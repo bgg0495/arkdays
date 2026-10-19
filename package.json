@@ -1,0 +1,19 @@
+{
+  "name": "arkdays",
+  "version": "0.2.0",
+  "private": true,
+  "description": "금일방주(Arkdays) — 테라 배경 비영리 팬 패러디. 런타임 라이브러리 0, 빌드만 esbuild.",
+  "scripts": {
+    "build": "node build/build.js && node -e \"require('fs').copyFileSync('dist/index.html','index.html')\"",
+    "verify:death": "node build/verify-death.js 3",
+    "check": "node test/validate-data.js && node test/check-text.js && node test/sim.js 300",
+    "build:dev": "node build/build.js --no-minify",
+    "verify": "node build/verify.js",
+    "serve:dist": "python -m http.server 8787 --bind 127.0.0.1 --directory dist",
+    "sim": "node test/sim.js",
+    "validate": "node test/validate-data.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>명생게임 — 테라에서 한 생</title>
+<!-- 개발용 진입점. 프로젝트 루트에서 `python -m http.server 8000` 후 http://localhost:8000/src/ 로 연다.
+     배포 빌드(W5)는 이 파일을 템플릿으로 데이터(window.__DATA__)·모듈·CSS 를 한 파일에 인라인한다. -->
+<link rel="stylesheet" href="./ui/style.css">
+</head>
+<body>
+<div id="app">
+  <section id="start" class="screen" hidden></section>
+  <section id="cert" class="screen" hidden></section>
+  <section id="life" class="screen" hidden></section>
+  <section id="dead" class="screen" hidden></section>
+  <div id="modal" class="modal-wrap" hidden></div>
+  <div id="toast" class="toast" hidden></div>
+  <noscript><p class="noscript">이 페이지는 자바스크립트가 필요합니다.</p></noscript>
+</div>
+<script type="module" src="./main.js"></script>
+</body>
+</html>

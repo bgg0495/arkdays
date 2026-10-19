@@ -1,0 +1,1211 @@
+{
+  "_meta": {
+    "baseYear": 1950,
+    "builtAt": "2026-10-19",
+    "builtBy": "W1 데이터 세션",
+    "units": {
+      "le": "년(출생 시 기대수명)",
+      "u5": "5세 미만 사망 확률(0~1)",
+      "imr": "영아 사망 확률(0~1)",
+      "ppp": "1인당 GDP, 2011 국제달러(PPP)",
+      "gini": "0~1",
+      "urb": "도시 인구 비율 %",
+      "tfr": "합계출산율",
+      "pop": "1950 인구(명)"
+    },
+    "sources": {
+      "wpp": "UN World Population Prospects 2024 (OWID grapher 경유)",
+      "wppU5": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)",
+      "igme": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)",
+      "maddison": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)",
+      "wup": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)",
+      "est": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)"
+    },
+    "note": "값마다 source를 둔다. estimated:true 는 공개 통계에 1950 값이 없어 W1 세션이 추정한 값. 홍콩(HKG)은 여러 칸이 추정. 지니는 전부 추정."
+  },
+  "countries": {
+    "CHN": {
+      "name": "중국",
+      "pop": {
+        "value": 544044355,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 43.8,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 42.2,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 45.7,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.2061,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.144,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "ppp": {
+        "value": 799,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.33,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 11.2,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 5.81,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "note": "IMR: WPP U5MR×0.70 근사"
+    },
+    "HKG": {
+      "name": "홍콩",
+      "pop": {
+        "value": 1978347,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 57.8,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 53.6,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 61.4,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.105,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "imr": {
+        "value": 0.079,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "ppp": {
+        "value": 3500,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "gini": {
+        "value": 0.45,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 85,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "tfr": {
+        "value": 4.4,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "note": "홍콩: WPP 사망률·UN WUP·Maddison 1950 행이 OWID CSV에 없음. IMR은 홍콩 통계처 1951년 등록치(약 79/1000) 근사, 도시화·출산율은 1955년 값(85.6%, 4.55)에서 역추정, PPP는 Maddison 1990GK$ 2,218에서 2011$로 환산한 근사."
+    },
+    "JPN": {
+      "name": "일본",
+      "pop": {
+        "value": 86443278,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 59.3,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 57.6,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 60.9,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.0896,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0579,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 3062,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.37,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 37,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 3.62,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "RUS": {
+      "name": "러시아",
+      "pop": {
+        "value": 103392364,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 55.5,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 51,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 58.9,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.1607,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.112,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "ppp": {
+        "value": 3311,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.26,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 44.7,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 2.93,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "note": "IMR: WPP U5MR×0.70 근사"
+    },
+    "FIN": {
+      "name": "핀란드",
+      "pop": {
+        "value": 4008410,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 64.2,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 60.4,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 67.9,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.0508,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0367,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 6779,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.38,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 43.6,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 3.15,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "NOR": {
+      "name": "노르웨이",
+      "pop": {
+        "value": 3265199,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 71.6,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 69.9,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 73.3,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.0341,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0269,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 8655,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.33,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 47.9,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 2.52,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "SWE": {
+      "name": "스웨덴",
+      "pop": {
+        "value": 7016565,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 71.1,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 69.8,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 72.4,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.0255,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0221,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 10742,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.36,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 64.7,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 2.29,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "CHE": {
+      "name": "스위스",
+      "pop": {
+        "value": 4692642,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 68.9,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 66.7,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 71.1,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.0382,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0313,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 11541,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.38,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 44.3,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 2.4,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "DEU": {
+      "name": "독일",
+      "pop": {
+        "value": 69847778,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 66.8,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 64.1,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 69.3,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.0659,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.055,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "ppp": {
+        "value": 6186,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.37,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 70.4,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 2.19,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "note": "IMR: 서독 1950 연방통계청 등록치 약 55.6/1000"
+    },
+    "AUT": {
+      "name": "오스트리아",
+      "pop": {
+        "value": 6936455,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 64.8,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 62.2,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 67.3,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.076,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0625,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 5907,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.37,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 49.1,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 2.09,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "GBR": {
+      "name": "영국",
+      "pop": {
+        "value": 50121020,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 68.6,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 66.2,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 70.9,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.0356,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0315,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 11061,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.32,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 80.3,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 2.22,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "IRL": {
+      "name": "아일랜드",
+      "pop": {
+        "value": 2912656,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 65.6,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 64.5,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 66.7,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.0532,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0452,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 5504,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.38,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 41,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 3.5,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "POL": {
+      "name": "폴란드",
+      "pop": {
+        "value": 24780169,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 58.3,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 55.5,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 61.1,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.1343,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.1225,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 3900,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.28,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 38.4,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 3.65,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "USA": {
+      "name": "미국",
+      "pop": {
+        "value": 154202683,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 68.1,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 65.4,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 71,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.037,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0323,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 15240,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.38,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 64,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 3.09,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "ITA": {
+      "name": "이탈리아",
+      "pop": {
+        "value": 46391674,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 65.7,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 63.9,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 67.4,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.0811,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0708,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 5582,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.42,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 54.6,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 2.52,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "ESP": {
+      "name": "스페인",
+      "pop": {
+        "value": 28077048,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 61.8,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 59.3,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 64.1,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.1008,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0776,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 3459,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.44,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 51.6,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 2.47,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "PRT": {
+      "name": "포르투갈",
+      "pop": {
+        "value": 8418877,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 58.5,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 55.8,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 61,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.144,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0994,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 3325,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.45,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 28.5,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 3.16,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "GRC": {
+      "name": "그리스",
+      "pop": {
+        "value": 7651080,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 66.2,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 64.2,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 68.1,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.0595,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0442,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)",
+        "originalYear": 1951
+      },
+      "ppp": {
+        "value": 3052,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.4,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 52.2,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 2.57,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "IRN": {
+      "name": "이란",
+      "pop": {
+        "value": 16510553,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 38.2,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 38.9,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 37.4,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.3346,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.234,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "ppp": {
+        "value": 2742,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.5,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 27.5,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 6.97,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "note": "IMR: WPP U5MR×0.70 근사"
+    },
+    "IRQ": {
+      "name": "이라크",
+      "pop": {
+        "value": 5653357,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 37.4,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 34.3,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 41,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.3579,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.2454,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 2174,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.5,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 35,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 6.2,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "SAU": {
+      "name": "사우디아라비아",
+      "pop": {
+        "value": 1703280,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 40,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 37.8,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 42.5,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.3196,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.224,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "ppp": {
+        "value": 3556,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.52,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 21.3,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 7.58,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "note": "IMR: WPP U5MR×0.70 근사"
+    },
+    "COL": {
+      "name": "콜롬비아",
+      "pop": {
+        "value": 11766991,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 48.3,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 46.1,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 50.6,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.1934,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.1143,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)",
+        "originalYear": 1954
+      },
+      "ppp": {
+        "value": 3432,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.53,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 38.7,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 6.41,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "VEN": {
+      "name": "베네수엘라",
+      "pop": {
+        "value": 5488858,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 51.1,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 49,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 53.5,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.1506,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0745,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)",
+        "originalYear": 1953
+      },
+      "ppp": {
+        "value": 8462,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.48,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 53.5,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 6.64,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    },
+    "AUS": {
+      "name": "호주",
+      "pop": {
+        "value": 8176751,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "le": {
+        "value": 69,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leM": {
+        "value": 66.5,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "leF": {
+        "value": 71.7,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      },
+      "u5": {
+        "value": 0.031,
+        "source": "UN WPP 2024, 5세 미만 사망률 (OWID grapher child-mortality-around-the-world)"
+      },
+      "imr": {
+        "value": 0.0249,
+        "source": "UN IGME / Gapminder 장기 시계열 (OWID grapher infant-mortality)"
+      },
+      "ppp": {
+        "value": 11815,
+        "source": "Maddison Project Database 2023, 2011 국제달러 (OWID grapher)"
+      },
+      "gini": {
+        "value": 0.33,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 75.8,
+        "source": "UN World Urbanization Prospects 2018 (OWID grapher share-of-population-urban)"
+      },
+      "tfr": {
+        "value": 3.06,
+        "source": "UN World Population Prospects 2024 (OWID grapher 경유)"
+      }
+    }
+  },
+  "custom": {
+    "KAZDEL": {
+      "name": "카즈델 (창작)",
+      "estimated": true,
+      "canon": false,
+      "le": {
+        "value": 46,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true,
+        "note": "1950 세계 평균(약 46.5)에 명세 주석 0.8배를 적용하면 37이지만, lifeMul 적용 전 기준치로 세계 평균을 두고 statMul.le=0.8로 깎는다"
+      },
+      "leM": {
+        "value": 44,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "leF": {
+        "value": 48,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "u5": {
+        "value": 0.22,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "imr": {
+        "value": 0.15,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "ppp": {
+        "value": 1050,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true,
+        "note": "1950 세계 평균 약 3,500$의 0.3배"
+      },
+      "gini": {
+        "value": 0.48,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 35,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "tfr": {
+        "value": 4.5,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "note": "명세 §3.1 주석(le 0.8배·ppp 0.3배·분쟁 3). 내전 중 반파된 이동도시 국가. 전부 추정."
+    },
+    "DURIN": {
+      "name": "두린 (창작)",
+      "estimated": true,
+      "canon": false,
+      "le": {
+        "value": 70,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true,
+        "note": "1950 선진국 상위권(노르웨이 71.5) 수준에 명세 주석 1.1배는 statMul.le로 적용"
+      },
+      "leM": {
+        "value": 68,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "leF": {
+        "value": 72,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "u5": {
+        "value": 0.03,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "imr": {
+        "value": 0.022,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "ppp": {
+        "value": 9000,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "gini": {
+        "value": 0.28,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "urb": {
+        "value": 100,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true,
+        "note": "전원 지하 돔 도시 거주"
+      },
+      "tfr": {
+        "value": 2.2,
+        "source": "추정 (W1 세션, 공개 통계 공백을 지역 수준으로 메움)",
+        "estimated": true
+      },
+      "note": "명세 §3.1 주석(le 1.1배·안전). 지하 돔 도시 문명. 전부 추정."
+    }
+  }
+}

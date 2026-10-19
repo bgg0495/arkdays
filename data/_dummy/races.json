@@ -1,0 +1,9 @@
+{
+  "_meta": { "note": "W2 더미 4종. oriVuln 은 {infect, progress}" },
+  "races": [
+    { "id": "feline", "name": "필라인", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1, "progress": 1 }, "artsApt": 0.0, "stigma": 0, "traits": [], "home": ["yan", "lungmen", "victoria", "columbia", "siracusa", "kjerag", "sami", "ursus"] },
+    { "id": "lupo", "name": "루포", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1, "progress": 1 }, "artsApt": 0.0, "stigma": 0, "traits": [], "home": ["siracusa", "yan", "lungmen", "leithanien", "sami"] },
+    { "id": "ursus", "name": "우르수스", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1, "progress": 1 }, "artsApt": -0.1, "stigma": 0, "traits": [], "home": ["ursus", "sami", "kazimierz", "kjerag"] },
+    { "id": "sarkaz", "name": "살카즈", "group": "teekaz", "lifeMul": 2.5, "oriVuln": { "infect": 2, "progress": 1.5 }, "artsApt": 0.7, "stigma": 3, "traits": ["longlived"], "home": ["kazdel"] }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "_meta": { "bands": ["<1", "<5", "<15", "<30", "<50", "<70", "70+"], "note": "W2 더미 13종(현실 7 + 테라 6). w 는 7밴드 배열. tags: 같은 접두(threat:, nation:)끼리 OR, 접두 그룹끼리 AND. by 는 W2 확장(태그→배율), W1 데이터엔 없어도 됨" },
+  "causes": [
+    { "id": "infection", "kind": "real", "label": "감염병", "w": [30, 45, 30, 15, 8, 5, 3], "tags": [], "by": { "rural": 1.3, "q1": 1.5 } },
+    { "id": "respiratory", "kind": "real", "label": "폐렴·호흡기", "w": [20, 20, 10, 8, 8, 12, 18], "tags": [], "by": { "nomadic_under": 1.4 } },
+    { "id": "cardio", "kind": "real", "label": "심혈관 질환", "w": [0.5, 1, 2, 5, 25, 40, 45], "tags": [] },
+    { "id": "cancer", "kind": "real", "label": "암", "w": [0.3, 1, 3, 5, 15, 25, 15], "tags": [] },
+    { "id": "accident", "kind": "real", "label": "사고", "w": [2, 10, 25, 30, 15, 6, 4], "tags": [], "by": { "male": 1.5, "nomadic": 1.2 } },
+    { "id": "childbirth", "kind": "real", "label": "출산", "w": [0, 0, 1, 12, 6, 0, 0], "tags": ["female"], "by": { "rural": 1.4 } },
+    { "id": "oldage", "kind": "real", "label": "노환", "w": [0, 0, 0, 0, 0, 5, 35], "tags": [] },
+    { "id": "oripathy", "kind": "terra", "label": "광석병 결정화", "w": [5, 10, 20, 30, 30, 20, 10], "tags": ["infected"], "fact": "(로도스 아일랜드 의료부 연보, 추정)" },
+    { "id": "catastrophe", "kind": "terra", "label": "재앙 피폭", "w": [3, 5, 6, 6, 6, 5, 6], "tags": [] },
+    { "id": "war", "kind": "terra", "label": "전쟁·내전", "w": [1, 2, 4, 15, 10, 3, 1], "tags": [] },
+    { "id": "execution", "kind": "terra", "label": "처형", "w": [0, 0, 0.5, 3, 3, 1.5, 0.5], "tags": ["threat:secret_police"] },
+    { "id": "camp", "kind": "terra", "label": "수용소", "w": [0, 2, 8, 15, 15, 10, 5], "tags": ["infected", "nation:ursus"] },
+    { "id": "euthanasia", "kind": "terra", "label": "제도적 안락사", "w": [0, 2, 6, 10, 10, 8, 4], "tags": ["infected", "nation:leithanien"] }
+  ]
+}

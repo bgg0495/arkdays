@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "schema": "docs/설계_명세.md §3.4",
+    "builtAt": "2026-10-19",
+    "bands": ["<1", "<5", "<15", "<30", "<50", "<70", "70+"],
+    "fields": {
+      "w": "연령대 7밴드 기본 가중(상대값, 0 이면 그 밴드에서 불가). 엔진은 국가 threats·직업 risk·감염 상태·종족 traits 로 곱한 뒤 정규화",
+      "tags": "적용 조건. 없으면 전 국가 공통. nation:<id>(국가 한정) / threat:<key>(국가 threats 에 키가 있을 때) / infected / female / trait:<key> / job 가중은 jobs.json risk 로",
+      "kind": "real(1950 현실 패턴) / terra(테라 고유)",
+      "label": "사망 기록 표시용 담백체 명사구",
+      "fact": "사망 기록 비교 문장용 메모(각주는 콘텐츠 세션이 테라식 출처로 다시 씀)",
+      "footnote": "무거운 주제 처리 지침(§3.4)"
+    },
+    "note": "가중치는 1950년 사망 원인 구성(감염병·호흡기 상위, 심혈관·암은 노년)을 단순화한 추정. 테라 고유 사인은 보고서 A-9 를 옮긴 것이며 가중은 전부 추정. 현실 11종 + 테라 22종 = 33종."
+  },
+  "causes": [
+    { "id": "neonatal", "kind": "real", "label": "출생 직후 합병증", "w": [45, 0, 0, 0, 0, 0, 0], "tags": [], "fact": "영아 사망의 절반은 생후 한 달 안에 일어납니다. 로도스 아일랜드 의료부 소책자" },
+    { "id": "infection", "kind": "real", "label": "감염병", "w": [30, 45, 30, 15, 8, 5, 3], "tags": [], "fact": "" },
+    { "id": "respiratory", "kind": "real", "label": "폐렴", "w": [20, 20, 10, 8, 8, 12, 18], "tags": [] },
+    { "id": "cardio", "kind": "real", "label": "심장과 혈관의 병", "w": [0.5, 1, 2, 5, 25, 40, 45], "tags": [], "fact": "" },
+    { "id": "cancer", "kind": "real", "label": "암", "w": [0.3, 1, 3, 5, 15, 25, 15], "tags": [] },
+    { "id": "accident", "kind": "real", "label": "사고", "w": [2, 10, 25, 30, 15, 6, 4], "tags": [] },
+    { "id": "childbirth", "kind": "real", "label": "출산 중 사망", "w": [0, 0, 1, 12, 6, 0, 0], "tags": ["female"], "footnote": "장면 없이 결과만 서술" },
+    { "id": "oldage", "kind": "real", "label": "노환", "w": [0, 0, 0, 0, 0, 5, 35], "tags": [] },
+    { "id": "suicide", "kind": "real", "label": "스스로 선택한 죽음", "w": [0, 0, 2, 8, 6, 3, 1.5], "tags": [], "footnote": "담백하게. 사망 기록 하단에 '로도스 아일랜드 의료부 상담 창구' 테라식 안내 문구" },
+    { "id": "violence", "kind": "real", "label": "폭력", "w": [0.5, 1, 2, 6, 3, 1, 0.3], "tags": [] },
+    { "id": "starvation", "kind": "real", "label": "굶주림과 영양 결핍", "w": [8, 6, 3, 1, 1, 1, 2], "tags": [], "fact": "타라 식량 부족·전시 봉쇄에서 가중" },
+
+    { "id": "oripathy", "kind": "terra", "label": "광석병 결정화", "w": [5, 10, 20, 30, 30, 20, 10], "tags": ["infected"], "fact": "혈중 오리지늄 결정 밀도 0.80 u/L 를 넘기면 장기가 멈춥니다. 전 국가 공통, 치료는 진행을 늦출 뿐입니다", "footnote": "엔진이 uL>=0.80 이면 이 사인으로 확정(§5.1). 가중은 그 전에 합병증으로 죽는 경우용" },
+    { "id": "euthanasia", "kind": "terra", "label": "국가 안락사", "w": [0, 2, 6, 10, 10, 8, 4], "tags": ["infected", "nation:leithanien"], "fact": "라이타니엔은 광석병 3기에 이른 감염자에게 국가가 마지막 절차를 안내합니다", "footnote": "장면 없이 통지와 결과만" },
+    { "id": "camp", "kind": "terra", "label": "수용소", "w": [0, 2, 8, 15, 15, 10, 5], "tags": ["infected", "nation:ursus"], "fact": "우르수스 광산 수용소의 노동사와 즉결 처형을 한데 묶었습니다", "footnote": "장면 없이 결과만" },
+    { "id": "execution", "kind": "terra", "label": "처형", "w": [0, 0, 0.5, 3, 3, 1.5, 0.5], "tags": ["threat:secret_police", "threat:inquisition", "threat:three_way_civil_war", "threat:dukes_war", "threat:court_intrigue"], "fact": "정치범·이단·탈영의 결말" },
+    { "id": "catastrophe", "kind": "terra", "label": "재앙", "w": [3, 5, 6, 6, 6, 5, 6], "tags": [], "fact": "대피에 실패한 정주 취락이 가장 많이 죽습니다. 이동도시는 피하고, 재앙 정보 전달자는 틀립니다", "footnote": "§5.2 롤의 사망 2% 가 이 사인으로 확정. 가중은 간접 사망용" },
+    { "id": "mine_accident", "kind": "terra", "label": "광산 사고", "w": [0, 2, 8, 10, 8, 4, 1], "tags": [], "fact": "낙반·분진·오리지늄 노출을 한데 묶었습니다. 림 빌리턴에서는 통계에 잡히지도 않습니다" },
+    { "id": "arts_backlash", "kind": "terra", "label": "아츠 폭주", "w": [0, 1, 4, 6, 4, 2, 1], "tags": [], "fact": "캐스터와 연구원, 감염자의 무유닛 아츠 사용에서 가중" },
+    { "id": "nomadic_accident", "kind": "terra", "label": "이동도시 사고", "w": [1, 2, 3, 4, 4, 3, 2], "tags": [], "fact": "플레이트 이음새·엔진·열차. 1094년 카시미어 대분리가 가장 큰 사례" },
+    { "id": "seaborn", "kind": "terra", "label": "시테러 습격", "w": [2, 3, 5, 8, 8, 6, 4], "tags": ["threat:seaborn_raid", "threat:seaborn_assimilation", "threat:deep_church", "threat:deep_sea_war"], "fact": "이베리아 해안과 에기르, 극동 북부 해안. 시신은 대개 돌아오지 않습니다" },
+    { "id": "sacrifice", "kind": "terra", "label": "인신공양", "w": [1, 3, 5, 6, 5, 4, 3], "tags": ["threat:human_sacrifice"], "fact": "이베리아 해안 마을의 백일 제비뽑기", "footnote": "장면 없이 결과만" },
+    { "id": "collapsal", "kind": "terra", "label": "붕괴체 정신오염", "w": [1, 2, 4, 6, 6, 5, 3], "tags": ["threat:collapsal_north", "threat:collapsal_paradigm", "threat:collapsal_south", "threat:aurora_madness"], "fact": "사미·우르수스 북부·염국 북부·사르곤 남부·극동 북부" },
+    { "id": "war", "kind": "terra", "label": "전쟁", "w": [1, 2, 4, 15, 10, 3, 1], "tags": [], "fact": "내전·봉기·원정을 한데 묶었습니다. conflict 3 국가와 전시 플래그에서 가중(§5.4)" },
+    { "id": "vendetta", "kind": "terra", "label": "벤데타", "w": [0.5, 1, 2, 8, 8, 4, 2], "tags": ["threat:vendetta", "threat:family_feud"], "fact": "시라쿠사 패밀리 간 복수. 연좌로 가족이 함께 기록되는 일이 흔합니다" },
+    { "id": "major_arena", "kind": "terra", "label": "경기장 사망", "w": [0, 0, 3, 10, 5, 1, 0], "tags": ["threat:major_bloodsport"], "fact": "카시미어 메이저 혈투와 지하 감염자 투기장" },
+    { "id": "hound", "kind": "terra", "label": "사냥개", "w": [1, 3, 5, 6, 5, 3, 2], "tags": ["threat:hounds"], "fact": "볼리바르 남부 블랙 플로우 지대의 짐승" },
+    { "id": "experiment", "kind": "terra", "label": "생체 실험", "w": [0.5, 1, 2, 4, 3, 1, 0.3], "tags": ["threat:corporate_experiment", "threat:far_north_rebellion", "threat:scorched_earth", "threat:slavery", "infected"], "fact": "우르수스 극북, 볼리바르, 컬럼비아 기업, 사르곤 궁정. 감염자가 먼저 뽑힙니다", "footnote": "장면 없이 결과만" },
+    { "id": "feranmut", "kind": "terra", "label": "베헤모스 습격", "w": [1, 2, 3, 4, 3, 2, 1], "tags": [], "fact": "극한 환경에서는 초식동물도 사람을 공격합니다. 염국의 창괴도 여기 묶었습니다" },
+    { "id": "corpse_blast", "kind": "terra", "label": "감염자 시신 폭발 2차 피해", "w": [1, 1, 1, 2, 2, 2, 1], "tags": [], "fact": "말기 감염자가 숨진 자리에 함께 있던 사람의 사인. 의료진·가족이 많습니다" },
+    { "id": "jungle_fever", "kind": "terra", "label": "정글 풍토병", "w": [8, 8, 4, 3, 3, 3, 3], "tags": ["threat:jungle_fever"], "fact": "사르곤 아카후알라. 재앙이 없는 대신 풍토병이 있습니다" },
+    { "id": "dehydration", "kind": "terra", "label": "탈수", "w": [1, 1, 2, 3, 3, 3, 3], "tags": ["trait:hydro", "threat:dehydration"], "fact": "에기르가 육지에서 오래 버티면 몸이 먼저 말라 갑니다" },
+    { "id": "dome_collapse", "kind": "terra", "label": "돔 붕괴", "w": [2, 2, 2, 2, 2, 2, 2], "tags": ["threat:dome_collapse", "threat:flooding"], "fact": "두린 지하 도시의 천장은 모두의 천장입니다" },
+    { "id": "avalanche", "kind": "terra", "label": "눈사태", "w": [1, 2, 4, 5, 4, 2, 1], "tags": ["threat:avalanche", "threat:cold_wave"], "fact": "쉐라그와 사미. 봄까지 찾지 못하는 경우가 많습니다" }
+  ]
+}

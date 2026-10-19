@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "schema": "docs/설계_명세.md §3.2",
+    "builtAt": "2026-10-19",
+    "note": "lifeMul·oriVuln·artsApt·stigma 는 D11·§3.2 에 적힌 값 외에는 전부 추정. 캐논에 종족별 수명·비율 수치는 없다(보고서 A-5). oriVuln 은 {infect, progress} 두 배율. rare:true 종족(용·드라코)은 국가 races 가중치에서 0.1% 미만만 준다. 기본 24종 + rare 2종 = 26 항목.",
+    "groupEnum": ["ancients", "elders", "teekaz", "other"],
+    "traitKeys": {
+      "halo": "산크타 광륜: 근처 산크타와 공감, 12세에 수호총, 비산크타와의 자녀는 비산크타",
+      "hydro": "에기르: 육지에서 탈수 위험(사인 dehydration 가중)",
+      "small": "두린: 성인도 아동 체격, 일부 직업 제한·광산 투입 가중",
+      "fertile": "카우투스: 대가족·고출산(형제 수 +)",
+      "horned": "카프리니·포르테 등: 뿔. 라이타니엔 뿔 절단 위장 이벤트 키",
+      "winged": "리베리·산크타: 날개(장식 수준)",
+      "royal": "아슬란·용·드라코: 왕족 혈통 이벤트 키",
+      "ageless": "엘프: 신체 노화 없음(lifeMul 로 표현), 감염 시 즉사급",
+      "longlived": "살카즈·에기르·두린: 장수 종족, 사망 기록 각주 대상",
+      "warlike_stereotype": "오니: 호전적이라는 편견",
+      "sarkaz_lookalike": "리프로바: 살카즈와 닮았다는 이유로 기피"
+    }
+  },
+  "races": [
+    { "id": "feline", "name": "필라인", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.0, "stigma": 0, "traits": [], "home": ["victoria", "tara", "lungmen", "yan", "columbia", "kjerag", "siracusa", "higashi"], "note": "테라 전역에 가장 흔한 종족. 어디서도 이방인이 아니다시피 함" },
+    { "id": "lupo", "name": "루포", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.0, "stigma": 0, "traits": [], "home": ["siracusa", "leithanien", "lungmen", "yan"] },
+    { "id": "vulpo", "name": "불포", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.1, "stigma": 0, "traits": [], "home": ["siracusa", "higashi", "lungmen", "iberia"] },
+    { "id": "perro", "name": "페로", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": -0.1, "stigma": 0, "traits": [], "home": ["bolivar", "sami", "higashi", "lungmen", "columbia", "ursus"] },
+    { "id": "kuranta", "name": "쿠란타", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": -0.1, "stigma": 0, "traits": [], "home": ["kazimierz"] },
+    { "id": "caprinae", "name": "카프리니", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.5, "stigma": 0, "traits": ["horned"], "home": ["leithanien", "minos", "kazimierz"], "note": "아츠 적성 +0.5 는 §3.2 명시값" },
+    { "id": "elafia", "name": "엘라피아", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.2, "stigma": 0, "traits": ["horned"], "home": ["sami", "leithanien"], "note": "Terra Wiki 는 '라피아' 표기. 한국 정식 표기는 엘라피아" },
+    { "id": "ursus", "name": "우르수스", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": -0.1, "stigma": 0, "traits": [], "home": ["ursus", "kazimierz", "kjerag", "sami"] },
+    { "id": "liberi", "name": "리베리", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.1, "stigma": 0, "traits": ["winged"], "home": ["iberia", "columbia", "laterano", "victoria", "bolivar", "aegir"] },
+    { "id": "forte", "name": "포르테", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": -0.2, "stigma": 0, "traits": ["horned"], "home": ["minos", "yan", "sargon", "lungmen"] },
+    { "id": "vouivre", "name": "와이번", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.1, "stigma": 0, "traits": [], "home": ["victoria", "columbia", "tara", "sargon"] },
+    { "id": "aslan", "name": "아슬란", "group": "ancients", "lifeMul": 1.1, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.2, "stigma": 0, "traits": ["royal"], "home": ["victoria", "sargon"], "note": "왕족 혈통. 평민 출생은 '몰락한 가문' 서사" },
+    { "id": "cautus", "name": "카우투스", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.0, "stigma": 0, "traits": ["fertile"], "home": ["rim", "columbia", "tara"] },
+    { "id": "zalak", "name": "자라크", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": -0.1, "stigma": 0, "traits": [], "home": ["kjerag", "bolivar", "rim"] },
+    { "id": "sabra", "name": "사브라", "group": "ancients", "lifeMul": 1.2, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.0, "stigma": 0, "traits": [], "home": ["sargon", "rim", "minos"], "note": "최장수 기록(파디샤 230년)은 사브라. lifeMul 1.2 추정" },
+    { "id": "anaty", "name": "아나티", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.0, "stigma": 0, "traits": [], "home": ["sami", "kjerag", "sargon"], "note": "보고서 A-5 는 사미·쉐라그. 설계 명세 §3.1 사르곤 표도 아나티를 적어 둘 다 home 으로 둠" },
+    { "id": "petram", "name": "페트람", "group": "ancients", "lifeMul": 1.1, "oriVuln": { "infect": 0.9, "progress": 1.0 }, "artsApt": -0.2, "stigma": 0, "traits": [], "home": ["yan"] },
+    { "id": "reproba", "name": "리프로바", "group": "ancients", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.1, "stigma": 1, "traits": ["sarkaz_lookalike"], "home": ["sargon"], "note": "stigma 1 은 §3.2 명시값" },
+    { "id": "sarkaz", "name": "살카즈", "group": "teekaz", "lifeMul": 2.5, "oriVuln": { "infect": 2.0, "progress": 1.5 }, "artsApt": 0.7, "stigma": 3, "traits": ["longlived"], "home": ["kazdel"], "note": "lifeMul 2.5·oriVuln 2.0/1.5·artsApt 0.7·stigma 3 은 §3.2 명시값. 라테라노 입국 불가, 1098 이후 빅토리아 전범 취급" },
+    { "id": "sankta", "name": "산크타", "group": "teekaz", "lifeMul": 1.0, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.2, "stigma": 0, "traits": ["halo", "winged"], "home": ["laterano"], "note": "라테라노 밖에서는 '천사' 호기심·우대 이벤트" },
+    { "id": "oni", "name": "오니", "group": "teekaz", "lifeMul": 1.1, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.1, "stigma": 1, "traits": ["horned", "warlike_stereotype"], "home": ["higashi"], "note": "stigma 1 은 §3.2 명시값. 이름은 성 없이 이름만(names.json ja.raceRule)" },
+    { "id": "durin", "name": "두린", "group": "teekaz", "lifeMul": 1.3, "oriVuln": { "infect": 1.0, "progress": 1.0 }, "artsApt": 0.0, "stigma": 0, "traits": ["small", "longlived"], "home": ["durin"], "note": "lifeMul 1.3 은 §3.2 명시값" },
+    { "id": "aegir", "name": "에기르", "group": "other", "lifeMul": 1.5, "oriVuln": { "infect": 0.5, "progress": 1.0 }, "artsApt": 0.1, "stigma": 2, "traits": ["hydro", "longlived"], "home": ["aegir", "iberia"], "note": "lifeMul 1.5·oriVuln 0.5·stigma 2(육지) 는 §3.2 명시값. 에기르 본국 안에서는 stigma 0 으로 취급(엔진이 home 판정)" },
+    { "id": "elf", "name": "엘프", "group": "other", "lifeMul": 3.0, "oriVuln": { "infect": 1.0, "progress": 10.0 }, "artsApt": -0.5, "stigma": 0, "traits": ["ageless"], "home": ["sami", "yan"], "note": "lifeMul 3.0·감염 시 진행 10배(즉사급)·artsApt -0.5 는 §3.2 명시값. 어느 국가에서도 1% 미만" },
+    { "id": "lung", "name": "용", "group": "elders", "rare": true, "lifeMul": 2.0, "oriVuln": { "infect": 0.8, "progress": 1.0 }, "artsApt": 0.5, "stigma": 0, "traits": ["royal"], "home": ["yan", "lungmen"], "note": "극희귀(0.1% 미만). 염국 지배층 혈통" },
+    { "id": "draco", "name": "드라코", "group": "elders", "rare": true, "lifeMul": 2.0, "oriVuln": { "infect": 0.8, "progress": 1.0 }, "artsApt": 0.5, "stigma": 0, "traits": ["royal"], "home": ["victoria", "tara"], "note": "극희귀(0.1% 미만). 빅토리아·타라 왕족 혈통. 순혈 2명뿐이라 평민 출생은 '먼 피' 서사" }
+  ]
+}

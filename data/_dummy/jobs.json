@@ -1,0 +1,13 @@
+{
+  "_meta": { "note": "W2 더미 8종. lo/hi 는 소득 백분위 0~100, only 는 국가 id 배열, req 는 artsTop10/infected/race:<id>/sex:<m|f>, special 은 국가 jobs 목록이나 req 로만 제안" },
+  "jobs": [
+    { "id": "farmer", "name": "농민", "sector": "agr", "edu": 0, "lo": 5, "hi": 45, "urban": -1, "oriMul": 1.0, "risk": { "accident": 1.3 } },
+    { "id": "factory", "name": "공장 노동자", "sector": "ind", "edu": 1, "lo": 20, "hi": 60, "urban": 1, "oriMul": 1.2, "risk": { "accident": 1.5 } },
+    { "id": "clerk", "name": "사무원", "sector": "ser", "edu": 3, "lo": 40, "hi": 80, "urban": 1, "oriMul": 0.6, "risk": {} },
+    { "id": "merchant", "name": "상인", "sector": "ser", "edu": 1, "lo": 30, "hi": 95, "urban": 0, "oriMul": 0.9, "risk": {} },
+    { "id": "soldier", "name": "군인", "sector": "ser", "edu": 1, "lo": 30, "hi": 70, "urban": 0, "oriMul": 1.5, "risk": { "war": 4, "accident": 1.5 } },
+    { "id": "ori_miner", "name": "오리지늄 광부", "sector": "ind", "edu": 0, "lo": 15, "hi": 50, "urban": -1, "oriMul": 8, "special": true, "risk": { "accident": 3 } },
+    { "id": "caster", "name": "캐스터", "sector": "ser", "edu": 2, "lo": 50, "hi": 98, "urban": 0, "oriMul": 2.0, "special": true, "req": ["artsTop10"], "risk": {} },
+    { "id": "official", "name": "천사부 관료", "sector": "ser", "edu": 4, "lo": 70, "hi": 98, "urban": 1, "only": ["yan"], "special": true, "oriMul": 0.4, "risk": {} }
+  ]
+}

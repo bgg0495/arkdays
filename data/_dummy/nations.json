@@ -1,0 +1,40 @@
+{
+  "_meta": { "note": "W2 더미(국가 3 + 하위 지역 1). W1 data/nations.json 이 있으면 그것이 우선. policyVariants.when 은 year/age/urban 또는 출생 시 롤되는 보조 변수(region 등)를 비교하는 한 줄 식" },
+  "nations": [
+    {
+      "id": "yan", "name": "염국", "share": 22, "model": ["CHN"], "statMul": { "le": 1.05, "u5": 0.9, "ppp": 1.6, "urb": 1.4 },
+      "policy": "quarantine", "oriExp": 2, "catFreq": 2, "conflict": 2, "nomadic": 0.5,
+      "seaborn": false, "collapsal": true, "conscript": "draft",
+      "races": { "feline": 35, "lupo": 30, "ursus": 5, "sarkaz": 3 },
+      "jobs": ["official", "ori_miner"], "threats": ["shui", "collapsal_north"], "nameLang": "zh", "canon": true,
+      "blurb": "오래된 제국. 흠천감이 모든 것을 세고, 세지 못한 것은 없는 셈 칩니다."
+    },
+    {
+      "id": "lungmen", "name": "용문", "parent": "yan", "share": 3, "model": ["HKG"], "statMul": { "ppp": 1.3 },
+      "policy": "quarantine", "policyVariants": [{ "when": "year>=1098", "policy": "ignore" }],
+      "oriExp": 2, "catFreq": 2, "conflict": 2, "nomadic": 1.0, "collapsal": false,
+      "conscript": "none", "races": { "feline": 45, "lupo": 30, "ursus": 3, "sarkaz": 5 },
+      "jobs": [], "threats": ["reunion_1096", "slums"], "nameLang": "yue",
+      "blurb": "염국의 자치 이동도시. 상층과 빈민가 사이의 거리는 계단 몇 개가 아닙니다."
+    },
+    {
+      "id": "ursus", "name": "우르수스", "share": 14, "model": ["RUS"], "statMul": { "le": 0.97 },
+      "policy": "persecute", "oriExp": 3, "catFreq": 3, "conflict": 3, "nomadic": 0.5,
+      "seaborn": false, "collapsal": true, "conscript": "draft",
+      "races": { "ursus": 55, "feline": 20, "lupo": 10, "sarkaz": 3 },
+      "jobs": ["ori_miner"], "threats": ["chernobog_1096", "camps", "secret_police", "collapsal_north"], "nameLang": "ru",
+      "blurb": "제국은 넓고 겨울은 깁니다. 감염자 수용소는 지도에 표시되지 않습니다."
+    },
+    {
+      "id": "sami", "name": "사미", "share": 1.5, "model": ["FIN", "NOR", "SWE"], "statMul": { "le": 0.95 },
+      "policy": "ignore", "oriExp": 1, "catFreq": 3, "conflict": 2, "nomadic": 0.0,
+      "seaborn": false, "collapsal": true, "conscript": "none",
+      "races": { "ursus": 40, "feline": 15, "lupo": 30, "sarkaz": 2 },
+      "jobs": [], "threats": ["cold_wave", "collapsal_paradigm"], "nameLang": "sami",
+      "blurb": "눈 아래의 땅. 국가라기보다 서로 알고 지내는 사람들의 합에 가깝습니다."
+    }
+  ],
+  "ethnicFlags": {
+    "outsider": { "note": "출생 종족의 home 에 현재 국가가 없으면 자동 부여(§5.3)" }
+  }
+}

@@ -1,0 +1,7 @@
+node_modules/
+.claude/
+*.log
+Thumbs.db
+.DS_Store
+# 세션·에이전트 작업 메모(공유 노트)는 저장소에 넣지 않는다
+*_인수인계.md
