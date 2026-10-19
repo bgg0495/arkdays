@@ -21,11 +21,13 @@
   --bad: #e2695d;
   --bad-soft: rgba(226, 105, 93, 0.1);
   --sans: "Pretendard", "Noto Sans KR", "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif;
-  --mono: "Cascadia Mono", "JetBrains Mono", Consolas, "SF Mono", Menlo, "Roboto Mono", monospace;
+  /* 모노 스택 뒤에 한글 산세리프를 둔다: 한글 글리프가 굴림으로 떨어지는 것을 막는다 */
+  --mono: "Cascadia Mono", "JetBrains Mono", Consolas, "SF Mono", Menlo, "Roboto Mono", "Pretendard", "Noto Sans KR", "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", monospace;
   --cut: 10px;
   --fc: var(--line);
   --grid: rgba(255, 255, 255, 0.022);
   --hatch: rgba(255, 255, 255, 0.025);
+  --bar-bg: rgba(14, 17, 22, 0.94);
   color-scheme: dark;
 }
 /* 라이트 팔레트: 종이 느낌의 따뜻한 회백색. 강조색은 밝은 바탕에서 대비가 나오게 한 단계 어둡게. */
@@ -50,6 +52,7 @@
   --bad-soft: rgba(194, 70, 59, 0.1);
   --grid: rgba(0, 0, 0, 0.035);
   --hatch: rgba(0, 0, 0, 0.045);
+  --bar-bg: rgba(241, 239, 233, 0.94);
   color-scheme: light;
 }
 
@@ -209,11 +212,11 @@ code { font-family: var(--mono); font-size: 0.9em; background: var(--panel-3); p
 
 /* ── 인생 화면: 상단 상태 표시줄 ─────────────────────── */
 .life-bar {
-  position: sticky; top: 0; z-index: 20; background: rgba(14, 17, 22, 0.94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 20; background: var(--bar-bg); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line);
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.4rem 1rem; padding: 0.5rem 1.2rem 0.6rem;
 }
 .bar-left { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-.bar-title { font-family: var(--mono); font-weight: 500; font-size: 0.64rem; letter-spacing: 0.3em; color: var(--accent); text-transform: uppercase; padding-right: 1rem; border-right: 1px solid var(--line-2); line-height: 1; }
+.bar-title { font-family: var(--sans); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.22em; color: var(--accent); padding-right: 1rem; border-right: 1px solid var(--line-2); line-height: 1; }
 .bar-age { display: inline-flex; align-items: baseline; gap: 0.25em; font-size: 0.8rem; color: var(--muted); }
 .bar-age .en { display: inline; margin-right: 0.4em; font-size: 0.56rem; }
 .bar-age b { font-family: var(--mono); font-weight: 500; font-size: 1.7rem; line-height: 1; color: var(--text); }
@@ -273,7 +276,7 @@ code { font-family: var(--mono); font-size: 0.9em; background: var(--panel-3); p
 .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
 .chip { font: inherit; font-size: 0.82rem; cursor: pointer; border: 1px solid var(--line-2); background: transparent; color: var(--text-2); border-radius: 0; padding: 0.45em 0.9em; display: inline-flex; flex-direction: column; align-items: flex-start; line-height: 1.3; min-width: 6.2em; transition: border-color 120ms, color 120ms, background-color 120ms; }
 .chip:hover { border-color: var(--text-2); color: var(--text); }
-.chip .chip-hint { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); letter-spacing: 0.02em; margin-top: 0.15em; }
+.chip .chip-hint { font-family: var(--sans); font-size: 0.66rem; color: var(--muted); letter-spacing: 0.02em; margin-top: 0.15em; }
 .chip.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
 .chip.on .chip-hint { color: var(--accent); opacity: 0.8; }
 
@@ -333,7 +336,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 1px
 .choice:active { background: var(--accent-dim); }
 .choice-n { grid-row: 1 / span 2; color: var(--muted); font-size: 0.78rem; text-align: center; border: 1px solid var(--line-2); padding: 0.1em 0; line-height: 1.3; transition: color 120ms; }
 .choice-label { font-weight: 600; }
-.choice-sub { grid-column: 2; font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.02em; margin-top: 0.15em; }
+.choice-sub { grid-column: 2; font-family: var(--sans); font-size: 0.74rem; color: var(--muted); letter-spacing: 0.02em; margin-top: 0.15em; }
 .countdown { margin: 0.6rem 0 0.2rem; }
 .countdown-track { height: 2px; background: var(--line); }
 .countdown-bar { height: 100%; background: var(--accent2); width: 100%; transition: width 100ms linear; }
