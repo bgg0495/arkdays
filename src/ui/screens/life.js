@@ -114,7 +114,7 @@ function renderId(app) {
   setHtml(R.id, `
     <div class="id-head"><span class="lbl"><span class="en">Operator file</span>테라 신원 기록</span><span class="mono id-no">${esc(certNo(S))}</span></div>
     <div class="id-body">
-      <div class="pixel-slot small" aria-hidden="true"><span>초상 자리</span></div>
+      <div class="pixel-slot small" aria-hidden="true"></div>
       <div class="id-main">
         <div class="id-name">${esc(S.name.full)}</div>
         <div class="id-sub">${SEX(S.sex)} · ${esc(sim.race.name)}</div>
@@ -200,7 +200,7 @@ export function renderFocus(app) {
   if (!R) return;
   const S = app.S; const sim = app.sim;
   const opts = focusOptions(sim);
-  if (!opts.length) { setHtml(R.focus, `<h2 class="h-small"><span class="en">Focus</span>올해의 초점</h2><p class="muted small">아직 아기입니다. 초점은 6세부터 고릅니다. 8× 를 권합니다.</p>`); return; }
+  if (!opts.length) { setHtml(R.focus, `<h2 class="h-small"><span class="en">Focus</span>올해의 초점</h2><p class="muted small">아직 아기입니다. 초점은 6세부터 고릅니다.</p>`); return; }
   setHtml(R.focus, `<h2 class="h-small"><span class="en">Focus</span>올해의 초점 <span class="muted">(연중 비율만큼 연말에 반영)</span></h2><div class="chips" id="focus-chips"></div>`);
   const box = $('#focus-chips', R.focus);
   for (const k of opts) {

@@ -27,7 +27,6 @@ export function mount(app) {
       <h1 class="person-name">${esc(S.name.full)}</h1>
       <p class="doc-meta">${esc(deathMeta(sim))}</p>
       <p class="lead">${esc(deathSummary(sim))}</p>
-      <div class="pixel-slot" aria-hidden="true"><span>마지막 장면 자리</span></div>
       <section class="sec cause-block">
         <h2 class="h-small"><span class="en">Cause of death</span>사인</h2>
         <p class="cause">${esc(d.label)}</p>

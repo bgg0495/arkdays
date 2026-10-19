@@ -38,7 +38,6 @@ export function mount(app) {
       </header>
       <h1 class="person-name">${esc(S.name.full)}</h1>
       <p class="lead">${esc(birthSummary(sim))}</p>
-      <div class="pixel-slot" aria-hidden="true"><span>장면 자리</span></div>
       <dl class="rec">
         ${rows.map(([k, v, w]) => `<div class="f${w ? ' w' : ''}"><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}
       </dl>

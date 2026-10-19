@@ -446,7 +446,6 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 1px
       </header>
       <h1 class="person-name">${x(r.name.full)}</h1>
       <p class="lead">${x(ta(t))}</p>
-      <div class="pixel-slot" aria-hidden="true"><span>장면 자리</span></div>
       <dl class="rec">
         ${u.map(([g,m,p])=>`<div class="f${p?" w":""}"><dt>${x(g)}</dt><dd>${m}</dd></div>`).join("")}
       </dl>
@@ -499,7 +498,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 1px
     <div class="bar-prog"><div class="bar-prog-fill" id="lf-prog" style="width:${(Math.min(1,n.t)*100).toFixed(1)}%"></div></div>`),q.bar.querySelectorAll("[data-speed]").forEach(f=>f.addEventListener("click",()=>r.setSpeed(+f.dataset.speed))),M("#bar-pause",q.bar).addEventListener("click",()=>r.togglePause()),M("#bar-skip",q.bar).addEventListener("click",()=>r.skipToDecision()),M("#bar-auto",q.bar).addEventListener("click",()=>r.toggleAuto()),M("#bar-exit",q.bar).addEventListener("click",()=>r.exitToStart()),M("#bar-theme",q.bar).addEventListener("click",f=>{r.toggleTheme(),f.currentTarget.textContent=r.themeLabel()})}function gi(e){let n=e.S,t=e.sim,[r,a]=ca(n,t),c=n.prison==="camp"?"수용소":n.prison?"복역 중":n.serving?"복무 중 ("+n.serving+"년 남음)":n.school?Xr[n.school]||"재학":n.retired?"은퇴":n.job?we(t,n.job):n.age<6?"유아":"무직",f=(i,l,u)=>`<div class="f${u?" w":""}"><dt>${i}</dt><dd>${l}</dd></div>`;X(q.id,`
     <div class="id-head"><span class="lbl"><span class="en">Operator file</span>테라 신원 기록</span><span class="mono id-no">${x(hn(n))}</span></div>
     <div class="id-body">
-      <div class="pixel-slot small" aria-hidden="true"><span>초상 자리</span></div>
+      <div class="pixel-slot small" aria-hidden="true"></div>
       <div class="id-main">
         <div class="id-name">${x(n.name.full)}</div>
         <div class="id-sub">${Me(n.sex)} · ${x(t.race.name)}</div>
@@ -537,7 +536,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 1px
       ${r.older||r.younger?`<li><span class="who">형제</span> 위로 ${r.older}명 · 아래로 ${r.younger}명</li>`:""}
       ${r.partner?a(r.partner,"배우자"):n.age>=18?'<li class="muted"><span class="who">배우자</span> 없음</li>':""}
       ${c}
-    </ul>`)}function $n(e){if(!q)return;let n=e.S,t=e.sim,r=_n(t);if(!r.length){X(q.focus,'<h2 class="h-small"><span class="en">Focus</span>올해의 초점</h2><p class="muted small">아직 아기입니다. 초점은 6세부터 고릅니다. 8× 를 권합니다.</p>');return}X(q.focus,'<h2 class="h-small"><span class="en">Focus</span>올해의 초점 <span class="muted">(연중 비율만큼 연말에 반영)</span></h2><div class="chips" id="focus-chips"></div>');let a=M("#focus-chips",q.focus);for(let c of r){let f=U("button.chip",{type:"button",class:c===n.focus?"on":"",title:lt(c)},Tn(c),U("span.chip-hint",{},lt(c)));f.addEventListener("click",()=>e.actions.setFocus(c)),a.appendChild(f)}}function sa(e){return U("div.log-line.k-"+(e.k||"ev"),{},U("span.log-a.mono",{},e.a+"세"),U("span.log-t",{},e.t),e.fx&&En(e.fx)?U("span.log-fx",{},En(e.fx)):null,e.f?U("div.log-f",{},e.f):null)}function bi(e){let n=e.S;q.log.innerHTML="";let t=document.createDocumentFragment(),r=n.log.slice(-fa);for(let a=r.length-1;a>=0;a--)t.appendChild(sa(r[a]));q.log.appendChild(t),q.logcount.textContent=n.log.length+"줄"}function St(e,n){if(q){for(q.log.insertBefore(sa(n),q.log.firstChild);q.log.childElementCount>fa;)q.log.removeChild(q.log.lastChild);q.logcount.textContent=e.S.log.length+"줄"}}function ua(e){if(!q)return;let n=e.S,t=Math.round(n.e0),r=[],a=Math.max(t+1,n.age+1,10),c=Object.fromEntries(n.years.map(f=>[f.a,f]));for(let f=0;f<a;f++){let i=c[f],l="mc",u=f+"세";i?(l+=" h"+Math.min(4,Math.floor(i.h/20)),u+=" · 테라력 "+i.y+"년 · 행복 "+i.h+" · 건강 "+i.hl+(i.uL?" · "+i.uL.toFixed(2)+" u/L":"")):f===n.age&&n.phase==="life"?(l+=" now",u+=" (지금)"):l+=" future",f===t&&(l+=" e0",u+=" · 기대수명"),n.deathAt&&f===n.deathAt.age&&(l+=" dead",u+=" · 사망"),r.push(`<i class="${l}" title="${x(u)}"></i>`)}X(q.map,`<h2 class="h-small"><span class="en">Life map</span>인생 지도 <span class="muted">(1칸 = 1년, 색 = 행복)</span></h2><div class="map">${r.join("")}</div>
+    </ul>`)}function $n(e){if(!q)return;let n=e.S,t=e.sim,r=_n(t);if(!r.length){X(q.focus,'<h2 class="h-small"><span class="en">Focus</span>올해의 초점</h2><p class="muted small">아직 아기입니다. 초점은 6세부터 고릅니다.</p>');return}X(q.focus,'<h2 class="h-small"><span class="en">Focus</span>올해의 초점 <span class="muted">(연중 비율만큼 연말에 반영)</span></h2><div class="chips" id="focus-chips"></div>');let a=M("#focus-chips",q.focus);for(let c of r){let f=U("button.chip",{type:"button",class:c===n.focus?"on":"",title:lt(c)},Tn(c),U("span.chip-hint",{},lt(c)));f.addEventListener("click",()=>e.actions.setFocus(c)),a.appendChild(f)}}function sa(e){return U("div.log-line.k-"+(e.k||"ev"),{},U("span.log-a.mono",{},e.a+"세"),U("span.log-t",{},e.t),e.fx&&En(e.fx)?U("span.log-fx",{},En(e.fx)):null,e.f?U("div.log-f",{},e.f):null)}function bi(e){let n=e.S;q.log.innerHTML="";let t=document.createDocumentFragment(),r=n.log.slice(-fa);for(let a=r.length-1;a>=0;a--)t.appendChild(sa(r[a]));q.log.appendChild(t),q.logcount.textContent=n.log.length+"줄"}function St(e,n){if(q){for(q.log.insertBefore(sa(n),q.log.firstChild);q.log.childElementCount>fa;)q.log.removeChild(q.log.lastChild);q.logcount.textContent=e.S.log.length+"줄"}}function ua(e){if(!q)return;let n=e.S,t=Math.round(n.e0),r=[],a=Math.max(t+1,n.age+1,10),c=Object.fromEntries(n.years.map(f=>[f.a,f]));for(let f=0;f<a;f++){let i=c[f],l="mc",u=f+"세";i?(l+=" h"+Math.min(4,Math.floor(i.h/20)),u+=" · 테라력 "+i.y+"년 · 행복 "+i.h+" · 건강 "+i.hl+(i.uL?" · "+i.uL.toFixed(2)+" u/L":"")):f===n.age&&n.phase==="life"?(l+=" now",u+=" (지금)"):l+=" future",f===t&&(l+=" e0",u+=" · 기대수명"),n.deathAt&&f===n.deathAt.age&&(l+=" dead",u+=" · 사망"),r.push(`<i class="${l}" title="${x(u)}"></i>`)}X(q.map,`<h2 class="h-small"><span class="en">Life map</span>인생 지도 <span class="muted">(1칸 = 1년, 색 = 행복)</span></h2><div class="map">${r.join("")}</div>
     <div class="map-legend muted small"><i class="mc h0"></i>낮음 <i class="mc h4"></i>높음 <i class="mc e0"></i>기대수명 ${t}세 <i class="mc now"></i>지금</div>`)}function Si(e){let n=e.sim,t=n.nation,r=ia(n,t);X(q.nation,`
     <h2 class="h-small"><span class="en">Nation</span>${x(t.name)} <span class="muted">국가 통계</span></h2>
     <table class="kv small">
@@ -574,7 +573,6 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 1px
       <h1 class="person-name">${x(r.name.full)}</h1>
       <p class="doc-meta">${x(dt(t))}</p>
       <p class="lead">${x(ft(t))}</p>
-      <div class="pixel-slot" aria-hidden="true"><span>마지막 장면 자리</span></div>
       <section class="sec cause-block">
         <h2 class="h-small"><span class="en">Cause of death</span>사인</h2>
         <p class="cause">${x(a.label)}</p>
