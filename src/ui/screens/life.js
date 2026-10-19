@@ -93,6 +93,7 @@ export function renderBar(app) {
       <button class="btn tiny ${S.paused ? 'on' : ''}" id="bar-pause" ${dead ? 'disabled' : ''}>${S.paused ? '▶ 계속' : '∥ 멈춤'}</button>
       <button class="btn tiny" id="bar-skip" ${dead || S.pending ? 'disabled' : ''}>다음 결정까지 »</button>
       <button class="btn tiny toggle ${p.auto ? 'on' : ''}" id="bar-auto" title="결정을 자동으로 맡깁니다">자동 결정 ${p.auto ? '켬' : '끔'}</button>
+      <button class="btn tiny ghost" id="bar-theme" title="밝은 화면 / 어두운 화면">${app.actions.themeLabel()}</button>
       <button class="btn tiny ghost" id="bar-exit">나가기</button>
     </div>
     <div class="bar-prog"><div class="bar-prog-fill" id="lf-prog" style="width:${(Math.min(1, S.t) * 100).toFixed(1)}%"></div></div>`);
@@ -101,6 +102,7 @@ export function renderBar(app) {
   $('#bar-skip', R.bar).addEventListener('click', () => A.skipToDecision());
   $('#bar-auto', R.bar).addEventListener('click', () => A.toggleAuto());
   $('#bar-exit', R.bar).addEventListener('click', () => A.exitToStart());
+  $('#bar-theme', R.bar).addEventListener('click', (e) => { A.toggleTheme(); e.currentTarget.textContent = A.themeLabel(); });
 }
 
 // ── 좌측 ───────────────────────────────────────────────

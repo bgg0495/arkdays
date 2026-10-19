@@ -13,7 +13,25 @@ import * as dead from './ui/screens/dead.js';
 
 export const KEY = { save: 'tr1.save', prefs: 'tr1.prefs', past: 'tr1.past', rolls: 'tr1.rolls' };
 export const SPEEDS = [1, 2, 4, 8];
-const DEFAULT_PREFS = { speed: 2, auto: false };
+const DEFAULT_PREFS = { speed: 2, auto: false, theme: 'auto' };   // theme: auto(기기 설정) | light | dark
+
+/** 테마 적용: 명시 설정이면 data-theme, auto 면 기기 설정을 .sys-light 클래스로 반영(CSS 가 둘 다 읽는다) */
+export function applyTheme() {
+  const t = app.prefs.theme === 'light' || app.prefs.theme === 'dark' ? app.prefs.theme : 'auto';
+  const root = document.documentElement;
+  if (t === 'auto') root.removeAttribute('data-theme'); else root.dataset.theme = t;
+  const sysLight = typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: light)').matches;
+  root.classList.toggle('sys-light', t === 'auto' && sysLight);
+}
+export function resolvedTheme() {
+  const root = document.documentElement;
+  return root.dataset.theme === 'light' || (!root.dataset.theme && root.classList.contains('sys-light')) ? 'light' : 'dark';
+}
+export function toggleTheme() {
+  app.prefs.theme = resolvedTheme() === 'dark' ? 'light' : 'dark'; savePrefs(); applyTheme();
+  return resolvedTheme();
+}
+export const themeLabel = () => (resolvedTheme() === 'dark' ? '☀ 밝게' : '☾ 어둡게');
 
 const app = {
   data: null, content: null, sim: null, screen: null,
@@ -30,6 +48,8 @@ function lsDel(k) { try { localStorage.removeItem(k); } catch (e) { /* noop */ }
 export function loadPrefs() {
   try { const p = JSON.parse(lsGet(KEY.prefs) || '{}'); app.prefs = { ...DEFAULT_PREFS, ...p }; } catch (e) { app.prefs = { ...DEFAULT_PREFS }; }
   if (!SPEEDS.includes(app.prefs.speed)) app.prefs.speed = DEFAULT_PREFS.speed;
+  applyTheme();
+  try { matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => applyTheme()); } catch (e) { /* 구형 브라우저 */ }
 }
 export function savePrefs() { lsSet(KEY.prefs, JSON.stringify(app.prefs)); }
 
@@ -216,7 +236,7 @@ async function boot() {
   }
   if (app.data.warnings.length) console.warn('데이터 경고:', app.data.warnings);
   app.content = content.install(createRegistry());
-  app.actions = { newLife, startLife, resume, setSpeed, togglePause, toggleAuto, skipToDecision, choose, autoChooseNow, setFocus, exitToStart, rebirth, toStart, readSave, pastLives, save };
+  app.actions = { newLife, startLife, resume, setSpeed, togglePause, toggleAuto, skipToDecision, choose, autoChooseNow, setFocus, exitToStart, rebirth, toStart, readSave, pastLives, save, toggleTheme, themeLabel };
   show('start');
   requestAnimationFrame(frame);
   document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });

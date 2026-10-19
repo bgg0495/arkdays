@@ -25,8 +25,9 @@ export function mount(app) {
         ${save ? `<button class="btn" id="btn-resume">이어하기 <span class="muted">— ${esc(save.S.name.full)}, ${save.S.age}세 · ${esc(nationName(app, save.S.cur))}</span></button>` : ''}
       </section>
       ${past.length ? `<section class="past"><h2 class="h-small"><span class="en">Past lives</span>전생 기록</h2><ul>${past.slice(0, 5).map((p) => `<li><span class="mono">${esc(p.by)}</span> ${esc(p.name)} · ${esc(nationName(app, p.born))} ${esc(SEX(p.sex))} · ${p.age}세 · ${esc(p.cause)}</li>`).join('')}</ul></section>` : ''}
-      <footer class="doc-foot">
+      <footer class="doc-foot row">
         <p class="muted">「명일방주」 비공식 팬 창작 · 비영리</p>
+        <button class="btn tiny ghost" id="btn-theme" title="밝은 화면 / 어두운 화면">${app.actions.themeLabel()}</button>
       </footer>
     </div>`);
 
@@ -41,6 +42,7 @@ export function mount(app) {
       el('span.share-pct', {}, x.share.toFixed(1) + '%')));
   });
   $('#btn-born', root).addEventListener('click', () => A.newLife());
+  $('#btn-theme', root).addEventListener('click', (e) => { A.toggleTheme(); e.currentTarget.textContent = A.themeLabel(); });
   const r = $('#btn-resume', root);
   if (r) r.addEventListener('click', () => A.resume());
 }

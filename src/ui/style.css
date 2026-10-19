@@ -1,5 +1,6 @@
-/* 금일방주 Arkdays — PRTS 단말기풍 다크 테마(D27). 웹폰트·이미지 없음(외부 요청 0).
-   변수: --bg --panel --line --text --muted --accent --accent2. 라이트 모드는 지원하지 않는다(다크 고정).
+/* 금일방주 Arkdays — PRTS 단말기풍 테마(D27). 웹폰트·이미지 없음(외부 요청 0).
+   변수: --bg --panel --line --text --muted --accent --accent2. 기본은 다크. 라이트 팔레트는 아래 :root[data-theme="light"] 와
+   prefers-color-scheme: light(명시 설정 없을 때)에서 적용된다. 토글은 main.js toggleTheme(prefs.theme: auto|light|dark).
    프레임 규칙: 패널은 1px 선 + 우상단 모서리를 --cut 만큼 꺾는다(clip-path + ::after 대각선). 자세한 규칙은 docs/설계_명세.md "W5b-1 메모". */
 :root {
   --bg: #0e1116;
@@ -23,12 +24,38 @@
   --mono: "Cascadia Mono", "JetBrains Mono", Consolas, "SF Mono", Menlo, "Roboto Mono", monospace;
   --cut: 10px;
   --fc: var(--line);
+  --grid: rgba(255, 255, 255, 0.022);
+  --hatch: rgba(255, 255, 255, 0.025);
   color-scheme: dark;
+}
+/* 라이트 팔레트: 종이 느낌의 따뜻한 회백색. 강조색은 밝은 바탕에서 대비가 나오게 한 단계 어둡게. */
+:root[data-theme="light"],
+:root:not([data-theme="dark"]):not([data-theme="light"]).sys-light {
+  --bg: #f1efe9;
+  --bg-2: #ebe8e1;
+  --panel: #fbfaf7;
+  --panel-2: #f3f1ec;
+  --panel-3: #e7e4dc;
+  --line: #d6d2c8;
+  --line-2: #b9b4a7;
+  --text: #1c2027;
+  --text-2: #3d434d;
+  --muted: #747b88;
+  --accent: #d4701a;
+  --accent-soft: rgba(212, 112, 26, 0.12);
+  --accent-dim: rgba(212, 112, 26, 0.5);
+  --accent2: #1a8f8a;
+  --accent2-soft: rgba(26, 143, 138, 0.12);
+  --bad: #c2463b;
+  --bad-soft: rgba(194, 70, 59, 0.1);
+  --grid: rgba(0, 0, 0, 0.035);
+  --hatch: rgba(0, 0, 0, 0.045);
+  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-html { background: var(--bg); }   /* prefers-color-scheme: light 에서도 바탕·폼 컨트롤이 어둡게 유지된다 */
+html { background: var(--bg); }
 body {
   background: var(--bg);
   color: var(--text);
@@ -42,7 +69,7 @@ body {
 /* 아주 옅은 격자. 단말기 배경 */
 body::before {
   content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background-image: linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 #app { position: relative; z-index: 1; }
@@ -121,7 +148,7 @@ code { font-family: var(--mono); font-size: 0.9em; background: var(--panel-3); p
 .pixel-slot {
   position: relative; height: 120px; margin: 1rem 0; border: 1px solid var(--line-2);
   display: flex; align-items: center; justify-content: center; color: var(--muted); font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.24em;
-  background: repeating-linear-gradient(135deg, transparent 0 7px, rgba(255,255,255,0.025) 7px 8px);
+  background: repeating-linear-gradient(135deg, transparent 0 7px, var(--hatch) 7px 8px);
 }
 .pixel-slot::before, .pixel-slot::after { content: ""; position: absolute; width: 9px; height: 9px; border: 1px solid var(--accent-dim); }
 .pixel-slot::before { top: 4px; left: 4px; border-right: 0; border-bottom: 0; }
