@@ -9,6 +9,7 @@ import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
 import { eul, iga, eun, wa, ro, ieot, rago } from '../../src/engine/text.js';
 import { cul, fest, F, orgF, rhodesF, given, poor, rich, lifeRoll, once, medX } from '../_util.js';
 import { sharedDecisions, canonOpen, canonSeen } from './sargon.js';
+import { hoist } from '../_dispatch.js';
 
 const T = (id, st) => 'track:' + id + (st ? ':' + st : '');
 const E = (id, a, tags, w, gap, run, extra = {}) => ({ id, a, tags, w, gap, run: typeof run === 'function' ? run : () => run, ...extra });
@@ -385,8 +386,9 @@ export const decisions = {
     apply: (s, k) => { if (k === 'factory') return s.switchTrack('RIM_FACTORY', 'switch') ? false : '공장 자리는 먼저 찼습니다. 다른 광산으로 갔습니다.';
       s.S.track.aff = s.rng.pick(['RIM_MIN_IRONCARROT', 'RIM_MIN_IRONFIST']); return { t: '다른 광산으로 옮겼습니다. 갱도는 비슷했고, 얼굴은 달랐습니다.', k: 'note', fx: { h: -1 } }; },
   },
-  home_change: sharedDecisions.home_change,
-  marry_second: sharedDecisions.marry_second,
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_community: ['rim'], marry_company: ['rim'] });
 
 export default { events, decisions };

@@ -289,7 +289,7 @@ export const decisions = {
         : '월루몽드에서 감염자들이 일어서려 합니다. 궁정은 모른 척했고, 마을은 알고 있었습니다.';
       const f = s.year === 1101 ? '제국 내무성 불온 전단 수거 목록, 1101년' : s.S.cur === 'tara' ? '더블린 소집 통지(압수본), 1097년' : '궁정 기록국 변경 치안 보고, 1097년';
       return { title: '봉기', body, fact: F(f), choices: [
-        { k: 'join', label: '가담한다', sub: '사망 위험 큼, 관계 +', auto: s.S.ori.known ? 1.5 : 0.6 },
+        { k: 'join', label: '가담한다', sub: '사망 위험 큼, 연줄 +', auto: s.S.ori.known ? 1.5 : 0.6 },
         { k: 'flee', label: '떠난다', sub: '재산 −, 안전', auto: 1.2 },
         { k: 'hide', label: '숨죽인다', sub: '변화 없음', auto: 1.5 }] }; },
     apply: (s, k) => {

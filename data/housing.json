@@ -127,7 +127,7 @@
    { "id": "plate_own", "name": "이동도시 주택 소유", "w": 0.3, "cost": 0.05, "own": true, "price": 10, "canon": "partial" },
    { "id": "monastery", "name": "수도원 거처", "w": 0.1, "req": { "track": ["LAT_MONASTERY","LAT_GUARD"] }, "cost": 0, "canon": true },
    { "id": "dentist_district", "name": "치과의사 구역 셋방", "w": 0.1, "req": { "track": ["LAT_DENTIST"] }, "cost": 0.1, "canon": "partial" },
-   { "id": "expelled", "name": "국외 임시 거처", "w": 0.05, "cost": 0.15, "forced": { "track": ["LAT_FALLEN"] }, "canon": true }
+   { "id": "expelled", "name": "국외 거처", "w": 0.05, "cost": 0.15, "forced": { "track": ["LAT_FALLEN"] }, "canon": true }
   ]
  },
  "iberia": {

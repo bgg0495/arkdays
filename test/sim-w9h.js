@@ -52,7 +52,7 @@ for (const [name, p] of Object.entries(PACKS)) wrapPack(name, p);
 
 function buildRegistry(data) {
   const registry = content.install(createRegistry());
-  for (const p of Object.values(PACKS)) registry.use(p);
+  // W11: 국가 팩은 content/index.js 가 등록한다(중복 등록 방지)
   return registry;
 }
 

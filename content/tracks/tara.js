@@ -8,6 +8,7 @@
 import { eul, iga, eun, wa, ro, ieot, rago } from '../../src/engine/text.js';
 import { cul, F, orgF, given, poor, rich, lifeRoll, once, medX, momHere, dadHere } from '../_util.js';
 import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
+import { hoist } from '../_dispatch.js';
 
 const TA = 'nation:tara';
 const T = (id, st) => 'track:' + id + (st ? ':' + st : '');
@@ -493,5 +494,8 @@ export const decisions = {
   marry_nomad: marryWrap('nomad', (s, pr, t) => wa(pr.name) + ' 혼례를 마차 사이에서 올리는 이야기가 오갔습니다. ' + iga(cul(s).elder) + ' 옛 텐게어로 축복하고, 두 마차가 한 마차가 됩니다. 마을 교회에는 적히지 않습니다.', ['마차를 잇는다', '다음 길에서', '거절한다']),
   marry_camp: marryWrap('camp', (s, pr, t) => wa(pr.name) + ' 야영지 혼인을 이야기했습니다. 사제도 호적부도 없이, 천막 앞에서 간부 하나가 증인이 됩니다. 지참금은 없고, 내일도 없을 수 있습니다. 그래서 오늘 하는 것입니다.', ['오늘 한다', '내일로 미룬다', '하지 않는다']),
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_handfast: ['tara'], marry_nomad: ['tara'], marry_camp: ['tara'] });
 
 export default { events, decisions };

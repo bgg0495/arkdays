@@ -4729,7 +4729,7 @@
   {
    "id": "AEG_ART_PHILO",
    "track": "AEG_ARTIST",
-   "name": "철학·예술 창작",
+   "name": "철학·예술 분과",
    "canon": true,
    "weight": 0.4,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },

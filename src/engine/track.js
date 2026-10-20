@@ -38,6 +38,12 @@ export function canSeek(sim) {
   const minAge = S.flags.noSchool && B.childLaborAge[S.q] ? B.childLaborAge[S.q] : 15;
   return S.age >= minAge;
 }
+/** W11: 입구 나이가 15세 미만으로 적힌 진로(HIG_NINJA 5~8·VIC_KNIGHT 11~14)는 재학 중에도 그 나이부터 롤한다 */
+function childTrackOpen(sim) {
+  const { S } = sim;
+  if (!T().childTrackSeek || S.phase !== 'life' || S.age >= 15 || S.track || S.prison || S.serving || S.job) return false;
+  return tracksFor(sim.data, S.cur).some((t) => t.entry.ages[0] < 15 && S.age >= t.entry.ages[0] && S.age <= t.entry.ages[1] && !t.synthetic && !t.forcedEntry && !t.noClasses && !t.A.flags.childLabor);
+}
 
 function zOf(S, key) {
   if (key === 'looks' || key === 'luck') return S.innate ? S.innate[key] : 0;
@@ -49,7 +55,16 @@ function gateMul(sim, g) {
   const { S } = sim;
   const w = typeof g.weight === 'number' ? g.weight : null;   // weight 가 있으면 조건이 아니라 가중
   const hit = (ok) => (w == null ? (ok ? 1 : false) : (ok ? w : 1));
-  if (g.cap) return hit(zOf(S, g.cap) >= (g.min ?? -9) && zOf(S, g.cap) <= (g.max ?? 9));
+  if (g.cap) {
+    // W11: 역량 하한은 부드러운 문턱 — 모자란 만큼(z 단위) 가중을 줄이고 softCapGate 만큼 모자라면 0. 데이터 weight 가 있으면 종전처럼 가중만
+    const z = zOf(S, g.cap), lo = g.min ?? -9, hi = g.max ?? 9;
+    if (w != null) return hit(z >= lo && z <= hi);
+    if (z > hi) return false;
+    if (z >= lo) return 1;
+    const soft = T().softCapGate ?? 0;
+    const f = soft > 0 ? 1 - (lo - z) / soft : 0;
+    return f > 0 ? f : false;
+  }
   if (g.born) return hit(zOf(S, g.born) >= (g.min ?? -9) && zOf(S, g.born) <= (g.max ?? 9));
   if (g.status) {
     const neg = g.status.startsWith('!'); const k = neg ? g.status.slice(1) : g.status;
@@ -61,7 +76,7 @@ function gateMul(sim, g) {
   if (g.race) { const list = Array.isArray(g.race) ? g.race : [g.race]; return hit(list.includes(S.race)); }
   if (g.edu != null) return hit(S.edu + (S.q >= 4 ? 1 : 0) >= g.edu);
   if (g.sex) return hit(S.sex === g.sex);
-  if (g.year) return hit(evalWhen('year' + g.year, S));
+  if (g.year) { const y = S.by + S.age; return hit(Array.isArray(g.year) ? y >= g.year[0] && y <= g.year[1] : evalWhen('year' + g.year, S)); }   // W11: [y0,y1] 배열형
   if (g.urban != null) return hit(!!S.urban === !!g.urban);
   if (g.infected != null) return hit(!!S.ori.on === !!g.infected);
   if (g.known != null) return hit(!!S.ori.known === !!g.known);
@@ -82,19 +97,26 @@ export function entryCandidates(sim, opts = {}) {
   const out = [];
   const settling = S.res && S.res.phase === 'settling';
   const child = S.age < 15;
+  const laborOk = child && S.flags.noSchool && B.childLaborAge[S.q] && S.age >= B.childLaborAge[S.q];   // 학교 못 간 최하층 아동 노동
+  const subRegion = S.sub && S.sub.region;
   for (const t of tracksFor(data, S.cur)) {
     if (t.forcedEntry && !opts.includeForced) continue;
-    if (t.noClasses && !opts.includeNoClass) continue;
+    if (t.noClasses && !opts.includeNoClass && !t.entry.trigger) continue;
     if (opts.exclude && opts.exclude === t.id) continue;
     const ages = t.entry.ages;
     const maxAge = ages[1] + 50 * (sim.race.lifeMul - 1);
     if (S.age < ages[0] || S.age > maxAge) continue;
-    if (child && !(t.A.flags.childLabor || t.synthetic)) continue;
+    if (child && !((laborOk && (t.A.flags.childLabor || t.synthetic)) || (ages[0] < 15 && !t.synthetic && !t.A.flags.childLabor))) continue;   // W11: 입구 나이 < 15 진로는 그 나이부터
     if (settling && !(['A11', 'A5', 'A6'].includes(t.archetype) || t.entry.gates.some((g) => g.newcomer))) continue;
     if (t.dept && !S.rhodes) continue;                       // 로도스 내부 진로는 합류자만
     const classes = t.entry.classes || {};
     let w = t.noClasses ? 1 : (classes['q' + S.q] ?? 0);
+    // W11 (g): COM_* 공통 입구 entry.trigger = { nations?:[…], p?:가중, … } — 거주국이 목록에 있으면 그 가중으로 후보에 든다
+    if (t.noClasses && t.entry.trigger && !opts.includeNoClass) { const tg = t.entry.trigger; if (tg.nations && !tg.nations.includes(S.cur) && !tg.nations.includes(S.root)) continue; w = tg.p ?? tg.w ?? 0.05; }
     if (!(w > 0)) continue;
+    // W11 (b): 하위 지역 거주자에게 상위국 진로는 ×parentNationMul. (a) 소지역 표시 진로는 S.sub.region 이 다르면 ×regionOffMul(데이터에 region 게이트가 있으면 그쪽이 맡는다)
+    if (t.nation !== S.cur && t.nation === S.root) w *= T().parentNationMul;
+    if (t.region && !data.nationById[t.region] && t.region !== subRegion && !t.entry.gates.some((g) => g.region)) w *= T().regionOffMul;
     let ok = true;
     for (const g of t.entry.gates) { const m = gateMul(sim, g); if (m === false) { ok = false; break; } w *= m; }
     if (!ok) continue;
@@ -120,10 +142,12 @@ export function rollEntry(sim) {
   if (S.flags.trackRollAge === S.age) return S.flags.trackCands && S.flags.trackCands.age === S.age ? S.flags.trackCands : null;
   S.flags.trackRollAge = S.age;
   S.flags.trackCands = null;
-  if (!canSeek(sim)) return null;
+  if (!canSeek(sim) && !childTrackOpen(sim)) return null;
   const p = S.flags.everWorked ? T().seekPJobless : T().seekP;
   if (!rng.chance(p)) { S.flags.joblessYears = (S.flags.joblessYears || 0) + (S.age >= 15 ? 1 : 0); return null; }
-  const cands = entryCandidates(sim);
+  let cands = entryCandidates(sim);
+  // W11: 아동 진입(입구 나이 < 15 진로)은 가중을 제안 확률로 쓴다 — 평범한 아이가 5세에 닌자 가문에 들어가지 않게
+  if (S.age < 15 && !canSeek(sim)) cands = cands.filter((c) => rng.chance(Math.min(1, c.w * T().childTrackMul)));
   if (!cands.length) { S.flags.joblessYears = (S.flags.joblessYears || 0) + (S.age >= 15 ? 1 : 0); return null; }
   S.flags.trackCands = { age: S.age, cands };
   return S.flags.trackCands;
@@ -164,8 +188,8 @@ export function enterTrack(sim, id, opts = {}) {
   const { S, data } = sim;
   const t = data.trackById[id];
   if (!t) return false;
-  // 타국 진로로의 전환은 곧 이주(§7): SIR_CLERGY → LAT_FALLEN 류. common·rhodes·거주국(하위 지역 포함) 진로는 제외
-  if (t.nation !== 'common' && t.nation !== 'rhodes' && t.nation !== S.cur && t.nation !== S.root && data.nationById[t.nation] && !data.nationById[t.nation].virtual) {
+  // 타국 진로로의 전환은 곧 이주(§7): SIR_CLERGY → LAT_FALLEN 류. common·rhodes·거주국(하위 지역 포함) 진로는 제외. opts.noMigrate 면 거주국을 두고 진로만(W11, LAT_FALLEN·AEG_EXPAT)
+  if (!opts.noMigrate && t.nation !== 'common' && t.nation !== 'rhodes' && t.nation !== S.cur && t.nation !== S.root && data.nationById[t.nation] && !data.nationById[t.nation].virtual) {
     const dest = data.nationById[t.nation].parent && data.nationById[t.nation].parent !== S.root ? t.nation : t.nation;
     if (S.track) leaveTrack(sim, opts.how || 'switch', { quiet: true });
     if (!sim.migrate(opts.reason || (t.forcedEntry ? 'exile' : 'work'), dest, { keepTrack: true })) return false;
@@ -182,6 +206,7 @@ export function enterTrack(sim, id, opts = {}) {
   const sc = t.stages[stage].contract;
   if (sc) S.track.flags.contractEnd = S.age + sc; else if (t.contract) S.track.flags.contractEnd = S.age + sim.rng.ri(t.contract[0], t.contract[1]);
   S.job = t.job || t.id; S.jobY = 0; S.school = null; S.retired = false;
+  if (t.dept && S.rhodes && S.rhodes !== true) S.rhodes.dept = t.dept;   // W11: RHO_* 진로로 옮기면 부서도 따라간다
   S.flags.everWorked = true; S.flags.joblessYears = 0; S.flags.trackCands = null;
   if (S.age < 15 && S.flags.childLabor == null) { S.flags.childLabor = S.age; if (!opts.quiet) sim.log('아직 아이지만 일을 시작했습니다.', 'bad', '(' + (sim.nation.statOrg || '기록소') + ' 노동 대장에는 나이 칸이 없습니다)'); }
   if (!opts.quiet) {
@@ -364,7 +389,8 @@ export function retireTrack(sim, opts = {}) {
   const { S } = sim;
   const t = trackOf(sim); if (!t) return false;
   const r = t.exits.retire;
-  if (r && r.to && !opts.full && sim.data.trackById[r.to]) {
+  // W11: 데이터의 retire.to 가 자기 자신(생업 25개)이면 '그 나이에 은퇴'로 본다(매년 같은 진로로 재진입하던 버그)
+  if (r && r.to && !opts.full && r.to !== t.id && sim.data.trackById[r.to]) {
     const name = t.name;
     enterTrack(sim, r.to, { how: 'retire', quiet: true });
     sim.log(eul(name) + ' 그만두고 ' + ro(sim.data.trackById[r.to].name) + ' 돌아갔습니다.', 'ev');

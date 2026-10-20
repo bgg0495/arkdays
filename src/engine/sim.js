@@ -11,7 +11,7 @@ import { makeRng, clamp } from './rng.js';
 import { lifeTable, humanAge } from './lifetable.js';
 import { rootOf, resolvePolicy } from './data.js';
 import { newLife } from './birth.js';
-import { createRegistry, chooseFeed, scheduledDecisions, dueBigEvents } from './content.js';
+import { createRegistry, chooseFeed, scheduledDecisions, dueBigEvents, tagsOf, tagsOk } from './content.js';
 import { oriYear, campYear, jailYear, STAGE_HL } from './oripathy.js';
 import { catYear, conflictYear, hazardYear } from './catastrophe.js';
 import { financeYear, jobOffers, takeJob, medianLMD, initPartner } from './finance.js';
@@ -188,25 +188,47 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     normalizeRhodes(sim);
     sim.ensureFocus();
     for (const b of dueBigEvents(sim)) S.queue.push({ at: ((b.month || 6) - 0.5) / 12, type: 'big', id: b.id });
-    const decs = scheduledDecisions(sim);
+    // 결정은 한 해 앞 2개. 엔진 내장 결정(installEngineDecisions 가 앞에 둔 것)은 순서대로 먼저, 나머지 콘텐츠 결정은 섞어서 고른다
+    // (W11: 레지스트리 등록 순서가 곧 우선순위라 뒤에 등록된 국가 결정이 영영 밀리던 것을 막는다, W9f-6·W9g-5)
+    const all = scheduledDecisions(sim);
+    const builtin = sim.content.builtinIds || new Set();
+    const first = all.filter((d) => builtin.has(d.id));
+    const others = all.filter((d) => !builtin.has(d.id));
+    for (let i = others.length - 1; i > 0; i--) { const j = Math.floor(rng.rnd() * (i + 1)); [others[i], others[j]] = [others[j], others[i]]; }
+    const decs = first.concat(others);
     decs.slice(0, 2).forEach((d, i) => S.queue.push({ at: d.at ?? (0.3 + i * 0.3 + rng.rnd() * 0.15), type: 'dec', id: d.id, p: {} }));
     const n = S.age < 6 ? 2 : 3;
     const used = new Set();
     const visit = S.res && S.res.itinerantAt && data.nationById[S.res.itinerantAt] ? S.res.itinerantAt : null;   // §7.4 순회형: 피드의 20% 는 방문국
     for (let i = 0; i < n; i++) {
-      const e = chooseFeed(sim, used, visit && rng.chance(B.mig.visitShare) ? visit : null);
+      const v = visit && rng.chance(B.mig.visitShare) ? visit : null;
+      const e = chooseFeed(sim, used, v);
       if (!e) break;
       used.add(e.id);
-      S.queue.push({ at: 0.08 + (i + rng.rnd() * 0.8) / n * 0.86, type: 'ev', id: e.id });
+      S.queue.push({ at: 0.08 + (i + rng.rnd() * 0.8) / n * 0.86, type: 'ev', id: e.id, visit: v || undefined });
     }
     S.queue.sort((a, b) => a.at - b.at);
+  };
+  /** W11: 진로 진입 직후 남은 해에 피드 하나를 더 뽑는다(진입 해의 첫 해 진로 이벤트가 나오도록, W9a-5) */
+  sim.requeueFeed = () => {
+    const S = sim.S, rng = sim.rng;
+    if (!S || S.phase !== 'life' || S.t >= 0.9) return false;
+    const used = new Set(S.queue.filter((q) => q.type === 'ev').map((q) => q.id));
+    for (const id of S.recent) used.add(id);
+    const e = chooseFeed(sim, used, null);
+    if (!e) return false;
+    S.queue.push({ at: Math.min(0.97, S.t + 0.05 + rng.rnd() * (0.95 - S.t)), type: 'ev', id: e.id });
+    S.queue.sort((a, b) => a.at - b.at);
+    return true;
   };
 
   sim.fire = (e) => {
     const S = sim.S;
     if (e.type === 'ev') {
       const ev = sim.content.evById[e.id];
-      if (!ev || (ev.c && !ev.c(sim))) return;
+      if (!ev) return;
+      if (ev.tags.length && !tagsOk(ev.tags, tagsOf(sim, e.visit || null))) return;   // W11: 같은 해 앞선 이벤트로 상태가 바뀌었으면 태그를 다시 본다
+      if (ev.c && !ev.c(sim)) return;
       sim.logResult(ev.run(sim), 'ev');
       S.flags['ev_' + ev.id] = S.age;
       S.recent.push(ev.id);
@@ -244,6 +266,7 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     const S = sim.S;
     const d = sim.content.decisions[id];
     if (!d) return false;
+    if (d.tags && d.tags.length && !tagsOk(d.tags, tagsOf(sim))) return false;   // W11: 큐에 들어간 뒤 진로·상태가 바뀌었으면 열지 않는다
     if (d.ok && !d.ok(sim, p)) return false;
     const view = d.build(sim, p);
     if (!view || !view.choices || !view.choices.length) return false;
@@ -313,6 +336,7 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     familyYear(sim); if (S.phase !== 'life') return;
     housingYear(sim);
     resYear(sim); if (S.phase !== 'life') return;
+    refreshRel(sim);   // W11: 관계 등급은 연도 조건(since 1098 류)이 있어 매년 다시 본다(W9d-7)
     rhodesYear(sim); if (S.phase !== 'life') return;
     // 7. 연간 스냅샷
     S.years.push({ a: S.age, y: sim.year, hl: Math.round(S.st.hl), h: Math.round(S.st.h),
@@ -377,6 +401,8 @@ function serviceYear(sim) {
     return;
   }
   if (n.conscript === 'mandatory' && S.age === 18 && !S.served && !S.prison && (n.conscriptSex === 'all' || S.sex === 'M')) {   // D33: 기본 남성만
+    const t = trackOf(sim);
+    if (t && t.archetype === 'A4') { S.served = 3; return; }   // W11: 이미 군단·징집 진로(BOL_SINGAS 류)에 있으면 그것이 복무다
     S.serving = 3; S.job = null; S.school = null;
     sim.log('의무 복무가 시작되었습니다. 3년입니다.', 'ev', '(' + n.name + ' 병무 조례)');
   }

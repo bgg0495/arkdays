@@ -252,7 +252,7 @@ export const decisions = {
   elder_care: {
     ok: (s) => hAge(s) >= 72 && !s.S.flags.careHome && !s.S.flags.withKids && (conds(s).frail || conds(s).dementia || s.S.st.hl < 40) && !s.S.flags.careAsked,
     build: (s) => { s.S.flags.careAsked = true; const kids = adultKids(s); const ch = [];
-      if (kids.length) ch.push({ k: 'kids', label: '자녀 집으로', sub: '관계 +, 자녀 부담', auto: 2 });
+      if (kids.length) ch.push({ k: 'kids', label: '자녀 집으로', sub: '연줄 +, 자녀 부담', auto: 2 });
       if (CARE_HOME[s.S.root] !== '없음') ch.push({ k: 'home', label: ro(careHome(s)), sub: '매년 돈이 듭니다, 건강 +', auto: s.S.money > s.med * 2 ? 2 : 0.7 });
       ch.push({ k: 'stay', label: '집에 남는다', sub: '혼자, 고독 위험', auto: 1 });
       return { title: '돌봄', body: '혼자 지내기 어렵다는 것을 ' + (kids.length ? iga(kids[0].name) + ' 먼저 말했습니다.' : '이웃이 먼저 말했습니다.'), fact: orgF(s, '노인 돌봄 실태 조사'), choices: ch }; },
@@ -265,8 +265,8 @@ export const decisions = {
   elder_will: {
     ok: (s) => hAge(s) >= 68 && !s.S.flags.willDone && (s.S.money > s.med * 0.5 || kidsAlive(s).length > 0),
     build: (s) => { const kids = kidsAlive(s); const r = rite(s); const ch = [];
-      if (kids.length) ch.push({ k: 'kids', label: '자녀에게 고르게', sub: '관계 +', auto: 3 });
-      if (partnerHere(s)) ch.push({ k: 'partner', label: '배우자에게 전부', sub: '관계 +', auto: 2 });
+      if (kids.length) ch.push({ k: 'kids', label: '자녀에게 고르게', sub: '연줄 +', auto: 3 });
+      if (partnerHere(s)) ch.push({ k: 'partner', label: '배우자에게 전부', sub: '연줄 +', auto: 2 });
       if (r.faith !== '없음') ch.push({ k: 'faith', label: r.place + '에 기부', sub: '행복 +, 자녀 −', auto: 0.7 });
       ch.push({ k: 'rhodes', label: '로도스 아일랜드에 기부', sub: s.S.rhodes ? '옛 동료들에게' : '감염자 치료에', auto: s.S.rhodes ? 2 : 0.5 });
       ch.push({ k: 'none', label: '쓰지 않는다', sub: '나라 법대로', auto: 0.8 });
@@ -306,7 +306,7 @@ export const decisions = {
   elder_downsize: {
     ok: (s) => hAge(s) >= 64 && !nomadic(s) && s.S.money < s.med * 0.3 && !s.S.flags.downsized && !s.S.flags.careHome && !s.S.flags.withKids,
     build: (s) => ({ kind: 'small', title: '집', body: '집을 유지할 돈이 부족합니다. 작은 곳으로 옮기면 얼마간 손에 남습니다.', fact: orgF(s, '주택 거래 등기'), def: 'sell',
-      choices: [{ k: 'sell', label: '작은 곳으로', sub: '돈 +, 관계 −', auto: 2 }, { k: 'keep', label: '버틴다', sub: '돈 −', auto: 1 }] }),
+      choices: [{ k: 'sell', label: '작은 곳으로', sub: '돈 +, 연줄 −', auto: 2 }, { k: 'keep', label: '버틴다', sub: '돈 −', auto: 1 }] }),
     apply: (s, k) => { s.S.flags.downsized = true;
       if (k === 'sell') return { t: '집을 팔고 방 하나짜리로 옮겼습니다. 이웃은 바뀌었고, 창은 작아졌습니다.', k: 'ev', fx: { money: medX(s, 0.8), so: -2 }, f: orgF(s, '주택 거래 등기') };
       return { t: '집에 남았습니다. 난방을 방 하나로 줄였습니다.', k: 'note', fx: { hl: -2, money: -medX(s, 0.1) }, f: orgF(s, '주택 거래 등기, 거래 없음') }; },
@@ -315,7 +315,7 @@ export const decisions = {
     ok: (s) => E(s) && (s.S.flags.grandkids || 0) > 0 && !s.S.flags.grandRaiseAsked && s.rng.chance(0.3),
     build: (s) => { s.S.flags.grandRaiseAsked = true; const k = pick(s, adultKids(s)) || { name: '자녀' };
       return { title: '손주', body: eun(k.name) + ' 일 때문에 아이를 맡아 달라고 했습니다. 기간은 "당분간"이었습니다.', fact: orgF(s, '조손 가구 등록'),
-        choices: [{ k: 'yes', label: '맡는다', sub: '관계 +, 건강 −, 돈 −', auto: 2 }, { k: 'no', label: '거절한다', sub: '관계 −', auto: 1 }] }; },
+        choices: [{ k: 'yes', label: '맡는다', sub: '연줄 +, 건강 −, 돈 −', auto: 2 }, { k: 'no', label: '거절한다', sub: '연줄 −', auto: 1 }] }; },
     apply: (s, k) => {
       if (k === 'yes') { s.S.flags.raisingGrand = true; return { t: '손주를 맡았습니다. 집이 다시 시끄러워졌고, 허리는 다시 아팠습니다.', k: 'warm', fx: { so: 4, h: 2, hl: -3, money: -medX(s, 0.15) }, f: orgF(s, '조손 가구 등록') }; }
       return { t: '거절했습니다. 전화는 그 뒤로 짧아졌습니다.', k: 'note', fx: { so: -3 }, f: F('기록된 바 없음') }; },
@@ -324,7 +324,7 @@ export const decisions = {
     ok: (s) => E(s) && widowed(s) && !s.S.flags.memorialAsked && s.S.flags.widowRite != null,
     build: (s) => { s.S.flags.memorialAsked = true; const r = rite(s);
       return { kind: 'small', title: '기일', body: s.S.fam.partner.name + '의 첫 기일입니다. ' + (r.faith === '없음' ? '이 땅에는 정해진 절차가 없습니다.' : r.place + '에서 하는 것이 이 땅의 관례입니다.'), fact: r.f({ org: org(s) }), def: 'keep',
-        choices: [{ k: 'keep', label: '매년 지킨다', sub: '관계 +', auto: 2 }, { k: 'stop', label: '마음으로만', sub: '변화 없음', auto: 1 }] }; },
+        choices: [{ k: 'keep', label: '매년 지킨다', sub: '연줄 +', auto: 2 }, { k: 'stop', label: '마음으로만', sub: '변화 없음', auto: 1 }] }; },
     apply: (s, k) => { if (k === 'keep') { s.S.flags.memorialKept = true; return { t: '기일을 지키기로 했습니다. 달력에 동그라미를 쳤습니다.', k: 'note', fx: { so: 1, h: 1 }, f: orgF(s, '제례 관행 조사표') }; }
       return { t: '마음으로만 기리기로 했습니다.', k: 'note', f: F('기록된 바 없음') }; },
   },

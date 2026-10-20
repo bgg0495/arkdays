@@ -5,9 +5,10 @@
 // 1096~97년 사변 전후·빈민가(nomadic_under)·격리구역(home:quarantine)·염국 하위 지역(nation:yan) 이벤트, 혼인 결정 덮어쓰기.
 // home_change·track_choose·marry_infected_only 는 염국 파일(yan.js)이 두 나라 몫을 한 번에 등록한다(같은 id 중복 등록 방지).
 // 담백한 "~했습니다"체. 각주 f 는 본문에 숫자가 있을 때만, 세계관 안의 출처(근위국 호적과 등)로. 조사는 text.js 유틸. 콜백 첫 인자는 ctx(=sim).
-import { eul, iga, eun, wa, ro, ieot } from '../../src/engine/text.js';
+import { eul, iga, eun, wa, ro, ieot, rago } from '../../src/engine/text.js';
 import { cul, org, fest, F, orgF, given, poor, rich, medX, lifeRoll, once } from '../_util.js';
 import { marryOverride } from './yan.js';
+import { hoist } from '../_dispatch.js';
 
 // ── 도우미 ──────────────────────────────────────────────────────────────
 const tk = (id, st) => 'track:' + id + ':' + st;
@@ -557,5 +558,8 @@ export const decisions = {
   marry_money: marryOverride('money', (s, t, pr) => ({ title: t.name, body: wa(pr.name) + '의 집안에서 혼담이 왔습니다. 지참금 ' + Math.round(s.med * t.dowry).toLocaleString() + ' LMD. 돈이 먼저 오가고 사람은 나중에 만나는 혼인이었습니다.',
     choices: [{ k: 'accept', label: '받아들인다', sub: '지참금 혼인', auto: 1.8 }, { k: 'hold', label: '보류한다', auto: 1 }, { k: 'decline', label: '거절한다', auto: 0.8 }] }), ['lungmen']),
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_civil: ['lungmen'], marry_tea_ceremony: ['lungmen'], marry_money: ['lungmen'] });
 
 export default { events, decisions };

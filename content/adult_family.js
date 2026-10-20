@@ -6,7 +6,7 @@ import { initPartner, becomeHomemaker } from '../src/engine/finance.js';
 import { humanAge } from '../src/engine/lifetable.js';
 import { eul, iga, eun, wa, ro, ieot } from '../src/engine/text.js';
 import { cul, org, fest, F, orgF, rhodesF, given, poor, rich, nomadic, lifeRoll, once, medX, jobName } from './_util.js';
-import { yr, hum, adult, working, homemaker, partner, kids, kidAge, pol, someone, fmtLMD } from './adult_work.js';
+import { yr, hum, adult, working, homemaker, partner, kids, kidAge, pol, someone, fmtLMD } from './_adult_util.js';
 
 const momAlive = (s) => s.S.fam.mom.alive;
 const dadAlive = (s) => s.S.fam.dad.alive && !s.S.fam.dad.absent;
@@ -181,28 +181,7 @@ function proposeStyle(s) {
 }
 
 export const decisions = {
-  /** 구혼/수락. 엔진 familyYear 도 매년 결혼을 굴리므로 여기서는 소수 생에만 뜬다 */
-  adult_propose: {
-    gap: 6,
-    ok: (s) => adult(s) && !partner(s) && hum(s) >= 20 && hum(s) <= 40 && s.S.prison !== 'camp' && !s.S.flags.quarantined && yr(s, 'propose', 0.09),
-    build: (s) => {
-      const st = proposeStyle(s);
-      return { title: st.title, body: st.body, fact: orgF(s, '혼인 등기 요건'), choices: [
-        { k: 'yes', label: '받아들인다', sub: '관계 +, 돈 −(혼례)', auto: 2 },
-        { k: 'no', label: '거절한다', sub: '변화 없음', auto: 1 }] };
-    },
-    apply: (s, k) => {
-      const p = { yes: proposeStyle(s).yes };
-      if (k !== 'yes') return { t: '거절했습니다. ' + s.rng.pick(['이유는 말하지 않았습니다.', '상대는 다음 해 다른 사람과 혼인했습니다.', '중매인은 수수료만 받아 갔습니다.']), k: 'note', fx: { h: -1 }, f: F('기록된 바 없음') };
-      const S = s.S, f = S.fam;
-      const psex = S.sex === 'M' ? 'F' : 'M';
-      f.partner = { name: makeName(s.data, s.rng, { lang: s.nation.nameLang, sex: psex, race: S.race, avoid: familyNames(S) }).given,
-        sex: psex, age: S.age + s.rng.ri(-3, 4), alive: true, infected: s.rng.chance(0.03 * s.nation.oriExp) };
-      initPartner(s, f.partner);
-      f.married = true; f.marriedAt = S.age; f.widowed = false;
-      return { t: p.yes + ' ' + wa(f.partner.name) + ' 혼인했습니다.', k: 'warm', fx: { so: 4, h: 3 }, f: orgF(s, '혼인 등기', s.year) };
-    },
-  },
+  // (W11) 구혼 결정 adult_propose 는 제거 — 혼인은 엔진 marry_<type>(marriage.json 유형)만
   /** 자녀를 가질까(출산 자체는 엔진 롤). */
   adult_kids: {
     ok: (s) => !!partner(s) && !kids(s).length && sinceWed(s) >= 1 && hum(s) <= 40 && hum(s) >= 20,
@@ -210,7 +189,7 @@ export const decisions = {
       const inf = s.S.ori.on || partner(s).infected;
       return { title: '아이', body: wa(partner(s).name) + ' 아이 이야기를 했습니다. ' + (inf ? '둘 중 하나가 감염자입니다. 아이가 물려받을 확률을 의사는 숫자로 말했고, 우리는 그 숫자를 다시 말하지 않았습니다.' : poor(s) ? '아이 하나에 입이 하나 늘고 손도 하나 늘 것입니다.' : '집은 아이 하나쯤 들어올 자리가 있었습니다.'),
         fact: inf ? rhodesF('출생 감염 상담 지침') : orgF(s, '출생 장려 고시'), choices: [
-          { k: 'want', label: '아이를 기다린다', sub: '관계 +', auto: inf ? 1 : 2 },
+          { k: 'want', label: '아이를 기다린다', sub: '연줄 +', auto: inf ? 1 : 2 },
           { k: 'wait', label: '몇 해 미룬다', sub: '돈 +(저축), 그래도 아이는 올 수 있습니다', auto: 1 },
           { k: 'none', label: '갖지 않기로 한다', sub: '행복 ±, 그래도 아이는 올 수 있습니다', auto: inf ? 1.5 : 0.5 }] };
     },
@@ -240,7 +219,7 @@ export const decisions = {
         + ' ' + eun(cur) + ' 어떻게 하겠습니까.';
       return { title: firstKid ? '아이와 살림' : '살림', body, fact: orgF(s, '가구 조사표 가사 전담란'),
         choices: [
-          { k: 'home', label: '가사를 맡는다', sub: '본인 소득 0, 가계는 배우자 벌이. 관계 +', auto: hp },
+          { k: 'home', label: '가사를 맡는다', sub: '본인 소득 0, 가계는 배우자 벌이. 연줄 +', auto: hp },
           { k: 'work', label: s.S.job ? '일을 계속한다' : '일을 찾는다', sub: '둘이 벌어 둘이 씁니다', auto: 1 - hp }] };
     },
     apply: (s, k) => {
@@ -278,9 +257,9 @@ export const decisions = {
       const far = !!s.S.mig;
       return { title: who + ' 부양', body: iga(who) + ' 혼자 지내기 어려워졌습니다. ' + (far ? '저는 다른 나라에 있습니다.' : sibCount(s) ? '형제들은 서로를 보았습니다.' : '형제는 없습니다.'),
         fact: orgF(s, '노령 부양 실태 조사'), choices: [
-          { k: 'home', label: '모신다', sub: '관계 +, 돈 −, 집이 좁아집니다', auto: far ? 0.5 : 1.5 },
+          { k: 'home', label: '모신다', sub: '연줄 +, 돈 −, 집이 좁아집니다', auto: far ? 0.5 : 1.5 },
           { k: 'send', label: '돈을 보낸다', sub: '돈 −(매년 조금씩)', auto: 1.5 },
-          { k: 'no', label: '맡지 않는다', sub: '관계 −, 행복 −', auto: sibCount(s) ? 1 : 0.4 }] };
+          { k: 'no', label: '맡지 않는다', sub: '연줄 −, 행복 −', auto: sibCount(s) ? 1 : 0.4 }] };
     },
     apply: (s, k) => {
       if (k === 'home') { s.S.flags.parentCare = 'home'; return { t: '모셨습니다. 방 하나가 부모 방이 되었고, 저녁 식탁에 옛날이야기가 돌아왔습니다.', k: 'warm', fx: { so: 3, h: 1, money: -medX(s, 0.25) }, f: orgF(s, '동거 가족 신고') }; }

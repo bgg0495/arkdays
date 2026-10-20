@@ -57,6 +57,9 @@ export const FALL_CAUSE_LABEL = {
   impeach: '탄핵', exile: '추방', injury: '부상', scandal: '스캔들', elimination: '탈락', heresy: '이단 판정', demotion: '좌천',
   layoff: '해고', bankrupt: '파산', ruin: '몰락', fade: '잊힘', contract_end: '계약 해지', washout: '탈락', infected: '감염 판정',
   protection: '보호비', bribed: '매수', arena: '혈투 리그행',
+  // W11 추가(W9f-4): 영어 그대로 찍히던 cause
+  seaborn: '시테러 습격', sacrifice: '희생', starvation: '굶주림', drowning: '익사', raid: '습격', backlash: '역풍', dehydration: '탈수', hound: '사냥개',
+  beast: '맹수', catastrophe: '재앙', experiment: '실험 사고', mutiny: '반란', defeat: '패배', expose: '폭로', fraud: '사기',
 };
 
 export function archetypeOf(id) { return ARCHETYPES[id] || ARCHETYPES.A11; }

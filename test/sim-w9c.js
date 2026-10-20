@@ -72,7 +72,7 @@ function main() {
   if (process.env.NO_DUMMY_TRACKS !== '1') registry.use(dummyTracks);   // W7 더미 진로 콘텐츠(태그·ctx API 점검용)
   const fires = {};
   for (const pack of Object.values(W9C)) { if (process.env.NO_W9C === '1') break;   // NO_W9C=1: 세 팩 없이(밸런스 비교용)
-    for (const e of pack.events) { const run = e.run; e.run = (s) => { fires[e.id] = (fires[e.id] || 0) + 1; return run(s); }; } registry.use(pack); }
+    for (const e of pack.events) { const run = e.run; e.run = (s) => { fires[e.id] = (fires[e.id] || 0) + 1; return run(s); }; } /* W11: index.js 가 등록 */ }
   const texts = []; const pushT = (src, x) => { if (x && typeof x === 'string') texts.push({ src, t: x }); };
   const textHooks = { log: (e) => { pushT('log:' + e.k, e.t); if (e.f) pushT('log-f', e.f); }, decision: (pd) => { const v = pd.view; pushT('dec:' + pd.id, v.title); pushT('dec:' + pd.id, v.body); if (v.fact) pushT('dec-f:' + pd.id, v.fact); for (const c of v.choices || []) { pushT('dec-ch:' + pd.id, c.label); if (c.sub) pushT('dec-ch:' + pd.id, c.sub); } } };
   const vocab = buildVocab(data, raw);

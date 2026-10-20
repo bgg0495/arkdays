@@ -6,6 +6,7 @@
 import { eul, iga, eun, wa, ro, ieot, rago } from '../../src/engine/text.js';
 import { cul, F, orgF, given, poor, rich, lifeRoll, once, medX, momHere, dadHere } from '../_util.js';
 import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
+import { hoist } from '../_dispatch.js';
 
 const K = 'nation:kazimierz';
 const T = (id, st) => 'track:' + id + (st ? ':' + st : '');
@@ -647,5 +648,8 @@ export const decisions = {
   marry_sponsor: marryWrap('sponsor', (s, pr, t) => '스폰서가 혼담을 가져왔습니다. ' + wa(pr.name) + ' 결혼하면 광고가 하나 더 붙고, 지참금 ' + Math.round(s.med * t.dowry).toLocaleString() + ' LMD는 회사가 냅니다. 결혼식 중계권도 회사 것입니다.', ['받아들인다', '보류한다', '거절한다']),
   marry_village: marryWrap('village', (s, pr, t) => '남부 마을 혼례입니다. ' + wa(pr.name) + ' 마을 회관에서 식을 올리고, 지참금 대신 밭 한 뙈기를 이야기합니다. 보드카 한 통은 양가가 반씩 냅니다.', ['식을 올린다', '한 해 미룬다', '거절한다']),
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_civil: ['kazimierz'], marry_sponsor: ['kazimierz'], marry_village: ['kazimierz'] });
 
 export default { events, decisions };

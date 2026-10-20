@@ -42,9 +42,10 @@ export function rollMarriageType(sim) {
   const types = marriageTypes(sim);
   const quarantined = !!S.flags.quarantined;
   let cands = types.filter((t) => typeOk(sim, t));
-  if (quarantined) { const io = cands.filter((t) => t.infected_only); if (io.length) cands = io; }
-  else cands = cands.filter((t) => !t.infected_only);
-  if (!cands.length) cands = types.filter((t) => !t.infected_only && !(t.req && t.req.track));
+  const isIO = (t) => !!t.infected_only || !!(t.req && t.req.infected === true) || t.id === 'infected_only';   // W11: 데이터는 req.infected:true 로 적는다(W9c-6)
+  if (quarantined) { const io = cands.filter(isIO); if (io.length) cands = io; }
+  else cands = cands.filter((t) => !isIO(t));
+  if (!cands.length) cands = types.filter((t) => !isIO(t) && !(t.req && t.req.track));
   if (!cands.length) return { id: 'custom', name: '관습 혼인', w: 1, req: {} };
   const id = rng.wpick(cands.map((t) => [t.id, t.w ?? 1]));
   return cands.find((t) => t.id === id) || cands[0];

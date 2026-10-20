@@ -7,6 +7,7 @@ import { F, cul, fest, medX, eul, iga, eun, wa, ro } from '../_util.js';
 import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
 import { marriageP, rollMarriageType, makeProspect, marry, familyOpposes } from '../../src/engine/marriage.js';
 import { homeChangeOptions, setHousing } from '../../src/engine/housing.js';
+import { hoist } from '../_dispatch.js';
 
 const NAT = 'aegir';
 const N = 'nation:' + NAT;
@@ -389,5 +390,8 @@ export const decisions = {
     },
   },
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_assigned: ['aegir'], marry_cohort: ['aegir'], home_change: ['aegir'] });
 
 export default { events, decisions };

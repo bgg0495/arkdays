@@ -73,7 +73,21 @@ export const BALANCE = {
     jailYears: [1, 6], campYears: [3, 12],
     skillIncome: 0.1,           // 소득 × (1 + 0.1·z(skill))
     childLaborArch: ['A11', 'A5'],   // 아동 노동이 허용되는 원형
+    parentNationMul: 0.2,       // W11: 하위 지역(용문·타라) 거주자 후보에 섞이는 상위국 진로 가중 ×
+    regionOffMul: 0.25,         // W11: 진로 region(소지역 표시)과 S.sub.region 이 다르고 데이터에 region 게이트가 없을 때 가중 ×
+    childTrackSeek: true,       // W11: entry.ages[0] < 15 인 진로(HIG_NINJA·VIC_KNIGHT)는 재학 중에도 그 나이부터 진입 롤
+    softCapGate: 1.0,           // W11: cap+min 게이트를 부드럽게 — z 가 min 보다 이만큼 모자라면 가중 0, 그 사이는 선형(가팔랐던 생업 쏠림 완화)
+    childTrackMul: 0.1,         // W11: 그 아동 진입은 가중을 '제안 확률'로 쓴다(가중 × 이 값, 상한 1). 세습 가중(ninja_clan ×50)이면 거의 확정
   },
+  // W11: 출생 시 S.sub.region 롤(창작 비율, W8 제안). 표에 없는 국가는 policyVariants 변수 롤(rollWhenVars) 그대로
+  regions: {
+    higashi: { north: 0.4, south: 0.6 },
+    sargon: { acahualla: 0.15, other: 0.85 },
+    bolivar: { singas: 0.35, coalition: 0.35, liberated: 0.2, dossoles: 0.1 },
+    tara: { hillock: 0.1, other: 0.9 },
+  },
+  // W11: 국가별 출생 연도 하한(BIRTH_YEARS[0] 대신). 카즈델 바벨기·내전기 진로, 에기르 헌터 제도(~1095)가 닿도록
+  birthYearMin: { kazdel: 1070, aegir: 1070 },
   cap: {
     sd: 0.6,                    // 출생 N(0, 0.6)
     qLearn: 0.25, qTies: 0.35,  // (q−3)× 보정
@@ -129,6 +143,8 @@ export const BALANCE = {
     referralCap: 1.0,
     treatmentP: 0.015,          // 진단 후 치료 입구 연
     treatmentMoney: 1.0,        // 또는 돈 ≥ 중위 ×
+    referralP: 0.12,            // W11: 접점 플래그 + 역량 조건을 넘긴 해의 추천 제안 확률(데이터 p 와 max). 콘텐츠 접점 이벤트가 잦아 0.5 면 합류 6%+
+    treatmentScale: 4,          // W11: 치료 입구 p 추가 배율(구 콘텐츠 직접 합류를 지운 뒤 환자 유입이 너무 낮아짐)
     agreementP: 0.04,
     flightP: 0.05,
     transferP: 0.01,

@@ -10,13 +10,16 @@ export const KINDS = ['ev', 'bad', 'big', 'warm', 'loss', 'note', 'dec', 'death'
 
 export function createRegistry() {
   const R = { events: [], evById: {}, decisions: {}, big: [], bigById: {} };
-  R.addEvents = (list) => { for (const e of list) { validateEvent(e); R.events.push(e); R.evById[e.id] = e; } return R; };
+  // 같은 id 를 두 번 받으면 경고(W11): 이벤트·대사건은 둘 다 남고(id 조회는 뒤의 것), 결정은 뒤의 것이 앞의 것을 대체한다
+  R.dupes = [];
+  const dupe = (kind, id) => { R.dupes.push(kind + ':' + id); if (typeof console !== 'undefined' && !R.quiet) console.warn('[registry] ' + kind + ' id 중복: ' + id); };
+  R.addEvents = (list) => { for (const e of list) { validateEvent(e); if (R.evById[e.id]) dupe('event', e.id); R.events.push(e); R.evById[e.id] = e; } return R; };
   R.addDecisions = (listOrObj) => {
     const list = Array.isArray(listOrObj) ? listOrObj : Object.entries(listOrObj).map(([id, d]) => ({ id, ...d }));
-    for (const d of list) { validateDecision(d); R.decisions[d.id] = d; }
+    for (const d of list) { validateDecision(d); if (R.decisions[d.id]) dupe('decision', d.id); R.decisions[d.id] = d; }
     return R;
   };
-  R.addBig = (list) => { for (const b of list) { validateBig(b); R.big.push(b); R.bigById[b.id] = b; } return R; };
+  R.addBig = (list) => { for (const b of list) { validateBig(b); if (R.bigById[b.id]) dupe('big', b.id); R.big.push(b); R.bigById[b.id] = b; } return R; };
   R.use = (pack) => {
     if (pack.events) R.addEvents(pack.events);
     if (pack.decisions) R.addDecisions(pack.decisions);

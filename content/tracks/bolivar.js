@@ -9,6 +9,7 @@ import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
 import { eul, iga, eun, wa, ro, ieot, rago } from '../../src/engine/text.js';
 import { cul, fest, F, orgF, rhodesF, given, poor, rich, lifeRoll, once, medX } from '../_util.js';
 import { sharedDecisions, canonOpen, canonSeen } from './sargon.js';
+import { hoist } from '../_dispatch.js';
 
 const T = (id, st) => 'track:' + id + (st ? ':' + st : '');
 const E = (id, a, tags, w, gap, run, extra = {}) => ({ id, a, tags, w, gap, run: typeof run === 'function' ? run : () => run, ...extra });
@@ -393,8 +394,9 @@ export const decisions = {
       if (s.rng.chance(0.3)) return { t: '돌아왔습니다. 다리 하나가 전처럼 움직이지 않았습니다. 보수는 세 배였습니다.', k: 'bad', fx: { hl: -15, money: medX(s, 1.5) } };
       return { t: '돌아왔습니다. 사냥개 소리를 밤마다 들었고, 돌아온 뒤에도 들었습니다.', k: 'ev', fx: { money: medX(s, 1.5), h: -3, standing: 5 } }; },
   },
-  home_change: sharedDecisions.home_change,
-  marry_second: sharedDecisions.marry_second,
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_church: ['bolivar'], marry_civil: ['bolivar'], marry_garrison: ['bolivar'], marry_camp: ['bolivar'] });
 
 export default { events, decisions };

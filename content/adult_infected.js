@@ -1,10 +1,10 @@
-// W4b 성인기 감염 생활 콘텐츠: 이벤트 약 22개 · 결정 3개(숨긴 감염 신고, 로도스 제안, 억제제).
+// W4b 성인기 감염 생활 콘텐츠: 이벤트 약 17개 · 결정 2개(숨긴 감염 신고, 억제제). 로도스 합류는 W11 부터 엔진 rhodes_offer(content/tracks/rhodes.js)만.
 // 감염·진행·진단·정책 분기(수용소·격리·안락사 통지·보험·보호비·추방)와 발각·3기 실직은 엔진 oripathy 가 처리하고 플래그를 세운다.
 // 여기서는 그 뒤의 일상을 서술한다. 무거운 주제는 장면 없이 결과만(D25). 각주는 세계관 안의 출처만. 콜백은 ctx 첫 인자(D23).
 import { applyPolicy } from '../src/engine/oripathy.js';
 import { eul, iga, eun, wa, ro } from '../src/engine/text.js';
 import { cul, org, fest, F, orgF, rhodesF, poor, rich, nomadic, under, artsTop, lifeRoll, medX } from './_util.js';
-import { yr, adult, working, partner, kids, pol, fmtLMD } from './adult_work.js';
+import { yr, adult, working, partner, kids, pol, fmtLMD } from './_adult_util.js';
 
 const known = (s) => s.S.ori.on && s.S.ori.known;
 const hidden = (s) => known(s) && !!s.S.flags.oriHidden;
@@ -91,27 +91,7 @@ export const events = [
       return { t: '쫓겨난 땅에서의 첫해였습니다. ' + s.rng.pick(['말이 달랐고, 감염자를 보는 눈은 같았습니다.', '첫 달은 역 근처에서 잤습니다.', '고향 ' + wa(cul(s).food) + ' 비슷한 것을 찾는 데 반년이 걸렸습니다.']), k: 'bad', fx: { h: -3, so: -3 },
         f: orgF(s, '외국인 감염자 거주 등록') }; } },
 
-  // ── 로도스 아일랜드 ──
-  { id: 'inf_rhodes_poster', a: [19, 64], tags: ['known', '!rhodes'], w: 20, gap: 4, c: (s) => s.S.flags.rhodesOffer == null,
-    run: (s) => { const get = s.rng.chance(0.35);
-      if (get) s.S.flags.rhodesOffer = s.S.age;
-      return { t: get ? '로도스 아일랜드 모집 공고를 보고 연락했습니다. 답장이 왔습니다.' : '로도스 아일랜드 모집 공고를 보았습니다. 연락하지는 않았습니다.', k: 'note', fx: get ? { h: 2 } : {},
-        f: rhodesF('공개 모집 공고 ' + s.year + '년분') }; } },
-  { id: 'inf_rhodes_ship', a: [19, 64], tags: ['rhodes'], w: 35, gap: 4, rep: true,
-    run: (s) => ({ t: s.rng.pick(['로도스 식당에서는 아무도 제 손을 보지 않았습니다. 다들 비슷한 손이었습니다.', '함선이 이동하는 밤에는 바닥이 울렸습니다. 금방 익숙해졌습니다.', '의료부 복도에서 마주치는 얼굴이 몇 개 늘었습니다. 몇 개는 사라졌습니다.', '검진 날 간호사가 이름을 불렀습니다. 번호가 아니었습니다.']), k: 'warm', fx: { so: 2, h: 2 },
-      f: rhodesF('선내 생활 안내') }) },
-  { id: 'inf_rhodes_work', a: [19, 64], tags: ['rhodes'], w: 30, gap: 5,
-    run: (s) => { const field = s.rng.chance(0.3);
-      return { t: field ? '외근 보조로 나갔습니다. 돌아오는 길에 새 얼굴 둘을 데려왔습니다.' : s.rng.pick(['후방지원부에서 일했습니다. 서류, 세탁, 식당. 감염자 대부분이 그쪽을 택한다고 했습니다.', '의료부 보조로 배정되었습니다. 제가 받던 검진을 이제 제가 합니다.', '기관부에서 보일러를 맡았습니다. 뜨거웠고 조용했습니다.']), k: 'note', fx: field ? { h: 2, hl: -2, money: medX(s, 0.1) } : { so: 1, money: medX(s, 0.05) },
-        f: rhodesF('인사부 배치 기록') }; } },
-  { id: 'inf_rhodes_checkup', a: [19, 64], tags: ['rhodes'], w: 30, gap: 3,
-    run: (s) => ({ t: '정기 검진. ' + uL(s) + ' u/L. ' + s.rng.pick(['의사가 "느려졌다"고 했습니다. "멎었다"는 아니었습니다.', '약이 바뀌었습니다. 맛은 같았습니다.', '수치표를 받아 서랍에 넣었습니다. 서랍이 두꺼워졌습니다.']), k: 'note', fx: { h: 1 },
-      f: rhodesF('환자 경과 기록') }) },
-
-  // ── 카즈델 ──
-  { id: 'inf_kazdel_normal', a: [19, 64], tags: ['kazdel', 'infected'], w: 30, gap: 5,
-    run: (s) => ({ t: s.rng.pick(['결정이 보여도 아무도 묻지 않았습니다. 묻지 않는 것이 카즈델의 인사였습니다.', '용병단 의무병이 수치를 적었습니다. ' + uL(s) + ' u/L. "아직 뛸 수 있군" 하고 서명했습니다.', '외국 사람이 제 손을 보고 물러섰습니다. 여기서는 그 사람이 이상한 쪽이었습니다.']), k: 'note', fx: { so: 1 },
-      f: F('용병 등록부 건강란') }) },
+  // (W11) 로도스 접점·합류는 엔진 rhodes_offer + content/tracks/rhodes.js 가 맡는다. 구 직접 합류 이벤트·결정은 제거
 ];
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -127,32 +107,12 @@ export const decisions = {
       return { title: '숨긴 지 ' + (s.S.age - (s.S.flags.oriKnownAt || s.S.age)) + '년', body: '결정 밀도 ' + uL(s) + ' u/L. 숨기는 데 드는 돈과 품이 매년 늘었습니다. ' + ({ persecute: '신고하면 수용소나 국경입니다.', quarantine: '신고하면 격리구역입니다.', euthanasia: '신고하면 격리구역과 서류 한 장입니다.', insurance: '신고하면 보험료입니다. 못 내면 국경입니다.', neglect: '신고하면 보호비 걷는 사람이 옵니다.', expel: '신고하면 성문 밖입니다.' }[p] || '신고해도 달라질 것은 많지 않습니다.'),
         fact: orgF(s, '감염 미신고 처벌 조항'), choices: [
           { k: 'keep', label: '계속 숨긴다', sub: '들킬 확률은 매년 그대로', auto: 2 },
-          { k: 'report', label: '신고한다', sub: '정책대로 처분', auto: ['ignore', 'treat', 'insurance'].includes(p) ? 2 : 0.5 },
-          { k: 'rhodes', label: '로도스를 찾는다', sub: '연락이 닿을지는 모릅니다', auto: 1.5 }] };
+          { k: 'report', label: '신고한다', sub: '정책대로 처분', auto: ['ignore', 'treat', 'insurance'].includes(p) ? 2 : 0.5 }] };
     },
     apply: (s, k) => {
       const S = s.S;
       if (k === 'report') { S.flags.oriHidden = false; applyPolicy(s, s.policy); return { t: '신고했습니다. 서류의 "최초 진단일" 칸을 비워 두었고, 서기는 묻지 않았습니다.', k: 'note', f: orgF(s, '감염자 등록 대장', s.year) }; }
-      if (k === 'rhodes') { if (s.rng.chance(0.45)) { S.rhodes = true; S.ori.treated = true; S.flags.rhodesAt = S.age; S.flags.oriHidden = false; return { t: '로도스 아일랜드와 연락이 닿았습니다. 처음으로 소매를 걷고 진료를 받았습니다.', k: 'warm', fx: { h: 5 }, f: rhodesF('신규 환자 등록증') }; }
-        return { t: '로도스 아일랜드에 편지를 보냈습니다. 답은 오지 않았습니다. 소매는 그대로였습니다.', k: 'note', fx: { h: -2 }, f: rhodesF('수신 우편 대장 미도달 표시') }; }
       return { t: '계속 숨기기로 했습니다. 장갑을 한 켤레 더 샀습니다.', k: 'note', fx: { money: -medX(s, 0.05) }, f: F('기록된 바 없음') };
-    },
-  },
-  /** 로도스 합류 제안(엔진 rhodesOffer 플래그 → 여기서 고른다. 고르지 않으면 엔진이 연 30% 로 자동 합류) */
-  adult_rhodes_offer: {
-    gap: 3,
-    ok: (s) => adult(s) && s.S.flags.rhodesOffer != null && !s.S.rhodes,
-    build: (s) => ({ title: '로도스 아일랜드', body: '로도스 아일랜드에서 사람이 왔습니다. 치료와 일자리를 함께 말했고, 함선은 한 곳에 머물지 않는다고 했습니다. ' + (partner(s) || kids(s).length ? '가족 동반란이 있었습니다.' : '짐은 하나면 된다고 했습니다.'),
-      fact: rhodesF('신규 인원 안내서'), choices: [
-        { k: 'join', label: '합류한다', sub: '치료 시작, 진행 ×0.5. ' + (s.S.job ? '지금 일은 그만둡니다' : '일자리가 생깁니다'), auto: 2 },
-        { k: 'later', label: '생각해 본다', sub: '제안은 남습니다', auto: 1 },
-        { k: 'no', label: '거절한다', sub: '제안이 사라집니다', auto: 0.5 }] }),
-    apply: (s, k) => {
-      const S = s.S;
-      if (k === 'join') { S.rhodes = true; S.ori.treated = true; S.flags.rhodesAt = S.age; S.flags.rhodesOffer = null; S.flags.quarantined = false; S.flags.noMove = false;
-        return { t: '로도스 아일랜드에 합류했습니다. 첫 검진에서 간호사가 이름을 물었습니다. 번호가 아니라.', k: 'big', fx: { h: 6, so: 3 }, f: rhodesF('신규 인원 등록, ' + s.year + '년') }; }
-      if (k === 'no') { S.flags.rhodesOffer = null; S.flags.rhodesRefused = S.age; return { t: '거절했습니다. 안내서는 서랍에 넣었습니다.', k: 'note', fx: { h: -1 }, f: rhodesF('모집 응답 대장 "거절"') }; }
-      return { t: '생각해 보겠다고 했습니다. 안내서는 식탁 위에 두었습니다.', k: 'note', f: rhodesF('모집 응답 대장 "보류"') };
     },
   },
   /** 억제제(엔진은 잔고가 중위소득 2배를 넘으면 자동 구매. 그 아래 구간에서 한 번 살지 묻는다) */

@@ -3,7 +3,7 @@
 // 담백한 "~했습니다"체(D25). 각주 f 는 세계관 안의 출처만. 콜백은 전부 ctx 첫 인자(D23).
 import { eul, iga, eun, wa, ro, ieot } from '../src/engine/text.js';
 import { cul, org, fest, F, orgF, rhodesF, poor, rich, nomadic, upper, under, lifeRoll, medX } from './_util.js';
-import { yr, adult, working, partner, kids, fmtLMD } from './adult_work.js';
+import { yr, adult, working, partner, kids, fmtLMD } from './_adult_util.js';
 
 const momGone = (s) => !s.S.fam.mom.alive;
 const dadGone = (s) => !s.S.fam.dad.alive && !s.S.fam.dad.absent;

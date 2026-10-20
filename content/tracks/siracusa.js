@@ -6,6 +6,7 @@
 import { makeName, familyNames } from '../../src/engine/names.js';
 import { cul, fest, F, orgF, lifeRoll, medX, poor, rich, eul, iga, eun, wa, ro, ieot } from '../_util.js';
 import { W9E_OVERRIDES, marryDecision, homeChangeDecision } from './columbia.js';
+import { hoist } from '../_dispatch.js';
 
 // ────────────────────────────────────────────────────────────────────────────
 // 도우미
@@ -670,5 +671,8 @@ export const decisions = {
   marry_pack: marryDecision('pack'),
   home_change: homeChangeDecision,
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_family_approved: ['siracusa'], marry_church: ['siracusa'], marry_civil: ['siracusa'], marry_pack: ['siracusa'], home_change: ['siracusa'] });
 
 export default { events, decisions };

@@ -3,6 +3,7 @@
 // A7(샤먼·사냥꾼·전사·추방자) 승급은 징조(S.flags.omen)로만 제 배율이 된다 — omen() 을 세우는 이벤트가 각 진로에 있다.
 import { orgF, F, fest, cul, medX, lifeRoll, once, eul, iga, eun, wa, ro, rago } from '../_util.js';
 import { E, T, TR, AF, fresh, stageYears, fell, affIs, affName, standing, trStage, omen, openSwitch, canonOk, canonSeen, marryDecision, homeDecision } from './_w9c_util.js';
+import { hoist } from '../_dispatch.js';
 
 const N = 'sami';
 const SHA = 'SAM_SHAMAN', HUN = 'SAM_HUNTER', TRI = 'SAM_TRIBE', GUI = 'SAM_GUIDE', WAR = 'SAM_WARRIOR';
@@ -362,5 +363,8 @@ export const decisions = {
   })),
   home_change: homeDecision(),
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_shaman_blessed: ['sami'], marry_tribe_exchange: ['sami'], marry_adoption: ['sami'], home_change: ['sami'] });
 
 export default { events, decisions };

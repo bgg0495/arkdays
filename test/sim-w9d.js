@@ -89,8 +89,8 @@ function main() {
   const myTexts = [];   // 내 팩이 낸 문장(금지 문구 검사 범위)
   const myEvents = new Map();
   for (const [nat, pack] of Object.entries(PACKS)) {
-    const wrapped = { events: pack.events.map((e) => { myEvents.set(e.id, { nat, tags: e.tags || [] }); return { ...e, run: (s) => { fired[e.id] = (fired[e.id] || 0) + 1; const r = e.run(s); if (r) { if (typeof r === 'string') myTexts.push(r); else { if (r.t) myTexts.push(r.t); if (r.f) myTexts.push(r.f); } logStat.myEv++; if (typeof r === 'object' && r.f && /[0-9]/.test(r.t || '')) logStat.myEvF++; } return r; } }; }), decisions: pack.decisions };
-    registry.use(wrapped);
+    // W11: 국가 팩은 content/index.js 가 등록한다(중복 등록 방지). 래핑은 같은 객체를 제자리에서 바꾼다
+    for (const e of pack.events) { myEvents.set(e.id, { nat, tags: e.tags || [] }); const orig = e.run; e.run = (s) => { fired[e.id] = (fired[e.id] || 0) + 1; const r = orig(s); if (r) { if (typeof r === 'string') myTexts.push(r); else { if (r.t) myTexts.push(r.t); if (r.f) myTexts.push(r.f); } logStat.myEv++; if (typeof r === 'object' && r.f && /[0-9]/.test(r.t || '')) logStat.myEvF++; } return r; }; }
   }
   const nEv = Object.values(PACKS).reduce((a, p) => a + p.events.length, 0);
   const nDec = Object.values(PACKS).reduce((a, p) => a + Object.keys(p.decisions).length, 0);

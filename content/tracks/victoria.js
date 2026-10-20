@@ -8,6 +8,7 @@
 import { eul, iga, eun, wa, ro, ieot, rago } from '../../src/engine/text.js';
 import { cul, F, orgF, given, poor, rich, lifeRoll, once, medX, momHere, dadHere, nomadic } from '../_util.js';
 import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
+import { hoist } from '../_dispatch.js';
 
 const V = 'nation:victoria';   // 거주국·상위국 태그(출생국 'victoria' 맨 태그는 이주민에게도 붙으므로 쓰지 않는다)
 const T = (id, st) => 'track:' + id + (st ? ':' + st : '');
@@ -604,5 +605,8 @@ export const decisions = {
     apply: (s, k) => ENGINE_DECISIONS.home_change.apply(s, k),
   },
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_parish: ['victoria', 'tara'], marry_registry: ['victoria'], marry_peerage: ['victoria'], home_change: ['victoria', 'tara', 'kazimierz'] });
 
 export default { events, decisions };

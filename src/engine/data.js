@@ -214,7 +214,7 @@ export function normTrack(t, warnings, affById, fallDefaults = {}) {
   if (o.exits.retire && typeof o.exits.retire === 'number') o.exits.retire = { age: o.exits.retire };
   o.exits.switch = Array.isArray(o.exits.switch) ? o.exits.switch : [];
   if (o.oriMul == null) o.oriMul = A.oriMul;
-  if (o.archetype === 'A5' && t.forced === undefined) o.forced = true;
+  // (W11) A5 원형이라도 데이터에 forced 가 없으면 자발 진입 가능(KJE_MINE·SAR_MINE·YAN_MINER). 강제 광산은 데이터가 forced 를 명시한다(URS_MINE)
   o.forcedEntry = !!o.forced || !!(o.stages[0] && o.stages[0].forced);   // 자발 진입 불가(강제 전환·이벤트로만)
   o.noClasses = !Object.keys(o.entry.classes || {}).length;             // classes 없음 = switch·이벤트·로도스 배치로만 진입
   if (o.archetype === 'A6' && !o.contract) o.contract = A.flags.contract;
@@ -393,8 +393,10 @@ export function tracksFor(data, nationId) {
   const n = data.nationById[nationId];
   const own = data.tracksByNation[nationId] || [];
   const common = nationId === 'rhodes' ? [] : (data.tracksByNation.common || []);
-  if (!n || !n.parent) return own.filter((t) => !t.region || t.region === nationId).concat(common);
-  const parent = (data.tracksByNation[n.parent] || []).filter((t) => !t.region || t.region === nationId);
+  // W11: 진로 region 은 (1) 하위 국가 id(그 나라에서만 열림) 또는 (2) 소지역 표시(north·singas·hillock…, S.sub.region 과 비교해 entryCandidates 가 가중)
+  const regionOk = (t) => !t.region || t.region === nationId || !data.nationById[t.region];
+  if (!n || !n.parent) return own.filter(regionOk).concat(common);
+  const parent = (data.tracksByNation[n.parent] || []).filter(regionOk);
   return own.concat(parent, common);
 }
 

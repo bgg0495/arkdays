@@ -1,6 +1,6 @@
 {
   "name": "arkdays",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "금일방주(Arkdays) — 테라 배경 비영리 팬 패러디. 런타임 라이브러리 0, 빌드만 esbuild.",
   "scripts": {

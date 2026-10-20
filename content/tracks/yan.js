@@ -7,6 +7,7 @@
 import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
 import { eul, iga, eun, wa, ro, ieot, rago } from '../../src/engine/text.js';
 import { cul, org, fest, F, orgF, given, poor, rich, medX, lifeRoll, once } from '../_util.js';
+import { hoist } from '../_dispatch.js';
 
 // ── 도우미 ──────────────────────────────────────────────────────────────
 const tk = (id, st) => 'track:' + id + ':' + st;
@@ -679,5 +680,8 @@ export function marryOverride(typeId, buildMine, nations = ['yan']) {
     build: (s, p) => { const r = s.S.flags.y_marry && s.S.flags.y_marry.v; if (!r) return null; if (!nations.includes(s.S.cur)) return base.build(s, p); Object.assign(p, r); return buildMine(s, r.type, r.prospect); },
   };
 }
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_arranged: ['yan'], marry_clan: ['yan'], marry_village: ['yan'], marry_infected_only: ['yan', 'lungmen'], home_change: ['yan', 'lungmen'], track_choose: ['yan', 'lungmen'] });
 
 export default { events, decisions };

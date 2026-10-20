@@ -3,7 +3,7 @@
 // data/*.json 이 있으면 그것을, 없으면 data/_dummy/*.json 을 파일별로 대체 로드한다.
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { prepareData } from '../src/engine/data.js';
 import { lifeTable } from '../src/engine/lifetable.js';
 import { createRegistry } from '../src/engine/content.js';
@@ -66,7 +66,7 @@ function main() {
   const oriHow = {};
   const scen = { bornInf: 0, bornInfU5: 0, minerFam: 0, minerFamBornInf: 0, childLabor: 0, childLaborAgeSum: 0, campChild: 0 };
   const rowOf = (id) => rows[id] || (rows[id] = { n: 0, nHuman: 0, ageSum: 0, ageSumHuman: 0, inf: 0, known: 0, bornInf: 0, money: 0, causes: {}, outcomes: {}, u5: 0, decisions: 0, logs: 0, rhodes: 0, moved: 0, marF: 0, hmF: 0, marM: 0, hmM: 0, servF: 0, specialY: 0, adultY: 0 });
-  const v1 = { lives: 0, infected: 0, rhodes: 0, rhodesInf: 0, via: {}, rstatus: {}, migrated: 0, migReason: {}, marriage: {}, married: 0, trackByNation: {}, entryByClass: {}, everTrack: 0, how: {}, falls: {}, relIncome: {}, housing: {}, promos: 0, disgrace: 0, stigma: {} };
+  const v1 = { spells: {}, decDone: {}, logLines: 0, lives: 0, infected: 0, rhodes: 0, rhodesInf: 0, via: {}, rstatus: {}, migrated: 0, migReason: {}, marriage: {}, married: 0, trackByNation: {}, entryByClass: {}, everTrack: 0, how: {}, falls: {}, relIncome: {}, housing: {}, promos: 0, disgrace: 0, stigma: {} };
   let errors = 0;
   const t0 = Date.now();
   const lifeMulByRace = Object.fromEntries(data.races.map((r) => [r.id, r.lifeMul]));
@@ -120,8 +120,13 @@ function main() {
       if (S.fam.marriage) v1.marriage[S.cur + ':' + S.fam.marriage.type] = (v1.marriage[S.cur + ':' + S.fam.marriage.type] || 0) + 1;
       if (S.fam.marriedAt != null) v1.married++;
       for (const h of S.trackHist.concat(S.track ? [{ id: S.track.id, how: 'alive' }] : [])) { const t = data.trackById[h.id]; if (!t) continue; const key = t.nation + ':' + t.id; (v1.trackByNation[t.nation] || (v1.trackByNation[t.nation] = {}))[t.id] = (v1.trackByNation[t.nation][t.id] || 0) + 1; if (h.how === 'promo') v1.promos++; }
-      const firstTrack = S.trackHist.find((h) => h.how !== 'promo' && h.how !== 'demote') || (S.track ? { id: S.track.id } : null);
-      if (firstTrack && data.trackById[firstTrack.id]) { const t = data.trackById[firstTrack.id]; const q = 'q' + S.q; const nb = v1.entryByClass[t.nation] || (v1.entryByClass[t.nation] = {}); const qb = nb[q] || (nb[q] = {}); qb[t.id] = (qb[t.id] || 0) + 1; if (t.special) tr.specialY++; }
+      // W11: 유입 = 진로 구간(spell)마다 1(첫 진로만이 아니라 전직·재진입도). 승급·강등 항목은 같은 구간이므로 세지 않는다
+      { const spells = []; let last = null;
+        let prevHow = null; for (const h of S.trackHist) { if (h.how === 'promo' || h.how === 'demote') { last = h.id; continue; } if (h.id !== last && prevHow !== 'retire') spells.push(h.id); last = null; prevHow = h.how; }
+        if (S.track && S.track.id !== last && prevHow !== 'retire') spells.push(S.track.id);
+        for (const id of spells) { const t = data.trackById[id]; if (!t) continue; const q = 'q' + S.q; const nb = v1.entryByClass[t.nation] || (v1.entryByClass[t.nation] = {}); const qb = nb[q] || (nb[q] = {}); qb[t.id] = (qb[t.id] || 0) + 1; v1.spells[t.id] = (v1.spells[t.id] || 0) + 1; if (t.special) tr.specialY++; } }
+      for (const id of Object.keys(S.done)) v1.decDone[id] = (v1.decDone[id] || 0) + 1;
+      v1.logLines += S.log.length;
       if (S.trackHist.length || S.track) v1.everTrack++;
       for (const h of S.trackHist) v1.how[h.how] = (v1.how[h.how] || 0) + 1;
       if (S.flags.lastFall) v1.falls[S.flags.lastFall] = (v1.falls[S.flags.lastFall] || 0) + 1;
@@ -204,7 +209,12 @@ function main() {
   console.log('[v1] 결혼 유형(거주국:유형): ' + fmtObj(v1.marriage) + ' | 기혼 ' + pct(v1.married / v1.lives));
   console.log('[v1] 관계 등급별 최고소득(중위 배율 평균): ' + Object.entries(v1.relIncome).map(([g, r]) => g + ' ' + (r.n ? f1(r.inc / r.n) : '-') + '×(n=' + r.n + ')').join(', '));
   console.log('[v1] 주거: ' + fmtObj(v1.housing));
-  console.log('[v1] 생애 중 진로 경험 ' + pct(v1.everTrack / v1.lives));
+  console.log('[v1] 생애 중 진로 경험 ' + pct(v1.everTrack / v1.lives) + ' | 기록 줄/생 평균 ' + f1(v1.logLines / v1.lives));
+  // W11: 자연 시뮬에서 유입 0 인 자발 진로(forced·synthetic·classes 없음 제외)와 한 번도 열리지 않은 결정
+  const zeroTracks = Object.values(data.trackById).filter((t) => !t.forcedEntry && !t.synthetic && !t.noClasses && !t.dept && !v1.spells[t.id]).map((t) => t.id);
+  console.log('[v1] 유입 0 자발 진로 ' + zeroTracks.length + '개: ' + zeroTracks.join(', '));
+  const zeroDec = Object.keys(registry.decisions).filter((id) => !v1.decDone[id]);
+  console.log('[v1] 발화 0 결정 ' + zeroDec.length + '/' + Object.keys(registry.decisions).length + '개: ' + zeroDec.join(', '));
 
   // ── 완료 기준 ──
   const MIN_N = 100;  // 표본이 이보다 작은 국가는 수명 판정에서 제외(사망 나이 표준편차 약 25년 → n=100 이면 표준오차 2.5년)
@@ -222,4 +232,5 @@ function main() {
   else if (bad.length || !monotone) console.log('(밸런스 경고: 완료 기준 ±5 / 등급 순서를 벗어난 항목이 있습니다. docs/설계_명세.md W2 메모 참조)');
 }
 
-main();
+// 직접 실행할 때만(다른 하네스가 loadData 를 import 할 수 있게, W11)
+if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) main();

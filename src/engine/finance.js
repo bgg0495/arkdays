@@ -173,7 +173,8 @@ export function financeYear(sim) {
       const j = sim.data.jobById[tr.job];
       const n = Math.max(1, tr.stages.length - 1);
       const pct = clamp(j.lo + (j.hi - j.lo) * (S.track.stage / n) + 0.1 * (S.cap ? S.cap.skill : 0) * (j.hi - j.lo), 0.02, 0.98);
-      base = toLMD(incomeAt(st.ppp, st.gini, pct)) * (mul / (tr.income.stage[S.track.stage] ?? 1));
+      const sm = tr.income.stage[Math.min(S.track.stage, tr.income.stage.length - 1)];   // W11: 단계 소득 배율 0(SAR_SLAVE 노예 단계)이면 소득 0, 나눗셈 NaN 방지
+      base = sm > 0 ? toLMD(incomeAt(st.ppp, st.gini, pct)) * (mul / sm) : 0;
     } else base = med * mul;
     S.income = Math.round(base * kFactors());
     S.pct = S.income > 0 ? clamp(0.5 + Math.log(S.income / med) / (2 * sigmaOf(st.gini)) * 0.5, 0.02, 0.98) : 0.02;

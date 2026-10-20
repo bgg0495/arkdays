@@ -3,6 +3,7 @@
 // 시대 분기: 1090 카란 무역·국경 개방 / 1097.12 설산 사변·개방 선언(bigevents kjerag_1097) / 1101.12 첫 재앙(bigevents kjerag_1101) — 여기서는 전후만 가른다.
 import { orgF, F, fest, cul, medX, lifeRoll, once, eul, iga, eun, wa, ro, rago } from '../_util.js';
 import { E, T, TR, AF, fresh, stageYears, fell, affIs, affName, standing, trStage, openSwitch, canonOk, canonSeen, marryDecision, homeDecision } from './_w9c_util.js';
+import { hoist } from '../_dispatch.js';
 
 const N = 'kjerag';
 const KT = 'KJE_KT', CLAN = 'KJE_CLAN', GUI = 'KJE_GUIDE', MINE = 'KJE_MINE', COURT = 'KJE_COURT';
@@ -382,5 +383,8 @@ export const decisions = {
   })),
   home_change: homeDecision(),
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_chapel: ['kjerag'], marry_fief: ['kjerag'], marry_clan_match: ['kjerag'], marry_outsider: ['kjerag'], home_change: ['kjerag'] });
 
 export default { events, decisions };

@@ -52,7 +52,7 @@ function main() {
       mine.set(e.id, { pack: name, tags: e.tags, fired: 0, withF: 0 });
     }
     for (const id of Object.keys(p.decisions)) myDec.set(id, { pack: name, opened: 0, picks: {} });
-    registry.use(p);
+    // W11: 국가 팩은 content/index.js 가 등록한다(중복 등록 방지). 래핑은 같은 객체를 제자리에서 바꾼다
   }
   console.log('콘텐츠: 이벤트 ' + registry.events.length + ' / 결정 ' + Object.keys(registry.decisions).length + ' / 대사건 ' + registry.big.length
     + '  (W9a: 염국 이벤트 ' + yan.events.length + '·결정 ' + Object.keys(yan.decisions).length + ', 용문 이벤트 ' + lungmen.events.length + '·결정 ' + Object.keys(lungmen.decisions).length + ')');

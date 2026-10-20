@@ -7,6 +7,7 @@ import { F, orgF, medX, eul, iga, eun, ro, wa, lifeRoll } from '../_util.js';
 import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
 import { homeChangeOptions, setHousing } from '../../src/engine/housing.js';
 import { marry as engineMarry } from '../../src/engine/marriage.js';
+import { hoist } from '../_dispatch.js';
 
 const N = 'higashi';
 const here = (s) => s.S.cur === N;
@@ -573,5 +574,8 @@ export const decisions = {
       return { t: T[k] || eul(h.name) + ' 마련했습니다. 문에 이름표를 걸었습니다.', k: 'warm', fx: { h: 3 } }; },
   },
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_miai: ['higashi'], marry_love: ['higashi'], marry_house: ['higashi'], marry_infected_only: ['higashi'], home_change: ['higashi'] });
 
 export default { events, decisions };

@@ -8,6 +8,7 @@
 import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
 import { eul, iga, eun, wa, ro, ieot, rago } from '../../src/engine/text.js';
 import { cul, fest, F, orgF, rhodesF, given, poor, rich, lifeRoll, once, medX, momName, dadName } from '../_util.js';
+import { hoist } from '../_dispatch.js';
 
 // ── 도우미 ─────────────────────────────────────────────────────────────────
 const T = (id, st) => 'track:' + id + (st ? ':' + st : '');
@@ -436,5 +437,8 @@ export const sharedDecisions = {
   },
 };
 Object.assign(decisions, sharedDecisions);
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_dowry: ['sargon'], marry_tribal: ['sargon'], marry_court: ['sargon'], marry_slave: ['sargon'], home_change: ['sargon', 'bolivar', 'rim'], marry_second: ['sargon', 'bolivar', 'rim'] });
 
 export default { events, decisions };

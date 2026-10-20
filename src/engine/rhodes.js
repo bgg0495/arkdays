@@ -90,14 +90,14 @@ export function rhodesTrigger(sim) {
       }
       case 'referral': {
         if (!flagHit(S, e.flags)) break;
-        if (capAnyOk(S, e.capAny) || (e.orFalling && S.flags.lastFallAt === S.age - 1)) { if (rng.chance(Math.max(p, 0.5))) return 'referral'; }
+        if (capAnyOk(S, e.capAny) || (e.orFalling && S.flags.lastFallAt === S.age - 1)) { if (rng.chance(Math.max(p, R().referralP ?? 0.5))) return 'referral'; }
         break;
       }
       case 'treatment': {
-        if (!S.ori.on || !S.ori.known || S.flags.rhodesOffer != null || S.prison === 'camp') break;
+        if (!S.ori.on || !S.ori.known || S.prison === 'camp') break;   // (W11: 구 rhodesOffer 플래그 조건 제거)
         const okPol = (e.policies || []).includes(sim.policy) || (e.money != null && S.money >= sim.med * e.money) || (e.forcedTrack && t && t.forced);
         if (!okPol) break;
-        if (rng.chance(p)) return 'treatment';
+        if (rng.chance(p * (R().treatmentScale ?? 1))) return 'treatment';
         break;
       }
       case 'rescue': {

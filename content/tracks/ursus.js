@@ -7,6 +7,7 @@ import { F, orgF, medX, eul, iga, eun, ro, wa, lifeRoll } from '../_util.js';
 import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
 import { homeChangeOptions, setHousing } from '../../src/engine/housing.js';
 import { marry as engineMarry } from '../../src/engine/marriage.js';
+import { hoist } from '../_dispatch.js';
 
 const N = 'ursus';
 const here = (s) => s.S.cur === N;
@@ -601,5 +602,8 @@ export const decisions = {
       return { t: k === 'village_izba' ? '통나무집 열쇠를 받았습니다. 첫 밤에 벽난로를 지폈고, 연기가 제 집 굴뚝으로 나갔습니다.' : k === 'estate' ? '저택 문서에 서명했습니다. 방이 열넷이었고, 쓰는 방은 셋이었습니다.' : eul(h.name) + ' 마련했습니다. 문에 제 이름을 걸었습니다.', k: 'warm', fx: { h: 3 } }; },
   },
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_church: ['ursus'], marry_noble: ['ursus'], marry_garrison: ['ursus'], marry_infected_only: ['ursus'], home_change: ['ursus'] });
 
 export default { events, decisions };

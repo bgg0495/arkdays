@@ -33,13 +33,13 @@ export const ENGINE_DECISIONS = {
     build: (s) => {
       const r = s.S.flags.trackCands;
       if (!r || r.age !== s.S.age || !r.cands.length) return null;
-      if (r.cands.length === 1) { enterTrack(s, r.cands[0].id, { via: 'auto' }); return null; }
+      if (r.cands.length === 1) { if (enterTrack(s, r.cands[0].id, { via: 'auto' }) && s.requeueFeed) s.requeueFeed(); return null; }
       const set = choiceSet(s, r.cands);
       const names = (c) => { const t = s.data.trackById[c.id]; const a = t.affiliations.length ? '소속 ' + t.affiliations.map((id) => s.data.affById[id] && s.data.affById[id].name).filter(Boolean).slice(0, 2).join('·') : ''; return { name: t.name, sub: (t.stages[0].title || t.stages[0].name) + (a ? ' · ' + a : '') + (t.special ? ' · 이 나라의 길' : '') }; };
       return { title: '길을 고를 때', body: '올해 들어갈 수 있는 자리가 몇 있습니다. 하나를 고르면 당분간은 그 길입니다.',
         choices: set.map((c) => { const n = names(c); return { k: c.id, label: n.name, sub: n.sub, auto: c.w }; }).concat([{ k: 'wait', label: '한 해 더 본다', sub: '소득 없음', auto: 0.15 }]) };
     },
-    apply: (s, k) => { if (k === 'wait') { s.S.flags.joblessYears = (s.S.flags.joblessYears || 0) + 1; return '한 해를 더 기다렸습니다.'; } return enterTrack(s, k, { via: 'choose' }) ? false : '그 자리는 열리지 않았습니다.'; },
+    apply: (s, k) => { if (k === 'wait') { s.S.flags.joblessYears = (s.S.flags.joblessYears || 0) + 1; return '한 해를 더 기다렸습니다.'; } if (!enterTrack(s, k, { via: 'choose' })) return '그 자리는 열리지 않았습니다.'; if (s.requeueFeed) s.requeueFeed(); return false; },
   },
   track_switch: {
     once: false, gap: 3, at: 0.5,
@@ -145,7 +145,8 @@ export const ENGINE_DECISIONS = {
   },
 };
 
-/** 레지스트리에 없는 내장 결정을 앞쪽에 채운다(planYear 가 앞 2개만 큐에 넣으므로 순서가 우선순위) */
+/** 내장 결정을 레지스트리 앞쪽에 채운다(planYear 가 앞 2개만 큐에 넣으므로 순서가 우선순위).
+ *  콘텐츠가 같은 id 를 등록했으면 그쪽 build/apply 를 쓰되 자리는 엔진 PRIORITY 그대로(W11: 덮어쓴 rhodes_offer·track_choose 가 뒤로 밀리지 않게) */
 export function installEngineDecisions(registry, data) {
   const mine = { ...ENGINE_DECISIONS };
   // 혼인 유형별 결정 id: marry_<type>. 콘텐츠가 그 id 를 등록하면 build/apply 를 그쪽이 가져간다. 없으면 공통 marry 를 복제.
@@ -155,10 +156,18 @@ export function installEngineDecisions(registry, data) {
     ok: (s) => { const base = ENGINE_DECISIONS.marry.ok(s); return base && s.S.flags.y_marry && s.S.flags.y_marry.v && s.S.flags.y_marry.v.type.id === id; } };
   delete mine.marry;   // 공통 marry 는 유형 결정이 하나도 없을 때만
   if (!types.size) mine.marry = ENGINE_DECISIONS.marry;
-  const out = {};
   const PRIORITY = ['rhodes_offer', 'track_choose', 'contract_end', 'migrate_study', 'naturalize', 'return_home', 'migrate_work', 'marry_second', 'track_switch', 'home_change', 'looks_change'];
   const order = (id) => { const i = PRIORITY.indexOf(id); return i < 0 ? (id.startsWith('marry_') || id === 'marry' ? 2.5 : 99) : i; };
-  for (const [id, d] of Object.entries(mine).sort((a, b) => order(a[0]) - order(b[0]))) if (!registry.decisions[id]) { const dd = { id, tags: [], ...d }; if (dd.once === undefined) dd.once = true; out[id] = dd; }
-  registry.decisions = { ...out, ...registry.decisions };
+  const isBuiltin = (id) => id in mine || id.startsWith('marry_') || PRIORITY.includes(id);
+  const front = {};
+  const ids = new Set([...Object.keys(mine), ...Object.keys(registry.decisions).filter(isBuiltin)]);
+  for (const id of [...ids].sort((a, b) => order(a) - order(b))) {
+    if (registry.decisions[id]) { front[id] = registry.decisions[id]; continue; }
+    const dd = { id, tags: [], ...mine[id] }; if (dd.once === undefined) dd.once = true; front[id] = dd;
+  }
+  const rest = {};
+  for (const [id, d] of Object.entries(registry.decisions)) if (!front[id]) rest[id] = d;
+  registry.decisions = { ...front, ...rest };
+  registry.builtinIds = new Set(Object.keys(front));   // planYear 가 큐 앞자리를 줄 결정 id
   return registry;
 }

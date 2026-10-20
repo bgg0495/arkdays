@@ -35,7 +35,7 @@ function loadData() {
   for (const f of ['affiliations', 'relations', 'marriage', 'housing', 'rhodes', 'canon_figures']) { const p = path.join(ROOT, 'data', f + '.json'); if (fs.existsSync(p)) raw[f] = readJson(p); }
   const data = prepareData(raw);
   // region 우회(위 주석)
-  for (const n of NATIONS) for (const t of data.tracksByNation[n] || []) if (t.region) { t.regionTag = t.region; t.region = null; }
+  // (W11: 엔진 tracksFor 가 소지역 region 을 통과시키므로 우회 제거)
   // 알려진 엔진 문제 우회 2: finance.js 가 A11 소득을 income.stage[stage] 로 나누므로 0 이면 NaN(SAR_SLAVE 노예 단계). 여기서만 0.02 로 둔다 — W11 이 엔진 쪽에서 0 가드 필요
   const sl = data.trackById.SAR_SLAVE; if (sl && sl.income.stage[0] === 0) sl.income.stage[0] = 0.02;
   return { data, raw };
@@ -76,7 +76,7 @@ const pct = (v) => (v * 100).toFixed(1) + '%';
 function main() {
   const { data, raw } = loadData();
   const registry = content.install(createRegistry());
-  for (const n of NATIONS) registry.use(PACKS[n]);
+  // W11: 국가 팩은 content/index.js 가 등록한다(중복 등록 방지)
   const mine = new Set();
   const myDec = new Set();
   for (const n of NATIONS) { for (const e of PACKS[n].events) mine.add(e.id); for (const id of Object.keys(PACKS[n].decisions)) myDec.add(id); }

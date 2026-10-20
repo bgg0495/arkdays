@@ -117,10 +117,22 @@ node test/sim.js 1000               # 기본 (data/ 우선). 끝에 [v1] 집계:
 DATA=dummy node test/sim.js 1000    # 더미 데이터만(시라쿠사·우르수스·컬럼비아 진로 + 나머지 국가는 합성 생업)
 NO_DUMMY_TRACKS=1 node test/sim.js  # content/_dummy_tracks.js 를 빼고
 node test/calibrate.js 600          # 시뮬 기대수명 캐시 재생성(엔진·데이터 밸런스를 바꿨으면 다시)
+node test/sim-nations.js 150        # W11: 국가마다 150명씩 강제 출생 — 유입 0 자발 진로·발화 0 결정·캐논 인물 상한·계층 유입 이탈을 국가별 같은 표본으로
+node test/sim-w9a.js … sim-w9h.js   # 콘텐츠 세션별 하네스(국가 팩은 content/index.js 가 등록하므로 다시 use 하지 않는다)
 ```
 
-완료 기준: 예외 0건, 수명 ±5(시뮬 e0 기준, n≥100), 감염률 등급 단조. §13 목표(로도스 1~3%·감염자 중 8~15%, 이주 10~20%)는 `balance.js` 의 `rhodes.pScale`·`mig.*` 로 맞춘다 — 단, 구 콘텐츠(`adult_infected.js` 등)가 직접 `S.rhodes = true` 로 합류시키는 경로가 남아 있어 W11 정리 전까지는 로도스 합류율이 목표보다 높게 나온다.
+완료 기준: 예외 0건, 수명 ±5(시뮬 e0 기준, n≥100), 감염률 등급 단조. §13 목표(로도스 1~3%·감염자 중 8~15%, 이주 10~20%)는 `balance.js` 의 `rhodes.pScale`·`rhodes.referralP`·`rhodes.treatmentScale`·`mig.*` 로 맞춘다(W11 에서 구 콘텐츠의 `S.rhodes = true` 직접 합류 경로는 전부 지웠다 — 합류는 엔진 `rhodes_offer` 만).
+
+## W11 통합에서 바뀐 규칙(콘텐츠가 알아야 할 것)
+
+- **같은 id 결정 디스패처** `content/_dispatch.js`: `marry_<type>`·`marry_second`·`home_change`·`track_choose` 처럼 엔진 내장 id 를 국가 파일이 덮어쓸 때는 `hoist(decisions, { id: ['거주국'…] })` 로 맡긴다. 거주국(`S.cur`)에 핸들러가 있으면 그쪽, 없으면 엔진 기본. 하위 지역(용문·타라)은 상위국으로 자동 위임하지 않으므로 목록에 적는다. `createRegistry` 는 같은 id 를 두 번 받으면 `console.warn` 하고 `R.dupes` 에 남긴다.
+- **덮어쓴 내장 결정은 엔진 PRIORITY 자리를 지킨다**(`installEngineDecisions`). `planYear` 는 내장 결정을 먼저, 나머지 콘텐츠 결정은 섞어서 앞 2개를 큐에 넣는다(등록 순서가 우선순위가 아니다).
+- **`fire`·`openDecision` 이 태그를 다시 검사한다.** 같은 해 앞선 이벤트로 진로가 끝났으면 `track:` 태그 이벤트·결정은 열리지 않는다. 순회형 피드는 큐 항목의 `visit` 으로 방문국 태그를 다시 만든다. 그래도 이벤트 `c` 는 `chooseFeed` 와 `fire` 에서 두 번 평가되므로 **순수 함수**여야 한다(플래그를 세우면 두 번째 평가에서 떨어진다). 결정 `tags` 는 전부 AND — "두 단계 중 하나"는 `track:<ID>` + `ok` 에서 단계 검사.
+- **진로 `region`**: 하위 국가 id 면 그 나라에서만 열리고, 소지역 표시(`north`·`singas`·`hillock`…)면 모든 거주자에게 열리되 `S.sub.region` 이 다르면 ×`balance.track.regionOffMul`(데이터에 `{region, weight}` 게이트가 있으면 그쪽만). `S.sub.region` 은 출생 시 `balance.regions` 표로 롤한다(극동 north/south, 사르곤 acahualla/other, 볼리바르 4진영, 타라 hillock/other). 하위 지역 거주자 후보의 상위국 진로는 ×`parentNationMul`(0.2).
+- **연도 게이트** `year: [y0, y1]` 배열형이 동작한다. A5 원형은 데이터에 `forced` 가 없으면 자발 진입 가능. `entry.ages[0] < 15` 인 진로(HIG_NINJA·VIC_KNIGHT)는 재학 중에도 그 나이부터 가중을 제안 확률(×`childTrackMul`)로 써 롤한다. `entry.trigger = { nations?, p? }` 가 있는 classes 없는 진로(COM_*)는 거주국이 목록에 있으면 가중 p 로 후보에 든다.
+- `enterTrack(id, { noMigrate: true })` 는 타국 진로라도 거주국을 두고 진로만 바꾼다. RHO_* 진로로 옮기면 `S.rhodes.dept` 가 진로의 부서로 바뀐다. 진입 직후 `sim.requeueFeed()` 가 남은 해에 피드 하나를 더 뽑는다(첫 해 진로 이벤트).
+- 출생 연도 하한은 `balance.birthYearMin[국가]`(카즈델·에기르 1070), 그 외 `BIRTH_YEARS[0]`. 관계 등급 `S.rel` 은 매년 다시 계산한다. 볼리바르 징집은 이미 A4 진로에 있으면 그것을 복무로 친다. A11 단계 소득 배율 0 은 소득 0(NaN 아님). 혼인 `infected_only` 는 `req.infected:true` 로 판정한다.
 
 ## 가사 전담·배우자 소득 (D35, W6) / 각주 규칙 (D31) / 광산촌·아동 노동
 
-이전과 같다. 차이: `becomeHomemaker` 는 진로를 떠나고(`how:'homemaker'`), 아동 노동은 A11(및 합성 생업)·A5 진로 진입으로 표현된다(`S.flags.childLabor`).
+이전과 같다. 구 `adult_work.js`·`adult_nations.js` 는 W11 에서 폐기했고(`takeJob` 호환 경로는 엔진에 남아 있으나 콘텐츠가 쓰지 않는다), 공용 도우미는 `content/_adult_util.js` 로 옮겼다. 차이: `becomeHomemaker` 는 진로를 떠나고(`how:'homemaker'`), 아동 노동은 A11(및 합성 생업)·A5 진로 진입으로 표현된다(`S.flags.childLabor`).

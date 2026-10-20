@@ -5,6 +5,7 @@
 // 시대: ~1077 위치킹(공물 할당) / 1077~ 여황 / 1097 월루몽드(bigevents wolumonde_1097) / 1100 속세의 음.
 import { orgF, F, fest, cul, medX, lifeRoll, once, eul, iga, eun, wa, ro, rago, artsLow } from '../_util.js';
 import { E, T, TR, AF, fresh, stageYears, fell, affIs, affName, standing, trStage, openSwitch, canonOk, canonSeen, marryDecision, homeDecision } from './_w9c_util.js';
+import { hoist } from '../_dispatch.js';
 
 const N = 'leithanien';
 const MUS = 'LEI_MUSIC', GEND = 'LEI_GEND', COURT = 'LEI_COURT', QUAR = 'LEI_QUAR', FARM = 'LEI_FARM';
@@ -409,5 +410,8 @@ export const decisions = {
   })),
   home_change: homeDecision(),
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_ballroom: ['leithanien'], marry_patron: ['leithanien'], marry_village: ['leithanien'], marry_infected_only: ['leithanien'], home_change: ['leithanien'] });
 
 export default { events, decisions };

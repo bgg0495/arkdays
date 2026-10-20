@@ -74,7 +74,7 @@ function main() {
   if (data.warnings.length) console.log('경고:', data.warnings.join(' | '));
   const registry = content.install(createRegistry());
   if (process.env.NO_DUMMY_TRACKS !== '1') registry.use(dummyTracks);   // W7 더미 진로 콘텐츠(태그·ctx API 점검용)
-  registry.use(ursusPack); registry.use(higashiPack);                   // W9b
+  // W11: 국가 팩은 content/index.js 가 등록한다(중복 등록 방지)
   console.log('콘텐츠: 이벤트 ' + registry.events.length + ' / 결정 ' + Object.keys(registry.decisions).length + ' / 대사건 ' + registry.big.length);
 
   const rows = {};           // nation → 집계

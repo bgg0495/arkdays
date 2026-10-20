@@ -46,7 +46,6 @@ const trackTag = (e) => (e.tags || []).find((t) => t.startsWith('track:'));
 async function main() {
   const data = loadData();
   const packs = await loadPacks();
-  const registry = content.install(createRegistry());
   const mineEv = new Set(), mineDec = new Set();
   const evFired = {}, decFired = {}, stageFired = {}, textsOut = [];
   let evN = 0, evF = 0;
@@ -71,7 +70,7 @@ async function main() {
       d.apply = (s, k, pp, t) => { const r = oa(s, k, pp, t); const txt = typeof r === 'string' ? r : (r && r.t) || ''; if (txt) textsOut.push({ id: id + ':' + k, t: txt }); return r; };
     }
   }
-  for (const p of Object.values(packs)) registry.use(p);   // 래핑 뒤에 등록(addDecisions 가 객체를 복사한다)
+  const registry = content.install(createRegistry());   // W11: 래핑 뒤에 index.js 가 등록(addDecisions 가 객체를 복사한다)
   console.log('콘텐츠: 이벤트 ' + registry.events.length + ' / 결정 ' + Object.keys(registry.decisions).length + '  (W9f: ' + Object.entries(packs).map(([n, p]) => n + ' 이벤트 ' + p.events.length + '·결정 ' + Object.keys(p.decisions).length).join(' | ') + ')');
 
   // ── 정적 커버리지: 진로·단계마다 태그가 붙은 이벤트 수 ──

@@ -39,16 +39,16 @@ const fired = {};           // event id → 횟수
 const decFired = {};        // decision id → 횟수
 const MINE_EV = new Set(), MINE_DEC = new Set();
 let cur = null;
+// W11: 국가 팩은 content/index.js 가 등록하므로 같은 객체를 제자리에서 감싼다(레지스트리 생성 전에 호출)
 function wrapPack(pack) {
-  const events = pack.events.map((e) => { MINE_EV.add(e.id); return { ...e, run: (s) => { cur = 'ev:' + e.id; try { fired[e.id] = (fired[e.id] || 0) + 1; s.logResult(e.run(s), 'ev'); return undefined; } finally { cur = null; } } }; });
-  const decisions = {};
+  for (const e of pack.events) { MINE_EV.add(e.id); const run = e.run; e.run = (s) => { cur = 'ev:' + e.id; try { fired[e.id] = (fired[e.id] || 0) + 1; s.logResult(run(s), 'ev'); return undefined; } finally { cur = null; } }; }
   for (const [id, d] of Object.entries(pack.decisions)) {
     MINE_DEC.add(id);
-    decisions[id] = { ...d,
-      build: (s, p) => { cur = 'dec:' + id; try { return d.build(s, p); } finally { cur = null; } },
-      apply: (s, k, p, t) => { cur = 'dec:' + id; try { decFired[id] = (decFired[id] || 0) + 1; s.logResult(d.apply(s, k, p, t), 'ev'); return undefined; } finally { cur = null; } } };
+    const ob = d.build, oa = d.apply;
+    d.build = (s, p) => { cur = 'dec:' + id; try { return ob(s, p); } finally { cur = null; } };
+    d.apply = (s, k, p, t) => { cur = 'dec:' + id; try { decFired[id] = (decFired[id] || 0) + 1; s.logResult(oa(s, k, p, t), 'ev'); return undefined; } finally { cur = null; } };
   }
-  return { events, decisions };
+  return pack;
 }
 
 // ── 문장 검사(check-text.js 와 같은 규칙) ──
@@ -90,8 +90,8 @@ function runLife(sim, S, onYear) {
 
 function main() {
   const { data, raw } = loadData();
+  for (const n of NATIONS) wrapPack(PACKS[n]);
   const registry = content.install(createRegistry());
-  for (const n of NATIONS) registry.use(wrapPack(PACKS[n]));
   const mineEv = NATIONS.reduce((a, n) => a + PACKS[n].events.length, 0);
   const mineDec = NATIONS.reduce((a, n) => a + Object.keys(PACKS[n].decisions).length, 0);
   console.log('콘텐츠: 이벤트 ' + registry.events.length + ' / 결정 ' + Object.keys(registry.decisions).length + '  (W9e: 이벤트 ' + mineEv + ' / 결정 ' + mineDec + ' — ' + NATIONS.map((n) => n + ' ' + PACKS[n].events.length + '/' + Object.keys(PACKS[n].decisions).length).join(', ') + ')');

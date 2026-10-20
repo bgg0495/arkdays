@@ -288,9 +288,9 @@ export const decisions = {
     ok: (s) => s.S.age === 2,
     build: (s) => ({ title: '두 살', body: given(s) + '의 기질이 드러나기 시작했습니다. 어떤 아이였습니까.', fact: orgF(s, '영유아 발달 기록표 비고란'),
       choices: [
-        { k: 'cur', label: '호기심', sub: '지식 +, 손에 닿는 것은 다 열어 봅니다', auto: 1 },
+        { k: 'cur', label: '호기심', sub: '학식 +, 손에 닿는 것은 다 열어 봅니다', auto: 1 },
         { k: 'act', label: '활달함', sub: '건강 +, 앉아 있는 날이 없습니다', auto: 1 },
-        { k: 'warm', label: '다정함', sub: '관계 +, 우는 아이 옆에 가서 앉습니다', auto: 1 },
+        { k: 'warm', label: '다정함', sub: '연줄 +, 우는 아이 옆에 가서 앉습니다', auto: 1 },
         { k: 'grit', label: '끈기', sub: '행복 +, 한 번 잡은 것은 놓지 않습니다', auto: 1 }] }),
     apply: (s, k) => { s.S.trait = k; const fx = { cur: { sm: 3 }, act: { hl: 3 }, warm: { so: 3 }, grit: { h: 3 } }[k]; return { t: '기질이 자리 잡았습니다.', fx, f: orgF(s, '발달 기록표 3항') }; },
   },
@@ -300,11 +300,11 @@ export const decisions = {
       const ch = [
         { k: 'draw', label: '그림', sub: '행복 +', auto: 1 },
         { k: 'run', label: '달리기', sub: '건강 +', auto: 1 },
-        { k: 'read', label: '책', sub: '지식 +', auto: s.S.school ? 1.2 : 0.5 },
-        { k: 'craft', label: '손으로 만들기', sub: '지식 +, 가끔 돈', auto: 1 },
+        { k: 'read', label: '책', sub: '학식 +', auto: s.S.school ? 1.2 : 0.5 },
+        { k: 'craft', label: '손으로 만들기', sub: '학식 +, 가끔 돈', auto: 1 },
       ];
-      if (s.nation.id === 'leithanien' || s.rng.chance(0.4)) ch.push({ k: 'music', label: '노래', sub: '관계 +', auto: 0.8 });
-      if (s.S.arts >= 0.3) ch.push({ k: 'arts', label: '아츠 연습', sub: '지식 +, 건강 −, 감염 위험 조금', auto: artsTop(s) ? 1.5 : 0.6 });
+      if (s.nation.id === 'leithanien' || s.rng.chance(0.4)) ch.push({ k: 'music', label: '노래', sub: '연줄 +', auto: 0.8 });
+      if (s.S.arts >= 0.3) ch.push({ k: 'arts', label: '아츠 연습', sub: '학식 +, 건강 −, 감염 위험 조금', auto: artsTop(s) ? 1.5 : 0.6 });
       return { title: '일곱 살', body: '혼자 있는 시간에 손이 가는 것이 생겼습니다.', fact: F('취미는 ' + org(s) + ' 신고 대상이 아닙니다'), choices: ch };
     },
     apply: (s, k) => { s.S.flags.hobby = k; const fx = { draw: { h: 2 }, run: { hl: 2 }, read: { sm: 2 }, craft: { sm: 1 }, music: { so: 2 }, arts: { sm: 1 } }[k]; return { t: '취미가 생겼습니다.', fx, f: F('기록된 바 없음') }; },
@@ -312,7 +312,7 @@ export const decisions = {
   infected_friend: {
     ok: (s) => s.S.age >= 7 && s.S.age <= 12 && s.nation.oriExp >= 2 && !s.S.ori.known && s.rng.chance(0.25),
     build: (s) => ({ kind: 'small', title: '그 집 아이', body: '감염자라고 소문난 집 아이가 같이 놀자고 했습니다. 어른들은 가지 말라고 했습니다.', fact: rhodesF('소책자 「광석병은 함께 놀아서 옮지 않습니다」'), def: 'play',
-      choices: [{ k: 'play', label: '같이 놀기', sub: '관계 +, 어른들 눈총', auto: 1 }, { k: 'avoid', label: '피하기', sub: '행복 −', auto: 1 }] }),
+      choices: [{ k: 'play', label: '같이 놀기', sub: '연줄 +, 어른들 눈총', auto: 1 }, { k: 'avoid', label: '피하기', sub: '행복 −', auto: 1 }] }),
     apply: (s, k) => k === 'play' ? { t: '같이 놀았습니다. 아무 일도 일어나지 않았습니다. 어머니는 손을 세 번 씻게 했습니다.', k: 'warm', fx: { so: 3, h: 1 }, f: rhodesF('소책자 「광석병은 함께 놀아서 옮지 않습니다」') }
       : { t: '피했습니다. 그 아이는 그 뒤로 부르지 않았습니다.', k: 'note', fx: { h: -2 }, f: F('기록된 바 없음') },
   },
@@ -321,7 +321,7 @@ export const decisions = {
     build: (s) => ({ title: '괴롭힘', body: '학교에서 괴롭히는 아이가 있었습니다. 이유는 ' + s.rng.pick(['종족', '옷', '말투', '없었습니다. 그냥 그랬습니다.']).replace(/\.$/, '') + '.', fact: F(org(s) + ' 학교 규율에 괴롭힘 항목은 없습니다'),
       choices: [
         { k: 'fight', label: '맞선다', sub: '건강 −, 행복 +', auto: 1 },
-        { k: 'avoid', label: '피한다', sub: '관계 −', auto: 1 },
+        { k: 'avoid', label: '피한다', sub: '연줄 −', auto: 1 },
         { k: 'tell', label: '선생님께 말한다', sub: '선생님에 따라 다릅니다', auto: 1 }] }),
     apply: (s, k) => {
       if (k === 'fight') return s.rng.chance(0.5) ? { t: '맞섰습니다. 코피가 났고, 그 뒤로 건드리지 않았습니다.', k: 'ev', fx: { hl: -2, h: 3, so: 1 }, f: F('양호실 기록') } : { t: '맞섰습니다. 졌습니다. 그래도 다음 날 학교에 갔습니다.', k: 'bad', fx: { hl: -3, h: 1 }, f: F('양호실 기록') };
@@ -332,7 +332,7 @@ export const decisions = {
   terminal: {
     ok: (s) => s.S.age >= 10 && s.S.age <= 14 && upper(s) && !s.S.flags.terminal && s.S.q <= 3,
     build: (s) => ({ kind: 'small', title: '단말기', body: '반 아이들은 거의 다 단말기를 가지고 있었습니다. 부모에게 사 달라고 할지 망설였습니다.', fact: F(s.nation.name + ' 이동도시 통신국 가입 약관'), def: 'ask',
-      choices: [{ k: 'ask', label: '조른다', sub: '돈 −, 관계 +', auto: 1 }, { k: 'skip', label: '참는다', sub: '행복 −', auto: 1 }] }),
+      choices: [{ k: 'ask', label: '조른다', sub: '돈 −, 연줄 +', auto: 1 }, { k: 'skip', label: '참는다', sub: '행복 −', auto: 1 }] }),
     apply: (s, k) => { if (k === 'ask') { s.S.flags.terminal = s.S.age; return { t: '중고 단말기를 받았습니다. 화면에 금이 하나 있었습니다.', k: 'warm', fx: { so: 2, money: -medX(s, 0.08) }, f: F(s.nation.name + ' 이동도시 통신국 가입 약관') }; }
       return { t: '사 달라고 하지 않았습니다. 친구 것을 가끔 빌려 썼습니다.', k: 'note', fx: { h: -1 }, f: F('기록된 바 없음') }; },
   },
@@ -340,7 +340,7 @@ export const decisions = {
     ok: (s) => s.S.age === 11 && artsTop(s),
     build: (s) => ({ title: '아츠 적성 검사', body: '검사 결과가 왔습니다. 상위 등급이었습니다. 담당자는 수련 과정 등록을 권했습니다.', fact: F(org(s) + ' 아츠 적성 등급표 갑급 통지서'),
       choices: [
-        { k: 'enroll', label: '수련 등록', sub: '지식 +, 15세에 캐스터 과정 우선', auto: 1.5 },
+        { k: 'enroll', label: '수련 등록', sub: '학식 +, 15세에 캐스터 과정 우선', auto: 1.5 },
         { k: 'wait', label: '미룬다', sub: '변화 없음', auto: 1 }] }),
     apply: (s, k) => { if (k === 'enroll') { s.S.flags.casterPrep = true; return { t: '기초 아츠 수련에 등록했습니다. 주말이 사라졌습니다.', k: 'ev', fx: { sm: 3, h: -1 }, f: F(org(s) + ' 아츠 수련 등록증') }; }
       return { t: '통지서는 서랍에 넣어 두었습니다.', k: 'note', f: F('기록된 바 없음') }; },
@@ -351,7 +351,7 @@ export const decisions = {
       const p = lsecP(s);
       const ch = [
         { k: 'go', label: '상급 학교 시험', sub: '합격 가능성 약 ' + Math.round(p * 100) + '%', auto: 2 },
-        { k: 'work', label: '집안을 돕는다', sub: '학교 끝. 돈 +, 지식 −', auto: poor(s) ? 1.5 : 0.5 },
+        { k: 'work', label: '집안을 돕는다', sub: '학교 끝. 돈 +, 학식 −', auto: poor(s) ? 1.5 : 0.5 },
       ];
       if (rich(s)) ch.push({ k: 'private', label: '사립 학교', sub: '돈이 들지만 확실합니다', auto: 1.5 });
       return { title: '열두 살', body: '초등 과정이 끝납니다. ' + org(s) + ' 학제상 상급 학교는 시험을 치러야 합니다.', fact: orgF(s, '학제 규정 제' + s.rng.ri(3, 12) + '조'), choices: ch };
@@ -404,7 +404,6 @@ export const decisions = {
       const pol = s.S.flags.oriPolicy;
       const ch = [{ k: 'accept', label: child ? '신고한다' : '받아들이기', sub: child ? '부모가 ' + org(s) + '에 신고합니다' : '지금 처분대로 삽니다', auto: 1 }];
       if (o !== 'camp' && o !== 'expel' && o !== 'execute') ch.push({ k: 'hide', label: '숨긴다', sub: '들키면 더 나쁩니다', auto: (pol === 'persecute' || (s.S.cur === 'higashi' && s.S.sub.region === 'north')) ? 2 : 1 });
-      if (!s.S.rhodes) ch.push({ k: 'rhodes', label: '로도스를 찾는다', sub: '소문으로만 들은 제약회사', auto: 1.5 });
       const body = child
         ? iga(momHere(s) ? '어머니' : dadHere(s) ? '아버지' : '보호자') + ' 판정서를 받았습니다. 밤늦게까지 식탁에 앉아 있었습니다. 가족은 어떻게 하기로 했습니까.'
         : '판정서를 받았습니다. 어떻게 하시겠습니까.';
@@ -414,8 +413,6 @@ export const decisions = {
       const S = s.S; S.flags.oriDiagPending = false;
       const child = S.age < 18;
       if (k === 'hide') { S.flags.oriHidden = true; S.flags.quarantined = false; S.flags.noMove = false; return { t: child ? '가족은 판정서를 태웠습니다. 긴 소매와 장갑이 늘었습니다.' : '기록을 숨기고 평소처럼 살기로 했습니다.', k: 'note', f: F('기록된 바 없음') }; }
-      if (k === 'rhodes') { if (s.rng.chance(0.4)) { S.rhodes = true; S.ori.treated = true; S.flags.rhodesAt = S.age; return { t: '로도스 아일랜드와 연락이 닿았습니다. 치료가 시작되었습니다.', k: 'warm', f: rhodesF('신규 환자 등록증') }; }
-        return { t: '로도스 아일랜드에 편지를 보냈습니다. 답은 오지 않았습니다.', k: 'note', f: rhodesF('수신 우편 대장에 미도달 표시') }; }
       return { t: child ? '가족은 신고하기로 했습니다. 서류에 부모의 서명이 들어갔습니다.' : '받아들였습니다.', k: 'note', f: orgF(s, '감염자 등록 대장', s.year) };
     },
   },

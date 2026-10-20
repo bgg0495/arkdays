@@ -7,6 +7,7 @@ import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
 import { marry, familyOpposes } from '../../src/engine/marriage.js';
 import { homeChangeOptions, setHousing } from '../../src/engine/housing.js';
 import { cul, fest, F, orgF, lifeRoll, medX, poor, rich, eul, iga, eun, wa, ro, ieot } from '../_util.js';
+import { hoist } from '../_dispatch.js';
 
 // ────────────────────────────────────────────────────────────────────────────
 // 도우미
@@ -758,5 +759,8 @@ export const decisions = {
   marry_frontier: marryDecision('frontier'),
   home_change: homeChangeDecision,
 };
+
+// W11: 엔진 id 와 같은 결정은 국가 디스패처로 옮긴다(여러 파일이 같은 id 를 등록해도 거주국별로 분기)
+hoist(decisions, { marry_civil: ['columbia'], marry_church: ['columbia'], marry_prenup: ['columbia'], marry_frontier: ['columbia'], home_change: ['columbia'] });
 
 export default { events, decisions };

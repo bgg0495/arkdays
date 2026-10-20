@@ -63,7 +63,7 @@ export function newLife(data, rng, opts = {}) {
   const nation = opts.nation ? data.nationById[opts.nation] : drawNation(data, rng);
   const root = rootOf(data, nation.id);
   const st = nation.stats;
-  const by = opts.by ?? rng.ri(BIRTH_YEARS[0], BIRTH_YEARS[1]);
+  const by = opts.by ?? rng.ri((B.birthYearMin && B.birthYearMin[root]) ?? BIRTH_YEARS[0], BIRTH_YEARS[1]);   // W11: 국가별 하한
   const sex = opts.sex ?? (rng.chance(MALE_P) ? 'M' : 'F');
   const race = opts.race ? data.raceById[opts.race] : drawRace(data, nation, rng);
 
@@ -77,6 +77,8 @@ export function newLife(data, rng, opts = {}) {
 
   // policyVariants 가 참조하는 보조 변수(region, amir …)를 출생 시 롤. 값은 변형이 적은 것 또는 'other'
   const sub = rollWhenVars(nation, rng);
+  // W11: 소지역(S.sub.region) 출생 롤 — balance.regions 표(극동 남북·사르곤 아카후알라·볼리바르 삼파·타라 힐록). 진로 region 가중·정책 분기가 읽는다
+  { const tbl = B.regions && (B.regions[nation.id] || B.regions[root]); if (tbl) sub.region = rng.wpick(tbl) || sub.region; }
 
   const q = opts.q ?? rng.ri(1, 5);
   const urban = rng.chance(odds(clamp(st.urb, 0.02, 0.98), Math.exp(0.3 * (q - 3))));
