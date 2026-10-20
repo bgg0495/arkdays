@@ -1,6 +1,6 @@
 // dist/index.html 을 진짜 file:// 로 열어 플레이해 보는 검증 스크립트(Chrome/Edge headless + DevTools 프로토콜, 의존성 0).
 //   node build/verify.js [dist/index.html 경로] [브라우저 exe 경로]
-// 시작 → 태어나기 → 삶을 시작하기 → 10세(자동 결정) → localStorage 저장 → 새로고침 → 이어하기 → 12세. 콘솔 에러·예외·외부 요청을 모읍니다.
+// 시작 → 태어나기 → 삶을 시작하기 → 10세(자동 결정) → localStorage 저장 → 새로고침 → 이어하기 → 12세 → 변환 불가 구 세이브는 토스트 후 삭제(v1 §14). 콘솔 에러·예외·외부 요청을 모읍니다.
 // 종료 코드 0 = 통과, 2 = 콘솔 에러/예외 있음, 1 = 스크립트 실패.
 const { spawn } = require('child_process'); const fs = require('fs'); const os = require('os'); const path = require('path');
 const CANDIDATES = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
@@ -43,9 +43,17 @@ async function json(p) { return (await fetch(`http://127.0.0.1:${PORT}${p}`)).js
   await sleep(300);
   out.life0 = await ev('({screen: __app.screen, phase: __app.S.phase, age: __app.S.age, barTitle: document.querySelector(".bar-title")?.textContent})');
   // 3) 자동 결정 켜고 10세까지 틱(수동 tick 으로 빠르게). 결정은 autoChoice.
-  out.toTen = await ev(`(() => { const a=__app, S=a.S; a.actions.toggleAuto(true); S.paused=false; let g=0;
+  // 10세 전에 죽으면(영아 사망) 저장이 지워져 이어하기를 시험할 수 없으므로 다시 태어나 재시도한다
+  for (let tries = 0; tries < 6; tries++) {
+    out.toTen = await ev(`(() => { const a=__app, S=a.S; a.actions.toggleAuto(true); S.paused=false; let g=0;
       while (S.phase==='life' && S.age < 10 && g++ < 20000) { a.sim.tick(0.5); if (S.pending) a.sim.autoChoice(); }
       a.actions.save(); return {age:S.age, phase:S.phase, ticks:g, logLines:(S.log||[]).length, pending:!!S.pending, dead:S.deathAt||null}; })()`);
+    if (out.toTen.phase === 'life') break;
+    await sleep(1200);
+    await ev('(() => { const b=document.querySelector("#btn-rebirth"); if (b) b.click(); else __app.actions.rebirth(); })()'); await sleep(300);
+    await ev('(() => { const b=[...document.querySelectorAll("#cert button")].find(x=>/시작|살아/.test(x.textContent)); if (b) b.click(); else __app.actions.startLife(); })()'); await sleep(300);
+    out.retries = tries + 1;
+  }
   await sleep(200);
   out.rendered = await ev('({ageOnBar: document.querySelector(".bar-age")?.textContent, logDom: document.querySelectorAll("#life .log li, #life .log > *").length, lifeTextLen: document.querySelector("#life").textContent.length})');
   // 4) localStorage 저장 확인
@@ -57,6 +65,12 @@ async function json(p) { return (await fetch(`http://127.0.0.1:${PORT}${p}`)).js
   out.resumed = await ev('({screen: __app.screen, age: __app.S.age, name: __app.S.name.full, paused: __app.S.paused, toast: document.querySelector("#toast")?.textContent})');
   // 6) 이어서 2년 더 진행 후 저장 갱신 확인
   out.more = await ev(`(() => { const a=__app, S=a.S; S.paused=false; let g=0; while (S.phase==='life' && S.age < 12 && g++ < 20000) { a.sim.tick(0.5); if (S.pending) a.sim.autoChoice(); } a.actions.save(); return {age:S.age, savedAge: JSON.parse(localStorage.getItem('tr1.save')).S.age}; })()`);
+  // 7) v1 저장 호환(§14): 변환할 수 없는 구 세이브(st 없음)는 시작 화면에서 이어하기 없이 토스트 후 삭제되어야 한다
+  // (살아 있는 sim 이 있으면 beforeunload 가 다시 저장하므로 먼저 떼어 낸다)
+  await ev('(() => { __app.actions.exitToStart(); __app.sim = null; localStorage.setItem("tr1.save", JSON.stringify({ S: { phase: "life", v: 1, age: 3, name: { full: "옛 기록" }, cur: "yan", flags: {} }, at: Date.now() })); })()'); await sleep(300);
+  await send('Page.reload'); await sleep(1500);
+  out.oldSave = await ev('({screen: __app.screen, resumeBtn: !!document.querySelector("#btn-resume"), saveLeft: !!localStorage.getItem("tr1.save"), toast: document.querySelector("#toast")?.textContent})');
+  if (out.oldSave.resumeBtn || out.oldSave.saveLeft || !/이전 버전/.test(out.oldSave.toast || '')) errors.push('OLDSAVE 구 세이브 처리 실패 ' + JSON.stringify(out.oldSave));
   out.errors = errors; out.requests = logs.filter((l) => l.startsWith('REQ'));
   out.otherLogs = logs.filter((l) => !l.startsWith('REQ')).slice(0, 20);
   console.log(JSON.stringify(out, null, 1));

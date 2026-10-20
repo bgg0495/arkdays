@@ -3,6 +3,31 @@
 // 작은 선택은 카운트다운 뒤 기본 선택지(view.def 또는 첫 번째)를 고른다. 숫자 키 1~9 로도 고른다.
 import { $, el, esc, setHtml, iga } from '../dom.js';
 
+/** v1 내장 결정(track_choose·track_switch·marry_*·rhodes_offer·home_change·naturalize·return_home·contract_end·looks_change)의 선택지 효과 힌트.
+ *  엔진이 준 sub 를 앞에 두고, 진로 선택지엔 원형(archetype) 이름을 덧붙인다. 콘텐츠가 같은 id 를 덮어써도 k 규약은 같다(W7 메모 §2). */
+export function choiceHint(app, pd, c) {
+  const id = pd.id || '';
+  const data = app.sim && app.sim.data;
+  const t = data && data.trackById && data.trackById[c.k];
+  const parts = c.sub ? [c.sub] : [];
+  const add = (x) => { if (x && !parts.includes(x)) parts.push(x); };
+  if ((id === 'track_choose' || id === 'track_switch') && t) {
+    add(t.A && t.A.name);
+    if (id === 'track_switch') add((t.stages[0] && (t.stages[0].title || t.stages[0].name)) + '부터');
+    if (t.itinerant) add('떠돌이 길');
+    if (t.nation && t.nation !== 'common' && app.S && t.nation !== app.S.cur) add('이주');
+  } else if (id === 'track_choose' && c.k === 'wait') add('소득 없음');
+  else if (id === 'track_switch' && c.k === 'stay') add('지금 자리 유지');
+  else if (id.startsWith('marry_')) { if (c.k === 'accept') add('혼인 · 가계 합산'); }
+  else if (id === 'rhodes_offer') { if (c.k === 'join') add('거주지가 로도스 본함으로'); else if (c.k === 'hold') add('다시 제안이 올 수 있음'); }
+  else if (id === 'naturalize') { if (c.k === 'yes') add('국적 변경'); }
+  else if (id === 'return_home') { if (c.k === 'go') add('진로를 두고 귀향'); }
+  else if (id === 'contract_end') { if (c.k === 're') add('같은 조건으로 계속'); else if (c.k === 'leave') add('일을 잃음'); }
+  else if (id === 'home_change') { if (c.k === 'no') add('지금 집 그대로'); else add('소유'); }
+  else if (id === 'looks_change') { if (c.k === 'go') add('돈이 나감'); }
+  return parts.join(' · ');
+}
+
 const SMALL_SEC = 8;
 const KIND = { big: { ko: '중대 결정', en: 'Decision' }, small: { ko: '작은 선택', en: 'Quick pick' } };
 let timer = null;
@@ -26,7 +51,7 @@ export function open(app, pd) {
   current = { pd, kind, app };
   setHtml(wrap, `
     <div class="modal-back"></div>
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" data-id="${esc(pd.id || '')}">
       <div class="modal-top">
         <span class="tag tag-${kind}"><span class="tag-en">${KIND[kind].en}</span>${KIND[kind].ko}</span>
         <span class="modal-when mono">${S.age}세 · 테라력 ${S.by + S.age}년</span>
@@ -43,10 +68,11 @@ export function open(app, pd) {
     </div>`);
   const box = $('#modal-choices', wrap);
   v.choices.forEach((c, i) => {
+    const sub = choiceHint(app, pd, c);
     const b = el('button.choice', { type: 'button', dataset: { k: c.k } },
       el('span.choice-n.mono', {}, String(i + 1)),
       el('span.choice-label', {}, c.label),
-      c.sub ? el('span.choice-sub', {}, c.sub) : null);
+      sub ? el('span.choice-sub', {}, sub) : null);
     b.addEventListener('click', () => pick(app, c.k));
     box.appendChild(b);
   });

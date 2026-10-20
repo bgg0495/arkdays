@@ -412,3 +412,49 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 1px
   .mc.now, .log-line:first-child, .modal, .toast { animation: none; }
   .stat-fill, .bar-prog-fill, .btn, .chip, .choice { transition: none; }
 }
+
+/* ── v1(W10): 신원 카드 보강 — 소속 지위 바·역량 등급·타고남·거주 상태 ────────── */
+.standing { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0.6em; margin-top: 0.35rem; font-size: 0.68rem; color: var(--muted); letter-spacing: 0.04em; }
+.standing .stat-bar { height: 3px; }
+.s-standing { background: var(--accent2); }
+.caps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; padding: 0.35rem 0.95rem 0.5rem; }
+.cap { display: flex; flex-direction: column; gap: 0.1em; min-width: 0; padding: 0.35em 0.5em; border: 1px solid var(--line); background: var(--panel-2); }
+.cap i { font-style: normal; font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em; color: var(--muted); }
+.cap b { font-size: 0.8rem; font-weight: 600; color: var(--text-2); }
+.cap.g-low b { color: var(--muted); }
+.cap.g-high b { color: var(--accent2); }
+.cap.g-top b { color: var(--accent); }
+.caps-inline { display: inline-grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.4rem; padding: 0.3rem 0 0.1rem; width: 100%; }
+.traits { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0 0.95rem 0.5rem; }
+.trait { font-size: 0.72rem; color: var(--accent); border: 1px solid var(--accent-dim); padding: 0.1em 0.55em; letter-spacing: 0.04em; }
+.rel-line { background: var(--panel-2); padding: 0.6em 1em; border-left: 2px solid var(--accent); margin: 0.6rem 0 0.4rem; font-size: 0.9rem; color: var(--text); }
+.rel-line .en { margin-bottom: 0.3em; }
+
+/* 접이식 블록(로도스 아일랜드 §10.3) */
+.fold-card { padding: 0; }
+.fold { margin: 0; }
+.fold-head { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-end; gap: 0.6rem; padding: 0.7rem 0.95rem 0.6rem; }
+.fold-head::-webkit-details-marker { display: none; }
+.fold-head::after { content: "+"; font-family: var(--mono); color: var(--muted); font-size: 0.9rem; line-height: 1; margin-left: 0.4rem; }
+.fold[open] > .fold-head { border-bottom: 1px solid var(--line); }
+.fold[open] > .fold-head::after { content: "−"; }
+.fold-sub { font-size: 0.74rem; color: var(--accent2); letter-spacing: 0.02em; text-align: right; flex: 1; }
+.fold-body { padding: 0.5rem 0.95rem 0.85rem; }
+.op-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem 0.6rem; margin-top: 0.6rem; }
+.op-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.1em 0.5em; padding: 0.3em 0.55em; border: 1px solid var(--line); background: var(--panel-2); min-width: 0; }
+.op-k { flex: 1 1 auto; font-size: 0.68rem; color: var(--muted); letter-spacing: 0.02em; line-height: 1.3; }
+.op-v { font-size: 0.8rem; font-weight: 600; color: var(--text-2); white-space: nowrap; }
+.op-v.g-low { color: var(--bad); } .op-v.g-high { color: var(--accent2); } .op-v.g-top { color: var(--accent); }
+.clinic { margin-top: 0.6rem; padding: 0.6rem 0.75rem; border: 1px solid var(--line); border-left: 2px solid var(--bad); background: var(--panel-2); }
+.clinic-h { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 0.4em; }
+.clinic-row { display: flex; justify-content: space-between; gap: 0.6em; font-size: 0.78rem; color: var(--text-2); padding: 0.15em 0; }
+.clinic-row b { color: var(--text); font-weight: 500; }
+.clinic-line { margin: 0.5em 0 0; font-size: 0.8rem; line-height: 1.55; color: var(--text); }
+
+/* 인생 기록: 진로 진입·이주·혼인·주거 변경 표식(엔진 k 는 그대로, UI 표식 m) */
+.k-m { border-left-color: var(--accent2); } .k-m .log-t { font-weight: 600; } .k-m .log-a { color: var(--accent2); }
+
+@media (max-width: 400px) {
+  .caps, .caps-inline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .op-grid { grid-template-columns: 1fr; }
+}

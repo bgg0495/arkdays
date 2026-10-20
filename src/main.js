@@ -2,7 +2,7 @@
 // 엔진(src/engine)은 건드리지 않는다. 상태는 sim.S 하나, UI 설정은 tr1.prefs.
 import { loadData } from './data-loader.js';
 import { createRegistry } from './engine/content.js';
-import { createSim } from './engine/sim.js';
+import { createSim, migrateSave } from './engine/sim.js';
 import content from '../content/index.js';
 import { $, toast } from './ui/dom.js';
 import * as start from './ui/screens/start.js';
@@ -53,12 +53,15 @@ export function loadPrefs() {
 }
 export function savePrefs() { lsSet(KEY.prefs, JSON.stringify(app.prefs)); }
 
+const OLD_SAVE_MSG = '이전 버전의 삶은 이어갈 수 없습니다.';
 export function readSave() {
   const raw = lsGet(KEY.save);
   if (!raw) return null;
   try {
     const o = JSON.parse(raw);
     if (!o || !o.S || o.S.phase !== 'life') { lsDel(KEY.save); return null; }
+    // v1(§14): 구 세이브는 migrateSave 로 변환된다. 변환이 안 되면(복사본으로 시험) 이어하기를 감추고 지운다.
+    if (app.data && !migrateSave(JSON.parse(raw).S, app.data)) { lsDel(KEY.save); toast(OLD_SAVE_MSG); return null; }
     return o;
   } catch (e) { lsDel(KEY.save); return null; }
 }
@@ -142,9 +145,10 @@ export function startLife() {
 export function resume() {
   const o = readSave();
   if (!o) { toast('이어할 기록이 없습니다.'); show('start'); return false; }
-  const S = o.S;
-  const sim = makeSim((S.flags.seed || 'ui') + ':r' + Date.now().toString(36));
-  sim.S = S;
+  const S0 = o.S;
+  const sim = makeSim((S0.flags.seed || 'ui') + ':r' + Date.now().toString(36));
+  const S = sim.load(S0);   // migrateSave + 로도스·관계 정규화. 실패하면 null
+  if (!S) { clearSave(); toast(OLD_SAVE_MSG); show('start'); return false; }
   S.speed = app.prefs.speed;
   app.sim = sim;
   show('life');

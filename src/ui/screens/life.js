@@ -1,23 +1,29 @@
-// 인생 화면: 상단 바 / 좌(신원 카드·스탯·돈·광석병·가족) / 중(올해의 초점·인생 기록) / 우(인생 지도·국가 통계).
+// 인생 화면: 상단 바 / 좌(신원 카드·로도스·스탯·돈·광석병·가족) / 중(올해의 초점·인생 기록) / 우(인생 지도·국가 통계).
 // 매 프레임 tickRender 가 나이·진행률만 갱신하고, app.dirty 일 때만 패널을 다시 그린다. 기록은 HOOK.log 로 한 줄씩 앞에 붙인다.
+// v1(W10): 상태 막대는 건강·행복 둘. 신원 카드에 진로·소속 지위·역량 4등급·타고남·거주 상태, 그 아래 접이식 로도스 블록(§10.3).
 import { $, el, esc, setHtml, lmd, num } from '../dom.js';
-import { focusOptions } from '../../engine/sim.js';
+import { focusOptions, capProfile, rhodesCard } from '../../engine/sim.js';
 import { humanAge } from '../../engine/lifetable.js';
 import { SPEEDS } from '../../main.js';
-import { STAT_LABEL, STAGE_LABEL, ORI_OUTCOME, POLICY_LABEL, TRAIT_LABEL, SCHOOL_LABEL, EDU_LABEL, SEX, Q_DOTS, homeWord, jobName, nationName, fxText, focusLabel, focusHint, nationStatRows, MRZ, certNo } from '../text.js';
+import { STAT_LABEL, STAGE_LABEL, ORI_OUTCOME, POLICY_LABEL, TRAIT_LABEL, SCHOOL_LABEL, EDU_LABEL, SEX, Q_DOTS, RHODES_STATUS, homeWord, jobName, nationName, fxText, focusLabel, focusHint, nationStatRows, MRZ, certNo,
+  statusWord, standingOf, residenceLine, housingName, traitWords } from '../text.js';
 
 const LOG_MAX = 1500;
+const GRADE_KEY = { '낮음': 'low', '보통': 'mid', '높음': 'high', '뛰어남': 'top' };
+const OP_KEY = { '결함': 'low', '보통': 'mid', '표준': 'mid', '우수': 'high', '뛰어남': 'high', '탁월': 'top' };
 let R = null;     // 엘리먼트 참조
 let lastBar = '';
+let lastMile = '';   // 인생 기록 강조용 상태 스냅샷(진로·단계·거주국·혼인·주거)
+let rhodesOpen = null;   // 접이식 로도스 블록 열림 상태(사용자가 건드리면 기억)
 
 export function mount(app) {
   const root = $('#life');
-  const S = app.S;
   setHtml(root, `
     <div class="life-bar" id="lf-bar"></div>
     <div class="life-grid">
       <aside class="col col-left">
         <section class="card id-card" id="lf-id"></section>
+        <section class="card fold-card" id="lf-rhodes" hidden></section>
         <section class="card" id="lf-stats"></section>
         <section class="card" id="lf-money"></section>
         <section class="card" id="lf-ori" hidden></section>
@@ -36,10 +42,11 @@ export function mount(app) {
       </aside>
     </div>`);
   R = {
-    bar: $('#lf-bar', root), id: $('#lf-id', root), stats: $('#lf-stats', root), money: $('#lf-money', root), ori: $('#lf-ori', root),
+    bar: $('#lf-bar', root), id: $('#lf-id', root), rhodes: $('#lf-rhodes', root), stats: $('#lf-stats', root), money: $('#lf-money', root), ori: $('#lf-ori', root),
     fam: $('#lf-fam', root), focus: $('#lf-focus', root), log: $('#lf-log', root), logcount: $('#lf-logcount', root), map: $('#lf-map', root), nation: $('#lf-nation', root),
   };
   lastBar = '';
+  lastMile = mileKey(app.S);
   renderAll(app);
   renderLog(app);
 }
@@ -49,6 +56,7 @@ export function renderAll(app) {
   if (!R) return;
   renderBar(app);
   renderId(app);
+  renderRhodes(app);
   renderStats(app);
   renderMoney(app);
   renderOri(app);
@@ -56,6 +64,7 @@ export function renderAll(app) {
   renderFocus(app);
   renderMap(app);
   renderNation(app);
+  lastMile = mileKey(app.S);
   app.dirty = false;
 }
 
@@ -75,7 +84,7 @@ export function onYear(app) { if (!R) return; renderMap(app); }
 // ── 상단 바 ─────────────────────────────────────────────
 export function renderBar(app) {
   if (!R) return;
-  const S = app.S; const sim = app.sim; const A = app.actions; const p = app.prefs;
+  const S = app.S; const A = app.actions; const p = app.prefs;
   lastBar = S.age + '|' + S.paused + '|' + S.speed + '|' + (S.pending ? 1 : 0) + '|' + S.phase;
   const dead = S.phase === 'dead';
   setHtml(R.bar, `
@@ -109,7 +118,12 @@ export function renderBar(app) {
 function renderId(app) {
   const S = app.S; const sim = app.sim;
   const [m1, m2] = MRZ(S, sim);
-  const status = S.prison === 'camp' ? '수용소' : S.prison ? '복역 중' : S.serving ? '복무 중 (' + S.serving + '년 남음)' : S.school ? SCHOOL_LABEL[S.school] || '재학' : S.retired ? '은퇴' : S.job ? jobName(sim, S.job) : S.age < 6 ? '유아' : '무직';
+  const status = statusWord(sim);
+  const st = standingOf(sim);
+  const prof = capProfile(S);
+  const traits = traitWords(S);
+  const res = residenceLine(sim);
+  const housing = housingName(sim);
   const f = (k, v, w) => `<div class="f${w ? ' w' : ''}"><dt>${k}</dt><dd>${v}</dd></div>`;
   setHtml(R.id, `
     <div class="id-head"><span class="lbl"><span class="en">Operator file</span>테라 신원 기록</span><span class="mono id-no">${esc(certNo(S))}</span></div>
@@ -119,23 +133,62 @@ function renderId(app) {
         <div class="id-name">${esc(S.name.full)}</div>
         <div class="id-sub">${SEX(S.sex)} · ${esc(sim.race.name)}</div>
         <div class="id-status">${esc(status)}</div>
+        ${st ? `<div class="standing" title="${esc(st.name)} ${st.v}"><span class="standing-k">${esc(st.name)}</span><span class="stat-bar"><span class="stat-fill s-standing" style="width:${st.v}%"></span></span></div>` : ''}
       </div>
     </div>
+    <div class="caps" aria-label="역량">
+      ${prof.caps.map((c) => `<span class="cap g-${GRADE_KEY[c.grade] || 'mid'}"><i>${esc(c.label)}</i><b>${esc(c.grade)}</b></span>`).join('')}
+    </div>
+    ${traits.length ? `<div class="traits">${traits.map((t) => `<span class="trait">${esc(t)}</span>`).join('')}</div>` : ''}
     <dl class="id-kv">
       ${f('출생', `${esc(nationName(sim, S.born))} · 테라력 ${S.by}년`, true)}
-      ${f('거주', `${esc(nationName(sim, S.cur))} · ${esc(homeWord(S))}${S.flags.quarantined ? ' · <b class="stamp-text">격리</b>' : ''}`, true)}
+      ${f('거주', `${esc(nationName(sim, S.cur))} · ${esc(housing || homeWord(S))}${S.flags.quarantined ? ' · <b class="stamp-text">격리</b>' : ''}`, true)}
+      ${res ? f('거주 상태', esc(res), true) : ''}
       ${f('출신 가정', `<span class="dots">${Q_DOTS(S.q)}</span>`)}
       ${f('학력', `${esc(EDU_LABEL[Math.min(4, S.edu || 0)])}${S.flags.casterRoute ? ' · 캐스터' : ''}`)}
       ${S.trait ? f('기질', esc(TRAIT_LABEL[S.trait] || S.trait)) : ''}
-      ${S.rhodes ? f('소속', '로도스 아일랜드') : ''}
+      ${S.fam.marriage ? f('혼인', esc(S.fam.marriage.name || '')) : ''}
       ${S.lifeMul !== 1 ? f('인간 척도', `${Math.round(humanAge(S.age, S.lifeMul))}세`) : ''}
     </dl>
     <div class="mrz mono"><div>${esc(m1)}</div><div>${esc(m2)}</div></div>`);
 }
 
+/** 로도스 아일랜드 블록(§10.3): 오퍼레이터(외근부)면 캐논 6종 등급, 환자·감염 직원이면 임상 진단 분석. 접이식 */
+function renderRhodes(app) {
+  const sim = app.sim; const S = app.S;
+  const card = S.rhodes ? rhodesCard(sim) : null;
+  if (!card) { R.rhodes.hidden = true; return; }
+  R.rhodes.hidden = false;
+  const open = rhodesOpen == null ? true : rhodesOpen;
+  const head = (RHODES_STATUS[card.status] || card.status) + (card.deptLabel && card.status !== 'patient' ? ' · ' + card.deptLabel : '');
+  const prof = card.profile ? `
+      <div class="op-grid" aria-label="오퍼레이터 능력 평가">
+        ${card.profile.map((r) => `<div class="op-row"><span class="op-k">${esc(r.label)}</span><b class="op-v g-${OP_KEY[r.grade] || 'mid'}">${esc(r.grade)}</b></div>`).join('')}
+      </div>
+      <div class="footnote">(로도스 아일랜드 인사부 · 외근 오퍼레이터 능력 평가표)</div>` : '';
+  const cl = card.clinical ? `
+      <div class="clinic">
+        <div class="clinic-h">임상 진단 분석</div>
+        <div class="clinic-row"><span>[체세포와 오리지늄 융합률]</span><b class="mono">${card.clinical.fusion.toFixed(0)}%</b></div>
+        <div class="clinic-row"><span>[혈중 오리지늄 결정 밀도]</span><b class="mono">${card.clinical.density.toFixed(2)} u/L</b></div>
+        <p class="clinic-line">${esc(card.clinical.line || '')}</p>
+      </div>
+      <div class="footnote">(로도스 아일랜드 의료부 · 검사 담당의 소견)</div>` : '';
+  setHtml(R.rhodes, `
+    <details class="fold" ${open ? 'open' : ''}>
+      <summary class="fold-head"><span class="lbl"><span class="en">Rhodes Island</span>로도스 아일랜드</span><span class="fold-sub">${esc(head)}</span></summary>
+      <div class="fold-body">
+        <div class="money-row"><span>합류</span><span>${card.since != null ? card.since + '세' : '—'}${card.viaLine ? ' · ' + esc(card.viaLine) : ''}</span></div>
+        ${prof}${cl}
+        ${!prof && !cl ? '<p class="muted small">배에서 맡은 일 외에 기록된 평가는 없습니다.</p>' : ''}
+      </div>
+    </details>`);
+  $('details', R.rhodes).addEventListener('toggle', (e) => { rhodesOpen = e.currentTarget.open; });
+}
+
 function renderStats(app) {
   const S = app.S;
-  setHtml(R.stats, `<h2 class="h-small"><span class="en">Status</span>상태</h2>` +['hl', 'h', 'sm', 'so'].map((k) => {
+  setHtml(R.stats, `<h2 class="h-small"><span class="en">Status</span>상태</h2>` + ['hl', 'h'].map((k) => {
     const v = Math.round(S.st[k]);
     return `<div class="stat"><span class="stat-k">${STAT_LABEL[k]}</span><span class="stat-bar"><span class="stat-fill s-${k}" style="width:${v}%"></span></span><span class="stat-v mono">${v}</span></div>`;
   }).join(''));
@@ -150,19 +203,21 @@ function renderMoney(app) {
   if (S.flags.oriPremium) extra.push('감염자 보험료 ' + lmd(S.flags.oriPremium) + '/년');
   if (S.flags.oriFees) extra.push('보호비 납부 중');
   if (S.money < 0) extra.push('빚');
+  const work = S.track ? statusWord(sim) + ' · ' + Math.max(0, S.age - (S.track.since ?? S.age)) + '년째' : S.job ? jobName(sim, S.job) + ' · ' + S.jobY + '년째' : null;
   setHtml(R.money, `
     <h2 class="h-small"><span class="en">Assets</span>돈 <span class="muted">(용문폐, LMD)</span></h2>
     <div class="money-main"><span class="money-v mono ${S.money < 0 ? 'neg' : ''}">${esc(lmd(S.money))}</span><span class="muted small">순자산</span></div>
     <div class="money-row"><span>연 소득</span><span class="mono">${esc(lmd(S.income))}</span></div>
     <div class="money-row"><span>소득 위치</span><span>${S.income ? esc(nationName(sim, S.cur)) + ' 상위 ' + Math.round((1 - S.pct) * 100) + '%' + (rel ? ' · 중위소득의 ' + rel.toFixed(1) + '배' : '') : '—'}</span></div>
-    ${S.job ? `<div class="money-row"><span>일</span><span>${esc(jobName(sim, S.job))} · ${S.jobY}년째</span></div>` : ''}
+    ${work ? `<div class="money-row"><span>일</span><span>${esc(work)}</span></div>` : ''}
+    ${S.home && S.home.owned ? `<div class="money-row"><span>집</span><span>${esc(housingName(sim) || '소유')} · 소유</span></div>` : ''}
     ${S.fam.partner && S.fam.partner.alive && S.fam.partner.inc ? `<div class="money-row"><span>배우자 소득</span><span class="mono">${esc(lmd(S.fam.partner.inc))}</span></div>` : ''}
     ${extra.length ? `<div class="money-row muted small">${esc(extra.join(' · '))}</div>` : ''}
     <div class="footnote">(용문폐 환산, 용문 금융국 고시 환율)</div>`);
 }
 
 function renderOri(app) {
-  const S = app.S; const sim = app.sim;
+  const S = app.S;
   if (!(S.ori.on && S.ori.known)) { R.ori.hidden = true; return; }
   R.ori.hidden = false;
   const uL = S.ori.uL;
@@ -184,6 +239,7 @@ function renderFam(app) {
     return `<li class="${p.alive ? '' : 'gone'}"><span class="who">${who}</span> ${esc(p.name)}${p.age != null ? ' · ' + p.age + '세' : ''}${p.job ? ' · ' + esc(jobName(sim, p.job)) : ''}${p.infected ? ' · 감염자' : ''}${p.alive ? '' : ' · 별세'}</li>`;
   };
   const kids = f.kids.map((k) => `<li class="${k.alive ? '' : 'gone'}"><span class="who">자녀</span> ${esc(k.name)} · ${S.age - k.bornAt}세${k.infected ? ' · 감염' : ''}${k.alive ? '' : ' · 잃음'}</li>`).join('');
+  const second = (f.partners || []).map((p) => person(p, '배우자')).join('');
   setHtml(R.fam, `
     <h2 class="h-small"><span class="en">Family</span>가족</h2>
     <ul class="fam">
@@ -191,6 +247,7 @@ function renderFam(app) {
       ${person(f.dad, '아버지')}
       ${f.older || f.younger ? `<li><span class="who">형제</span> 위로 ${f.older}명 · 아래로 ${f.younger}명</li>` : ''}
       ${f.partner ? person(f.partner, '배우자') : (S.age >= 18 ? '<li class="muted"><span class="who">배우자</span> 없음</li>' : '')}
+      ${second}
       ${kids}
     </ul>`);
 }
@@ -210,8 +267,15 @@ export function renderFocus(app) {
   }
 }
 
+/** 인생 기록 강조 키: 진로 id·단계·거주국·혼인·주거가 바뀐 직후의 기록은 중대 기록(k-big)처럼 보인다 */
+function mileKey(S) {
+  if (!S) return '';
+  return (S.track ? S.track.id + ':' + S.track.stage : '-') + '|' + S.cur + '|' + (S.fam.marriage ? S.fam.marriage.at : '-') + '|' + (S.home ? S.home.housing : '-');
+}
+const MILE_RE = /들어갔습니다|옮겨 갔습니다|옮겼습니다|옮겨졌습니다|마련했습니다|돌아갔습니다|결혼했습니다|합류했습니다|떠났습니다|마쳤습니다|되었습니다|올라섰습니다/;
+
 function logNode(e) {
-  const n = el('div.log-line.k-' + (e.k || 'ev'), {},
+  const n = el('div.log-line.k-' + (e.k || 'ev') + (e.m ? ' k-m' : ''), {},
     el('span.log-a.mono', {}, e.a + '세'),
     el('span.log-t', {}, e.t),
     e.fx && fxText(e.fx) ? el('span.log-fx', {}, fxText(e.fx)) : null,
@@ -229,6 +293,9 @@ function renderLog(app) {
 }
 export function onLog(app, e) {
   if (!R) return;
+  const key = mileKey(app.S);
+  if (key !== lastMile && !e.m && ['ev', 'note', 'warm'].includes(e.k || 'ev') && MILE_RE.test(e.t || '')) e.m = 1;   // 저장되는 기록에 표식만 남긴다(k 는 엔진 것 그대로)
+  lastMile = key;
   R.log.insertBefore(logNode(e), R.log.firstChild);
   while (R.log.childElementCount > LOG_MAX) R.log.removeChild(R.log.lastChild);
   R.logcount.textContent = app.S.log.length + '줄';

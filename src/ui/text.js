@@ -2,12 +2,30 @@
 import { normCdf } from '../engine/rng.js';
 import { humanAge } from '../engine/lifetable.js';
 import { toLMD } from '../engine/finance.js';
-import { FOCUS } from '../engine/sim.js';
+import { FOCUS, trackName, migrationSummary, capProfile } from '../engine/sim.js';
 import { num, lmd } from './dom.js';
 import { eun, iga, eul, wa, ro, euro } from '../engine/text.js';
 import { deathTexts } from '../../content/death_texts.js';
 
-export const STAT_LABEL = { hl: '건강', h: '행복', sm: '지식', so: '관계', money: '돈' };
+// v1(W10): 상태 막대는 건강·행복 둘만. 구 fx 의 sm/so 는 역량(학식·연줄)으로 읽어 보여 준다.
+export const STAT_LABEL = { hl: '건강', h: '행복', money: '돈' };
+export const CAP_LABEL = { skill: '기량', learn: '학식', arts: '아츠', ties: '연줄' };
+export const LEGACY_FX = { sm: '학식', so: '연줄' };
+export const PAPERS_LABEL = { native: null, legal: '합법', refugee: '난민', illegal: '미등록', contract: '계약', agreement: '협정' };
+export const PHASE_LABEL = { settling: '정착 중', settled: '정착', naturalized: '귀화' };
+export const RHODES_STATUS = { operator: '정식 직원', contractor: '협력 계약자', patient: '환자' };
+export const NOBLE_LABEL = { noble: '귀족 작위' };
+/** 종족 관계 등급(§9) → 출생 신고서 한 줄. 무관(neutral)은 줄 없음. 문구는 relations.json gradeNote 를 세계관 안 표현으로 */
+export function relationLine(raceName, grade) {
+  switch (grade) {
+    case 'institutional': return '이 땅에서 ' + eun(raceName) + ' 제도적 차별을 받습니다.';
+    case 'cultural': return '이 땅에서 ' + eun(raceName) + ' 멸시받는 종족입니다.';
+    case 'subtle': return '이 땅에는 ' + eul(raceName) + ' 향한 은근한 편견이 있습니다.';
+    case 'favored': return '이 땅에서 ' + eun(raceName) + ' 우대받는 종족입니다.';
+    case 'exclude': return '이 땅은 ' + eul(raceName) + ' 받아들이지 않습니다.';
+    default: return null;
+  }
+}
 export const POLICY_LABEL = {
   persecute: '박해', quarantine: '격리', euthanasia: '안락사', neglect: '방치', insurance: '보험',
   expel: '추방', ignore: '묵인', treat: '치료',
@@ -50,8 +68,13 @@ export function yearWord(S) { return '테라력 ' + S.by + '년 ' + monthWord(S.
 export function fxText(fx) {
   if (!fx) return '';
   const parts = [];
-  for (const k of ['hl', 'h', 'sm', 'so']) if (fx[k]) parts.push(STAT_LABEL[k] + ' ' + (fx[k] > 0 ? '+' : '−') + Math.abs(Math.round(fx[k] * 10) / 10));
+  const sign = (v) => (v > 0 ? '▲' : '▼');
+  for (const k of ['hl', 'h']) if (fx[k]) parts.push(STAT_LABEL[k] + ' ' + (fx[k] > 0 ? '+' : '−') + Math.abs(Math.round(fx[k] * 10) / 10));
   if (fx.money) parts.push('돈 ' + (fx.money > 0 ? '+' : '−') + num(Math.abs(fx.money)));
+  // 역량·지위는 숫자를 내보이지 않는다(§6.4): 방향만
+  for (const k of ['sm', 'so']) if (fx[k]) parts.push(LEGACY_FX[k] + ' ' + sign(fx[k]));
+  if (fx.cap) for (const [k, v] of Object.entries(fx.cap)) if (v && CAP_LABEL[k]) parts.push(CAP_LABEL[k] + ' ' + sign(v));
+  if (fx.standing) parts.push('지위 ' + sign(fx.standing));
   return parts.join(' · ');
 }
 export function focusLabel(k) { return (FOCUS[k] && FOCUS[k].label) || k || '—'; }
@@ -77,6 +100,109 @@ export function birthSummary(sim) {
 
 export function jobName(sim, id) { const j = id && sim.data.jobById[id]; return j ? j.name : (id || '—'); }
 export function nationName(sim, id) { const n = id && sim.data.nationById[id]; return n ? n.name : (id || '—'); }
+
+/** 신원 카드 직업란: 진로가 있으면 trackName(소속 · 칭호), 없으면 상태어 */
+export function statusWord(sim) {
+  const S = sim.S;
+  const t = trackName(sim);
+  if (t) return t;
+  if (S.prison === 'camp') return '수용소';
+  if (S.prison) return '복역 중';
+  if (S.serving) return '복무 중 (' + S.serving + '년 남음)';
+  if (S.school) return SCHOOL_LABEL[S.school] || '재학';
+  if (S.retired) return '은퇴';
+  if (S.job === 'homemaker') return '가사 전담';
+  if (S.job) return jobName(sim, S.job);
+  if (S.age < 6) return '유아';
+  if (S.age < 15) return '아동';
+  return '실업';
+}
+/** 소속 지위 바 재료: {name, v} 또는 null */
+export function standingOf(sim) {
+  const S = sim.S; const t = sim.track;
+  if (!S.track || !t) return null;
+  return { name: (t.standing && t.standing.name) || '지위', v: Math.round(S.track.standing || 0) };
+}
+/** 거주 상태 줄(§7): "이주민(합법) · 정착 중 3년째" / "로도스 아일랜드 본함" / 순회형 "올해 머문 곳: ○○". 토박이면 null */
+export function residenceLine(sim) {
+  const S = sim.S; const r = S.res;
+  const parts = [];
+  if (S.cur === 'rhodes') parts.push('로도스 아일랜드 본함');
+  else if (r && r.papers && r.papers !== 'native') {
+    const who = r.papers === 'refugee' ? '난민' : '이주민' + (PAPERS_LABEL[r.papers] ? '(' + PAPERS_LABEL[r.papers] + ')' : '');
+    const years = Math.max(1, S.age - (r.since || 0));
+    parts.push(who + ' · ' + (r.phase === 'settling' ? '정착 중 ' + years + '년째' : PHASE_LABEL[r.phase] || r.phase));
+  } else if (r && r.phase === 'naturalized') parts.push('귀화');
+  const t = sim.track;
+  if (t && t.itinerant && r && r.itinerantAt) parts.push('올해 머문 곳: ' + nationName(sim, r.itinerantAt));
+  return parts.length ? parts.join(' · ') : null;
+}
+/** 주거 유형 이름(housing.json) */
+export function housingName(sim) {
+  const S = sim.S; const id = S.home && S.home.housing; if (!id) return null;
+  const h = sim.data.housing || {};
+  const n = sim.nation;
+  for (const src of [h[S.cur], n && n.parent && h[n.parent], h._default, h._common]) {
+    const t = src && src.types && src.types.find((x) => x.id === id);
+    if (t) return t.name;
+  }
+  return null;
+}
+/** 타고남 특성 줄: capProfile 의 traits 를 라벨로 */
+export function traitWords(S) {
+  return capProfile(S).traits.map((t) => (t.startsWith('작위: ') ? (NOBLE_LABEL[t.slice(4)] || '작위') : t));
+}
+
+/** 진로 이력 구간 [{label, years, how, aff}] (trackHist + 현재 진로) */
+export function trackSegments(sim) {
+  const S = sim.S; const out = [];
+  const label = (id, stageId) => { const t = sim.data.trackById[id]; if (!t) return id; const st = t.stages.find((x) => x.id === stageId); return (st && (st.title || st.name)) || t.name; };
+  for (const h of S.trackHist || []) out.push({ id: h.id, label: label(h.id, h.stage), years: Math.max(0, (h.to ?? 0) - (h.from ?? 0)), how: h.how, aff: h.aff || null });
+  if (S.track) { const t = sim.data.trackById[S.track.id]; const st = t && t.stages[Math.min(S.track.stage, t.stages.length - 1)]; out.push({ id: S.track.id, label: (st && (st.title || st.name)) || (t ? t.name : S.track.id), years: Math.max(0, S.age - (S.track.stageSince ?? S.age)), how: 'now', aff: S.track.aff || null }); }
+  // 같은 칭호가 이어지면 합친다(강등·재진입 등)
+  const merged = [];
+  for (const seg of out) { const last = merged[merged.length - 1]; if (last && last.label === seg.label) { last.years += seg.years; last.how = seg.how; } else merged.push({ ...seg }); }
+  return merged;
+}
+const HOW_TAIL = { retire: '은퇴했습니다', expel: '그만두게 되었습니다', exile: '나라를 떠나야 했습니다', prison: '감옥에 갇혔습니다', disgrace: '이름에 금이 가 끝났습니다', injured: '다쳐서 그만두었습니다', infected: '감염으로 내려놓았습니다', discharged: '복무를 마쳤습니다', homemaker: '가사를 맡았습니다', forced: '선택 없이 끌려갔습니다' };
+/** 사망 요약 진로 문장 1~2개: "솔다토로 11년, 카포로 4년을 살았습니다." + 끝맺음 */
+export function trackHistSentences(sim) {
+  const segs = trackSegments(sim).filter((x) => x.years > 0 || x.how === 'now');
+  if (!segs.length) return [];
+  // 가장 오래 산 구간 3개를 시간 순으로
+  const top = segs.map((x, i) => ({ x, i })).sort((a, b) => b.x.years - a.x.years).slice(0, 3).sort((a, b) => a.i - b.i).map((o) => o.x);
+  const parts = top.map((x, i) => ro(x.label) + ' ' + x.years + '년' + (i === top.length - 1 ? '을' : ''));
+  const s = [parts.join(', ') + ' 살았습니다.'];
+  const last = segs[segs.length - 1];
+  if (last.how !== 'now' && HOW_TAIL[last.how]) s.push('마지막에는 ' + HOW_TAIL[last.how] + '.');
+  return s;
+}
+/** 최종 소속·지위 셀 */
+export function finalTrackCell(sim) {
+  const S = sim.S;
+  const now = trackName(sim);
+  if (now) { const st = standingOf(sim); return now + (st ? ' · ' + st.name + ' ' + st.v : ''); }
+  const h = (S.trackHist || [])[(S.trackHist || []).length - 1];
+  if (!h) return S.job === 'homemaker' ? '가사 전담' : S.job ? jobName(sim, S.job) : '없음';
+  const t = sim.data.trackById[h.id]; const a = h.aff && sim.data.affById[h.aff];
+  const st = t && t.stages.find((x) => x.id === h.stage);
+  return (a ? a.name : t ? t.name : h.id) + (st ? ' · ' + (st.title || st.name) : '');
+}
+const REASON_WORD = { work: '일자리를 찾아', study: '공부하러', marriage: '결혼으로', flee: '피난으로', asylum: '망명으로', exile: '추방되어', contract: '계약으로', caravan: '상단을 따라', rhodes: '로도스 아일랜드에 합류해', return: '고향으로', deport: '강제 송환되어', expel: '추방되어', insurance_default: '보험료를 못 내', voluntary: '스스로' };
+/** 살았던 나라(이주 사유) 셀: "염국 → 용문(일자리를 찾아)" */
+export function livedCell(sim) {
+  const S = sim.S;
+  const hist = (S.flags.migHist || []);
+  if (!hist.length) {
+    const lived = [...new Set(S.years.map((y) => y.cur).concat([S.born, S.cur]))].map((id) => nationName(sim, id));
+    return lived.join(' → ');
+  }
+  const parts = [nationName(sim, S.born)];
+  let prev = S.born;
+  for (const m of hist) { if (m.to === prev) continue; parts.push(nationName(sim, m.to) + (REASON_WORD[m.reason] ? '(' + REASON_WORD[m.reason] + ')' : '')); prev = m.to; }
+  return parts.join(' → ');
+}
+export { migrationSummary };
 
 export function eduWord(S) {
   if (S.flags.casterRoute) return '아츠 수련 과정 수료';
@@ -107,8 +233,10 @@ export function deathSummary(sim) {
   if (S.flags.bornInfected) s.push('태어날 때부터 감염자였습니다.');
   if (d.age >= 6) s.push(S.flags.noSchool ? '학교는 다니지 못했습니다.' : S.flags.casterRoute ? '아츠 수련 과정을 마쳤습니다.' : S.edu >= 4 ? '대학까지 다녔습니다.' : S.edu >= 3 ? '상급 학교까지 다녔습니다.' : S.edu >= 2 ? '중학교까지 다녔습니다.' : S.edu >= 1 ? '초등학교까지 다녔습니다.' : '');
   if (S.flags.childLabor != null) s.push(S.flags.childLabor + '세부터 일했습니다.');
+  const th = trackHistSentences(sim);   // v1: 진로 이력 1~2문장
   const lastJob = S.job || lastJobOf(S);
-  if (lastJob === 'homemaker' || S.flags.homemakerAt != null) {
+  if (th.length) s.push(...th);
+  else if (lastJob === 'homemaker' || S.flags.homemakerAt != null) {
     const before = S.flags.jobBeforeHome || lastJobOf(S, ['homemaker']);
     if (before) s.push(ro(jobName(sim, before)) + ' 일하다 가사를 맡았습니다.'); else s.push('가사를 맡았습니다.');
     if (lastJob && lastJob !== 'homemaker' && S.flags.backToWork != null) s.push('뒤에 다시 ' + ro(jobName(sim, lastJob)) + ' 일했습니다.');
@@ -120,7 +248,8 @@ export function deathSummary(sim) {
     s.push(wa(f.partner.name) + ' ' + Math.max(0, yrs) + '년을 함께했습니다.' + (f.widowed ? ' 먼저 떠나보냈습니다.' : ''));
   }
   if (f.kids.length) s.push('아이 ' + f.kids.length + '명을 키웠고' + (S.stats.kidsLost ? ', 그중 ' + S.stats.kidsLost + '명을 먼저 떠나보냈습니다.' : ' 모두 살아 있습니다.'));
-  if (S.mig) s.push(ro(nationName(sim, S.mig)) + ' 옮겨 가 살았습니다.');
+  const mig = migrationSummary(S, sim.data);   // v1: 이주 사유 문장
+  if (mig) s.push(mig); else if (S.mig) s.push(ro(nationName(sim, S.mig)) + ' 옮겨 가 살았습니다.');
   s.push(deathTexts(sim).line);  // W4c: 사인별 문장(content/death_texts.js)
   return s.filter(Boolean).join(' ').replace(/\s+/g, ' ');
 }
@@ -184,18 +313,18 @@ export function deathCells(sim) {
   const f = S.fam;
   const best = happiestYear(S);
   const fy = focusYears(S);
-  const lived = [...new Set(S.years.map((y) => y.cur).concat([S.born, S.cur]))].map((id) => nationName(sim, id));
   return [
     ['최종 학력', eduWord(S)],
-    ['마지막 일', jobName(sim, S.job || lastJobOf(S)) + (S.retired ? ' (은퇴)' : '')],
-    ['함께한 사람', f.partner ? f.partner.name + (f.widowed ? ' (먼저 떠남)' : '') : '없음'],
+    ['최종 소속·지위', finalTrackCell(sim) + (S.retired ? ' (은퇴)' : '')],
+    ['함께한 사람', f.partner ? f.partner.name + (f.marriage && f.marriage.name ? ' · ' + f.marriage.name : '') + (f.widowed ? ' (먼저 떠남)' : '') : '없음'],
     ['자녀', f.kids.length ? f.kids.length + '명' + (S.stats.kidsLost ? ' (' + S.stats.kidsLost + '명 먼저 떠남)' : '') : '없음'],
     ['가장 행복했던 해', best ? best.a + '세 · 테라력 ' + best.y + '년' : '—'],
-    ['살았던 나라', lived.join(' → ')],
+    ['살았던 나라(이주 사유)', livedCell(sim)],
+    ['역량', capProfile(S).caps.map((c) => c.label + ' ' + c.grade).join(' · ')],
     ['남긴 재산', lmd(S.money)],
     ['시간을 쓴 곳', fy.length ? fy.slice(0, 3).map(([k, n]) => focusLabel(k) + ' ' + n + '년').join(' · ') : '—'],
     ['광석병', S.ori.on ? (S.ori.known ? STAGE_LABEL[S.ori.stage] + ' · ' + S.ori.uL.toFixed(2) + ' u/L · ' + (ORI_OUTCOME[S.flags.oriOutcome] || '—') : '감염, 판정 없음') : '없음'],
-    ['로도스 아일랜드', S.rhodes ? S.flags.rhodesAt + '세 합류' : '—'],
+    ['로도스 아일랜드', S.rhodes ? ((S.rhodes.since ?? S.flags.rhodesAt) + '세 합류') + (RHODES_STATUS[S.rhodes.status] ? ' · ' + RHODES_STATUS[S.rhodes.status] : '') : '—'],
     ['결정', S.stats.decisions + '회' + (S.stats.auto ? ' (자동 ' + S.stats.auto + '회)' : '')],
     ['재앙 피격', S.stats.catHits ? S.stats.catHits + '회' : '없음'],
   ];

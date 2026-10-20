@@ -1,6 +1,8 @@
 // 출생 신고서(BIRTH RECORD): 번호·이름·요약 한 문단·항목 그리드(라벨 작게/값 크게 2열)·국가 한 줄 소개·삶을 시작하기.
+// v1(W10): 역량 초기 등급 4종, 타고남(외모 극단·작위·낙인), 종족 관계 등급이 무관이 아니면 한 줄.
 import { $, esc, setHtml, lmd } from '../dom.js';
-import { certNo, birthSummary, SEX, Q_DOTS, homeWord, yearWord, jobName, artsPercentile, POLICY_LABEL } from '../text.js';
+import { capProfile } from '../../engine/sim.js';
+import { certNo, birthSummary, SEX, Q_DOTS, homeWord, yearWord, jobName, artsPercentile, POLICY_LABEL, traitWords, relationLine } from '../text.js';
 
 export function mount(app) {
   const root = $('#cert');
@@ -8,6 +10,10 @@ export function mount(app) {
   const f = S.fam;
   const sub = (t) => ' <span class="rec-sub">' + t + '</span>';
   const parent = (p, who) => p.absent ? who + ' 부재' : who + ' ' + p.age + '세' + (p.job ? ' · ' + esc(jobName(sim, p.job)) : '') + (p.infected ? ' · 감염자' : '');
+  const GK = { '낮음': 'low', '보통': 'mid', '높음': 'high', '뛰어남': 'top' };
+  const caps = capProfile(S).caps.map((c) => '<span class="cap g-' + (GK[c.grade] || 'mid') + '"><i>' + esc(c.label) + '</i><b>' + esc(c.grade) + '</b></span>').join('');
+  const traits = traitWords(S);
+  const rel = relationLine(race.name, S.rel);
   // [라벨, 값(HTML), 전폭 여부]
   const rows = [
     ['성별', SEX(S.sex)],
@@ -19,6 +25,8 @@ export function mount(app) {
     ['부모', parent(f.mom, '어머니') + ' · ' + parent(f.dad, '아버지'), true],
     ['감염 여부', (S.ori.on ? '<b class="stamp-text">양성</b> · ' + S.ori.uL.toFixed(2) + ' u/L' : '음성') + sub('출생 검사')],
     ['아츠 적성', '상위 ' + artsPercentile(S) + '%' + sub(esc(n.statOrg) + ' 적성 등급표')],
+    ['역량', '<span class="caps caps-inline">' + caps + '</span>' + sub('출생 검사 추정'), true],
+    ...(traits.length ? [['타고남', traits.map((t) => esc(t)).join(' · ')]] : []),
     ['기대수명', S.e0 + '세' + sub(esc(n.statOrg) + ' 생명표')],
     ['5세 전 사망 확률', S.u5 + '%' + sub(esc(n.statOrg) + ' 집계')],
     ['소득 수준', '가정 백분위 ' + Math.round(S.pct * 100) + '%' + sub('국가 중위소득 ' + lmd(sim.med) + '/년')],
@@ -42,6 +50,7 @@ export function mount(app) {
         ${rows.map(([k, v, w]) => `<div class="f${w ? ' w' : ''}"><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}
       </dl>
       <p class="blurb"><b>${esc(n.name)}</b> — ${esc(n.blurb || '소개 문구가 아직 없습니다.')}</p>
+      ${rel ? `<p class="rel-line"><span class="en">Standing</span>${esc(rel)}</p>` : ''}
       <p class="footnote">${esc(yearWord(S))} ${esc(n.statOrg)} 접수. 기대수명은 광석병·재앙·분쟁을 포함해 셈한 값입니다.</p>
       <div class="start-actions">
         <button class="btn primary big" id="btn-start">삶을 시작하기</button>

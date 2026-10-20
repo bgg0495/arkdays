@@ -16,12 +16,17 @@ npm run build
 - `npm run verify` → `dist/index.html` 을 **진짜 `file://`** 로 Chrome/Edge headless 에서 열어
   시작 → 태어나기 → 삶을 시작하기 → 10세(자동 결정) → localStorage 저장 → 새로고침 → 이어하기 → 12세 까지 돌리고
   콘솔 에러·예외·네트워크 요청을 모아 보고합니다. 의존성 없음(DevTools 프로토콜 직접 사용). 종료 코드 0 = 통과.
+- `npm run verify:death` → `node build/verify-death.js 3`: 세 생을 사망 화면까지 자동으로 돌려 요약문·사인·장례·복사 텍스트(D36)를 검사.
+- `node build/shot-theme.js` → 시작·인생 화면을 라이트/다크로 `docs/ui-mock/{start,life}-{light,dark}.png`.
+- `node build/shot-v1.js` (W10) → 진로가 자리 잡은 성인의 인생 화면·결정 모달·사망 기록을 `docs/ui-mock/*-v1.png` 로(375px 포함).
+  진로 선택 모달과 로도스 블록(오퍼레이터 6종·임상 진단)은 매 생에 나오지 않으므로 상태를 꾸며 찍는다(`decision-track-v1.png`, `rhodes-*-v1.png`). 콘솔 에러가 있으면 종료 코드 2.
 - 개발 중엔 그대로 `python -m http.server 8765` → `http://localhost:8765/src/` (빌드 불필요).
 
 `build/build.js` 가 하는 일:
 1. `src/main.js` 를 esbuild 로 IIFE 한 덩어리로 번들(`content/`·`src/engine`·`src/ui` 전부 포함).
-2. `data/{nations,races,jobs,causes,names,stats1950}.json` + `terra_e0.json` 을 `window.__DATA__ = {...}` 로 번들 **앞에** 인라인
-   → `src/data-loader.js` 가 fetch 를 건너뜁니다(키 이름 = 파일명, `terra` = `terra_e0.json`).
+2. `data/{nations,races,jobs,causes,names,stats1950}.json` + `terra_e0.json`, v1(W7/W8)의 `affiliations·relations·marriage·housing·rhodes·canon_figures.json`
+   과 `data/tracks/*.json`(폴더 전부를 배열 `tracks` 로, `test/sim.js` 의 `loadData()` 와 같은 모양)을 `window.__DATA__ = {...}` 로 번들 **앞에** 인라인
+   → `src/data-loader.js` 가 fetch 를 건너뜁니다(키 이름 = 파일명, `terra` = `terra_e0.json`). v1 파일은 없으면 경고만 내고 엔진 기본값으로 돕니다.
 3. `src/ui/style.css` 를 `<style>` 로 인라인(주석 제거).
 4. **제목 치환(D28)**: `src/ui/*` 원본은 손대지 않고 빌드 때 `REPLACE` 표로 "명생게임" → "금일방주", 영문 부제 "Arkdays",
    시작 화면 카피에 "몇 억 분의 1." 추가. 치환 대상이 원본에서 사라지면 빌드가 실패하므로 그때 표를 갱신하면 됩니다

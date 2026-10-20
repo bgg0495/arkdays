@@ -32,7 +32,11 @@ const REPLACE = {
   // src/ui/text.js 의 공유 문구('[명생게임] …', '#명생게임')는 D36 으로 삭제됨 → 치환 항목 없음.
 };
 
-const DATA_FILES = { nations: 'nations.json', races: 'races.json', jobs: 'jobs.json', causes: 'causes.json', names: 'names.json', stats1950: 'stats1950.json', terra: 'terra_e0.json' };
+const DATA_FILES = { nations: 'nations.json', races: 'races.json', jobs: 'jobs.json', causes: 'causes.json', names: 'names.json', stats1950: 'stats1950.json', terra: 'terra_e0.json',
+  // v1(W7/W8): 진로·소속·관계·혼인·주거·로도스·캐논 인물. 없으면 엔진이 기본값(합성 생업 진로)으로 돈다 — canon_figures 외에는 경고.
+  affiliations: 'affiliations.json', relations: 'relations.json', marriage: 'marriage.json', housing: 'housing.json', rhodes: 'rhodes.json', canon_figures: 'canon_figures.json' };
+const OPTIONAL_DATA = new Set(['terra', 'affiliations', 'relations', 'marriage', 'housing', 'rhodes', 'canon_figures']);
+const TRACKS_DIR = 'data/tracks';   // 폴더 안 *.json 전부를 배열로(test/sim.js loadData 와 같은 모양: [{_meta, tracks:[…]}, …])
 
 function read(rel) { return fs.readFileSync(path.join(ROOT, rel), 'utf8'); }
 function applyReplace(rel, text) {
@@ -86,11 +90,16 @@ async function main() {
   const sizes = {};
   for (const [key, file] of Object.entries(DATA_FILES)) {
     const p = path.join(ROOT, 'data', file);
-    if (!fs.existsSync(p)) { if (key === 'terra') { console.warn('terra_e0.json 없음 → k=1 로 동작'); continue; } throw new Error('데이터 파일 없음: ' + file); }
+    if (!fs.existsSync(p)) { if (OPTIONAL_DATA.has(key)) { console.warn(file + ' 없음 → 엔진 기본값으로 동작'); continue; } throw new Error('데이터 파일 없음: ' + file); }
     const txt = fs.readFileSync(p, 'utf8');
     data[key] = JSON.parse(txt);              // 파싱해 JSON 오류를 빌드 시점에 잡는다
     sizes[file] = Buffer.byteLength(txt);
   }
+  const tracksDir = path.join(ROOT, TRACKS_DIR);
+  const trackFiles = fs.existsSync(tracksDir) ? fs.readdirSync(tracksDir).filter((f) => f.endsWith('.json')).sort() : [];
+  if (trackFiles.length) {
+    data.tracks = trackFiles.map((f) => { const txt = fs.readFileSync(path.join(tracksDir, f), 'utf8'); sizes['tracks/' + f] = Buffer.byteLength(txt); return JSON.parse(txt); });
+  } else console.warn(TRACKS_DIR + '/*.json 없음 → 합성 생업 진로만으로 동작');
   const dataJs = 'window.__DATA__=' + JSON.stringify(data) + ';';
 
   // 3) CSS
