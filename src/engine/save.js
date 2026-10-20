@@ -6,6 +6,68 @@ import { tracksFor } from './data.js';
 
 export const SAVE_V = 2;
 
+// W15에서 삭제한 진로는 저장 버전(v2)이 같아도 변환해야 한다.
+const MERGED_TRACKS = {
+  COL_BSW: { id: 'COL_PMC', aff: 'COL_PMC_BLACKSTEEL', stages: ['trainee', 'operator', 'elite', 'exec', 'ceo'] },
+  COL_RHINE: { id: 'COL_RESEARCH', aff: 'COL_RES_RHINE', stages: ['intern', 'researcher', 'director', 'board'] },
+  COM_PENGUIN: { id: 'LGM_MESSENGER', aff: 'LGM_MSG_PENGUIN', stages: ['messenger', 'escort', 'lead'] },
+  COM_PENGUIN_IDOL: { id: 'LGM_ART', aff: 'COM_SIREN', stages: ['busker', 'club', 'star'] },
+  COM_BLACKSTEEL: { id: 'COL_PMC', aff: 'COL_PMC_BLACKSTEEL', stages: ['trainee', 'operator', 'elite', 'exec'] },
+  COM_BLACKSTEEL_EXCHANGE: { id: 'COL_PMC', aff: 'COL_PMC_BLACKSTEEL', stages: ['operator', 'operator', 'operator'] },
+};
+const OLD_STAGES = {
+  COM_PENGUIN: ['screened', 'staff', 'role'],
+  COM_PENGUIN_IDOL: ['contract', 'protected', 'record'],
+  COM_BLACKSTEEL: ['trainee', 'operator', 'lead', 'cadre'],
+  COM_BLACKSTEEL_EXCHANGE: ['signed', 'dispatched', 'ended'],
+};
+
+function migrateMergedTracks(S, data) {
+  const replacement = (id) => !data.trackById[id] && MERGED_TRACKS[id] && data.trackById[MERGED_TRACKS[id].id] ? MERGED_TRACKS[id] : null;
+  const mapId = (id) => replacement(id)?.id || id;
+  const convert = (tr, active = false) => {
+    if (!tr) return false;
+    const r = replacement(tr.id); if (!r) return false;
+    const old = tr.id;
+    const index = active ? tr.stage : (OLD_STAGES[old] || r.stages).indexOf(tr.stage);
+    const stageId = r.stages[clamp(Number.isFinite(index) && index >= 0 ? index : 0, 0, r.stages.length - 1)];
+    tr.id = r.id;
+    tr.stage = active ? data.trackById[r.id].stages.findIndex((s) => s.id === stageId) : stageId;
+    tr.aff = r.aff;
+    if (active && old === 'COM_BLACKSTEEL_EXCHANGE' && index < 2 && !S.flags.bsx) {
+      S.flags.bsx = { at: tr.since ?? S.age, from: S.flags.rhodesContractorFrom || 'columbia' };
+    }
+    return true;
+  };
+  const changed = convert(S.track, true);
+  for (const h of S.trackHist || []) convert(h);
+  S.job = mapId(S.job);
+  if (changed) {
+    S.job = data.trackById[S.track.id].job || S.track.id;
+    S.flags.promoDue = null;
+  }
+  if (S.dream) S.dream.id = mapId(S.dream.id);
+  if (S.flags.lastTrack) {
+    const last = { id: S.flags.lastTrack, stage: S.flags.lastTrackStage };
+    convert(last);
+    S.flags.lastTrack = last.id; S.flags.lastTrackStage = last.stage;
+  }
+  // 후보 캐시를 새 데이터로 다시 계산한다. 현재 열린 진로 결정의 선택지도 갱신한다.
+  if (S.flags.trackCands?.cands.some((c) => replacement(c.id))) {
+    S.flags.trackCands = null; delete S.flags.trackRollAge;
+  }
+  if (S.pending && ['track_choose', 'track_switch', 'dream_choose'].includes(S.pending.id)) {
+    for (const c of S.pending.view.choices) {
+      const prefix = c.k.startsWith('closed:') ? 'closed:' : '';
+      const r = replacement(c.k.slice(prefix.length));
+      if (r) {
+        const t = data.trackById[r.id];
+        c.k = prefix + r.id; c.label = t.name; c.sub = t.stages[0].title || t.stages[0].name;
+      }
+    }
+  }
+}
+
 export function healStats(S) {
   if (!S || typeof S !== 'object') return S;
   S.st = S.st || {};
@@ -35,6 +97,8 @@ export function healStats(S) {
 export function migrateSave(S, data) {
   try {
     if (!S || typeof S !== 'object' || !S.st) return null;
+    S.flags = S.flags || {};
+    migrateMergedTracks(S, data);
     if (S.v >= SAVE_V && S.cap && S.innate && S.res && S.status) { healStats(S); return S; }
     // cap: sm→learn, so→ties (50 = 0, 20점 = 1z)
     const sm = Number.isFinite(S.st.sm) ? S.st.sm : 50, so = Number.isFinite(S.st.so) ? S.st.so : 50;

@@ -23,10 +23,14 @@
 ```bash
 npm install          # esbuild 하나뿐
 npm run build        # dist/index.html 과 루트 index.html 생성
-npm run check        # 데이터 검증 · 조사/금지 문구 검사 · 300명 자동 시뮬
+npm run check        # 데이터·진로·문장 검사 · 회귀 테스트 · 300명 자동 시뮬
 npm run verify       # headless Chrome 으로 file:// 플레이 검증(12세까지)
 npm run verify:death # 사망 화면까지 3생
 ```
+
+대규모 콘텐츠 감사는 `node test/audit.js 100 1000`(21개국 각 100명 + 무작위 1,000명),
+정적 콘텐츠 점검은 `node test/lint-content.js`로 실행합니다.
+최근 인수 점검과 남은 경고는 [QA 보고서](docs/QA_감사_v0.3.md)의 v0.3.5 절에 있습니다.
 
 개발 중에는 프로젝트 루트에서 `python -m http.server 8765` 후 `http://localhost:8765/src/index.html`.
 

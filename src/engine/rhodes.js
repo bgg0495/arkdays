@@ -10,7 +10,7 @@
 import { clamp } from './rng.js';
 import { BALANCE as B } from './balance.js';
 import { grade as capGrade } from './caps.js';
-import { trackOf, enterTrack, leaveTrack, achieveDream } from './track.js';
+import { trackOf, enterTrack, leaveTrack } from './track.js';
 import { migrateTo } from './migration.js';
 import { expHealth } from './death.js';
 
@@ -185,7 +185,6 @@ export function joinRhodes(sim, via = 'treatment', opts = {}) {
   S.rhodes = { via, status: place.status, dept: place.dept, since: S.age };
   S.ori.treated = true;
   S.flags.rhodesAt = S.flags.rhodesAt ?? S.age; S.flags.rhodesOffer = null; S.flags.rhodesVia = via;
-  achieveDream(sim, 'RHO_OPERATOR', '어릴 적 꿈대로 로도스 아일랜드에 들어갔습니다.');   // W16(D56): 오퍼레이터 꿈은 합류로 이룬다
   S.flags.quarantined = false; S.flags.noMove = false; S.flags.oriHidden = false; S.flags.euthTrack = false; S.flags.euthNotice = null; S.flags.oriFees = false; S.flags.oriPremium = 0;
   if (S.prison) { S.prison = null; S.prisonLeft = 0; }
   if (data.nationById.rhodes && !keep) migrateTo(sim, 'rhodes', 'rhodes', { papers: 'agreement', quiet: true, keepTrack: false });

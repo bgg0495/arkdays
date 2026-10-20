@@ -144,7 +144,13 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
   sim.joinRhodes = (via, opts) => joinRhodes(sim, via, opts);
   sim.setHousing = (typeId, opts) => { const t = (data.housing[sim.S.cur] || data.housing._default).types.find((x) => x.id === typeId); return t ? setHousing(sim, t, opts) : false; };
   sim.heal = () => healStats(sim.S);
-  sim.load = (S) => { const m = migrateSave(S, data); if (!m) return null; sim.S = m; normalizeRhodes(sim); refreshRel(sim); return sim.S; };
+  sim.load = (S) => {
+    const m = migrateSave(S, data); if (!m) return null;
+    sim.S = m;
+    // 개편으로 삭제된 결정 창을 그대로 실행하면 apply가 없어 이어하기가 멈춘다.
+    if (m.pending && !sim.content.decisions[m.pending.id]) m.pending = null;
+    normalizeRhodes(sim); refreshRel(sim); return sim.S;
+  };
 
   // ── 생애 시작 ──────────────────────────────────────────
   sim.newLife = (opts = {}) => { sim.S = newLife(data, sim.rng, { terra: sim.terra, ...opts }); refreshRel(sim); initHousing(sim); return sim.S; };
@@ -231,6 +237,8 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     } else if (e.type === 'big') {
       const b = sim.content.bigById[e.id];
       if (!b) return;
+      // 연초에 예약한 뒤 이주했을 수 있다. 현재 거주국·방문국 사건만 실행한다.
+      if (b.nation && b.nation !== S.cur && b.nation !== S.root && b.nation !== S.res?.itinerantAt) return;
       sim.logResult(b.run(sim), 'big');
       S.flags['big_' + b.id] = S.age;
     }
@@ -274,6 +282,7 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     const S = sim.S;
     const pd = S.pending;
     if (!pd) return false;
+    if (pd.view.choices.some((c) => c.k === k && c.disabled)) return false;
     const d = sim.content.decisions[pd.id];
     S.pending = null;
     S.done[pd.id] = (S.done[pd.id] || 0) + 1;
@@ -343,7 +352,7 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     resYear(sim); if (S.phase !== 'life') return;
     refreshRel(sim);   // W11: 관계 등급은 연도 조건(since 1098 류)이 있어 매년 다시 본다(W9d-7)
     rhodesYear(sim); if (S.phase !== 'life') return;
-    dreamYear(sim);     // W16(D56): 인간 척도 35세까지 꿈 진로에 못 들어갔으면 접는다
+    dreamYear(sim);     // W16(D56): 나이·진로·가정 상황에 따른 연간 확률로 꿈을 접는다
     capGradeLog(sim);   // W14(QA B17): 이주·투옥의 mulTies 가 끝난 뒤(스냅샷 직전)에 등급 변화를 적는다
     // 7. 연간 스냅샷
     S.years.push({ a: S.age, y: sim.year, hl: Math.round(S.st.hl), h: Math.round(S.st.h),

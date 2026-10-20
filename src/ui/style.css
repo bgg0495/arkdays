@@ -320,10 +320,20 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 1px
 .modal-wrap { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; }
 .modal-back { position: absolute; inset: 0; background: rgba(8, 10, 14, 0.72); backdrop-filter: blur(3px); }
 /* W12(D51-4): 잠깐 숨기기 — .peek 면 모달·배경이 투명해지고 버튼만 남는다 */
-.peek-btn { position: absolute; top: 12px; right: 14px; z-index: 3; }
+.peek-btn { margin-left: auto; white-space: nowrap; color: var(--accent); border-color: var(--accent-dim); }
+.peek-return {
+  position: fixed; left: 50%; bottom: calc(clamp(24px, 8vh, 80px) + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 3;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  width: min(320px, calc(100vw - 40px)); padding: 18px 24px;
+  background: var(--panel); border: 2px solid var(--accent); border-top-width: 4px; color: var(--accent);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35), 0 0 0 5px var(--accent-soft);
+}
+.peek-return:hover { background: var(--panel-3); border-color: var(--accent); color: var(--accent); }
+.peek-return-title { font-size: 1.05rem; font-weight: 700; }
+.peek-return-note { font-size: 0.78rem; color: var(--text-2); }
 .modal-wrap.peek { pointer-events: none; }
-.modal-wrap.peek .peek-btn { pointer-events: auto; background: var(--panel); border-color: var(--accent); color: var(--accent); }
-.modal-wrap.peek .modal, .modal-wrap.peek .modal-back { opacity: 0; transition: opacity 120ms; }
+.modal-wrap.peek .peek-return { pointer-events: auto; }
+.modal-wrap.peek .modal, .modal-wrap.peek .modal-back { opacity: 0; visibility: hidden; transition: opacity 120ms; }
 .modal-wrap .modal, .modal-wrap .modal-back { transition: opacity 120ms; }
 /* W12(D51-1): 신원 카드 역량 최근 1년 변화 화살표 */
 .cap .cap-d { font-style: normal; font-size: 0.62rem; margin-left: 0.3em; }
@@ -335,7 +345,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 1px
 .id-kv .dream-given { color: var(--muted); text-decoration: line-through; }
 .modal { width: min(560px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; background: var(--panel); border: 1px solid var(--line-2); padding: 20px 24px 18px; --cut: 14px; --fc: var(--line-2); animation: modal-in 160ms ease-out; }
 @keyframes modal-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.modal-top { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; font-size: 0.74rem; color: var(--muted); }
+.modal-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; font-size: 0.74rem; color: var(--muted); }
 .modal-when { letter-spacing: 0.04em; }
 .tag { display: inline-flex; align-items: baseline; gap: 0.7em; border: 1px solid currentColor; padding: 0.3em 0.75em 0.3em 0.65em; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; line-height: 1.2; }
 .tag-en { font-family: var(--mono); font-weight: 500; font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.85; }

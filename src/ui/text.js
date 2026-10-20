@@ -247,7 +247,11 @@ export function deathSummary(sim) {
   if (d.age >= 6) s.push(S.flags.noSchool ? '학교는 다니지 못했습니다.' : S.flags.casterRoute ? '아츠 수련 과정을 마쳤습니다.' : S.edu >= 4 ? '대학까지 다녔습니다.' : S.edu >= 3 ? '상급 학교까지 다녔습니다.' : S.edu >= 2 ? '중학교까지 다녔습니다.' : S.edu >= 1 ? '초등학교까지 다녔습니다.' : '');
   if (S.flags.childLabor != null) s.push(S.flags.childLabor + '세부터 일했습니다.');
   // W16(D56): 어릴 적 꿈
-  if (S.dream && S.dream.id) { const dt = sim.data.trackById[S.dream.id]; if (dt) s.push(S.flags.dreamDone != null ? '어릴 적 꿈대로 ' + ro(dt.name) + ' 살았습니다.' : S.flags.dreamGiven > 1 ? koAge(S.flags.dreamGiven) + '에 ' + dt.name + '의 꿈을 접었습니다.' : '어릴 적에는 ' + iga(dt.name) + ' 되고 싶었으나 되지 못했습니다.'); }
+  if (S.dream && S.dream.id) {
+    const dt = sim.data.trackById[S.dream.id];
+    const givenAge = S.flags.dreamGivenAt ?? (S.flags.dreamGiven <= 15 ? S.flags.dreamGiven : 15 + (S.flags.dreamGiven - 15) * sim.race.lifeMul);
+    if (dt) s.push(S.flags.dreamDone != null ? '어릴 적 꿈대로 ' + ro(dt.name) + ' 살았습니다.' : S.flags.dreamGiven > 1 ? koAge(givenAge) + '에 ' + dt.name + '의 꿈을 접었습니다.' : '어릴 적에는 ' + iga(dt.name) + ' 되고 싶었으나 되지 못했습니다.');
+  }
   const th = trackHistSentences(sim);   // v1: 진로 이력 1~2문장
   const lastJob = S.job || lastJobOf(S);
   if (th.length) s.push(...th);

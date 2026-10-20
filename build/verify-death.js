@@ -14,13 +14,19 @@ const URL_ = 'file:///' + HTML.split(path.sep).map(encodeURIComponent).join('/')
 const PORT = 9334;
 const udd = fs.mkdtempSync(path.join(os.tmpdir(), 'arkdays-cdp-death-'));
 const ch = spawn(CHROME, ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', `--remote-debugging-port=${PORT}`, `--user-data-dir=${udd}`, 'about:blank'], { stdio: 'ignore' });
+const watchdog = setTimeout(() => { console.error('TEST FAIL: 사망 화면 검증 시간 초과'); ch.kill(); process.exit(1); }, Math.max(60000, N * 20000));
+ch.on('error', (e) => { console.error('TEST FAIL: 브라우저 실행 실패', e); process.exit(1); });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 async function json(p) { return (await fetch(`http://127.0.0.1:${PORT}${p}`)).json(); }
 (async () => {
   let targets; for (let i = 0; i < 50; i++) { try { targets = await json('/json/list'); break; } catch (e) { await sleep(200); } }
   const page = targets.find((t) => t.type === 'page');
   const ws = new WebSocket(page.webSocketDebuggerUrl);
-  await new Promise((r) => ws.onopen = r);
+  await new Promise((resolve, reject) => {
+    ws.onopen = resolve;
+    ws.onerror = () => reject(new Error('DevTools WebSocket 연결 실패'));
+    ws.onclose = () => reject(new Error('DevTools 연결이 검사 시작 전에 종료됨'));
+  });
   let id = 0; const pend = new Map(); const errors = [];
   ws.onmessage = (m) => { const d = JSON.parse(m.data);
     if (d.id) { const p = pend.get(d.id); pend.delete(d.id); d.error ? p.rej(new Error(JSON.stringify(d.error))) : p.res(d.result); }
@@ -60,5 +66,6 @@ async function json(p) { return (await fetch(`http://127.0.0.1:${PORT}${p}`)).js
   const bad = lives.filter((l) => l.phase !== 'dead' || l.dead.screen !== 'dead' || !l.dead.lead || !l.dead.rite
     || !l.copy || !l.copy.copied || l.copy.missing.length || l.copy.forbidden.length || l.copy.hasTextareaPreview);
   console.log(errors.length || bad.length ? `\n실패: 에러 ${errors.length}건, 사망 화면 미완성 ${bad.length}생` : `\n통과: ${N}생 모두 사망 화면 도달 · 에러 0`);
+  clearTimeout(watchdog);
   ws.close(); ch.kill(); setTimeout(() => { try { fs.rmSync(udd, { recursive: true, force: true }); } catch (e) {} process.exit(errors.length || bad.length ? 2 : 0); }, 500);
 })().catch((e) => { console.error('TEST FAIL', e); ch.kill(); process.exit(1); });

@@ -213,10 +213,10 @@ export function dreamCandidates(sim) {
     if (t) { add(t, 'parent', '“' + (who === 'dad' ? '아버지' : '어머니') + '처럼요” · 부모의 길', 0.7); break; }
   }
   const famInf = (S.fam.dad && S.fam.dad.infected) || (S.fam.mom && S.fam.mom.infected);
-  if (sim.year >= (B.dream.rhodesYear ?? 1094) && (S.ori.known || famInf) && data.trackById.RHO_OPERATOR) add(data.trackById.RHO_OPERATOR, 'rhodes', '“아픈 사람도 받아 준다는 배가 있대요” · 로도스 합류로 이룸', 0.6);
+  if (sim.year >= (B.dream.rhodesYear ?? 1094) && (S.ori.known || famInf) && data.trackById.RHO_OPERATOR) add(data.trackById.RHO_OPERATOR, 'rhodes', '“아픈 사람도 받아 준다는 배가 있대요” · 외근 오퍼레이터가 되면 이룸', 0.6);
   return out;
 }
-/** 꿈 달성(진입·로도스 합류). 생애 1회. 행복 +happyIn, 기록 big */
+/** 꿈 진로 진입 시 달성. 생애 1회. 행복 +happyIn, 기록 big */
 export function achieveDream(sim, id, text) {
   const { S, data } = sim;
   if (!S.dream || S.dream.id !== id || S.flags.dreamDone != null) return false;
@@ -260,6 +260,7 @@ export function dreamYear(sim) {
   const t = data.trackById[S.dream.id];
   const ha = Math.round(humanAge(S.age, sim.race.lifeMul));
   S.flags.dreamGiven = ha;
+  S.flags.dreamGivenAt = S.age;   // 표시에는 실제 나이, 분포 집계에는 인간 척도를 사용
   const h = B.dream.happyGiveUp ?? -3;
   S.st.h = clamp(S.st.h + h, 0, 100);
   const nm = t ? t.name : '그 길';

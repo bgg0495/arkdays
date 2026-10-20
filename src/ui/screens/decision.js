@@ -52,11 +52,15 @@ export function open(app, pd) {
   wrap.classList.remove('peek');
   setHtml(wrap, `
     <div class="modal-back"></div>
-    <button class="btn tiny ghost peek-btn" id="btn-peek" type="button" title="결정 창을 잠깐 숨기고 뒤 화면을 봅니다 (H 키)">뒤 화면 보기</button>
+    <button class="btn peek-return" id="btn-peek-return" type="button" hidden>
+      <span class="peek-return-title">선택지 다시 보기</span>
+      <span class="peek-return-note">결정은 잠시 멈춰 있습니다</span>
+    </button>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" data-id="${esc(pd.id || '')}">
       <div class="modal-top">
         <span class="tag tag-${kind}"><span class="tag-en">${KIND[kind].en}</span>${KIND[kind].ko}</span>
         <span class="modal-when mono">${S.age}세 · 테라력 ${S.by + S.age}년</span>
+        <button class="btn tiny peek-btn" id="btn-peek" type="button" title="뒤의 기록과 능력치를 확인합니다 (Esc / H)">잠깐 내려두기</button>
       </div>
       <h2 id="modal-title" class="modal-title">${esc(v.title || '')}</h2>
       <p class="modal-body">${esc(v.body || '')}</p>
@@ -81,6 +85,8 @@ export function open(app, pd) {
   });
   $('#btn-auto', wrap).addEventListener('click', () => { app.actions.toggleAuto(true); });
   $('#btn-peek', wrap).addEventListener('click', () => togglePeek());
+  $('#btn-peek-return', wrap).addEventListener('click', () => togglePeek(false));
+  $('.modal-back', wrap).addEventListener('click', () => togglePeek(true));
   wrap.hidden = false;
   window.addEventListener('keydown', onKey);
   if (kind === 'small') startCountdown(app, v);
@@ -90,7 +96,8 @@ export function open(app, pd) {
 function onKey(ev) {
   if (!current) return;
   if (ev.target && ev.target.matches('textarea, input')) return;
-  if (ev.key === 'h' || ev.key === 'H' || (ev.key === 'Escape' && $('#modal').classList.contains('peek'))) { ev.preventDefault(); togglePeek(); return; }
+  if (!ev.ctrlKey && !ev.altKey && !ev.metaKey && (ev.code === 'KeyH' || ev.key === 'h' || ev.key === 'H' || ev.key === 'Escape')) { ev.preventDefault(); togglePeek(); return; }
+  if ($('#modal').classList.contains('peek')) return;
   const n = parseInt(ev.key, 10);
   const active = current.pd.view.choices.filter((c) => !c.disabled);
   if (n >= 1 && n <= active.length) { ev.preventDefault(); pick(current.app, active[n - 1].k); }
@@ -102,8 +109,14 @@ export function togglePeek(force) {
   const wrap = $('#modal'); if (!wrap || !current) return;
   const on = typeof force === 'boolean' ? force : !wrap.classList.contains('peek');
   wrap.classList.toggle('peek', on);
-  const b = $('#btn-peek', wrap); if (b) b.textContent = on ? '결정으로 돌아가기' : '뒤 화면 보기';
+  const dialog = $('.modal', wrap);
+  dialog.inert = on;
+  dialog.setAttribute('aria-hidden', String(on));
+  dialog.setAttribute('aria-modal', String(!on));
+  const back = $('#btn-peek-return', wrap);
+  back.hidden = !on;
   if (on && timer) stopCountdown();
+  (on ? back : $('#btn-peek', wrap)).focus();
 }
 
 function pick(app, k) {

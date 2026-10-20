@@ -13,13 +13,20 @@ const URL_ = 'file:///' + HTML.split(path.sep).map(encodeURIComponent).join('/')
 const PORT = 9333;
 const udd = fs.mkdtempSync(path.join(os.tmpdir(), 'arkdays-cdp-'));
 const ch = spawn(CHROME, ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', `--remote-debugging-port=${PORT}`, `--user-data-dir=${udd}`, 'about:blank'], { stdio: 'ignore' });
+// 연결 실패가 미해결 Promise로 남아 종료 코드 0으로 끝나지 않게 한다.
+const watchdog = setTimeout(() => { console.error('TEST FAIL: 브라우저 검증 시간 초과'); ch.kill(); process.exit(1); }, 60000);
+ch.on('error', (e) => { console.error('TEST FAIL: 브라우저 실행 실패', e); process.exit(1); });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 async function json(p) { return (await fetch(`http://127.0.0.1:${PORT}${p}`)).json(); }
 (async () => {
   let targets; for (let i = 0; i < 50; i++) { try { targets = await json('/json/list'); break; } catch (e) { await sleep(200); } }
   const page = targets.find((t) => t.type === 'page');
   const ws = new WebSocket(page.webSocketDebuggerUrl);
-  await new Promise((r) => ws.onopen = r);
+  await new Promise((resolve, reject) => {
+    ws.onopen = resolve;
+    ws.onerror = () => reject(new Error('DevTools WebSocket 연결 실패'));
+    ws.onclose = () => reject(new Error('DevTools 연결이 검사 시작 전에 종료됨'));
+  });
   let id = 0; const pend = new Map(); const errors = []; const logs = [];
   ws.onmessage = (m) => { const d = JSON.parse(m.data);
     if (d.id) { const p = pend.get(d.id); pend.delete(d.id); d.error ? p.rej(new Error(JSON.stringify(d.error))) : p.res(d.result); }
@@ -71,11 +78,16 @@ async function json(p) { return (await fetch(`http://127.0.0.1:${PORT}${p}`)).js
   await send('Page.reload'); await sleep(1500);
   out.oldSave = await ev('({screen: __app.screen, resumeBtn: !!document.querySelector("#btn-resume"), saveLeft: !!localStorage.getItem("tr1.save"), toast: document.querySelector("#toast")?.textContent})');
   if (out.oldSave.resumeBtn || out.oldSave.saveLeft || !/이전 버전/.test(out.oldSave.toast || '')) errors.push('OLDSAVE 구 세이브 처리 실패 ' + JSON.stringify(out.oldSave));
+  if (out.toTen.age !== 10 || out.toTen.phase !== 'life' || !out.storage.hasSave || out.storage.savedAge !== 10) errors.push('SAVE 10세 저장 실패');
+  if (out.resumed.screen !== 'life' || out.resumed.age !== out.storage.savedAge || out.resumed.name !== out.storage.savedName) errors.push('RESUME 저장된 삶과 이어하기 불일치');
+  if (out.more.age !== 12 || out.more.savedAge !== 12) errors.push('RESUME 이어서 12세 진행·저장 실패');
+  if (logs.some((l) => l.startsWith('REQ ') && l !== 'REQ ' + URL_.slice(0, 100))) errors.push('NETWORK 외부 요청 발생');
   out.errors = errors; out.requests = logs.filter((l) => l.startsWith('REQ'));
   out.otherLogs = logs.filter((l) => !l.startsWith('REQ')).slice(0, 20);
   console.log(JSON.stringify(out, null, 1));
   console.log(errors.length ? `
 실패: 에러 ${errors.length}건` : `
 통과: ${URL_} · 에러 0 · 요청 ${out.requests.length}건(index.html 자체 로드)`);
+  clearTimeout(watchdog);
   ws.close(); ch.kill(); setTimeout(() => { try { fs.rmSync(udd, { recursive: true, force: true }); } catch (e) {} process.exit(errors.length ? 2 : 0); }, 500);
 })().catch((e) => { console.error('TEST FAIL', e); ch.kill(); process.exit(1); });
