@@ -1,0 +1,885 @@
+{
+ "_meta": {
+  "nation": "victoria",
+  "source": "진로_카탈로그_v0 §8",
+  "canon": "mixed",
+  "classScale": 1,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "최하층 VIC_INFECTED 25는 감염 강제 전환 전용(forced)이라 빼고 재정규화. VIC_MILITIA는 1094~98 시대 한정 전환 진로라 classes 없음."
+ },
+ "tracks": [
+  {
+   "id": "VIC_GANG",
+   "nation": "victoria",
+   "region": null,
+   "name": "글래스고 갱단",
+   "archetype": "A1",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [10,25],
+    "classes": { "q1": 0.47 },
+    "gates": [
+     { "urban": true }
+    ],
+    "via": ["kid","gym"]
+   },
+   "stages": [
+    {
+     "id": "kid",
+     "name": "꼬마",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "ties", "k": 0.25 },
+     "fall": { "base": 0.05, "causes": ["vendetta","arrest","kia"] }
+    },
+    {
+     "id": "member",
+     "name": "단원",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.05, "causes": ["vendetta","arrest","kia"] }
+    },
+    {
+     "id": "lieutenant",
+     "name": "부관",
+     "title": "부관",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.05, "causes": ["vendetta","arrest","kia"] }
+    },
+    {
+     "id": "boss",
+     "name": "두목",
+     "title": "두목",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.05, "causes": ["vendetta","arrest","kia"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.7,1.8,4], "job": "criminal" },
+   "standing": { "name": "조직 신뢰", "start": 20 },
+   "affiliations": ["VIC_GANG_GLASGOW","VIC_GANG_GYM"],
+   "exits": {
+    "retire": { "age": 60, "to": "VIC_CRAFT" },
+    "fall": { "vendetta": "death", "arrest": "prison:jail", "kia": "death:violence" },
+    "switch": ["VIC_FACTORY","VIC_MILITIA"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["siege"]
+  },
+  {
+   "id": "VIC_INFECTED",
+   "nation": "victoria",
+   "region": null,
+   "name": "감염자 노동",
+   "archetype": "A5",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [10,70],
+    "classes": {},
+    "gates": [
+     { "infected": true }
+    ],
+    "via": ["diagnosed"]
+   },
+   "forced": { "infected": true, "policy": ["persecute"] },
+   "stages": [
+    {
+     "id": "halfpay",
+     "name": "격리 노동",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.07, "causes": ["accident","suicide","crystallize","camp"] },
+     "forced": true
+    },
+    {
+     "id": "accident",
+     "name": "사고 후",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.15 },
+     "fall": { "base": 0.07, "causes": ["accident","suicide","crystallize","camp"] },
+     "forced": true
+    },
+    {
+     "id": "camp",
+     "name": "수용소",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.07, "causes": ["accident","suicide","crystallize","camp"] },
+     "forced": true
+    }
+   ],
+   "income": { "stage": [0.3,0.15,0] },
+   "standing": { "name": "작업반 평판", "start": 20 },
+   "affiliations": ["VIC_INF_CALADON","VIC_INF_ZONE"],
+   "exits": {
+    "retire": null,
+    "fall": { "accident": "death", "suicide": "death", "crystallize": "death", "camp": "prison:camp" },
+    "switch": ["VIC_MILITIA"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "VIC_CONSCRIPT",
+   "nation": "victoria",
+   "region": null,
+   "name": "징집병",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [17,24],
+    "classes": { "q1": 0.27, "q2": 0.25 },
+    "gates": [
+     { "sex": "M", "weight": 4 }
+    ],
+    "via": ["conscript"]
+   },
+   "stages": [
+    {
+     "id": "draft",
+     "name": "징집",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.045, "causes": ["kia","desert","infected"] }
+    },
+    {
+     "id": "basic",
+     "name": "기초 훈련",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.045, "causes": ["kia","desert","infected"] }
+    },
+    {
+     "id": "front",
+     "name": "전선",
+     "title": "병",
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.12 },
+     "fall": { "base": 0.045, "causes": ["kia","desert","infected"] }
+    },
+    {
+     "id": "discharged",
+     "name": "제대",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["kia","desert","infected"] }
+    }
+   ],
+   "income": { "stage": [0.5,0.5,0.9,0.7], "job": "soldier" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["VIC_CON_ROYAL","VIC_CON_SECOND","VIC_CON_LONDINIUM"],
+   "exits": {
+    "retire": { "age": 40, "to": "VIC_FACTORY" },
+    "fall": { "kia": "death", "desert": "exile", "infected": "demote" },
+    "switch": ["VIC_PRIVATE","VIC_ACADEMY"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "VIC_FACTORY",
+   "nation": "victoria",
+   "region": null,
+   "name": "공장 노동",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q1": 0.26, "q2": 0.4, "q3": 0.1 },
+    "gates": [
+     { "urban": true, "weight": 1.5 }
+    ],
+    "via": ["hire","family"]
+   },
+   "stages": [
+    {
+     "id": "line",
+     "name": "조립 라인",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["accident","infected","layoff"] }
+    },
+    {
+     "id": "foreman",
+     "name": "반장",
+     "title": "반장",
+     "minYears": 7,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["accident","infected","layoff"] }
+    },
+    {
+     "id": "rep",
+     "name": "노동자 대표",
+     "title": "대표",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.04 },
+     "fall": { "base": 0.03, "causes": ["accident","infected","layoff"] }
+    },
+    {
+     "id": "chief",
+     "name": "군수공장 총책",
+     "title": "총책",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["accident","infected","layoff"] }
+    }
+   ],
+   "income": { "stage": [0.5,0.9,1.3,3], "job": "factory_worker" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["VIC_FAC_HIGHBURY","VIC_FAC_SUDIAN","VIC_FAC_CALADON","VIC_FAC_ROYALDELL"],
+   "exits": {
+    "retire": { "age": 60, "to": "VIC_CRAFT" },
+    "fall": { "accident": "injured", "infected": "infected", "layoff": "expel" },
+    "switch": ["VIC_CRAFT","VIC_MILITIA"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "VIC_CRAFT",
+   "nation": "victoria",
+   "region": null,
+   "name": "장인·자영업",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,35],
+    "classes": { "q2": 0.1, "q3": 0.25 },
+    "gates": [],
+    "via": ["apprentice","family"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "견습",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.02, "causes": ["ruin","raid"] }
+    },
+    {
+     "id": "shop",
+     "name": "독립 가게",
+     "title": "주인",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.02, "causes": ["ruin","raid"] }
+    },
+    {
+     "id": "wholesale",
+     "name": "도매상",
+     "title": "도매상",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["ruin","raid"] }
+    }
+   ],
+   "income": { "stage": [0.4,1.2,2.5], "job": "artisan" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["VIC_CRAFT_BAKERY","VIC_CRAFT_SPICE","VIC_CRAFT_FLOWER","VIC_CRAFT_VIDEO"],
+   "exits": {
+    "retire": { "age": 60, "to": "VIC_CRAFT" },
+    "fall": { "ruin": "expel", "raid": "expel" },
+    "switch": ["VIC_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "VIC_RURAL",
+   "nation": "victoria",
+   "region": null,
+   "name": "농축산·지방 산업",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,40],
+    "classes": { "q2": 0.2 },
+    "gates": [
+     { "urban": false, "weight": 3 }
+    ],
+    "via": ["family"]
+   },
+   "stages": [
+    {
+     "id": "family",
+     "name": "가족",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.015, "causes": ["ruin","catastrophe","raid"] }
+    },
+    {
+     "id": "farm",
+     "name": "농장·꽃 재배",
+     "title": null,
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.015, "causes": ["ruin","catastrophe","raid"] }
+    },
+    {
+     "id": "owner",
+     "name": "농장주",
+     "title": "농장주",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.015, "causes": ["ruin","catastrophe","raid"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.7,1.4], "job": "farmer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["VIC_RUR_NOMAD","VIC_RUR_BRENTWOOD","VIC_RUR_EASTHAM","VIC_RUR_TORUN"],
+   "exits": {
+    "retire": { "age": 60, "to": "VIC_CRAFT" },
+    "fall": { "ruin": "expel", "catastrophe": "death", "raid": "death" },
+    "switch": ["VIC_ACADEMY","VIC_FACTORY"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["bagpipe"]
+  },
+  {
+   "id": "VIC_PRIVATE",
+   "nation": "victoria",
+   "region": null,
+   "name": "공작 사병",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,35],
+    "classes": { "q2": 0.05, "q3": 0.05 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["veteran","hire"]
+   },
+   "stages": [
+    {
+     "id": "private",
+     "name": "병",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.045, "causes": ["kia","purge","betrayal"] }
+    },
+    {
+     "id": "sergeant",
+     "name": "중간 지휘",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["kia","purge","betrayal"] },
+     "canon": false
+    },
+    {
+     "id": "captain",
+     "name": "대장",
+     "title": "대장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["kia","purge","betrayal"] }
+    }
+   ],
+   "income": { "stage": [0.9,1.5,4], "job": "duke_retainer" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["VIC_PRI_REDIRON","VIC_PRI_GREYHAT","VIC_PRI_SWORDBEARER"],
+   "exits": {
+    "retire": { "age": 50, "to": "VIC_CRAFT" },
+    "fall": { "kia": "death", "purge": "expel", "betrayal": "exile" },
+    "switch": ["VIC_CONSCRIPT"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "VIC_POLICE",
+   "nation": "victoria",
+   "region": null,
+   "name": "기마 경찰",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,30],
+    "classes": { "q3": 0.15 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 },
+     { "rel": "<=subtle" }
+    ],
+    "via": ["exam"]
+   },
+   "stages": [
+    {
+     "id": "rookie",
+     "name": "잡무 신참",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["kia","scandal","layoff"] }
+    },
+    {
+     "id": "constable",
+     "name": "경관",
+     "title": "경관",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["kia","scandal","layoff"] }
+    },
+    {
+     "id": "commended",
+     "name": "표창",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["kia","scandal","layoff"] }
+    },
+    {
+     "id": "inspector",
+     "name": "경감",
+     "title": "경감",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["kia","scandal","layoff"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.9,1.3,1.6,2.5], "job": "police" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["VIC_POL_NATIONAL","VIC_POL_COUNTY","VIC_POL_CITY"],
+   "exits": {
+    "retire": { "age": 55, "to": "VIC_CRAFT" },
+    "fall": { "kia": "death", "scandal": "disgrace", "layoff": "expel" },
+    "switch": ["VIC_PRIVATE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "VIC_OFFICE",
+   "nation": "victoria",
+   "region": null,
+   "name": "사무직",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,32],
+    "classes": { "q3": 0.15, "q4": 0.15 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "staff",
+     "name": "사원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt"] }
+    },
+    {
+     "id": "senior",
+     "name": "주임",
+     "title": "주임",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt"] }
+    },
+    {
+     "id": "secretary",
+     "name": "비서·편집장",
+     "title": "편집장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt"] }
+    }
+   ],
+   "income": { "stage": [0.9,1.4,2.8], "job": "clerk" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["VIC_OFF_PRESS","VIC_OFF_MP","VIC_OFF_WHOLESALE","VIC_OFF_FINANCE"],
+   "exits": {
+    "retire": { "age": 60, "to": "VIC_CRAFT" },
+    "fall": { "layoff": "expel", "bankrupt": "expel" },
+    "switch": ["VIC_CRAFT","VIC_TEACHER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "VIC_TEACHER",
+   "nation": "victoria",
+   "region": null,
+   "name": "교사",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [20,30],
+    "classes": { "q3": 0.1 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "teacher",
+     "name": "교사",
+     "title": "교사",
+     "minYears": 10,
+     "promo": { "cap": "learn", "k": 0.2 },
+     "fall": { "base": 0.02, "causes": ["arrest","layoff"] }
+    },
+    {
+     "id": "principal",
+     "name": "교장",
+     "title": "교장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["arrest","layoff"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [1.1,2], "job": "teacher" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["VIC_TEA_STMARCEL","VIC_TEA_PRIMARY"],
+   "exits": {
+    "retire": { "age": 60, "to": "VIC_CRAFT" },
+    "fall": { "arrest": "prison:jail", "layoff": "expel" },
+    "switch": ["VIC_OFFICE","VIC_MILITIA"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "VIC_MILITIA",
+   "nation": "victoria",
+   "region": null,
+   "name": "점령기 자경단",
+   "archetype": "A1",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,60],
+    "classes": {},
+    "gates": [
+     { "year": [1094,1098] },
+     { "region": "londinium", "weight": 5 }
+    ],
+    "via": ["occupation"]
+   },
+   "stages": [
+    {
+     "id": "member",
+     "name": "대원",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "ties", "k": 0.25 },
+     "fall": { "base": 0.08, "causes": ["execution","kia","betrayal"] }
+    },
+    {
+     "id": "squad",
+     "name": "조장",
+     "title": "조장",
+     "minYears": 2,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.08, "causes": ["execution","kia","betrayal"] }
+    },
+    {
+     "id": "leadership",
+     "name": "지도부",
+     "title": "지도부",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.08, "causes": ["execution","kia","betrayal"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.4,0.6] },
+   "standing": { "name": "조직 신뢰", "start": 20 },
+   "affiliations": ["VIC_MIL_CORPS"],
+   "exits": {
+    "retire": { "age": 70, "to": "VIC_CRAFT" },
+    "fall": { "execution": "death", "kia": "death", "betrayal": "death" },
+    "switch": ["VIC_CRAFT","VIC_FACTORY"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "classes 없음: 1094~98 런디니움 거주자 전환 이벤트로만 진입"
+  },
+  {
+   "id": "VIC_ACADEMY",
+   "nation": "victoria",
+   "region": null,
+   "name": "사관학교 하사관·장교",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,22],
+    "classes": { "q3": 0.2, "q4": 0.45, "q5": 0.2 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 },
+     { "cap": "skill", "min": -0.8 },
+     { "rel": "<=subtle" }
+    ],
+    "via": ["entrance","scholarship"]
+   },
+   "stages": [
+    {
+     "id": "cadet",
+     "name": "생도",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.04, "causes": ["kia","courtmartial","suicide"] }
+    },
+    {
+     "id": "junior",
+     "name": "하사관·장교·근위",
+     "title": "소위",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.12 },
+     "fall": { "base": 0.04, "causes": ["kia","courtmartial","suicide"] }
+    },
+    {
+     "id": "captain",
+     "name": "대위",
+     "title": "대위",
+     "minYears": 7,
+     "promo": { "cap": "skill", "k": 0.06 },
+     "fall": { "base": 0.04, "causes": ["kia","courtmartial","suicide"] }
+    },
+    {
+     "id": "colonel",
+     "name": "대령",
+     "title": "대령",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.03 },
+     "fall": { "base": 0.04, "causes": ["kia","courtmartial","suicide"] }
+    },
+    {
+     "id": "peer",
+     "name": "귀족 지위",
+     "title": "경",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["kia","courtmartial","suicide"] }
+    }
+   ],
+   "income": { "stage": [0.5,1.5,3,7,15] },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["VIC_ACA_ROYAL","VIC_ACA_STORM","VIC_ACA_SECOND"],
+   "exits": {
+    "retire": { "age": 60, "to": "VIC_OFFICE" },
+    "fall": { "kia": "death", "courtmartial": "prison:jail", "suicide": "death" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["horn","bagpipe"]
+  },
+  {
+   "id": "VIC_KNIGHT",
+   "nation": "victoria",
+   "region": null,
+   "name": "탑의 기사·증기 기사",
+   "archetype": "A2",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [11,14],
+    "classes": { "q4": 0.15, "q5": 0.1 },
+    "gates": [
+     { "year": [1000,1094] },
+     { "cap": "skill", "min": 0.5 },
+     { "status": "noble", "weight": 3 }
+    ],
+    "via": ["selected"]
+   },
+   "stages": [
+    {
+     "id": "squire",
+     "name": "종자",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.035, "causes": ["kia","arrest","injury"] }
+    },
+    {
+     "id": "sentinel",
+     "name": "초병대장",
+     "title": "초병대장",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["kia","arrest","injury"] }
+    },
+    {
+     "id": "guard",
+     "name": "경비대장",
+     "title": "경비대장",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.06 },
+     "fall": { "base": 0.035, "causes": ["kia","arrest","injury"] }
+    },
+    {
+     "id": "knight",
+     "name": "기사",
+     "title": "기사",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.03 },
+     "fall": { "base": 0.035, "causes": ["kia","arrest","injury"] }
+    },
+    {
+     "id": "head",
+     "name": "수장",
+     "title": "수장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["kia","arrest","injury"] }
+    }
+   ],
+   "income": { "stage": [0.5,1.5,3,6,12], "job": "steam_knight" },
+   "standing": { "name": "랭킹 포인트", "start": 20 },
+   "affiliations": ["VIC_KNI_TOWER","VIC_KNI_STEAM"],
+   "exits": {
+    "retire": { "age": 60, "to": "VIC_OFFICE" },
+    "fall": { "kia": "death", "arrest": "prison:jail", "injury": "injured" },
+    "switch": ["VIC_ACADEMY"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "1094 런디니움 사태로 입구 닫힘(캐논). 1072 구금·1094 전멸은 대사건 처리"
+  },
+  {
+   "id": "VIC_SCHOLAR",
+   "nation": "victoria",
+   "region": null,
+   "name": "학자",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [17,26],
+    "classes": { "q4": 0.25 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["admission"]
+   },
+   "stages": [
+    {
+     "id": "student",
+     "name": "학생",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["infected","accident","disappear"] }
+    },
+    {
+     "id": "lab",
+     "name": "실험팀",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["infected","accident","disappear"] }
+    },
+    {
+     "id": "researcher",
+     "name": "연구원",
+     "title": "연구원",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["infected","accident","disappear"] }
+    },
+    {
+     "id": "professor",
+     "name": "교수",
+     "title": "교수",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["infected","accident","disappear"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.8,2,4.5], "job": "scholar" },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["VIC_SCH_ADVANCED","VIC_SCH_NATIONAL","VIC_SCH_ROYALSOC"],
+   "exits": {
+    "retire": { "age": 70, "to": "VIC_OFFICE" },
+    "fall": { "infected": "infected", "accident": "injured", "disappear": "death" },
+    "switch": ["VIC_TEACHER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "VIC_NOBLE",
+   "nation": "victoria",
+   "region": null,
+   "name": "공작령 정치",
+   "archetype": "A3",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,40],
+    "classes": { "q5": 0.7 },
+    "gates": [
+     { "status": "noble", "weight": 20 },
+     { "cap": "ties", "min": 0.5 }
+    ],
+    "via": ["heir"]
+   },
+   "stages": [
+    {
+     "id": "member",
+     "name": "가문원",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "ties", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["purge","assassination","exile"] }
+    },
+    {
+     "id": "mp",
+     "name": "의원",
+     "title": "의원",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["purge","assassination","exile"] }
+    },
+    {
+     "id": "duke",
+     "name": "공작",
+     "title": "공작",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["purge","assassination","exile"] }
+    }
+   ],
+   "income": { "stage": [4,8,40] },
+   "standing": { "name": "관청 평판", "start": 20 },
+   "affiliations": ["VIC_NOB_DUCHY","VIC_NOB_PARLIAMENT"],
+   "exits": {
+    "retire": { "age": 75, "to": "VIC_OFFICE" },
+    "fall": { "purge": "exile", "assassination": "death", "exile": "exile" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  }
+ ]
+}

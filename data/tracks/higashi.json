@@ -1,0 +1,791 @@
+{
+ "_meta": {
+  "nation": "higashi",
+  "source": "진로_카탈로그_v0 §3",
+  "canon": "mixed",
+  "classScale": 1,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "단계 minYears·promo.k·fall.base·income·classes·gates 수치는 전부 창작(명세 §4·§13 기본값). canon:false 표시가 없는 단계 명칭은 카탈로그 캐논 명칭."
+ },
+ "tracks": [
+  {
+   "id": "HIG_RURAL",
+   "nation": "higashi",
+   "region": "north",
+   "name": "광산촌 주민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,40],
+    "classes": { "q2": 0.3 },
+    "gates": [
+     { "region": "north", "weight": 3 },
+     { "urban": false, "weight": 2 }
+    ],
+    "via": ["family","hunt"]
+   },
+   "stages": [
+    {
+     "id": "family",
+     "name": "가족 노동",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.015, "causes": ["ruin","catastrophe","beast"] }
+    },
+    {
+     "id": "hunter",
+     "name": "사냥꾼·상인",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.015, "causes": ["ruin","catastrophe","beast"] }
+    },
+    {
+     "id": "chief",
+     "name": "촌장",
+     "title": "촌장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.015, "causes": ["ruin","catastrophe","beast"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.6,1.2], "job": "hunter" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["HIG_RURAL_NOGE","HIG_RURAL_MINE"],
+   "exits": {
+    "retire": { "age": 60, "to": "HIG_STREET" },
+    "fall": { "ruin": "expel", "catastrophe": "death", "beast": "death" },
+    "switch": ["HIG_FACTORY","HIG_NORTH_ARMY"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "HIG_FACTORY",
+   "nation": "higashi",
+   "region": null,
+   "name": "공장 노동",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [15,40],
+    "classes": { "q1": 0.1, "q2": 0.35 },
+    "gates": [],
+    "via": ["hire","recruit"]
+   },
+   "stages": [
+    {
+     "id": "worker",
+     "name": "공원",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.025, "causes": ["accident","infected","layoff"] }
+    },
+    {
+     "id": "foreman",
+     "name": "반장",
+     "title": "반장",
+     "minYears": 7,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.025, "causes": ["accident","infected","layoff"] }
+    },
+    {
+     "id": "manager",
+     "name": "공장장",
+     "title": "공장장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["accident","infected","layoff"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.6,1,2], "job": "factory_worker" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["HIG_FACT_KOKAWA","HIG_FACT_KINSEKI"],
+   "exits": {
+    "retire": { "age": 60, "to": "HIG_STREET" },
+    "fall": { "accident": "injured", "infected": "infected", "layoff": "expel" },
+    "switch": ["HIG_STREET","HIG_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "HIG_STREET",
+   "nation": "higashi",
+   "region": null,
+   "name": "포장마차·상점가",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q1": 0.15, "q2": 0.2, "q3": 0.1 },
+    "gates": [
+     { "urban": true, "weight": 1.5 }
+    ],
+    "via": ["family","hire"]
+   },
+   "stages": [
+    {
+     "id": "clerk",
+     "name": "점원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.015, "causes": ["ruin","bankrupt"] }
+    },
+    {
+     "id": "owner",
+     "name": "자영",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.015, "causes": ["ruin","bankrupt"] }
+    },
+    {
+     "id": "chair",
+     "name": "상점가 회장",
+     "title": "회장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.015, "causes": ["ruin","bankrupt"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.5,1,1.8], "job": "shopkeeper" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["HIG_STREET_ODEN","HIG_STREET_NITA","HIG_STREET_RINGONES"],
+   "exits": {
+    "retire": { "age": 60, "to": "HIG_STREET" },
+    "fall": { "ruin": "expel", "bankrupt": "expel" },
+    "switch": ["HIG_FACTORY","HIG_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "HIG_RONIN",
+   "nation": "higashi",
+   "region": null,
+   "name": "유랑 전사",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": true,
+   "route": ["higashi","yan","lungmen"],
+   "entry": {
+    "ages": [15,30],
+    "classes": { "q1": 0.25 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["wander","disowned"]
+   },
+   "stages": [
+    {
+     "id": "wander",
+     "name": "방랑",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.06, "causes": ["kia","freezing","contract_end"] }
+    },
+    {
+     "id": "merc",
+     "name": "용병",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.06, "causes": ["kia","freezing","contract_end"] }
+    },
+    {
+     "id": "name",
+     "name": "이름난 떠돌이",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["kia","freezing","contract_end"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.2,0.7,1.5], "job": "soldier" },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["HIG_RONIN_NONE"],
+   "exits": {
+    "retire": { "age": 60, "to": "HIG_STREET" },
+    "fall": { "kia": "death", "freezing": "death", "contract_end": "expel" },
+    "switch": ["HIG_YAKUZA","COM_MERC_TEAM"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "HIG_TEMPLE",
+   "nation": "higashi",
+   "region": null,
+   "name": "산사·신사",
+   "archetype": "A8",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [6,25],
+    "classes": { "q1": 0.3, "q5": 0.1 },
+    "gates": [],
+    "via": ["orphan","bastard","devotion"]
+   },
+   "stages": [
+    {
+     "id": "novice",
+     "name": "수행승",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "learn", "k": 0.18 },
+     "fall": { "base": 0.02, "causes": ["demotion","heresy","exile"] }
+    },
+    {
+     "id": "monk",
+     "name": "정식 승려·신관",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.08 },
+     "fall": { "base": 0.02, "causes": ["demotion","heresy","exile"] }
+    },
+    {
+     "id": "abbot",
+     "name": "주지·칸누시",
+     "title": "주지",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["demotion","heresy","exile"] }
+    }
+   ],
+   "income": { "stage": [0.1,0.5,1.5], "job": "priest" },
+   "standing": { "name": "교단 신망", "start": 20 },
+   "affiliations": ["HIG_TEMPLE_MOUNTAIN","HIG_TEMPLE_TAISHA","HIG_TEMPLE_KIZUNA"],
+   "exits": {
+    "retire": { "age": 75, "to": "HIG_STREET" },
+    "fall": { "demotion": "expel", "heresy": "disgrace", "exile": "exile" },
+    "switch": ["HIG_STREET"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["saga","akafuyu"]
+  },
+  {
+   "id": "HIG_OFFICE",
+   "nation": "higashi",
+   "region": "south",
+   "name": "남조 회사원",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,30],
+    "classes": { "q2": 0.05, "q3": 0.4, "q4": 0.1 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 },
+     { "region": "south", "weight": 2 }
+    ],
+    "via": ["hire","graduate"]
+   },
+   "stages": [
+    {
+     "id": "staff",
+     "name": "사원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.025, "causes": ["layoff","overwork","infected"] }
+    },
+    {
+     "id": "kakari",
+     "name": "계장",
+     "title": "계장",
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.025, "causes": ["layoff","overwork","infected"] }
+    },
+    {
+     "id": "kacho",
+     "name": "과장",
+     "title": "과장",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.06 },
+     "fall": { "base": 0.025, "causes": ["layoff","overwork","infected"] }
+    },
+    {
+     "id": "bucho",
+     "name": "부장",
+     "title": "부장",
+     "minYears": 7,
+     "promo": { "cap": "learn", "k": 0.02 },
+     "fall": { "base": 0.025, "causes": ["layoff","overwork","infected"] }
+    },
+    {
+     "id": "exec",
+     "name": "임원",
+     "title": "임원",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["layoff","overwork","infected"] }
+    }
+   ],
+   "income": { "stage": [1,1.4,2.2,3.5,7], "job": "clerk" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["HIG_OFF_ELEC","HIG_OFF_MITSUKUE","HIG_OFF_KINSEKI"],
+   "exits": {
+    "retire": { "age": 60, "to": "HIG_STREET" },
+    "fall": { "layoff": "expel", "overwork": "death", "infected": "infected" },
+    "switch": ["HIG_STREET"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "직급 창작"
+  },
+  {
+   "id": "HIG_STUDENT",
+   "nation": "higashi",
+   "region": "south",
+   "name": "남조 학생",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [15,20],
+    "classes": { "q3": 0.25 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 },
+     { "region": "south", "weight": 2 }
+    ],
+    "via": ["school"]
+   },
+   "stages": [
+    {
+     "id": "highschool",
+     "name": "고교",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["ruin","infected"] }
+    },
+    {
+     "id": "university",
+     "name": "대학",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["ruin","infected"] }
+    },
+    {
+     "id": "parttime",
+     "name": "아르바이트",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["ruin","infected"] }
+    },
+    {
+     "id": "graduate",
+     "name": "취업·유학",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["ruin","infected"] }
+    }
+   ],
+   "income": { "stage": [0,0.1,0.4,0.6] },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["HIG_STU_BAR","HIG_STU_EXCHANGE"],
+   "exits": {
+    "retire": { "age": 24, "to": "HIG_OFFICE" },
+    "fall": { "ruin": "expel", "infected": "exile" },
+    "switch": ["HIG_OFFICE","HIG_POLICE","HIG_ENT"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["kirara"]
+  },
+  {
+   "id": "HIG_POLICE",
+   "nation": "higashi",
+   "region": "south",
+   "name": "미츠쿠에 경찰",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,30],
+    "classes": { "q3": 0.1 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["exam"]
+   },
+   "stages": [
+    {
+     "id": "patrol",
+     "name": "순경",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["kia","courtmartial","scandal"] }
+    },
+    {
+     "id": "detective",
+     "name": "형사",
+     "title": "형사",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["kia","courtmartial","scandal"] }
+    },
+    {
+     "id": "veteran",
+     "name": "베테랑",
+     "title": "베테랑",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["kia","courtmartial","scandal"] }
+    },
+    {
+     "id": "candidate",
+     "name": "국회 출마",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["kia","courtmartial","scandal"] }
+    }
+   ],
+   "income": { "stage": [1,1.5,2.2,3], "job": "police" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["HIG_POL_MITSUKUE"],
+   "exits": {
+    "retire": { "age": 58, "to": "HIG_STREET" },
+    "fall": { "kia": "death", "courtmartial": "expel", "scandal": "disgrace" },
+    "switch": ["HIG_POLITICS"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "HIG_ENT",
+   "nation": "higashi",
+   "region": null,
+   "name": "아이돌·연예",
+   "archetype": "A12",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,22],
+    "classes": { "q3": 0.05 },
+    "gates": [
+     { "born": "looks", "min": 0.5 }
+    ],
+    "via": ["audition","scouted"]
+   },
+   "stages": [
+    {
+     "id": "trainee",
+     "name": "연습생",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "looks", "k": 0.22 },
+     "fall": { "base": 0.05, "causes": ["scandal","fade","overwork"] }
+    },
+    {
+     "id": "contract",
+     "name": "전속",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "looks", "k": 0.12 },
+     "fall": { "base": 0.05, "causes": ["scandal","fade","overwork"] }
+    },
+    {
+     "id": "broadcast",
+     "name": "방송",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "looks", "k": 0.06 },
+     "fall": { "base": 0.05, "causes": ["scandal","fade","overwork"] }
+    },
+    {
+     "id": "indie",
+     "name": "독립",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.05, "causes": ["scandal","fade","overwork"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.9,3,2.5], "job": "idol" },
+   "standing": { "name": "명성", "start": 20 },
+   "affiliations": ["HIG_ENT_KINSEKI","HIG_ENT_AGENCY"],
+   "exits": {
+    "retire": { "age": 35, "to": "HIG_OFFICE" },
+    "fall": { "scandal": "disgrace", "fade": "expel", "overwork": "death" },
+    "switch": ["COM_PENGUIN_IDOL","HIG_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "HIG_POLITICS",
+   "nation": "higashi",
+   "region": "south",
+   "name": "남조 정치·공경",
+   "archetype": "A3",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [22,45],
+    "classes": { "q3": 0.05, "q4": 0.2, "q5": 0.3 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 },
+     { "cap": "ties", "min": 0.5 }
+    ],
+    "via": ["secretary","scholar","heir"]
+   },
+   "stages": [
+    {
+     "id": "secretary",
+     "name": "비서·학자",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.2 },
+     "fall": { "base": 0.035, "causes": ["impeach","assassination","scandal"] }
+    },
+    {
+     "id": "candidate",
+     "name": "후보",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["impeach","assassination","scandal"] }
+    },
+    {
+     "id": "diet",
+     "name": "의원",
+     "title": "의원",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.035, "causes": ["impeach","assassination","scandal"] }
+    },
+    {
+     "id": "minister",
+     "name": "각료",
+     "title": "각료",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["impeach","assassination","scandal"] }
+    }
+   ],
+   "income": { "stage": [1.5,1.2,5,10] },
+   "standing": { "name": "관청 평판", "start": 20 },
+   "affiliations": ["HIG_POLI_DIET","HIG_POLI_CABINET","HIG_POLI_KUGE"],
+   "exits": {
+    "retire": { "age": 70, "to": "HIG_OFFICE" },
+    "fall": { "impeach": "expel", "assassination": "death", "scandal": "disgrace" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "HIG_YAKUZA",
+   "nation": "higashi",
+   "region": null,
+   "name": "킨세키가이",
+   "archetype": "A1",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [15,30],
+    "classes": { "q1": 0.2, "q2": 0.1, "q3": 0.05, "q4": 0.15, "q5": 0.2 },
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["street","family","debt"]
+   },
+   "stages": [
+    {
+     "id": "low",
+     "name": "말단",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "ties", "k": 0.25 },
+     "fall": { "base": 0.05, "causes": ["vendetta","arrest","betrayal"] }
+    },
+    {
+     "id": "cadre",
+     "name": "간부",
+     "title": "간부",
+     "minYears": 5,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.05, "causes": ["vendetta","arrest","betrayal"] }
+    },
+    {
+     "id": "wakagashira",
+     "name": "부두목",
+     "title": "부두목",
+     "minYears": 7,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.05, "causes": ["vendetta","arrest","betrayal"] }
+    },
+    {
+     "id": "vice",
+     "name": "부회장",
+     "title": "부회장",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.02 },
+     "fall": { "base": 0.05, "causes": ["vendetta","arrest","betrayal"] }
+    },
+    {
+     "id": "kaicho",
+     "name": "회장",
+     "title": "회장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.05, "causes": ["vendetta","arrest","betrayal"] }
+    }
+   ],
+   "income": { "stage": [0.5,1.5,3.5,7,15], "job": "criminal" },
+   "standing": { "name": "조직 신뢰", "start": 20 },
+   "affiliations": ["HIG_YAK_KINSEKIKAI","HIG_YAK_KYOKAKU","HIG_YAK_GROUP"],
+   "exits": {
+    "retire": { "age": 60, "to": "HIG_STREET" },
+    "fall": { "vendetta": "death", "arrest": "prison:jail", "betrayal": "exile" },
+    "switch": ["HIG_OFFICE","HIG_STREET"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "HIG_NINJA",
+   "nation": "higashi",
+   "region": null,
+   "name": "세습 닌자",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [5,8],
+    "classes": { "q4": 0.25 },
+    "gates": [
+     { "status": "ninja_clan", "weight": 50 },
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["born"]
+   },
+   "stages": [
+    {
+     "id": "child",
+     "name": "유년 훈련",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.04, "causes": ["kia","desert","contract_end"] }
+    },
+    {
+     "id": "ninja",
+     "name": "닌자",
+     "title": "닌자",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["kia","desert","contract_end"] }
+    },
+    {
+     "id": "cadre",
+     "name": "가문 간부",
+     "title": "간부",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.04, "causes": ["kia","desert","contract_end"] }
+    },
+    {
+     "id": "head",
+     "name": "당주",
+     "title": "당주",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["kia","desert","contract_end"] }
+    }
+   ],
+   "income": { "stage": [0.2,1.5,3,5], "job": "shinobi" },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["HIG_NINJA_CLAN","HIG_NINJA_BIZ"],
+   "exits": {
+    "retire": { "age": 55, "to": "HIG_STREET" },
+    "fall": { "kia": "death", "desert": "exile", "contract_end": "disgrace" },
+    "switch": ["HIG_RONIN"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "가문 서열 창작. status ninja_clan 플래그는 출생 시 상층 2% 창작"
+  },
+  {
+   "id": "HIG_NORTH_ARMY",
+   "nation": "higashi",
+   "region": "north",
+   "name": "북조 무가·군",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [15,25],
+    "classes": { "q4": 0.3, "q5": 0.4 },
+    "gates": [
+     { "region": "north", "weight": 4 },
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["heir","bastard","retainer"]
+   },
+   "stages": [
+    {
+     "id": "entry",
+     "name": "입문",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.045, "causes": ["kia","betrayal","purge"] }
+    },
+    {
+     "id": "platoon",
+     "name": "소대장",
+     "title": "소대장",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["kia","betrayal","purge"] }
+    },
+    {
+     "id": "general",
+     "name": "장군",
+     "title": "장군",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.045, "causes": ["kia","betrayal","purge"] }
+    },
+    {
+     "id": "exile",
+     "name": "추방",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["kia","betrayal","purge"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.8,2,6,0.8] },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["HIG_NA_KUSARIKAWA","HIG_NA_BLOODPEAK"],
+   "exits": {
+    "retire": { "age": 55, "to": "HIG_RURAL" },
+    "fall": { "kia": "death", "betrayal": "exile", "purge": "exile" },
+    "switch": ["HIG_RONIN"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["akafuyu"],
+   "note": "북조 전체 창작 의존(D13)"
+  }
+ ]
+}

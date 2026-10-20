@@ -1,0 +1,727 @@
+{
+ "_meta": {
+  "nation": "iberia",
+  "source": "진로_카탈로그_v0 §14",
+  "canon": "mixed",
+  "classScale": 0.4646,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "IBE_DEEP 은 전 계층 전환 이벤트 전용(classes 없음)."
+ },
+ "tracks": [
+  {
+   "id": "IBE_INQ",
+   "nation": "iberia",
+   "region": null,
+   "name": "재판소 재판관",
+   "archetype": "A8",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,32],
+    "classes": { "q3": 0.0697, "q4": 0.4646, "q5": 0.4646 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 },
+     { "cap": "arts", "min": -0.8 },
+     { "race": ["aegir"], "weight": 0.1 },
+     { "infected": false }
+    ],
+    "via": ["exam","penal_elite"]
+   },
+   "stages": [
+    {
+     "id": "penal",
+     "name": "형벌 대대 병사",
+     "title": "병사",
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.04, "causes": ["kia","seaborn","heresy","assassination"] }
+    },
+    {
+     "id": "candidate",
+     "name": "자격자",
+     "title": "자격자",
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.04, "causes": ["kia","seaborn","heresy","assassination"] }
+    },
+    {
+     "id": "inquisitor",
+     "name": "재판관",
+     "title": "재판관",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.04, "causes": ["kia","seaborn","heresy","assassination"] }
+    },
+    {
+     "id": "grand",
+     "name": "대재판관",
+     "title": "대재판관",
+     "minYears": 10,
+     "promo": { "cap": "learn", "k": 0.02 },
+     "fall": { "base": 0.04, "causes": ["kia","seaborn","heresy","assassination"] }
+    },
+    {
+     "id": "saint",
+     "name": "성도",
+     "title": "성도",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["kia","seaborn","heresy","assassination"] }
+    }
+   ],
+   "income": { "stage": [0.8,1.5,3,6,10], "job": "inquisitor" },
+   "standing": { "name": "교단 신망", "start": 20 },
+   "affiliations": ["IBE_INQ_CARMEN","IBE_INQ_GRANFARO","IBE_INQ_RHODES"],
+   "exits": {
+    "retire": { "age": 65, "to": "IBE_CLERK" },
+    "fall": { "kia": "death", "seaborn": "death", "heresy": "death", "assassination": "death" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["carmen","lumen","irene"]
+  },
+  {
+   "id": "IBE_PENAL",
+   "nation": "iberia",
+   "region": null,
+   "name": "형벌 대대 병사",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,35],
+    "classes": { "q1": 0.0465, "q2": 0.1162 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["enlist","sentenced"]
+   },
+   "stages": [
+    {
+     "id": "recruit",
+     "name": "신병",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.06, "causes": ["seaborn","kia","desert"] }
+    },
+    {
+     "id": "soldier",
+     "name": "병사",
+     "title": "병사",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.06, "causes": ["seaborn","kia","desert"] }
+    },
+    {
+     "id": "elite",
+     "name": "엘리트",
+     "title": "엘리트",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.06, "causes": ["seaborn","kia","desert"] }
+    },
+    {
+     "id": "sergeant",
+     "name": "하사관",
+     "title": "하사관",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["seaborn","kia","desert"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.3,0.5,0.9,1.3], "job": "penal_battalion" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["IBE_PEN_TERCIO","IBE_PEN_COAST","IBE_PEN_SWEEP"],
+   "exits": {
+    "retire": { "age": 50, "to": "IBE_FARM" },
+    "fall": { "seaborn": "death", "kia": "death", "desert": "death" },
+    "switch": ["IBE_INQ"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "IBE_CLERK",
+   "nation": "iberia",
+   "region": null,
+   "name": "민정 서기",
+   "archetype": "A3",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [20,40],
+    "classes": { "q3": 0.2323 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["demoted_priest","hire"]
+   },
+   "stages": [
+    {
+     "id": "priest",
+     "name": "사제",
+     "title": "사제",
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.25 },
+     "fall": { "base": 0.03, "causes": ["heresy","seaborn","demotion"] }
+    },
+    {
+     "id": "demoted",
+     "name": "격하",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.25 },
+     "fall": { "base": 0.03, "causes": ["heresy","seaborn","demotion"] }
+    },
+    {
+     "id": "clerk",
+     "name": "민정 서기",
+     "title": "서기",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.06 },
+     "fall": { "base": 0.03, "causes": ["heresy","seaborn","demotion"] }
+    },
+    {
+     "id": "chief",
+     "name": "지역 수석 서기",
+     "title": "수석 서기",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["heresy","seaborn","demotion"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.9,0.6,1.2,2], "job": "civil_servant" },
+   "standing": { "name": "관청 평판", "start": 20 },
+   "affiliations": ["IBE_CLK_PRIEST","IBE_CLK_BISHOP","IBE_CLK_MAYOR"],
+   "exits": {
+    "retire": { "age": 65, "to": "IBE_FARM" },
+    "fall": { "heresy": "death", "seaborn": "death", "demotion": "demote" },
+    "switch": ["IBE_SCHOLAR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "IBE_COAST",
+   "nation": "iberia",
+   "region": null,
+   "name": "봉쇄 해안 주민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [8,60],
+    "classes": { "q1": 0.3252 },
+    "gates": [
+     { "urban": false, "weight": 3 },
+     { "region": "coast", "weight": 10 }
+    ],
+    "via": ["born"]
+   },
+   "stages": [
+    {
+     "id": "child",
+     "name": "아이",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.15 },
+     "fall": { "base": 0.08, "causes": ["starvation","seaborn","sacrifice","raid"] }
+    },
+    {
+     "id": "resident",
+     "name": "주민",
+     "title": null,
+     "minYears": 15,
+     "promo": { "cap": "skill", "k": 0.03 },
+     "fall": { "base": 0.08, "causes": ["starvation","seaborn","sacrifice","raid"] }
+    },
+    {
+     "id": "elder",
+     "name": "장로",
+     "title": "장로",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.08, "causes": ["starvation","seaborn","sacrifice","raid"] }
+    }
+   ],
+   "income": { "stage": [0.05,0.15,0.3], "job": "fisher" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["IBE_COA_SALVIENTO","IBE_COA_ROCAMAREA","IBE_COA_FAROMUERTO","IBE_COA_ARON"],
+   "exits": {
+    "retire": null,
+    "fall": { "starvation": "death", "seaborn": "death", "sacrifice": "death", "raid": "death" },
+    "switch": ["IBE_FISH","IBE_PIRATE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "IBE_FISH",
+   "nation": "iberia",
+   "region": null,
+   "name": "어민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,40],
+    "classes": { "q2": 0.0697 },
+    "gates": [
+     { "urban": false, "weight": 2 }
+    ],
+    "via": ["crew","family"]
+   },
+   "stages": [
+    {
+     "id": "crew",
+     "name": "선원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.04, "causes": ["seaborn","drowning","ruin"] }
+    },
+    {
+     "id": "fisher",
+     "name": "어민",
+     "title": "어민",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["seaborn","drowning","ruin"] }
+    },
+    {
+     "id": "owner",
+     "name": "선주",
+     "title": "선주",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.04 },
+     "fall": { "base": 0.04, "causes": ["seaborn","drowning","ruin"] }
+    },
+    {
+     "id": "fleet",
+     "name": "선단장",
+     "title": "선단장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["seaborn","drowning","ruin"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.3,0.5,1,2], "job": "fisher" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["IBE_FIS_FINCATCHER","IBE_FIS_SALT","IBE_FIS_SALTSCALE"],
+   "exits": {
+    "retire": { "age": 60, "to": "IBE_FARM" },
+    "fall": { "seaborn": "death", "drowning": "death", "ruin": "expel" },
+    "switch": ["IBE_PIRATE","IBE_FARM"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "IBE_PIRATE",
+   "nation": "iberia",
+   "region": null,
+   "name": "해적·유물 밀매",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": true,
+   "route": ["iberia","bolivar","laterano"],
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q1": 0.0929, "q2": 0.0465 },
+    "gates": [
+     { "year": [1035,9999] },
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["crew","runaway"]
+   },
+   "stages": [
+    {
+     "id": "crew",
+     "name": "선원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.065, "causes": ["seaborn","arrest","betrayal","kia"] }
+    },
+    {
+     "id": "bosun",
+     "name": "갑판장·요리사",
+     "title": "갑판장",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.065, "causes": ["seaborn","arrest","betrayal","kia"] }
+    },
+    {
+     "id": "captain",
+     "name": "선장",
+     "title": "선장",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.065, "causes": ["seaborn","arrest","betrayal","kia"] }
+    },
+    {
+     "id": "fleet",
+     "name": "선단 두목",
+     "title": "두목",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.065, "causes": ["seaborn","arrest","betrayal","kia"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.8,2.5,6], "job": "criminal" },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["IBE_PIR_JUANA","IBE_PIR_ARON","IBE_PIR_RELIC"],
+   "exits": {
+    "retire": { "age": 60, "to": "IBE_FARM" },
+    "fall": { "seaborn": "death", "arrest": "death", "betrayal": "death", "kia": "death" },
+    "switch": ["IBE_FISH"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "IBE_LIGHT",
+   "nation": "iberia",
+   "region": null,
+   "name": "등대지기",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q3": 0.0232 },
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["successor"]
+   },
+   "stages": [
+    {
+     "id": "assistant",
+     "name": "조수",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.035, "causes": ["seaborn","kia","ruin"] }
+    },
+    {
+     "id": "keeper",
+     "name": "등대지기",
+     "title": "등대지기",
+     "minYears": 15,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["seaborn","kia","ruin"] }
+    },
+    {
+     "id": "naming",
+     "name": "후계 지정",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["seaborn","kia","ruin"] }
+    }
+   ],
+   "income": { "stage": [0.4,0.8,0.9], "job": "lighthouse_keeper" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["IBE_LIG_GRANFARO","IBE_LIG_ROCKY"],
+   "exits": {
+    "retire": { "age": 75, "to": "IBE_FARM" },
+    "fall": { "seaborn": "death", "kia": "death", "ruin": "demote" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "IBE_SCHOLAR",
+   "nation": "iberia",
+   "region": null,
+   "name": "연구자·번역가",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,30],
+    "classes": { "q3": 0.1394 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["assistant"]
+   },
+   "stages": [
+    {
+     "id": "assistant",
+     "name": "조수",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.035, "causes": ["arrest","seaborn","disappear"] }
+    },
+    {
+     "id": "scholar",
+     "name": "연구자·번역가",
+     "title": "연구자",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["arrest","seaborn","disappear"] }
+    },
+    {
+     "id": "secretary",
+     "name": "재판소 비서·수석",
+     "title": "수석",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["arrest","seaborn","disappear"] }
+    }
+   ],
+   "income": { "stage": [0.6,1.4,3], "job": "scholar" },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["IBE_SCH_INQ","IBE_SCH_TRANSLATOR","IBE_SCH_BIO"],
+   "exits": {
+    "retire": { "age": 65, "to": "IBE_CLERK" },
+    "fall": { "arrest": "prison:jail", "seaborn": "death", "disappear": "death" },
+    "switch": ["IBE_CLERK"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "IBE_NURSE",
+   "nation": "iberia",
+   "region": null,
+   "name": "예배당 간호인",
+   "archetype": "A8",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,35],
+    "classes": { "q2": 0.0465 },
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["volunteer"]
+   },
+   "stages": [
+    {
+     "id": "volunteer",
+     "name": "봉사자",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "ties", "k": 0.18 },
+     "fall": { "base": 0.03, "causes": ["overwork","seaborn","demotion"] }
+    },
+    {
+     "id": "nurse",
+     "name": "간호인",
+     "title": "간호인",
+     "minYears": 10,
+     "promo": { "cap": "ties", "k": 0.08 },
+     "fall": { "base": 0.03, "causes": ["overwork","seaborn","demotion"] }
+    },
+    {
+     "id": "head",
+     "name": "수석 간호인",
+     "title": "수석 간호인",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.04 },
+     "fall": { "base": 0.03, "causes": ["overwork","seaborn","demotion"] },
+     "canon": false
+    },
+    {
+     "id": "picked",
+     "name": "재판소 발탁",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["overwork","seaborn","demotion"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.5,0.8,1.5], "job": "nurse" },
+   "standing": { "name": "교단 신망", "start": 20 },
+   "affiliations": ["IBE_NUR_CHAPEL","IBE_NUR_MEDIC"],
+   "exits": {
+    "retire": { "age": 65, "to": "IBE_FARM" },
+    "fall": { "overwork": "death", "seaborn": "death", "demotion": "demote" },
+    "switch": ["IBE_INQ"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["lumen"]
+  },
+  {
+   "id": "IBE_FARM",
+   "nation": "iberia",
+   "region": null,
+   "name": "내륙 농민·상인",
+   "archetype": "A11",
+   "canon": false,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,40],
+    "classes": { "q2": 0.1626 },
+    "gates": [
+     { "urban": false, "weight": 2 }
+    ],
+    "via": ["family"]
+   },
+   "stages": [
+    {
+     "id": "family",
+     "name": "가족 노동",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["ruin","starvation","arrest"] },
+     "canon": false
+    },
+    {
+     "id": "own",
+     "name": "자영",
+     "title": null,
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["ruin","starvation","arrest"] },
+     "canon": false
+    },
+    {
+     "id": "notable",
+     "name": "마을 유력자",
+     "title": "유력자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["ruin","starvation","arrest"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.3,0.6,1.2], "job": "farmer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["IBE_FARM_INLAND","IBE_FARM_PERDONIDORA"],
+   "exits": {
+    "retire": { "age": 60, "to": "IBE_FARM" },
+    "fall": { "ruin": "expel", "starvation": "death", "arrest": "prison:jail" },
+    "switch": ["IBE_BUILDER","IBE_PENAL"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "묘사 없음, 전부 창작"
+  },
+  {
+   "id": "IBE_BUILDER",
+   "nation": "iberia",
+   "region": null,
+   "name": "건설 노동(황금기 잔존)",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q2": 0.0232 },
+    "gates": [],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "hand",
+     "name": "잡역",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["accident","ruin","scandal"] }
+    },
+    {
+     "id": "skilled",
+     "name": "숙련 노동",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["accident","ruin","scandal"] }
+    },
+    {
+     "id": "foreman",
+     "name": "현장 반장",
+     "title": "반장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["accident","ruin","scandal"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.3,0.6,1.1], "job": "construction" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["IBE_BUI_STRANDED","IBE_BUI_RUINS"],
+   "exits": {
+    "retire": { "age": 60, "to": "IBE_FARM" },
+    "fall": { "accident": "injured", "ruin": "expel", "scandal": "disgrace" },
+    "switch": ["IBE_FARM"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "IBE_DEEP",
+   "nation": "iberia",
+   "region": null,
+   "name": "심해 교단 신도",
+   "archetype": "A8",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,70],
+    "classes": {},
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["contact","spouse","infiltration"]
+   },
+   "stages": [
+    {
+     "id": "contact",
+     "name": "접촉",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "ties", "k": 0.25 },
+     "fall": { "base": 0.06, "causes": ["execution","seaborn","betrayal"] }
+    },
+    {
+     "id": "believer",
+     "name": "신도",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "ties", "k": 0.08 },
+     "fall": { "base": 0.06, "causes": ["execution","seaborn","betrayal"] }
+    },
+    {
+     "id": "bishop",
+     "name": "주교",
+     "title": "주교",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.06, "causes": ["execution","seaborn","betrayal"] }
+    },
+    {
+     "id": "changed",
+     "name": "시테러화",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["execution","seaborn","betrayal"] },
+     "forced": true
+    }
+   ],
+   "income": { "stage": [0.3,0.4,0.8,0] },
+   "standing": { "name": "교단 신망", "start": 20 },
+   "affiliations": ["IBE_DEE_VILLAGE","IBE_DEE_INFILTRATOR","IBE_DEE_BISHOP"],
+   "exits": {
+    "retire": null,
+    "fall": { "execution": "death", "seaborn": "death", "betrayal": "death" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "classes 없음: 전환 이벤트 전용. 시테러화는 감염과 별개 축"
+  }
+ ]
+}

@@ -1,0 +1,623 @@
+{
+ "_meta": {
+  "nation": "tara",
+  "source": "진로_카탈로그_v0 §9",
+  "canon": "mixed",
+  "classScale": 1,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "단계 minYears·promo.k·fall.base·income·classes·gates 수치는 전부 창작(명세 §4·§13 기본값). canon:false 표시가 없는 단계 명칭은 카탈로그 캐논 명칭."
+ },
+ "tracks": [
+  {
+   "id": "TAR_WANDER",
+   "nation": "tara",
+   "region": null,
+   "name": "유랑민",
+   "archetype": "A1",
+   "canon": true,
+   "itinerant": true,
+   "route": ["tara","victoria"],
+   "entry": {
+    "ages": [10,40],
+    "classes": { "q1": 0.4 },
+    "gates": [],
+    "via": ["crime","evicted"]
+   },
+   "stages": [
+    {
+     "id": "crime",
+     "name": "잡범",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "ties", "k": 0.25 },
+     "fall": { "base": 0.06, "causes": ["starvation","arrest","freezing"] }
+    },
+    {
+     "id": "wander",
+     "name": "유랑",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.06, "causes": ["starvation","arrest","freezing"] }
+    },
+    {
+     "id": "dublinn",
+     "name": "더블린 합류",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["starvation","arrest","freezing"] }
+    }
+   ],
+   "income": { "stage": [0.1,0.2,0.4], "job": "criminal" },
+   "standing": { "name": "조직 신뢰", "start": 20 },
+   "affiliations": ["TAR_WAN_SCATANA","TAR_WAN_TRENT"],
+   "exits": {
+    "retire": { "age": 60, "to": "TAR_FARM" },
+    "fall": { "starvation": "death", "arrest": "prison:jail", "freezing": "death" },
+    "switch": ["TAR_DUBLIN","TAR_FARM"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "TAR_DUBLIN",
+   "nation": "tara",
+   "region": null,
+   "name": "더블린 병사·간부",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q1": 0.35, "q2": 0.1, "q3": 0.15 },
+    "gates": [
+     { "year": [1091,1098] }
+    ],
+    "via": ["recruit","infected_rep","wyvern"]
+   },
+   "stages": [
+    {
+     "id": "private",
+     "name": "하급 병사",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "ties", "k": 0.25 },
+     "fall": { "base": 0.07, "causes": ["kia","purge","execution"] }
+    },
+    {
+     "id": "liaison",
+     "name": "연락책",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "ties", "k": 0.12 },
+     "fall": { "base": 0.07, "causes": ["kia","purge","execution"] }
+    },
+    {
+     "id": "cadre",
+     "name": "간부",
+     "title": "간부",
+     "minYears": 4,
+     "promo": {
+      "cap": "ties",
+      "k": 0.05,
+      "requires": { "aff": "elite" }
+     },
+     "fall": { "base": 0.07, "causes": ["kia","purge","execution"] }
+    },
+    {
+     "id": "commander",
+     "name": "지휘관",
+     "title": "지휘관",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.07, "causes": ["kia","purge","execution"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.5,1,2] },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["TAR_DUB_SIX","TAR_DUB_HARDLINE","TAR_DUB_INFECTED","TAR_DUB_WYVERN"],
+   "exits": {
+    "retire": { "age": 60, "to": "TAR_REDIRON" },
+    "fall": { "kia": "death", "purge": "death", "execution": "death" },
+    "switch": ["TAR_REDIRON","TAR_WANDER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["reed"]
+  },
+  {
+   "id": "TAR_HILLOCK",
+   "nation": "tara",
+   "region": "hillock",
+   "name": "힐록 주민·공장",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q1": 0.15, "q2": 0.15 },
+    "gates": [],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "worker",
+     "name": "공장 노동",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.05, "causes": ["infected","accident","catastrophe"] }
+    },
+    {
+     "id": "dirtybomb",
+     "name": "더티밤 피폭 후",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.05, "causes": ["infected","accident","catastrophe"] },
+     "forced": true
+    },
+    {
+     "id": "rebuild",
+     "name": "재건 노동",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.05, "causes": ["infected","accident","catastrophe"] }
+    }
+   ],
+   "income": { "stage": [0.5,0.2,0.5], "job": "factory_worker" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["TAR_HIL_COUNTY","TAR_HIL_GARRISON"],
+   "exits": {
+    "retire": { "age": 60, "to": "TAR_FARM" },
+    "fall": { "infected": "demote", "accident": "death", "catastrophe": "death" },
+    "switch": ["TAR_DUBLIN","TAR_FARM"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "힐록 공장 불확실"
+  },
+  {
+   "id": "TAR_FARM",
+   "nation": "tara",
+   "region": null,
+   "name": "농민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,40],
+    "classes": { "q2": 0.5 },
+    "gates": [
+     { "urban": false, "weight": 2 }
+    ],
+    "via": ["family"]
+   },
+   "stages": [
+    {
+     "id": "family",
+     "name": "가족",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["starvation","ruin","raid"] }
+    },
+    {
+     "id": "tenant",
+     "name": "소작",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["starvation","ruin","raid"] }
+    },
+    {
+     "id": "own",
+     "name": "자영",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["starvation","ruin","raid"] }
+    }
+   ],
+   "income": { "stage": [0.25,0.45,0.8], "job": "farmer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["TAR_FARM_RURAL"],
+   "exits": {
+    "retire": { "age": 60, "to": "TAR_FARM" },
+    "fall": { "starvation": "death", "ruin": "demote", "raid": "death" },
+    "switch": ["TAR_WANDER","TAR_REDIRON"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "TAR_NOMAD",
+   "nation": "tara",
+   "region": null,
+   "name": "유목민(장례·전령)",
+   "archetype": "A7",
+   "canon": true,
+   "itinerant": true,
+   "route": ["tara"],
+   "entry": {
+    "ages": [8,20],
+    "classes": { "q1": 0.1, "q2": 0.1 },
+    "gates": [
+     { "eth": "nomad", "weight": 20 }
+    ],
+    "via": ["born"]
+   },
+   "stages": [
+    {
+     "id": "child",
+     "name": "아이",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "ties", "k": 0.12 },
+     "fall": { "base": 0.03, "causes": ["exile","ruin","freezing"] }
+    },
+    {
+     "id": "courier",
+     "name": "전령",
+     "title": "전령",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.06 },
+     "fall": { "base": 0.03, "causes": ["exile","ruin","freezing"] }
+    },
+    {
+     "id": "mourner",
+     "name": "장례 주관자",
+     "title": "장례 주관자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["exile","ruin","freezing"] }
+    }
+   ],
+   "income": { "stage": [0.1,0.4,0.7], "job": "nomad_courier" },
+   "standing": { "name": "부족 신망", "start": 20 },
+   "affiliations": ["TAR_NOM_OUTSKIRTS"],
+   "exits": {
+    "retire": { "age": 60, "to": "TAR_FARM" },
+    "fall": { "exile": "expel", "ruin": "expel", "freezing": "death" },
+    "switch": ["TAR_FARM","COM_MESSENGER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["bridgid"]
+  },
+  {
+   "id": "TAR_REDIRON",
+   "nation": "tara",
+   "region": null,
+   "name": "적철 근위대",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,35],
+    "classes": { "q2": 0.1, "q3": 0.15 },
+    "gates": [
+     { "year": [1098,9999] },
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["enlist","ex_dublinn"]
+   },
+   "stages": [
+    {
+     "id": "private",
+     "name": "병",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.04, "causes": ["kia","scandal","desert"] }
+    },
+    {
+     "id": "sergeant",
+     "name": "중간 지휘",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["kia","scandal","desert"] },
+     "canon": false
+    },
+    {
+     "id": "captain",
+     "name": "대장",
+     "title": "대장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["kia","scandal","desert"] }
+    }
+   ],
+   "income": { "stage": [0.7,1.1,2.5], "job": "defence_militia" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["TAR_RED_GUARD","TAR_RED_EXDUBLINN"],
+   "exits": {
+    "retire": { "age": 50, "to": "TAR_FARM" },
+    "fall": { "kia": "death", "scandal": "disgrace", "desert": "exile" },
+    "switch": ["TAR_RATION"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "계급 창작"
+  },
+  {
+   "id": "TAR_SMITH",
+   "nation": "tara",
+   "region": null,
+   "name": "대장장이·조각가",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q2": 0.05, "q3": 0.3 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["apprentice"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "견습",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.025, "causes": ["ruin","overwork","scandal"] }
+    },
+    {
+     "id": "smith",
+     "name": "대장장이",
+     "title": "대장장이",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.025, "causes": ["ruin","overwork","scandal"] }
+    },
+    {
+     "id": "sculptor",
+     "name": "조각 의뢰 명장",
+     "title": "명장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["ruin","overwork","scandal"] }
+    }
+   ],
+   "income": { "stage": [0.4,1,2], "job": "artisan" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["TAR_SMI_FORGE"],
+   "exits": {
+    "retire": { "age": 60, "to": "TAR_FARM" },
+    "fall": { "ruin": "expel", "overwork": "death", "scandal": "disgrace" },
+    "switch": ["TAR_RATION"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["culann"]
+  },
+  {
+   "id": "TAR_POET",
+   "nation": "tara",
+   "region": null,
+   "name": "시인·작가",
+   "archetype": "A12",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [15,30],
+    "classes": { "q3": 0.15 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["recital"]
+   },
+   "stages": [
+    {
+     "id": "recital",
+     "name": "낭독",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.035, "causes": ["fade","kia","arrest"] }
+    },
+    {
+     "id": "poet",
+     "name": "민족 시인",
+     "title": "시인",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.035, "causes": ["fade","kia","arrest"] }
+    },
+    {
+     "id": "writer",
+     "name": "작가",
+     "title": "작가",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["fade","kia","arrest"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.8,2], "job": "artist" },
+   "standing": { "name": "명성", "start": 20 },
+   "affiliations": ["TAR_POET_NATIONAL","TAR_POET_WYVERN"],
+   "exits": {
+    "retire": { "age": 60, "to": "TAR_FARM" },
+    "fall": { "fade": "expel", "kia": "death:violence", "arrest": "prison:jail" },
+    "switch": ["TAR_RATION"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "TAR_RATION",
+   "nation": "tara",
+   "region": null,
+   "name": "시정·배급 담당",
+   "archetype": "A3",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,40],
+    "classes": { "q3": 0.25, "q4": 0.2 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["appointed"]
+   },
+   "stages": [
+    {
+     "id": "ration",
+     "name": "배급 담당",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["impeach","arrest","scandal"] }
+    },
+    {
+     "id": "official",
+     "name": "시정 관리",
+     "title": "관리",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["impeach","arrest","scandal"] }
+    },
+    {
+     "id": "office",
+     "name": "관청",
+     "title": "관청장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["impeach","arrest","scandal"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.8,1.4,2.5], "job": "civil_servant" },
+   "standing": { "name": "관청 평판", "start": 20 },
+   "affiliations": ["TAR_RAT_CITY"],
+   "exits": {
+    "retire": { "age": 65, "to": "TAR_FARM" },
+    "fall": { "impeach": "disgrace", "arrest": "prison:jail", "scandal": "disgrace" },
+    "switch": ["TAR_SMITH"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "관청 창작"
+  },
+  {
+   "id": "TAR_SPIRIT",
+   "nation": "tara",
+   "region": null,
+   "name": "영혼수호자",
+   "archetype": "A7",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [10,25],
+    "classes": { "q4": 0.3, "q5": 0.5 },
+    "gates": [
+     { "cap": "arts", "min": 0.5 },
+     { "status": "noble", "weight": 3 }
+    ],
+    "via": ["descendant","hermit"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "견습",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "arts", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["exile","erosion","kia"] }
+    },
+    {
+     "id": "guardian",
+     "name": "수호자",
+     "title": "수호자",
+     "minYears": 15,
+     "promo": { "cap": "arts", "k": 0.06 },
+     "fall": { "base": 0.02, "causes": ["exile","erosion","kia"] }
+    },
+    {
+     "id": "elder",
+     "name": "은거 장로",
+     "title": "장로",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["exile","erosion","kia"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.5,0.6] },
+   "standing": { "name": "부족 신망", "start": 20 },
+   "affiliations": ["TAR_SPI_ORDER"],
+   "exits": {
+    "retire": { "age": 80, "to": "TAR_FARM" },
+    "fall": { "exile": "disgrace", "erosion": "death", "kia": "death" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "TAR_VICSERV",
+   "nation": "tara",
+   "region": null,
+   "name": "빅토리아 복무 타라인",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": true,
+   "route": ["victoria","tara"],
+   "entry": {
+    "ages": [17,28],
+    "classes": { "q4": 0.5, "q5": 0.5 },
+    "gates": [
+     { "status": "noble", "weight": 5 },
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["legacy","enlist"]
+   },
+   "stages": [
+    {
+     "id": "private",
+     "name": "병",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.045, "causes": ["kia","execution","exile"] }
+    },
+    {
+     "id": "intel",
+     "name": "정보장교",
+     "title": "장교",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["kia","execution","exile"] }
+    },
+    {
+     "id": "double",
+     "name": "이중첩자",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.045, "causes": ["kia","execution","exile"] }
+    },
+    {
+     "id": "envoy",
+     "name": "대사",
+     "title": "대사",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["kia","execution","exile"] }
+    }
+   ],
+   "income": { "stage": [0.8,2,2.5,6] },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["TAR_VIC_INTEL","TAR_VIC_HILLOCK"],
+   "exits": {
+    "retire": { "age": 60, "to": "TAR_RATION" },
+    "fall": { "kia": "death", "execution": "death", "exile": "exile" },
+    "switch": ["TAR_DUBLIN"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  }
+ ]
+}

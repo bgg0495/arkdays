@@ -12,27 +12,38 @@ import { lifeTable, humanAge } from './lifetable.js';
 import { rootOf, resolvePolicy } from './data.js';
 import { newLife } from './birth.js';
 import { createRegistry, chooseFeed, scheduledDecisions, dueBigEvents } from './content.js';
-import { oriYear, campYear, applyPolicy, STAGE_HL } from './oripathy.js';
+import { oriYear, campYear, jailYear, STAGE_HL } from './oripathy.js';
 import { catYear, conflictYear, hazardYear } from './catastrophe.js';
 import { financeYear, jobOffers, takeJob, medianLMD, initPartner } from './finance.js';
 import { expHealth, deathCheck, die } from './death.js';
 import { BALANCE as B } from './balance.js';
 import { makeName, familyNames } from './names.js';
 import { wa, ro, eul, iga } from './text.js';
+// v1
+import { infect } from './oripathy.js';
+import { capYear, applyLegacyFx, grade, capProfile } from './caps.js';
+import { refreshRel } from './relations.js';
+import { trackYear, trackOf, affOf, trackName, trackTitle, enterTrack, leaveTrack, promote, fall, switchTrack, retireTrack, applyExit } from './track.js';
+import { migrateTo, resYear, fleeCheck, migrationSummary } from './migration.js';
+import { initHousing, housingYear, setHousing } from './housing.js';
+import { normalizeRhodes, joinRhodes, rhodesYear, rhodesCard, operatorProfile, clinical } from './rhodes.js';
+import { installEngineDecisions } from './choices.js';
+import { healStats, migrateSave } from './save.js';
+export { healStats, migrateSave, grade, capProfile, operatorProfile, clinical, rhodesCard, trackName, migrationSummary };
 
-/** 올해의 초점: 연중 시간 비율(focusW)만큼 연말에 스탯 델타로 적용 */
+/** 올해의 초점: 연중 시간 비율(focusW)만큼 연말에 스탯 델타로 적용. 역량 효과는 caps.js B.cap.focus(§6.2) */
 export const FOCUS = {
-  study:   { label: '공부',     fx: { sm: 4, h: -1 } },
-  play:    { label: '놀기',     fx: { so: 3, h: 3, sm: -1 } },
-  sport:   { label: '운동',     fx: { hl: 3, h: 1, so: 1 } },
-  arts:    { label: '아츠 수련', fx: { sm: 2, h: 1, hl: -1 } },
-  work:    { label: '일',       fx: { hl: -2, h: -1, so: -2 } },
-  balance: { label: '균형',     fx: { h: 1, hl: 1, so: 1 } },
-  family:  { label: '가족',     fx: { so: 4, h: 2 } },
+  study:   { label: '공부',     fx: { h: -1 } },
+  play:    { label: '놀기',     fx: { h: 3 } },
+  sport:   { label: '운동',     fx: { hl: 3, h: 1 } },
+  arts:    { label: '아츠 수련', fx: { h: 1, hl: -1 } },
+  work:    { label: '일',       fx: { hl: -2, h: -1 } },
+  balance: { label: '균형',     fx: { h: 1, hl: 1 } },
+  family:  { label: '가족',     fx: { h: 2 } },
   health:  { label: '건강',     fx: { hl: 4, h: 1 } },
-  learn:   { label: '배움',     fx: { sm: 3, h: -1 } },
-  rest:    { label: '쉼',       fx: { hl: 2, h: 2, sm: -1 } },
-  survive: { label: '재앙 대비', fx: { hl: 1, so: -1 } },
+  learn:   { label: '배움',     fx: { h: -1 } },
+  rest:    { label: '쉼',       fx: { hl: 2, h: 2 } },
+  survive: { label: '재앙 대비', fx: { hl: 1 } },
 };
 export const STAGE_FOCUS = {
   baby: [],
@@ -79,12 +90,27 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     S: null,
     get nation() { return data.nationById[sim.S.cur]; },
     get race() { return data.raceById[sim.S.race]; },
-    get job() { return sim.S.job ? data.jobById[sim.S.job] : null; },
-    get policy() { return resolvePolicy(sim.nation, sim.S); },
+    get job() {
+      const S = sim.S; if (!S.job) return null;
+      const j = data.jobById[S.job]; if (j) return j;
+      const t = trackOf(sim); if (!t) return null;
+      // 진로 기반 가짜 job(구 콘텐츠 호환): jobs.json 필드 모양을 흉내 낸다
+      const st = t.stages[Math.min(S.track.stage, t.stages.length - 1)];
+      return { id: S.job, name: trackName(sim) || t.name, sector: t.archetype === 'A11' ? 'ser' : 'ser', edu: 0, urban: 0, oriMul: (st && st.oriMul != null ? st.oriMul : t.oriMul) ?? 1, risk: {}, req: [], special: !!t.special, lo: 0.2, hi: 0.8, only: null, age: t.entry.ages, track: t.id, stage: st ? st.id : null };
+    },
+    get policy() { const t = trackOf(sim); return (t && t.oriPolicyOverride) || resolvePolicy(sim.nation, sim.S); },
     get lt() { return lifeTable(sim.nation.stats, sim.S.sex, sim.race.lifeMul); },
     get year() { return sim.S.by + sim.S.age; },
     get med() { return medianLMD(sim); },
+    // v1 ctx API(§2·§3): 현재 진로 데이터·소속·거주·관계 등급·로도스 상태
+    get track() { return trackOf(sim); },
+    get aff() { return affOf(sim); },
+    get res() { return sim.S.res; },
+    get rel() { return sim.S.rel; },
+    get rhodes() { return sim.S.rhodes && sim.S.rhodes !== true ? sim.S.rhodes : null; },
+    get stage() { const t = trackOf(sim); return t ? t.stages[Math.min(sim.S.track.stage, t.stages.length - 1)] : null; },
   };
+  installEngineDecisions(sim.content, data);
 
   // ── 기록·효과 ──────────────────────────────────────────
   sim.log = (text, kind = 'ev', f, fx) => {
@@ -95,10 +121,12 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     sim.HOOK.log(e, sim);
     return e;
   };
+  /** 스탯 변화. hl/h 막대, money. 구 sm/so 와 cap{…}·standing 은 역량·지위로 흡수(§2) */
   sim.eff = (fx) => {
     const st = sim.S.st;
-    for (const k of ['hl', 'h', 'sm', 'so']) if (fx[k]) st[k] = clamp(st[k] + fx[k], 0, 100);
+    for (const k of ['hl', 'h']) if (fx[k]) st[k] = clamp(st[k] + fx[k], 0, 100);
     if (fx.money) sim.S.money = Math.round(sim.S.money + fx.money);
+    applyLegacyFx(sim.S, fx);
     sim.HOOK.change(sim.S, sim);
     return fx;
   };
@@ -109,31 +137,25 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     if (r.t) return sim.log(r.t, r.k || defKind, r.f, r.fx);
   };
   sim.die = (causeId, label) => die(sim, causeId, label);
+  sim.infect = (how) => infect(sim, how);
 
-  /** 타국 이주(추방·보험 미납·자발). 정책이 박해·추방·안락사인 나라는 피한다. */
-  sim.migrate = (reason) => {
-    const S = sim.S;
-    const cands = data.topNations.filter((n) => n.id !== S.root).map((n) => {
-      const p = typeof n.policy === 'string' ? n.policy : (n.policy.default || 'ignore');
-      return [n.id, Math.max(0.1, n.share) * (['persecute', 'expel', 'euthanasia'].includes(p) ? 0.2 : 1)];
-    });
-    const id = sim.rng.wpick(cands);
-    if (!id) return false;
-    const to = data.nationById[id];
-    S.cur = id; S.root = rootOf(data, id); S.mig = id; S.stats.moves++;
-    S.flags.quarantined = false; S.flags.noMove = false; S.flags.oriFees = false; S.flags.oriPremium = 0; S.flags.euthTrack = false;
-    S.flags.migReason = reason;
-    if (sim.job && sim.job.only && sim.job.only !== id) { S.job = null; S.income = 0; }
-    sim.log(ro(to.name) + ' 옮겨 갔습니다.', reason === 'expel' || reason === 'insurance_default' ? 'bad' : 'ev');
-    if (S.ori.on && S.ori.known) {
-      const p = sim.policy;
-      if (['ignore', 'treat', 'neglect', 'insurance', 'quarantine'].includes(p)) applyPolicy(sim, p);
-    }
-    return true;
-  };
+  /** 이주 상태 기계(§7): migrate(reason, to?). reason = work|study|marriage|flee|asylum|exile|contract|caravan|rhodes|return|deport (구 expel·insurance_default·voluntary 도 받음) */
+  sim.migrate = (reason, to, opts) => migrateTo(sim, reason === 'expel' || reason === 'insurance_default' ? reason : reason, to, opts);
+  // 진로 헬퍼(콘텐츠용, §3): 승급·몰락·전직·진입·이탈·로도스 합류·주거 전환
+  sim.promote = (opts) => promote(sim, opts);
+  sim.fall = (cause) => fall(sim, cause);
+  sim.applyExit = (value, cause) => applyExit(sim, value, cause);
+  sim.switchTrack = (id, how) => switchTrack(sim, id, how);
+  sim.enterTrack = (id, opts) => enterTrack(sim, id, opts);
+  sim.leaveTrack = (how, opts) => leaveTrack(sim, how, opts);
+  sim.retireTrack = (opts) => retireTrack(sim, opts);
+  sim.joinRhodes = (via, opts) => joinRhodes(sim, via, opts);
+  sim.setHousing = (typeId, opts) => { const t = (data.housing[sim.S.cur] || data.housing._default).types.find((x) => x.id === typeId); return t ? setHousing(sim, t, opts) : false; };
+  sim.heal = () => healStats(sim.S);
+  sim.load = (S) => { const m = migrateSave(S, data); if (!m) return null; sim.S = m; normalizeRhodes(sim); refreshRel(sim); return sim.S; };
 
   // ── 생애 시작 ──────────────────────────────────────────
-  sim.newLife = (opts = {}) => { sim.S = newLife(data, sim.rng, { terra: sim.terra, ...opts }); return sim.S; };
+  sim.newLife = (opts = {}) => { sim.S = newLife(data, sim.rng, { terra: sim.terra, ...opts }); refreshRel(sim); initHousing(sim); return sim.S; };
   sim.start = () => {
     const S = sim.S;
     if (S.phase !== 'birth') return S;
@@ -163,14 +185,16 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
   sim.planYear = () => {
     const S = sim.S, rng = sim.rng;
     S.queue = []; S.fT = {};
+    normalizeRhodes(sim);
     sim.ensureFocus();
     for (const b of dueBigEvents(sim)) S.queue.push({ at: ((b.month || 6) - 0.5) / 12, type: 'big', id: b.id });
     const decs = scheduledDecisions(sim);
     decs.slice(0, 2).forEach((d, i) => S.queue.push({ at: d.at ?? (0.3 + i * 0.3 + rng.rnd() * 0.15), type: 'dec', id: d.id, p: {} }));
     const n = S.age < 6 ? 2 : 3;
     const used = new Set();
+    const visit = S.res && S.res.itinerantAt && data.nationById[S.res.itinerantAt] ? S.res.itinerantAt : null;   // §7.4 순회형: 피드의 20% 는 방문국
     for (let i = 0; i < n; i++) {
-      const e = chooseFeed(sim, used);
+      const e = chooseFeed(sim, used, visit && rng.chance(B.mig.visitShare) ? visit : null);
       if (!e) break;
       used.add(e.id);
       S.queue.push({ at: 0.08 + (i + rng.rnd() * 0.8) / n * 0.86, type: 'ev', id: e.id });
@@ -257,6 +281,7 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
   sim.endYear = () => {
     const S = sim.S;
     if (S.phase !== 'life') return;
+    normalizeRhodes(sim);
     // 1. 초점 효과
     const tot = Object.values(S.fT).reduce((a, b) => a + b, 0);
     S.focusW = {};
@@ -267,26 +292,33 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
       if (!fx) continue;
       for (const [stat, v] of Object.entries(fx)) S.st[stat] = clamp(S.st[stat] + v * w, 0, 100);
     }
-    // 2. 학교·취업·복무
+    // 2. 학교·복무 → 진로 상태 기계(§3.3; 진입은 planYear 의 track_choose 결정이 한다)
     schoolYear(sim);
-    jobYear(sim);
     serviceYear(sim);
+    trackYear(sim); if (S.phase !== 'life') return;
     // 3. 돈
     financeYear(sim); if (S.phase !== 'life') return;
     // 4. 테라 위험
     if (sim.terra) {
       oriYear(sim); if (S.phase !== 'life') return;
       campYear(sim); if (S.phase !== 'life') return;
+      jailYear(sim);
       catYear(sim); if (S.phase !== 'life') return;
       conflictYear(sim); if (S.phase !== 'life') return;
       hazardYear(sim); if (S.phase !== 'life') return;
     }
-    // 5. 스탯 수렴, 6. 가족
+    // 5. 역량 성장·스탯 수렴, 6. 가족·주거·거주·로도스
+    capYear(sim);
     statYear(sim);
-    familyYear(sim);
+    familyYear(sim); if (S.phase !== 'life') return;
+    housingYear(sim);
+    resYear(sim); if (S.phase !== 'life') return;
+    rhodesYear(sim); if (S.phase !== 'life') return;
     // 7. 연간 스냅샷
-    S.years.push({ a: S.age, y: sim.year, hl: Math.round(S.st.hl), h: Math.round(S.st.h), sm: Math.round(S.st.sm), so: Math.round(S.st.so),
-      money: S.money, inc: S.income, pct: +S.pct.toFixed(2), cur: S.cur, job: S.job, uL: S.ori.on ? S.ori.uL : 0, focus: S.focus });
+    S.years.push({ a: S.age, y: sim.year, hl: Math.round(S.st.hl), h: Math.round(S.st.h),
+      cap: { skill: +S.cap.skill.toFixed(2), learn: +S.cap.learn.toFixed(2), arts: +S.cap.arts.toFixed(2), ties: +S.cap.ties.toFixed(2) },
+      money: S.money, inc: S.income, pct: +S.pct.toFixed(2), cur: S.cur, job: S.job, track: S.track ? S.track.id : null, stage: S.track ? S.track.stage : null, standing: S.track ? Math.round(S.track.standing) : null,
+      uL: S.ori.on ? S.ori.uL : 0, focus: S.focus });
     // 8. 사망 판정
     deathCheck(sim); if (S.phase !== 'life') return;
     // 9. 다음 해
@@ -333,26 +365,7 @@ function schoolYear(sim) {
   }
   if (S.age === 20 && S.school === 'caster') { S.school = null; S.eduEnd = 20; S.flags.casterRoute = true; sim.log('아츠 수련 과정을 마쳤습니다.', 'ev'); }
   if (S.age === 22 && S.school === 'uni') { S.edu = 4; S.school = null; S.eduEnd = 22; sim.log('대학을 마쳤습니다.', 'ev'); }
-  if (S.school) S.st.sm = clamp(S.st.sm + 2, 0, 100);
-}
-
-function jobYear(sim) {
-  const { S, rng } = sim;
-  if (S.job || S.school || S.retired || S.serving || S.prison) return;
-  if (S.ori.stage >= 3 && !S.rhodes) return;
-  if (humanAge(S.age, sim.race.lifeMul) >= 65) return;
-  const minAge = S.flags.noSchool && B.childLaborAge[S.q] ? B.childLaborAge[S.q] : 15;
-  if (S.age < minAge) return;
-  const first = !S.flags.everWorked;
-  if (!first && !rng.chance(0.45)) { S.flags.joblessYears = (S.flags.joblessYears || 0) + 1; return; }
-  const offers = jobOffers(sim, 3);
-  if (!offers.length) return;
-  const best = offers.reduce((a, b) => ((a.lo + a.hi) >= (b.lo + b.hi) ? a : b));
-  const pick = rng.chance(0.7) ? best : rng.pick(offers);
-  if (takeJob(sim, pick.id)) {
-    S.flags.everWorked = true; S.flags.joblessYears = 0;
-    if (S.age < 15) { S.flags.childLabor = S.age; sim.log('아직 아이지만 일을 시작했습니다.', 'bad', '(' + (sim.nation.statOrg || '기록소') + ' 노동 대장에는 나이 칸이 없습니다)'); }
-  }
+  if (S.school === 'uni' && S.flags.studyAbroad != null && S.age >= S.eduEnd) { S.edu = 4; S.school = null; sim.log('유학을 마쳤습니다.', 'ev'); S.flags.returnHomeDue = true; }
 }
 
 function serviceYear(sim) {
@@ -378,21 +391,20 @@ function statYear(sim) {
     + (fw.health || 0) * 6 - (fw.work || 0) * 2 + (S.money < 0 ? -3 : 0);
   S.st.hl = clamp(S.st.hl + (hlT - S.st.hl) * (S.age < 5 ? 0.4 : 0.25), 0, 100);
 
+  // 구 관계 막대 → 연줄(cap.ties): 가족이 곁에 있으면 천천히 오르고, 격리·수용소면 내려간다
   const kidsAlive = S.fam.kids.filter((k) => k.alive).length;
   const partner = S.fam.partner && S.fam.partner.alive;
-  let soT = 45 + (partner ? 12 : 0) + Math.min(15, kidsAlive * 4) + (S.fam.mom.alive ? 2 : 0) + (S.fam.dad.alive && !S.fam.dad.absent ? 2 : 0)
-    - 3 * race.stigma - (S.eth === 'outsider' ? 4 : 0) - (S.flags.quarantined ? 8 : 0) - (camp ? 15 : 0)
-    + (fw.family || 0) * 6 + (fw.play || 0) * 4 + (S.rhodes ? 5 : 0) + (S.job === 'homemaker' ? (kidsAlive ? 3 : 1) : 0);
-  S.st.so = clamp(S.st.so + (soT - S.st.so) * 0.2, 0, 100);
+  const tiesDelta = (partner ? 0.01 : 0) + Math.min(0.02, kidsAlive * 0.005) - (S.flags.quarantined ? 0.02 : 0) - (camp ? 0.04 : 0) + (S.rhodes ? 0.005 : 0) - 0.003 * race.stigma;
+  S.cap.ties = clamp(+(S.cap.ties + tiesDelta).toFixed(3), -3, 3);
+  const soProxy = 50 + S.cap.ties * 12 + (partner ? 6 : 0) + Math.min(8, kidsAlive * 2);   // 행복 목표식의 옛 '관계' 항
 
   const adult = S.age >= 18;
   const hm = S.job === 'homemaker';
-  let hT = 40 + (adult ? (hm ? (S.flags.hhPct - 0.5) * 12 + 1 : (S.pct - 0.5) * 18 * (S.job ? 1 : 0.3)) : (S.q - 3) * 3) + (S.st.so - 50) * 0.25 + (S.st.hl - eh) * 0.2
-    - (S.money < 0 ? 6 : 0) - (S.ori.known ? 8 : 0) - (camp ? 15 : 0) - (S.flags.quarantined ? 5 : 0)
+  const standing = S.track ? (S.track.standing - 50) * 0.08 : 0;
+  let hT = 40 + (adult ? (hm ? (S.flags.hhPct - 0.5) * 12 + 1 : (S.pct - 0.5) * 18 * (S.job ? 1 : 0.3)) : (S.q - 3) * 3) + (soProxy - 50) * 0.25 + (S.st.hl - eh) * 0.2 + standing
+    - (S.money < 0 ? 6 : 0) - (S.ori.known ? 8 : 0) - (camp ? 15 : 0) - (S.flags.quarantined ? 5 : 0) - (S.res && S.res.phase === 'settling' ? 3 : 0)
     + (fw.rest || 0) * 3 + (fw.play || 0) * 3 + (S.rhodes ? 4 : 0);
   S.st.h = clamp(S.st.h + (hT - S.st.h) * (hT > S.st.h ? 0.35 : 0.2), 0, 100);
-
-  if (humanAge(S.age, race.lifeMul) >= 30 && !(fw.study || fw.learn)) S.st.sm = clamp(S.st.sm - 0.3, 0, 100);
 }
 
 function familyYear(sim) {
@@ -408,32 +420,29 @@ function familyYear(sim) {
     const q = lt.q[Math.min(p.age, lt.q.length - 1)] * 1.2 * (p.infected ? 2 : 1);
     if (rng.chance(q)) {
       p.alive = false;
+      S.flags.parentDiedAt = S.age;
       sim.eff({ so: -4, h: -5 });
       sim.log(iga(key === 'mom' ? '어머니' : '아버지') + ' 세상을 떠났습니다.', 'loss');
     }
   }
-  // 배우자
+  // 배우자: 결혼 롤·제도 유형·결정은 choices.js 의 marry_<type>(§8). 여기서는 사별·타국 배우자 이주만
   const f = S.fam;
   const camp = S.prison === 'camp';
-  if (!f.partner && S.age >= 18 && humanAge(S.age, race.lifeMul) <= 45 && !camp && !S.serving) {
-    let p = 0.12 * clamp(S.st.so / 60, 0.3, 1.5) * (1 - 0.15 * race.stigma) * (S.eth === 'outsider' ? 0.8 : 1);
-    if (S.ori.known && !S.rhodes) p *= 0.3;
-    if (S.flags.quarantined) p *= 0.3;
-    if (rng.chance(p)) {
-      const psex = S.sex === 'M' ? 'F' : 'M';
-      f.partner = { name: makeName(sim.data, rng, { lang: sim.nation.nameLang, sex: psex, race: S.race, avoid: familyNames(S) }).given,
-        sex: psex, age: S.age + rng.ri(-3, 4), alive: true, infected: rng.chance(0.03 * sim.nation.oriExp) };
-      initPartner(sim, f.partner);
-      f.married = true; f.marriedAt = S.age;
-      sim.log(wa(f.partner.name) + ' 결혼했습니다.', 'warm');
-    }
-  } else if (f.partner && f.partner.alive) {
+  if (f.partner && !f.marriage) f.marriage = { type: 'custom', at: f.marriedAt ?? S.age, name: '관습 혼인' };   // 콘텐츠가 직접 배우자를 만든 경우
+  if (S.flags.marriageMigrateTo && f.partner && f.partner.alive && !S.prison && !S.flags.noMove) {
+    const to = S.flags.marriageMigrateTo; S.flags.marriageMigrateTo = null;
+    if (rng.chance(0.5) && sim.data.nationById[to]) { sim.migrate('marriage', to); if (S.phase !== 'life') return; }
+  }
+  if (f.partner && f.partner.alive) {
     const p = f.partner;
     p.age++;
     const lt = lifeTable(st, p.sex, race.lifeMul);
     const q = lt.q[Math.min(Math.max(0, p.age), lt.q.length - 1)] * 1.2 * (p.infected ? 2 : 1);
     if (rng.chance(q)) { p.alive = false; f.widowed = true; sim.eff({ h: -8, so: -6 }); sim.log('배우자가 세상을 떠났습니다.', 'loss'); }
   }
+  // 부모 사망 → 귀향 결정(§7.2) / 고아(15세 전 부모 둘 다 없음, gate status:'orphan')
+  if (S.cur !== S.born && S.flags.parentDiedAt === S.age) S.flags.returnHomeDue = true;
+  if (S.age < 15 && !S.fam.mom.alive && !S.fam.dad.alive && !S.flags.orphan) S.flags.orphan = S.age;
   // 자녀
   if (f.partner && f.partner.alive && !camp) {
     const motherAge = S.sex === 'F' ? S.age : f.partner.age;

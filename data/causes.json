@@ -11,7 +11,7 @@
       "fact": "사망 기록 비교 문장용 메모(각주는 콘텐츠 세션이 테라식 출처로 다시 씀)",
       "footnote": "무거운 주제 처리 지침(§3.4)"
     },
-    "note": "가중치는 1950년 사망 원인 구성(감염병·호흡기 상위, 심혈관·암은 노년)을 단순화한 추정. 테라 고유 사인은 보고서 A-9 를 옮긴 것이며 가중은 전부 추정. 현실 11종 + 테라 22종 = 33종."
+    "note": "가중치는 1950년 사망 원인 구성(감염병·호흡기 상위, 심혈관·암은 노년)을 단순화한 추정. 테라 고유 사인은 보고서 A-9 를 옮긴 것이며 가중은 전부 추정. 현실 11종 + 테라 22종 = 33종. W8(2026-10-20)이 진로 몰락 사인용 6종(missing·assassination·freezing·poison·overwork·seaborn_change)을 추가해 39종."
   },
   "causes": [
     { "id": "neonatal", "kind": "real", "label": "출생 직후 합병증", "w": [45, 0, 0, 0, 0, 0, 0], "tags": [], "fact": "영아 사망의 절반은 생후 한 달 안에 일어납니다. 로도스 아일랜드 의료부 소책자" },
@@ -47,6 +47,12 @@
     { "id": "jungle_fever", "kind": "terra", "label": "정글 풍토병", "w": [8, 8, 4, 3, 3, 3, 3], "tags": ["threat:jungle_fever"], "fact": "사르곤 아카후알라. 재앙이 없는 대신 풍토병이 있습니다" },
     { "id": "dehydration", "kind": "terra", "label": "탈수", "w": [1, 1, 2, 3, 3, 3, 3], "tags": ["trait:hydro", "threat:dehydration"], "fact": "에기르가 육지에서 오래 버티면 몸이 먼저 말라 갑니다" },
     { "id": "dome_collapse", "kind": "terra", "label": "돔 붕괴", "w": [2, 2, 2, 2, 2, 2, 2], "tags": ["threat:dome_collapse", "threat:flooding"], "fact": "두린 지하 도시의 천장은 모두의 천장입니다" },
-    { "id": "avalanche", "kind": "terra", "label": "눈사태", "w": [1, 2, 4, 5, 4, 2, 1], "tags": ["threat:avalanche", "threat:cold_wave"], "fact": "쉐라그와 사미. 봄까지 찾지 못하는 경우가 많습니다" }
+    { "id": "avalanche", "kind": "terra", "label": "눈사태", "w": [1, 2, 4, 5, 4, 2, 1], "tags": ["threat:avalanche", "threat:cold_wave"], "fact": "쉐라그와 사미. 봄까지 찾지 못하는 경우가 많습니다" },
+    { "id": "missing", "kind": "terra", "label": "실종", "w": [0, 0.5, 1, 2, 2, 1, 0.5], "tags": ["threat:corporate_experiment", "threat:frontier", "threat:avalanche", "threat:surface_journey"], "fact": "연구원·탐사원·길잡이. 기록은 마지막으로 목격된 날짜로 남습니다", "footnote": "장면 없이 결과만. W8 추가(§11.4 disappear)" },
+    { "id": "assassination", "kind": "terra", "label": "암살", "w": [0, 0, 0.5, 2, 3, 2, 1], "tags": ["threat:oligarch_assassination", "threat:court_intrigue", "threat:family_feud", "threat:aristocracy", "threat:three_clans"], "fact": "정치·패밀리·궁정. 범인은 대개 기록되지 않습니다", "footnote": "W8 추가(§11.4 coup·assassination)" },
+    { "id": "freezing", "kind": "terra", "label": "동사", "w": [2, 2, 2, 3, 3, 3, 4], "tags": ["threat:cold_wave", "threat:avalanche", "threat:far_north_rebellion", "nation:sami", "nation:kjerag"], "fact": "사미·쉐라그·우르수스 극북. 봄에 발견됩니다", "footnote": "W8 추가(§11.4 freezing)" },
+    { "id": "poison", "kind": "terra", "label": "독살", "w": [0, 0, 0.3, 1, 2, 2, 1], "tags": ["threat:court_intrigue", "threat:three_clans", "threat:aristocracy", "threat:carnevale", "threat:imperial_court"], "fact": "만주원·궁정·카르니발레 심사위원. 공식 사인은 대개 다르게 적힙니다", "footnote": "W8 추가(§11.4 poison)" },
+    { "id": "overwork", "kind": "terra", "label": "과로", "w": [0, 0, 0, 2, 4, 2, 0.5], "tags": ["threat:overwork", "threat:bubble", "threat:pmc"], "fact": "극동 남조 회사원·블랙스틸 사무직. 회사는 조의금을 냅니다", "footnote": "W8 추가(§11.4 overwork)" },
+    { "id": "seaborn_change", "kind": "terra", "label": "시테러화", "w": [1, 2, 3, 4, 4, 3, 2], "tags": ["threat:seaborn_assimilation", "threat:deep_church", "threat:profound_silence"], "fact": "봉쇄 해안·심해 교단. 사망으로 기록되지만 몸은 남지 않습니다", "footnote": "장면 없이 결과만. W8 추가(§11.4 seaborn)" }
   ]
 }

@@ -1,0 +1,854 @@
+{
+ "_meta": {
+  "nation": "kazimierz",
+  "source": "진로_카탈로그_v0 §10",
+  "canon": "mixed",
+  "classScale": 1,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "최하층 KAZ_INFECTED 10은 감염 강제 전환(arena) 전용이라 빼고 재정규화. KAZ_AU는 모집 이벤트 전용(classes 없음)."
+ },
+ "tracks": [
+  {
+   "id": "KAZ_SLAVE",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "노예",
+   "archetype": "A5",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [0,60],
+    "classes": { "q1": 0.11 },
+    "gates": [
+     { "status": "slave", "weight": 50 }
+    ],
+    "via": ["born","sold"]
+   },
+   "stages": [
+    {
+     "id": "slave",
+     "name": "노예",
+     "title": null,
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.03 },
+     "fall": { "base": 0.05, "causes": ["execution","accident","starvation"] },
+     "forced": true
+    },
+    {
+     "id": "freed",
+     "name": "해방",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.02 },
+     "fall": { "base": 0.05, "causes": ["execution","accident","starvation"] }
+    },
+    {
+     "id": "ask",
+     "name": "감정회 기사",
+     "title": "4급 기사",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.05, "causes": ["execution","accident","starvation"] }
+    }
+   ],
+   "income": { "stage": [0,0.4,2] },
+   "standing": { "name": "작업반 평판", "start": 20 },
+   "affiliations": ["KAZ_SLA_HOUSE","KAZ_SLA_ASK"],
+   "exits": {
+    "retire": null,
+    "fall": { "execution": "death", "accident": "death", "starvation": "death" },
+    "switch": ["KAZ_LABOR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["gravel"],
+   "note": "status.slave 는 출생 시 최하층 일부에 창작 부여"
+  },
+  {
+   "id": "KAZ_GHETTO",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "지하 거주구",
+   "archetype": "A5",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [10,60],
+    "classes": { "q1": 0.33 },
+    "gates": [
+     { "urban": true }
+    ],
+    "via": ["born","fallen"]
+   },
+   "stages": [
+    {
+     "id": "resident",
+     "name": "거주",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.06, "causes": ["accident","crystallize","starvation","arrest"] }
+    },
+    {
+     "id": "daylabor",
+     "name": "일용",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.06, "causes": ["accident","crystallize","starvation","arrest"] }
+    },
+    {
+     "id": "notice",
+     "name": "0구역 이송 통지",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["accident","crystallize","starvation","arrest"] },
+     "forced": true
+    }
+   ],
+   "income": { "stage": [0.1,0.3,0], "job": "laborer" },
+   "standing": { "name": "작업반 평판", "start": 20 },
+   "affiliations": ["KAZ_GHE_UNDER","KAZ_GHE_OGNISKO"],
+   "exits": {
+    "retire": null,
+    "fall": { "accident": "death", "crystallize": "death", "starvation": "death", "arrest": "prison:jail" },
+    "switch": ["KAZ_KNIGHT","KAZ_LABOR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KAZ_LABOR",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "상업 도시 저임금 노동",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,45],
+    "classes": { "q1": 0.39, "q2": 0.25 },
+    "gates": [
+     { "urban": true, "weight": 1.5 }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "daylabor",
+     "name": "일용",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["layoff","accident","infected"] }
+    },
+    {
+     "id": "factory",
+     "name": "공장",
+     "title": null,
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["layoff","accident","infected"] }
+    },
+    {
+     "id": "foreman",
+     "name": "반장",
+     "title": "반장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["layoff","accident","infected"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.3,0.6,1], "job": "laborer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["KAZ_LAB_ZBONEK","KAZ_LAB_CITY"],
+   "exits": {
+    "retire": { "age": 60, "to": "KAZ_LABOR" },
+    "fall": { "layoff": "expel", "accident": "injured", "infected": "infected" },
+    "switch": ["KAZ_KNIGHT","KAZ_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["flametail"]
+  },
+  {
+   "id": "KAZ_FARM",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "남부 농민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,40],
+    "classes": { "q2": 0.4 },
+    "gates": [
+     { "urban": false, "weight": 3 }
+    ],
+    "via": ["family"]
+   },
+   "stages": [
+    {
+     "id": "tenant",
+     "name": "소작",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["ruin","raid","catastrophe"] }
+    },
+    {
+     "id": "own",
+     "name": "자영",
+     "title": null,
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["ruin","raid","catastrophe"] }
+    },
+    {
+     "id": "village",
+     "name": "마을 자치",
+     "title": "촌장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["ruin","raid","catastrophe"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.6,1], "job": "farmer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["KAZ_FARM_TWIERDZA","KAZ_FARM_STRUMYKOWO","KAZ_FARM_BORDER"],
+   "exits": {
+    "retire": { "age": 60, "to": "KAZ_LABOR" },
+    "fall": { "ruin": "demote", "raid": "death", "catastrophe": "death" },
+    "switch": ["KAZ_LABOR","KAZ_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KAZ_KNIGHT",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "경쟁 기사",
+   "archetype": "A2",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [10,22],
+    "classes": { "q1": 0.17, "q2": 0.1, "q3": 0.15, "q4": 0.45 },
+    "gates": [
+     { "cap": "skill", "min": 0.5 },
+     { "race": ["kuranta"], "weight": 1.5 },
+     { "rel": "<=cultural" }
+    ],
+    "via": ["family_training","underground_points","registered"]
+   },
+   "stages": [
+    {
+     "id": "registered",
+     "name": "등록·연습생",
+     "title": "연습생",
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.06, "causes": ["injury","scandal","elimination","infected"] }
+    },
+    {
+     "id": "elite",
+     "name": "정예",
+     "title": "정예 기사",
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.15 },
+     "fall": { "base": 0.06, "causes": ["injury","scandal","elimination","infected"] }
+    },
+    {
+     "id": "mvp",
+     "name": "MVP",
+     "title": "MVP",
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.08 },
+     "fall": { "base": 0.06, "causes": ["injury","scandal","elimination","infected"] }
+    },
+    {
+     "id": "top100",
+     "name": "Top 100 기사단",
+     "title": "기사단 기사",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.04 },
+     "fall": { "base": 0.06, "causes": ["injury","scandal","elimination","infected"] }
+    },
+    {
+     "id": "grand",
+     "name": "대기사",
+     "title": "대기사",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["injury","scandal","elimination","infected"] }
+    }
+   ],
+   "income": { "stage": [0.3,1.5,4,10,30], "job": "knight" },
+   "standing": { "name": "랭킹 포인트", "start": 20 },
+   "affiliations": ["KAZ_KNI_GRAND8","KAZ_KNI_64","KAZ_KNI_INDEP","KAZ_KNI_SPONSOR"],
+   "exits": {
+    "retire": { "age": 35, "to": "KAZ_STAFF" },
+    "fall": { "injury": "injured", "scandal": "disgrace", "elimination": "demote", "infected": "arena:KAZ_INFECTED" },
+    "switch": ["KAZ_STAFF","KAZ_MEDIA","KAZ_OFFICE"]
+   },
+   "oriPolicyOverride": "kaz_arena",
+   "canonFigures": ["nearl"]
+  },
+  {
+   "id": "KAZ_INFECTED",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "감염자 기사",
+   "archetype": "A2",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,40],
+    "classes": {},
+    "gates": [
+     { "infected": true }
+    ],
+    "via": ["arena","bloodsport"]
+   },
+   "forced": { "infected": true, "from": ["KAZ_KNIGHT"] },
+   "stages": [
+    {
+     "id": "bloodsport",
+     "name": "혈투 투기장",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.08, "causes": ["injury","elimination","crystallize"] }
+    },
+    {
+     "id": "winner",
+     "name": "승자 본선",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.08 },
+     "fall": { "base": 0.08, "causes": ["injury","elimination","crystallize"] }
+    },
+    {
+     "id": "title",
+     "name": "칭호",
+     "title": "감염자 기사",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.08, "causes": ["injury","elimination","crystallize"] }
+    }
+   ],
+   "income": { "stage": [0.3,1,3], "job": "arena_knight" },
+   "standing": { "name": "랭킹 포인트", "start": 20 },
+   "affiliations": ["KAZ_INF_PINUS","KAZ_INF_SYSTEM"],
+   "exits": {
+    "retire": { "age": 40, "to": "KAZ_GHETTO" },
+    "fall": { "injury": "death:major_arena", "elimination": "expel", "crystallize": "death" },
+    "switch": ["KAZ_GHETTO"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["flametail"]
+  },
+  {
+   "id": "KAZ_STAFF",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "기사 클럽 스태프",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [25,45],
+    "classes": { "q3": 0.1 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["retired_knight","hire"]
+   },
+   "stages": [
+    {
+     "id": "instructor",
+     "name": "인스트럭터",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["layoff","scandal","bankrupt"] }
+    },
+    {
+     "id": "coach",
+     "name": "코치",
+     "title": "코치",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["layoff","scandal","bankrupt"] }
+    },
+    {
+     "id": "manager",
+     "name": "매니저",
+     "title": "매니저",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["layoff","scandal","bankrupt"] }
+    }
+   ],
+   "income": { "stage": [1,1.8,3.5] },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["KAZ_STA_NORTHWOOD","KAZ_STA_BLADEHELMET"],
+   "exits": {
+    "retire": { "age": 60, "to": "KAZ_LABOR" },
+    "fall": { "layoff": "expel", "scandal": "disgrace", "bankrupt": "expel" },
+    "switch": ["KAZ_OFFICE","KAZ_MEDIA"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KAZ_OFFICE",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "회사원",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,32],
+    "classes": { "q2": 0.15, "q3": 0.4, "q4": 0.1 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "staff",
+     "name": "사원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt","scandal"] }
+    },
+    {
+     "id": "middle",
+     "name": "중간 간부",
+     "title": "간부",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt","scandal"] }
+    },
+    {
+     "id": "exec",
+     "name": "대변인·임원",
+     "title": "임원",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt","scandal"] }
+    }
+   ],
+   "income": { "stage": [1,1.8,4], "job": "clerk" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["KAZ_OFF_MATERIALS","KAZ_OFF_MIESZKO","KAZ_OFF_GALE","KAZ_OFF_SWORMA"],
+   "exits": {
+    "retire": { "age": 60, "to": "KAZ_LABOR" },
+    "fall": { "layoff": "expel", "bankrupt": "expel", "scandal": "disgrace" },
+    "switch": ["KAZ_STAFF"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["mlynar"]
+  },
+  {
+   "id": "KAZ_MEDIA",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "해설·언론",
+   "archetype": "A12",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,32],
+    "classes": { "q3": 0.1, "q5": 0.15 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 },
+     { "born": "looks", "min": -0.8 }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "reporter",
+     "name": "기자",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.035, "causes": ["scandal","fade","layoff"] }
+    },
+    {
+     "id": "commentator",
+     "name": "해설자",
+     "title": "해설자",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.035, "causes": ["scandal","fade","layoff"] }
+    },
+    {
+     "id": "spokesman",
+     "name": "대변인",
+     "title": "대변인",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["scandal","fade","layoff"] }
+    }
+   ],
+   "income": { "stage": [1,2.5,6], "job": "commentator" },
+   "standing": { "name": "명성", "start": 20 },
+   "affiliations": ["KAZ_MED_ROSE","KAZ_MED_PAPER","KAZ_MED_FILM"],
+   "exits": {
+    "retire": { "age": 60, "to": "KAZ_LABOR" },
+    "fall": { "scandal": "disgrace", "fade": "expel", "layoff": "expel" },
+    "switch": ["KAZ_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["mob"]
+  },
+  {
+   "id": "KAZ_CRAFT",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "장인 길드",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q2": 0.05, "q3": 0.1 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["apprentice"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "견습",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.02, "causes": ["ruin","bankrupt"] }
+    },
+    {
+     "id": "master",
+     "name": "장인",
+     "title": "장인",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.02, "causes": ["ruin","bankrupt"] }
+    },
+    {
+     "id": "grandmaster",
+     "name": "명장",
+     "title": "명장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["ruin","bankrupt"] }
+    }
+   ],
+   "income": { "stage": [0.4,1.2,2.5], "job": "artisan" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["KAZ_CRA_GUILD"],
+   "exits": {
+    "retire": { "age": 60, "to": "KAZ_LABOR" },
+    "fall": { "ruin": "expel", "bankrupt": "expel" },
+    "switch": ["KAZ_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KAZ_MSG",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "재앙 메신저",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": true,
+   "route": ["kazimierz","columbia","leithanien"],
+   "entry": {
+    "ages": [16,28],
+    "classes": { "q3": 0.05 },
+    "gates": [
+     { "cap": "arts", "min": 0.5 }
+    ],
+    "via": ["apprentice"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "수습",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "arts", "k": 0.22 },
+     "fall": { "base": 0.04, "causes": ["accident","infected","catastrophe"] }
+    },
+    {
+     "id": "messenger",
+     "name": "메신저",
+     "title": "메신저",
+     "minYears": 8,
+     "promo": { "cap": "arts", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["accident","infected","catastrophe"] }
+    },
+    {
+     "id": "forecaster",
+     "name": "기업 제휴 예보관",
+     "title": "예보관",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["accident","infected","catastrophe"] }
+    }
+   ],
+   "income": { "stage": [0.6,1.5,3], "job": "cat_messenger" },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["KAZ_MSG_CORP"],
+   "exits": {
+    "retire": { "age": 60, "to": "KAZ_LABOR" },
+    "fall": { "accident": "death", "infected": "infected", "catastrophe": "death" },
+    "switch": ["COM_MESSENGER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KAZ_ASK",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "감정회 기사",
+   "archetype": "A3",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,30],
+    "classes": { "q3": 0.1, "q4": 0.15, "q5": 0.25 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 },
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["appointed"]
+   },
+   "stages": [
+    {
+     "id": "junior",
+     "name": "하급",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "ties", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["purge","assassination","scandal"] }
+    },
+    {
+     "id": "fourth",
+     "name": "4급",
+     "title": "4급 기사",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["purge","assassination","scandal"] }
+    },
+    {
+     "id": "covert",
+     "name": "비밀공작",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["purge","assassination","scandal"] }
+    },
+    {
+     "id": "guard",
+     "name": "대기사장 경호",
+     "title": "경호 기사",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["purge","assassination","scandal"] }
+    }
+   ],
+   "income": { "stage": [1.2,2.2,4,7] },
+   "standing": { "name": "관청 평판", "start": 20 },
+   "affiliations": ["KAZ_ASK_ASK"],
+   "exits": {
+    "retire": { "age": 60, "to": "KAZ_OFFICE" },
+    "fall": { "purge": "exile", "assassination": "death", "scandal": "disgrace" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["gravel"],
+   "note": "등급 전체 불확실"
+  },
+  {
+   "id": "KAZ_CAMPAIGN",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "출정 기사",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,20],
+    "classes": { "q2": 0.05, "q4": 0.3, "q5": 0.1 },
+    "gates": [
+     { "status": "noble", "weight": 4 },
+     { "cap": "skill", "min": 0.5 }
+    ],
+    "via": ["family"]
+   },
+   "stages": [
+    {
+     "id": "squire",
+     "name": "견습",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.04, "causes": ["kia","disappear","injury"] }
+    },
+    {
+     "id": "campaign",
+     "name": "출정 기사",
+     "title": "출정 기사",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["kia","disappear","injury"] }
+    },
+    {
+     "id": "fourth",
+     "name": "4급",
+     "title": "4급 기사",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.04, "causes": ["kia","disappear","injury"] }
+    },
+    {
+     "id": "second",
+     "name": "2급·실버랜스 지휘관",
+     "title": "지휘관",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["kia","disappear","injury"] }
+    }
+   ],
+   "income": { "stage": [0.5,2,4,9] },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["KAZ_CAM_ORDER","KAZ_CAM_SILVERLANCE"],
+   "exits": {
+    "retire": { "age": 55, "to": "KAZ_STAFF" },
+    "fall": { "kia": "death", "disappear": "exile", "injury": "injured" },
+    "switch": ["KAZ_ASK"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["mlynar"]
+  },
+  {
+   "id": "KAZ_AU",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "아머레스 유니온",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,35],
+    "classes": {},
+    "gates": [
+     { "cap": "skill", "min": 0.5 },
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["recruited"]
+   },
+   "stages": [
+    {
+     "id": "darksteel",
+     "name": "다크스틸",
+     "title": "다크스틸",
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.06, "causes": ["execution","kia","betrayal"] }
+    },
+    {
+     "id": "lazurite",
+     "name": "라주라이트",
+     "title": "라주라이트",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.06, "causes": ["execution","kia","betrayal"] }
+    },
+    {
+     "id": "platinum",
+     "name": "플래티넘",
+     "title": "플래티넘",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["execution","kia","betrayal"] }
+    }
+   ],
+   "income": { "stage": [1,2.5,6] },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["KAZ_AU_UNION","KAZ_AU_SHAMPOO"],
+   "exits": {
+    "retire": null,
+    "fall": { "execution": "death", "kia": "death", "betrayal": "death" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "classes 없음: 모집 이벤트(창작)로만 진입"
+  },
+  {
+   "id": "KAZ_KGCC",
+   "nation": "kazimierz",
+   "region": null,
+   "name": "상업연합회 임원",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [25,45],
+    "classes": { "q5": 0.5 },
+    "gates": [
+     { "status": "noble", "weight": 10 },
+     { "cap": "ties", "min": 0.5 }
+    ],
+    "via": ["heir"]
+   },
+   "stages": [
+    {
+     "id": "secretary",
+     "name": "이사 비서",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "ties", "k": 0.15 },
+     "fall": { "base": 0.03, "causes": ["assassination","bankrupt","scandal"] }
+    },
+    {
+     "id": "director",
+     "name": "이사",
+     "title": "이사",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["assassination","bankrupt","scandal"] }
+    },
+    {
+     "id": "chair",
+     "name": "의장",
+     "title": "의장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["assassination","bankrupt","scandal"] }
+    }
+   ],
+   "income": { "stage": [3,12,40] },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["KAZ_KGCC_COUNCIL","KAZ_KGCC_ASSEMBLY"],
+   "exits": {
+    "retire": { "age": 70, "to": "KAZ_OFFICE" },
+    "fall": { "assassination": "death", "bankrupt": "demote", "scandal": "disgrace" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  }
+ ]
+}

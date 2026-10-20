@@ -1,0 +1,596 @@
+{
+ "_meta": {
+  "nation": "minos",
+  "source": "진로_카탈로그_v0 §16",
+  "canon": "mixed",
+  "classScale": 0.8325,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "단계 minYears·promo.k·fall.base·income·classes·gates 수치는 전부 창작(명세 §4·§13 기본값). canon:false 표시가 없는 단계 명칭은 카탈로그 캐논 명칭."
+ },
+ "tracks": [
+  {
+   "id": "MIN_CIVIC",
+   "nation": "minos",
+   "region": null,
+   "name": "구역 공직",
+   "archetype": "A3",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [22,45],
+    "classes": { "q3": 0.2497, "q4": 0.4163 },
+    "gates": [
+     { "cap": "ties", "min": -0.8 },
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["elected","appointed"]
+   },
+   "stages": [
+    {
+     "id": "magistrate",
+     "name": "구역 치안관",
+     "title": "치안관",
+     "minYears": 4,
+     "promo": { "cap": "ties", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["exile","impeach","scandal"] }
+    },
+    {
+     "id": "supervisor",
+     "name": "시정감독관·서기관",
+     "title": "감독관",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["exile","impeach","scandal"] }
+    },
+    {
+     "id": "council",
+     "name": "평의회 위원",
+     "title": "위원",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["exile","impeach","scandal"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [1.2,2.5,5], "job": "civil_servant" },
+   "standing": { "name": "관청 평판", "start": 20 },
+   "affiliations": ["MIN_CIV_ATHENUS","MIN_CIV_CORINIA","MIN_CIV_LACEDAEMON"],
+   "exits": {
+    "retire": { "age": 68, "to": "MIN_TRADE" },
+    "fall": { "exile": "exile", "impeach": "disgrace", "scandal": "disgrace" },
+    "switch": ["MIN_TRADE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "MIN_TEMPLE",
+   "nation": "minos",
+   "region": null,
+   "name": "신전 사제",
+   "archetype": "A8",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,25],
+    "classes": { "q4": 0.1665, "q5": 0.8325 },
+    "gates": [
+     { "infected": false },
+     { "cap": "learn", "min": -0.8 },
+     { "status": "noble", "weight": 3 }
+    ],
+    "via": ["aspirant"]
+   },
+   "stages": [
+    {
+     "id": "aspirant",
+     "name": "지망생",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.18 },
+     "fall": { "base": 0.02, "causes": ["demotion","infected","heresy"] }
+    },
+    {
+     "id": "servant",
+     "name": "신전 봉사자",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "learn", "k": 0.08 },
+     "fall": { "base": 0.02, "causes": ["demotion","infected","heresy"] },
+     "canon": false
+    },
+    {
+     "id": "priest",
+     "name": "사제",
+     "title": "사제",
+     "minYears": 10,
+     "promo": { "cap": "learn", "k": 0.04 },
+     "fall": { "base": 0.02, "causes": ["demotion","infected","heresy"] }
+    },
+    {
+     "id": "chief",
+     "name": "수석 사제·신탁",
+     "title": "수석 사제",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["demotion","infected","heresy"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.8,2,5], "job": "temple_priest" },
+   "standing": { "name": "교단 신망", "start": 20 },
+   "affiliations": ["MIN_TEM_HEROES","MIN_TEM_ENDYMION","MIN_TEM_AKROTI"],
+   "exits": {
+    "retire": { "age": 80, "to": "MIN_TRADE" },
+    "fall": { "demotion": "demote", "infected": "demote", "heresy": "disgrace" },
+    "switch": ["MIN_TRADE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["pallas"]
+  },
+  {
+   "id": "MIN_ATHLETE",
+   "nation": "minos",
+   "region": null,
+   "name": "격투·경기 선수",
+   "archetype": "A2",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,22],
+    "classes": { "q2": 0.1249, "q3": 0.1249 },
+    "gates": [
+     { "cap": "skill", "min": 0.5 }
+    ],
+    "via": ["trainee"]
+   },
+   "stages": [
+    {
+     "id": "trainee",
+     "name": "훈련생",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.05, "causes": ["injury","elimination","scandal"] }
+    },
+    {
+     "id": "fighter",
+     "name": "라케다이몬 격투 선수",
+     "title": "선수",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.15 },
+     "fall": { "base": 0.05, "causes": ["injury","elimination","scandal"] }
+    },
+    {
+     "id": "hymnoi",
+     "name": "힘노이 출전",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.08 },
+     "fall": { "base": 0.05, "causes": ["injury","elimination","scandal"] }
+    },
+    {
+     "id": "legend",
+     "name": "3연승·전설",
+     "title": "전설",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.05, "causes": ["injury","elimination","scandal"] }
+    }
+   ],
+   "income": { "stage": [0.3,1,2.5,6], "job": "athlete" },
+   "standing": { "name": "랭킹 포인트", "start": 20 },
+   "affiliations": ["MIN_ATH_LACEDAEMON","MIN_ATH_HYMNOI","MIN_ATH_TRACK"],
+   "exits": {
+    "retire": { "age": 35, "to": "MIN_SECURITY" },
+    "fall": { "injury": "injured", "elimination": "demote", "scandal": "disgrace" },
+    "switch": ["MIN_SECURITY","MIN_TEMPLE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "MIN_SECURITY",
+   "nation": "minos",
+   "region": null,
+   "name": "민간 보안 기업원",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,35],
+    "classes": { "q3": 0.1665 },
+    "gates": [
+     { "year": [1090,9999] },
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "new",
+     "name": "신입",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["bankrupt","injury","layoff"] }
+    },
+    {
+     "id": "agent",
+     "name": "보안 요원",
+     "title": "요원",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.12 },
+     "fall": { "base": 0.03, "causes": ["bankrupt","injury","layoff"] }
+    },
+    {
+     "id": "lead",
+     "name": "팀장",
+     "title": "팀장",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.06 },
+     "fall": { "base": 0.03, "causes": ["bankrupt","injury","layoff"] }
+    },
+    {
+     "id": "committee",
+     "name": "인터락킹 위원회",
+     "title": "위원",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["bankrupt","injury","layoff"] }
+    }
+   ],
+   "income": { "stage": [0.9,1.5,2.5,5] },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["MIN_SEC_COMMITTEE","MIN_SEC_FIRM"],
+   "exits": {
+    "retire": { "age": 60, "to": "MIN_FARM" },
+    "fall": { "bankrupt": "expel", "injury": "injured", "layoff": "expel" },
+    "switch": ["MIN_TRADE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "MIN_SOLDIER",
+   "nation": "minos",
+   "region": null,
+   "name": "투창병·펠타스트",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,28],
+    "classes": { "q1": 0.1249, "q2": 0.1249 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["enlist"]
+   },
+   "stages": [
+    {
+     "id": "recruit",
+     "name": "신병",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.045, "causes": ["kia","execution","raid"] }
+    },
+    {
+     "id": "peltast",
+     "name": "투창병·펠타스트",
+     "title": "펠타스트",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["kia","execution","raid"] }
+    },
+    {
+     "id": "squad",
+     "name": "투석기조·분대장",
+     "title": "분대장",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.045, "causes": ["kia","execution","raid"] },
+     "canon": false
+    },
+    {
+     "id": "commander",
+     "name": "지휘관",
+     "title": "지휘관",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["kia","execution","raid"] }
+    }
+   ],
+   "income": { "stage": [0.6,1,1.6,3.5], "job": "soldier" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["MIN_SOL_ARMY","MIN_SOL_GUERRILLA","MIN_SOL_BORDER"],
+   "exits": {
+    "retire": { "age": 50, "to": "MIN_FARM" },
+    "fall": { "kia": "death", "execution": "death", "raid": "death" },
+    "switch": ["MIN_SECURITY"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "MIN_BOAT",
+   "nation": "minos",
+   "region": null,
+   "name": "델피 운하 뱃사공",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,35],
+    "classes": { "q1": 0.2081, "q2": 0.2081 },
+    "gates": [],
+    "via": ["disciple"]
+   },
+   "stages": [
+    {
+     "id": "disciple",
+     "name": "제자",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.025, "causes": ["ruin","drowning","scandal"] }
+    },
+    {
+     "id": "boatman",
+     "name": "뱃사공",
+     "title": "뱃사공",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.025, "causes": ["ruin","drowning","scandal"] }
+    },
+    {
+     "id": "dockmaster",
+     "name": "선착장장",
+     "title": "선착장장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["ruin","drowning","scandal"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.7,1.5], "job": "ferryman" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["MIN_BOA_DOCK","MIN_BOA_INDEP"],
+   "exits": {
+    "retire": { "age": 60, "to": "MIN_FARM" },
+    "fall": { "ruin": "demote", "drowning": "death", "scandal": "disgrace" },
+    "switch": ["MIN_FARM","MIN_TRADE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "MIN_FARM",
+   "nation": "minos",
+   "region": null,
+   "name": "과수·논·꽃 리큐르 농민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,40],
+    "classes": { "q2": 0.333 },
+    "gates": [
+     { "urban": false, "weight": 2 }
+    ],
+    "via": ["family"]
+   },
+   "stages": [
+    {
+     "id": "family",
+     "name": "가족 노동",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["raid","ruin","catastrophe"] }
+    },
+    {
+     "id": "own",
+     "name": "자영 과수·논",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["raid","ruin","catastrophe"] }
+    },
+    {
+     "id": "liqueur",
+     "name": "꽃 리큐르 제조",
+     "title": "제조가",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.04 },
+     "fall": { "base": 0.03, "causes": ["raid","ruin","catastrophe"] }
+    },
+    {
+     "id": "supplier",
+     "name": "코리니아 납품",
+     "title": "명가",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["raid","ruin","catastrophe"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.6,1.2,2.5], "job": "farmer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["MIN_FAR_APPLE","MIN_FAR_RICE","MIN_FAR_FLOWER"],
+   "exits": {
+    "retire": { "age": 60, "to": "MIN_FARM" },
+    "fall": { "raid": "death", "ruin": "expel", "catastrophe": "death" },
+    "switch": ["MIN_TRADE","MIN_BOAT"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "MIN_TRADE",
+   "nation": "minos",
+   "region": null,
+   "name": "코리니아 상인",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q2": 0.0416, "q3": 0.1249, "q4": 0.2497 },
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["peddler","family"]
+   },
+   "stages": [
+    {
+     "id": "peddler",
+     "name": "행상",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "ties", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["bankrupt","raid","scandal"] }
+    },
+    {
+     "id": "shop",
+     "name": "점포 상인",
+     "title": "상인",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["bankrupt","raid","scandal"] }
+    },
+    {
+     "id": "merchant",
+     "name": "대상인",
+     "title": "대상인",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.04 },
+     "fall": { "base": 0.03, "causes": ["bankrupt","raid","scandal"] }
+    },
+    {
+     "id": "priest",
+     "name": "사제 겸업",
+     "title": "대상인",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["bankrupt","raid","scandal"] }
+    }
+   ],
+   "income": { "stage": [0.5,1.3,4,5], "job": "merchant" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["MIN_TRA_CORINIA","MIN_TRA_PEDDLER","MIN_TRA_RANKWOOD"],
+   "exits": {
+    "retire": { "age": 60, "to": "MIN_FARM" },
+    "fall": { "bankrupt": "expel", "raid": "death", "scandal": "disgrace" },
+    "switch": ["MIN_CIVIC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "MIN_ART",
+   "nation": "minos",
+   "region": null,
+   "name": "극작가·철학자",
+   "archetype": "A12",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [15,30],
+    "classes": { "q3": 0.1665 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["disciple"]
+   },
+   "stages": [
+    {
+     "id": "disciple",
+     "name": "제자",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["fade","arrest","exile"] }
+    },
+    {
+     "id": "playwright",
+     "name": "극작가·철학자",
+     "title": "극작가",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.03, "causes": ["fade","arrest","exile"] }
+    },
+    {
+     "id": "notable",
+     "name": "아테누스 명사",
+     "title": "명사",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["fade","arrest","exile"] }
+    }
+   ],
+   "income": { "stage": [0.3,1,3], "job": "artist" },
+   "standing": { "name": "명성", "start": 20 },
+   "affiliations": ["MIN_ART_THEATER","MIN_ART_SCHOOL"],
+   "exits": {
+    "retire": { "age": 60, "to": "MIN_FARM" },
+    "fall": { "fade": "expel", "arrest": "disgrace", "exile": "exile" },
+    "switch": ["MIN_CIVIC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "MIN_BORDER",
+   "nation": "minos",
+   "region": null,
+   "name": "변경 마을 주민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [8,60],
+    "classes": { "q1": 0.4995 },
+    "gates": [
+     { "urban": false, "weight": 3 },
+     { "region": "akroti", "weight": 10 }
+    ],
+    "via": ["born"]
+   },
+   "stages": [
+    {
+     "id": "child",
+     "name": "아이",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.06, "causes": ["raid","starvation","kia"] }
+    },
+    {
+     "id": "militia",
+     "name": "농민·민병",
+     "title": null,
+     "minYears": 12,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.06, "causes": ["raid","starvation","kia"] }
+    },
+    {
+     "id": "chief",
+     "name": "촌장·피난",
+     "title": "촌장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["raid","starvation","kia"] }
+    }
+   ],
+   "income": { "stage": [0.1,0.4,0.8], "job": "farmer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["MIN_BOR_AKROTI","MIN_BOR_AGNES","MIN_BOR_SARGON"],
+   "exits": {
+    "retire": null,
+    "fall": { "raid": "death", "starvation": "death", "kia": "death:war" },
+    "switch": ["MIN_SOLDIER","MIN_FARM"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["pallas"]
+  }
+ ]
+}

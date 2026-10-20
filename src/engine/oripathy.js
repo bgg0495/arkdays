@@ -2,6 +2,9 @@
 // 정책 분기 결과는 로그 + S.flags.oriPolicy / S.flags.oriOutcome 로 남긴다. 각주는 nation.statOrg(세계관 내 기관)로 치환.
 import { clamp } from './rng.js';
 import { BALANCE as B } from './balance.js';
+import { tracksFor } from './data.js';
+import { enterTrack, leaveTrack, onDiagnosed } from './track.js';
+import { joinRhodes } from './rhodes.js';
 
 export const ORI_BASE = B.oriBase;                              // 연간 감염 기본 확률(balance.js)
 export const RHODES_OFFER_P = B.rhodesOfferP;                   // 모든 분기 공통 "로도스 합류 제안" 확률
@@ -28,7 +31,9 @@ export function parentPrevalence(nation, race, jobMul, homeMul) {
 /** 연간 감염 확률 */
 export function infectP(sim) {
   const { S, nation, race, job } = sim;
-  const jobMul = job ? job.oriMul : 1;
+  const tr = S.track ? sim.data.trackById[S.track.id] : null;
+  const stg = tr ? tr.stages[Math.min(S.track.stage, tr.stages.length - 1)] : null;
+  const jobMul = tr ? (stg && stg.oriMul != null ? stg.oriMul : (tr.oriMul ?? 1)) : (job ? job.oriMul : 1);
   const focusArts = S.focusW.arts || 0;
   return clamp(ORI_BASE[nation.oriExp] * jobMul * homeOriMul(S.home, S.urban) * race.oriVuln * (1 + 0.5 * focusArts), 0, 0.6);
 }
@@ -58,10 +63,25 @@ export function diagnose(sim, how = 'exam') {
   S.flags.oriPolicy = policy;
   sim.log('광석병 감염 판정을 받았습니다. 혈중 오리지늄 결정 밀도 ' + S.ori.uL.toFixed(2) + ' u/L.', 'big', '(' + (sim.nation.statOrg || '기록소') + ' 검진 기록)');
   applyPolicy(sim, policy);
+  if (S.phase !== 'life') return;
+  onDiagnosed(sim);                                   // v1 §4: A2 혈투 리그 전환, A7 자진 사퇴, A6 계약 해지
   if (sim.rng.chance(RHODES_OFFER_P) && !S.rhodes) {
     S.flags.rhodesOffer = S.age;
     sim.log('로도스 아일랜드라는 제약회사에서 연락이 왔습니다.', 'note', '(로도스 아일랜드 의료부 안내 엽서)');
   }
+}
+
+/** 감염 판정으로 강제 진로(URS_MINE 류 forced A5)가 있는 나라면 그리로 보낸다 */
+function forcedTrackFor(sim) {
+  const pol = sim.policy;
+  return tracksFor(sim.data, sim.S.cur).find((t) => {
+    if (!t.forced) return false;
+    const f = typeof t.forced === 'object' ? t.forced : {};
+    const infectedGate = f.infected || t.entry.gates.some((g) => g.infected === true);
+    if (!infectedGate) return false;
+    if (f.policy && !f.policy.includes(pol)) return false;
+    return true;
+  }) || null;
 }
 
 /** 국가 감염자 정책 분기(§5.1). 결과는 S.flags.oriOutcome */
@@ -71,9 +91,12 @@ export function applyPolicy(sim, policy) {
   switch (policy) {
     case 'persecute': {
       const r = rng.rnd();
-      if (r < 0.35) { outcome = 'camp'; S.prison = 'camp'; S.prisonLeft = rng.ri(3, 12); S.job = null; S.school = null;
-        sim.log('감염자 수용소로 이송되었습니다.', 'bad', '(' + (nation.statOrg || nation.name + ' 내무부') + ' 이송 명령서)'); }
-      else if (r < 0.6) { outcome = 'expel'; sim.log('국외 추방 명령을 받았습니다.', 'bad'); sim.migrate('expel'); }
+      if (r < 0.35) { outcome = 'camp'; S.prison = 'camp'; S.prisonLeft = rng.ri(3, 12); S.school = null;
+        const ft = forcedTrackFor(sim);
+        if (ft) enterTrack(sim, ft.id, { how: 'forced', via: 'patrol', quiet: true }); else if (S.track) leaveTrack(sim, 'prison', { quiet: true }); else { S.job = null; }
+        S.status.stigma = 'infected';
+        sim.log('감염자 수용소로 이송되었습니다.' + (ft ? ' ' + ft.name + '.' : ''), 'bad', '(' + (nation.statOrg || nation.name + ' 내무부') + ' 이송 명령서)'); }
+      else if (r < 0.6) { outcome = 'expel'; S.status.stigma = 'infected'; sim.log('국외 추방 명령을 받았습니다.', 'bad'); sim.migrate('exile'); }
       else if (r < 0.68) { outcome = 'execute'; sim.die('execution', '감염자 처형'); }
       else { outcome = 'hidden'; S.flags.oriHidden = true; sim.log('판정 기록을 돈으로 지웠습니다. 이제부터 숨기며 삽니다.', 'bad'); }
       break;
@@ -96,7 +119,7 @@ export function applyPolicy(sim, policy) {
       sim.log('보험사에서 감염자 특약 청구서가 왔습니다. 연 소득의 ' + Math.round(S.flags.oriPremium * 100) + '%입니다.', 'bad');
       break;
     case 'expel':
-      outcome = 'expel'; sim.log('즉시 추방되었습니다.', 'bad'); sim.migrate('expel');
+      outcome = 'expel'; S.status.stigma = 'infected'; sim.log('즉시 추방되었습니다.', 'bad'); sim.migrate('exile');
       break;
     case 'treat':
       outcome = 'treat'; S.ori.treated = true;
@@ -135,7 +158,7 @@ export function oriYear(sim) {
     if (S.phase !== 'life') return;
   }
   if (o.stage === 3 && prevStage < 3) {
-    if (S.job && !S.rhodes) { sim.log('더는 일할 수 없다는 통보를 받았습니다.', 'loss'); S.job = null; S.income = 0; }
+    if (S.job && !S.rhodes && !(S.track && sim.data.trackById[S.track.id] && sim.data.trackById[S.track.id].forced)) { sim.log('더는 일할 수 없다는 통보를 받았습니다.', 'loss'); if (S.track) leaveTrack(sim, 'infected', { quiet: true }); S.job = null; S.income = 0; }
     if (S.flags.euthTrack) { S.flags.euthNotice = S.age; sim.log('국가 안락사 통지서가 도착했습니다.', 'bad', '(' + (sim.nation.statOrg || '보건국') + ' 보건령 제3조)'); }
   }
   if (S.flags.euthNotice != null && S.age > S.flags.euthNotice) { sim.die('euthanasia', '제도적 안락사'); return; }
@@ -144,10 +167,7 @@ export function oriYear(sim) {
     sim.log('숨겨 온 감염이 드러났습니다.', 'bad');
     applyPolicy(sim, sim.policy);
   }
-  if (S.flags.rhodesOffer != null && !S.rhodes && rng.chance(0.3)) {
-    S.rhodes = true; o.treated = true; S.flags.rhodesAt = S.age; S.flags.rhodesOffer = null;
-    sim.log('로도스 아일랜드에 합류했습니다.', 'warm');
-  }
+  // 구 '엽서' 자동 합류(연 30%)는 폐기: 합류는 rhodes_offer 결정(§10) 또는 콘텐츠 결정(adult_rhodes_offer)만이 한다
 }
 
 /** 수용소 연간 처리(persecute 분기) */
@@ -156,5 +176,13 @@ export function campYear(sim) {
   if (S.prison !== 'camp' || S.phase !== 'life') return;
   if (rng.chance(B.campDeathP)) { sim.die('camp', '수용소'); return; }
   S.prisonLeft--;
-  if (S.prisonLeft <= 0) { S.prison = null; sim.log('수용소에서 풀려났습니다. 서류에는 "재분류"라고만 적혀 있었습니다.', 'note'); }
+  if (S.prisonLeft <= 0) { S.prison = null; if (S.track && sim.data.trackById[S.track.id] && sim.data.trackById[S.track.id].forced) leaveTrack(sim, 'released', { quiet: true }); sim.log('수용소에서 풀려났습니다. 서류에는 "재분류"라고만 적혀 있었습니다.', 'note'); }
+}
+
+/** 감옥(prison:jail) 연간 처리: 형기 감소 */
+export function jailYear(sim) {
+  const { S } = sim;
+  if (S.prison !== 'jail' || S.phase !== 'life') return;
+  S.prisonLeft--;
+  if (S.prisonLeft <= 0) { S.prison = null; sim.log('형기를 마치고 나왔습니다.', 'note'); }
 }

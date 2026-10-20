@@ -1,0 +1,172 @@
+{
+ "_meta": {
+  "schema": "docs/설계_명세_v1.md §8.1 (D48)",
+  "builtAt": "2026-10-20",
+  "note": "국가별 혼인 제도. w 는 국가 안에서 가중(합 1 권장). age 는 그 유형의 전형 결혼 연령 [min,max](엔진 결혼 롤 연령 보정용). dowry 는 중위소득 배율(양수=신랑 쪽이 냄, 음수=신부 쪽이 냄). poly 는 둘째 배우자 결정 허용(polyReq.income 은 중위소득 배율). req.track 은 그 진로 재직 중일 때만, req.infected 는 감염자 전용(forced 와 함께 격리구역 거주자 강제). since/until 테라력. 유형·비율은 전부 창작(nation.culture·카탈로그 진로와 맞춤), canon:true 는 제도 자체가 캐논에 언급된 것.",
+  "forcedRule": "격리구역 거주자(housing quarantine)는 infected_only 유형 강제(정책 quarantine·euthanasia·persecute 국가). 종족 간 혼인은 relations 등급이 cultural 이하면 가족 반대 이벤트."
+ },
+ "yan": {
+  "types": [
+   { "id": "arranged", "name": "중매 혼인", "w": 0.55, "age": [18,26], "dowry": 0.8, "canon": true, "events": "marriage:yan:arranged" },
+   { "id": "clan", "name": "가문 혼약", "w": 0.2, "age": [16,24], "dowry": 2, "req": { "track": ["YAN_BUREAU","YAN_TIANSHI","YAN_ARMY"] }, "canon": false },
+   { "id": "village", "name": "마을 혼례", "w": 0.2, "age": [17,25], "dowry": 0.3, "req": { "urban": false }, "canon": false },
+   { "id": "infected_only", "name": "격리 구역 내 혼인", "w": 0.05, "age": [18,40], "dowry": 0, "req": { "infected": true }, "canon": false }
+  ]
+ },
+ "lungmen": {
+  "types": [
+   { "id": "civil", "name": "혼인 등기", "w": 0.5, "age": [24,34], "dowry": 0, "canon": false },
+   { "id": "tea_ceremony", "name": "차례 혼례", "w": 0.35, "age": [22,30], "dowry": 0.5, "canon": false },
+   { "id": "money", "name": "지참금 혼인", "w": 0.1, "age": [22,36], "dowry": 3, "req": { "track": ["LGM_CORP","LGM_BUTLER"] }, "canon": false, "note": "D48 '돈 써서 결혼' 변주" },
+   { "id": "infected_only", "name": "빈민가 혼인", "w": 0.05, "age": [18,40], "dowry": 0, "req": { "infected": true }, "canon": false }
+  ]
+ },
+ "higashi": {
+  "types": [
+   { "id": "miai", "name": "맞선 혼인", "w": 0.45, "age": [22,30], "dowry": 0.5, "canon": false },
+   { "id": "love", "name": "연애 혼인", "w": 0.35, "age": [22,32], "dowry": 0, "region": "south", "canon": false },
+   { "id": "house", "name": "무가 혼약", "w": 0.15, "age": [16,24], "dowry": 2, "region": "north", "req": { "track": ["HIG_NORTH_ARMY","HIG_NINJA","HIG_POLITICS"] }, "canon": false },
+   { "id": "infected_only", "name": "숨긴 혼인", "w": 0.05, "age": [20,40], "dowry": 0, "req": { "infected": true }, "canon": false, "note": "북조 수치 문화(D13)" }
+  ]
+ },
+ "ursus": {
+  "types": [
+   { "id": "church", "name": "교회 혼인", "w": 0.5, "age": [19,27], "dowry": 0.3, "canon": false },
+   { "id": "noble", "name": "가문 간 혼약", "w": 0.15, "age": [18,25], "dowry": 3, "req": { "status": "noble" }, "canon": false },
+   { "id": "garrison", "name": "주둔지 혼인", "w": 0.2, "age": [20,30], "dowry": 0, "req": { "track": ["URS_SOLDIER","URS_OFFICER","URS_GUARD","URS_PATROL"] }, "canon": false },
+   { "id": "infected_only", "name": "수용소 내 혼인", "w": 0.15, "age": [16,50], "dowry": 0, "req": { "infected": true }, "canon": false }
+  ]
+ },
+ "sami": {
+  "types": [
+   { "id": "shaman_blessed", "name": "샤먼이 정한 날의 혼인", "w": 0.6, "age": [16,24], "dowry": 0.2, "canon": "partial", "note": "샤먼이 이주·의식 날짜를 정함(Sami)" },
+   { "id": "tribe_exchange", "name": "부족 간 혼인", "w": 0.3, "age": [16,26], "dowry": 0.5, "poly": false, "canon": false },
+   { "id": "adoption", "name": "입양 결연", "w": 0.1, "age": [16,40], "dowry": 0, "canon": "partial", "note": "성스러운 나무 입양·사이클롭스 양녀 등 혈연 아닌 결연이 흔함" }
+  ]
+ },
+ "kjerag": {
+  "types": [
+   { "id": "chapel", "name": "만주원 축복 혼인", "w": 0.55, "age": [19,27], "dowry": 0.3, "canon": "partial" },
+   { "id": "fief", "name": "영지 혼인", "w": 0.3, "age": [18,26], "dowry": 0.5, "req": { "urban": false }, "canon": false },
+   { "id": "clan_match", "name": "가문 혼약", "w": 0.1, "age": [18,26], "dowry": 4, "req": { "status": "noble" }, "canon": false },
+   { "id": "outsider", "name": "외지인 혼인", "w": 0.05, "age": [20,35], "dowry": 0, "req": { "eth": "outsider" }, "canon": "partial", "note": "외지인 혼인 자녀는 KJE_EXILE 가중(레토)" }
+  ]
+ },
+ "leithanien": {
+  "types": [
+   { "id": "ballroom", "name": "무도회 혼인", "w": 0.45, "age": [20,28], "dowry": 0.5, "canon": "partial" },
+   { "id": "patron", "name": "후원 혼약", "w": 0.15, "age": [18,30], "dowry": 2.5, "req": { "track": ["LEI_MUSIC","LEI_COURT"] }, "canon": false },
+   { "id": "village", "name": "산중 마을 혼례", "w": 0.3, "age": [18,26], "dowry": 0.3, "req": { "urban": false }, "canon": false },
+   { "id": "infected_only", "name": "격리구역 혼인", "w": 0.1, "age": [18,45], "dowry": 0, "req": { "infected": true }, "canon": false }
+  ]
+ },
+ "victoria": {
+  "types": [
+   { "id": "parish", "name": "교구 혼인", "w": 0.5, "age": [21,29], "dowry": 0.3, "canon": false },
+   { "id": "registry", "name": "등기소 혼인", "w": 0.3, "age": [22,34], "dowry": 0, "canon": false },
+   { "id": "peerage", "name": "귀족 혼약", "w": 0.1, "age": [18,26], "dowry": 5, "req": { "status": "noble" }, "canon": false },
+   { "id": "infected_only", "name": "격리구역 혼인", "w": 0.1, "age": [18,45], "dowry": 0, "req": { "infected": true }, "canon": false }
+  ]
+ },
+ "tara": {
+  "types": [
+   { "id": "handfast", "name": "손 묶기 혼례", "w": 0.45, "age": [18,26], "dowry": 0.2, "canon": false },
+   { "id": "parish", "name": "교구 혼인", "w": 0.3, "age": [20,28], "dowry": 0.3, "canon": false },
+   { "id": "nomad", "name": "유목민 혼례", "w": 0.1, "age": [16,24], "dowry": 0.1, "req": { "eth": "nomad" }, "canon": "partial" },
+   { "id": "camp", "name": "야영지 혼인", "w": 0.1, "age": [17,30], "dowry": 0, "req": { "track": ["TAR_DUBLIN","TAR_WANDER"] }, "canon": false },
+   { "id": "infected_only", "name": "격리 야영지 혼인", "w": 0.05, "age": [17,45], "dowry": 0, "req": { "infected": true }, "canon": false, "note": "독립 전 빅토리아 법 준용(반값 노동·격리)" }
+  ]
+ },
+ "kazimierz": {
+  "types": [
+   { "id": "civil", "name": "시청 혼인", "w": 0.5, "age": [23,32], "dowry": 0, "canon": false },
+   { "id": "sponsor", "name": "스폰서 주선 혼인", "w": 0.15, "age": [20,30], "dowry": 3, "req": { "track": ["KAZ_KNIGHT","KAZ_MEDIA","KAZ_STAFF"] }, "canon": false },
+   { "id": "village", "name": "남부 마을 혼례", "w": 0.25, "age": [18,26], "dowry": 0.3, "req": { "urban": false }, "canon": false },
+   { "id": "infected_only", "name": "지하 거주구 혼인", "w": 0.1, "age": [18,45], "dowry": 0, "req": { "infected": true }, "canon": false }
+  ]
+ },
+ "columbia": {
+  "types": [
+   { "id": "civil", "name": "혼인 신고", "w": 0.55, "age": [24,34], "dowry": 0, "canon": false },
+   { "id": "church", "name": "교회 혼인", "w": 0.25, "age": [22,30], "dowry": 0.2, "canon": false },
+   { "id": "prenup", "name": "혼전 계약 혼인", "w": 0.15, "age": [26,40], "dowry": 2, "req": { "track": ["COL_LAW","COL_EXEC","COL_RHINE","COL_OFFICE"] }, "canon": false, "note": "D48 '돈 써서 결혼' 변주" },
+   { "id": "frontier", "name": "개척지 혼인", "w": 0.05, "age": [18,30], "dowry": 0, "req": { "track": ["COL_FRONTIER"] }, "canon": false }
+  ]
+ },
+ "siracusa": {
+  "types": [
+   { "id": "family_approved", "name": "패밀리 승인 혼인", "w": 0.45, "age": [20,30], "dowry": 0, "req": { "track": ["SIR_FAMIGLIA","SIR_FAMBIZ","SIR_CLEANER"] }, "canon": "partial", "events": "marriage:siracusa:family" },
+   { "id": "church", "name": "교회 혼인", "w": 0.4, "age": [22,32], "dowry": 0.3, "canon": true },
+   { "id": "civil", "name": "시청 혼인", "w": 0.1, "age": [24,36], "dowry": 0, "since": 1100, "canon": "partial" },
+   { "id": "pack", "name": "황야 무리 결연", "w": 0.05, "age": [16,28], "dowry": 0, "req": { "track": ["SIR_WILD"] }, "canon": false }
+  ]
+ },
+ "laterano": {
+  "types": [
+   { "id": "blessing", "name": "사제 축복 혼인", "w": 0.7, "age": [20,28], "dowry": 0, "canon": "partial" },
+   { "id": "notarized", "name": "공증소 등록 혼인", "w": 0.25, "age": [22,32], "dowry": 0, "canon": "partial", "note": "공증소가 친권·계약 관리(Notarial Hall)" },
+   { "id": "mixed", "name": "산크타·비산크타 혼인", "w": 0.05, "age": [20,32], "dowry": 0, "canon": true, "note": "자녀는 항상 비산크타(Sankta)" }
+  ]
+ },
+ "iberia": {
+  "types": [
+   { "id": "chapel", "name": "예배당 혼인", "w": 0.4, "age": [20,28], "dowry": 0.3, "canon": false },
+   { "id": "coast", "name": "봉쇄 마을 결연", "w": 0.3, "age": [15,25], "dowry": 0, "req": { "track": ["IBE_COAST","IBE_FISH"] }, "canon": "partial", "note": "호적 없는 해안 마을" },
+   { "id": "inquisition", "name": "재판소 승인 혼인", "w": 0.2, "age": [22,32], "dowry": 0.5, "req": { "track": ["IBE_INQ","IBE_CLERK","IBE_PENAL"] }, "canon": false },
+   { "id": "deep", "name": "교단 결연", "w": 0.05, "age": [18,40], "dowry": 0, "req": { "track": ["IBE_DEEP"] }, "canon": "partial" },
+   { "id": "infected_only", "name": "재판소 격리 구역 혼인", "w": 0.05, "age": [18,45], "dowry": 0, "req": { "infected": true }, "canon": false, "note": "내륙 감염자 심문·격리(창작)" }
+  ]
+ },
+ "aegir": {
+  "types": [
+   { "id": "assigned", "name": "발전계획소 배정", "w": 0.85, "age": [20,30], "dowry": 0, "canon": "partial", "note": "배아 단계부터 공동 양육·직무 배정(Ægir). 혼인도 배정으로 처리(창작)" },
+   { "id": "cohort", "name": "동기 집단 결연", "w": 0.15, "age": [20,32], "dowry": 0, "canon": false }
+  ]
+ },
+ "minos": {
+  "types": [
+   { "id": "temple", "name": "신전 혼례", "w": 0.5, "age": [19,27], "dowry": 0.5, "canon": "partial" },
+   { "id": "district", "name": "구역 등록 혼인", "w": 0.35, "age": [22,32], "dowry": 0, "canon": false },
+   { "id": "border", "name": "변경 마을 혼례", "w": 0.15, "age": [16,24], "dowry": 0.1, "req": { "track": ["MIN_BORDER"] }, "canon": false }
+  ]
+ },
+ "sargon": {
+  "types": [
+   { "id": "dowry", "name": "지참금 혼인", "w": 0.5, "age": [16,26], "dowry": 1.5, "poly": true, "polyReq": { "income": 4 }, "canon": "partial" },
+   { "id": "tribal", "name": "부족 혼례", "w": 0.25, "age": [15,24], "dowry": 0.2, "region": "acahualla", "poly": false, "canon": "partial" },
+   { "id": "court", "name": "궁정 혼약", "w": 0.1, "age": [16,26], "dowry": 6, "poly": true, "polyReq": { "income": 8 }, "req": { "track": ["SAR_COURT","SAR_TRADE","SAR_ARMY"] }, "canon": false },
+   { "id": "slave", "name": "노예 결연", "w": 0.1, "age": [15,40], "dowry": 0, "req": { "status": "slave" }, "canon": false },
+   { "id": "infected_only", "name": "격리 구역 혼인", "w": 0.05, "age": [16,45], "dowry": 0, "req": { "infected": true }, "canon": false, "note": "롱스프링형 격리 구역" }
+  ]
+ },
+ "bolivar": {
+  "types": [
+   { "id": "church", "name": "성당 혼인", "w": 0.45, "age": [18,26], "dowry": 0.2, "canon": false },
+   { "id": "civil", "name": "시청 혼인", "w": 0.25, "age": [22,32], "dowry": 0, "region": "dossoles", "canon": false },
+   { "id": "garrison", "name": "부대 혼인", "w": 0.15, "age": [19,28], "dowry": 0, "req": { "track": ["BOL_SINGAS","BOL_COALITION","BOL_TRUE"] }, "canon": false },
+   { "id": "camp", "name": "수용소 혼인", "w": 0.1, "age": [17,40], "dowry": 0, "req": { "track": ["BOL_REFUGEE"] }, "canon": false },
+   { "id": "infected_only", "name": "허가 구역 혼인", "w": 0.05, "age": [17,45], "dowry": 0, "req": { "infected": true }, "canon": false, "note": "도솔레스 감염자 허가 구역(카지노·바)" }
+  ]
+ },
+ "rim": {
+  "types": [
+   { "id": "community", "name": "가족공동체 혼인", "w": 0.6, "age": [18,26], "dowry": 0.2, "canon": "partial", "note": "가족공동체가 사회 단위(Rim Billiton/Overview)" },
+   { "id": "company", "name": "회사 등기 혼인", "w": 0.3, "age": [22,32], "dowry": 0, "req": { "track": ["RIM_COMPANY","RIM_MEDIC","RIM_SECURITY"] }, "canon": false },
+   { "id": "infected_only", "name": "격리구역 혼인", "w": 0.1, "age": [18,45], "dowry": 0, "req": { "infected": true }, "canon": false }
+  ]
+ },
+ "kazdel": {
+  "types": [
+   { "id": "team", "name": "용병 팀 결연", "w": 0.5, "age": [16,28], "dowry": 0, "canon": false, "note": "화폐 없음, 지참금 없음" },
+   { "id": "clan", "name": "왕정 혈통 혼약", "w": 0.1, "age": [16,30], "dowry": 0, "req": { "status": "noble" }, "canon": "partial", "note": "순혈 살카즈 왕정(Sarkaz Royal Court)" },
+   { "id": "babel", "name": "바벨 등록 혼인", "w": 0.2, "age": [18,30], "dowry": 0, "until": 1094, "canon": false },
+   { "id": "barter", "name": "물물교환 결연", "w": 0.2, "age": [15,30], "dowry": 0.1, "canon": false }
+  ]
+ },
+ "durin": {
+  "types": [
+   { "id": "vote", "name": "주민 축하 혼인", "w": 0.7, "age": [20,32], "dowry": 0, "canon": false },
+   { "id": "tavern", "name": "술집 선언 혼인", "w": 0.3, "age": [20,40], "dowry": 0, "canon": false, "note": "애주가 문화(캐논)에서 창작" }
+  ]
+ }
+}

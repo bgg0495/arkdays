@@ -1,0 +1,7570 @@
+{
+ "_meta": {
+  "schema": "docs/설계_명세_v1.md §3.2",
+  "builtAt": "2026-10-20",
+  "note": "진로 안의 소속 변주(카탈로그 \"소속 변주\" 열). weight 는 진로 안에서 합 1(규모 감으로 창작). mods 는 승급·몰락·소득 배율(±30% 안, 전부 창작)과 standingStart 가산. tags: major(주류)/minor(군소)/elite(상층·정예, 단계 requires.aff 가 봄). canon:false 는 조직 자체가 창작. events 는 콘텐츠 태그 aff:<id> 와 짝.",
+  "tagEnum": ["major","minor","elite"]
+ },
+ "affiliations": [
+  {
+   "id": "YAN_FARM_TEA",
+   "track": "YAN_FARM",
+   "name": "강남 차 농가",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_FARM:farm_tea"
+  },
+  {
+   "id": "YAN_FARM_GRAIN",
+   "track": "YAN_FARM",
+   "name": "대황성 곡물 농가",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_FARM:farm_grain"
+  },
+  {
+   "id": "YAN_FARM_HERD",
+   "track": "YAN_FARM",
+   "name": "목축 마을",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_FARM:farm_herd"
+  },
+  {
+   "id": "YAN_FARM_WOOD",
+   "track": "YAN_FARM",
+   "name": "벌목 마을",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_FARM:farm_wood"
+  },
+  {
+   "id": "YAN_RIVER_FISH",
+   "track": "YAN_RIVER",
+   "name": "구오 비늘농어 어부",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_RIVER:river_fish"
+  },
+  {
+   "id": "YAN_RIVER_BOAT",
+   "track": "YAN_RIVER",
+   "name": "뱃사공 조합",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_RIVER:river_boat"
+  },
+  {
+   "id": "YAN_RIVER_PORTER",
+   "track": "YAN_RIVER",
+   "name": "지게꾼",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.2, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_RIVER:river_porter"
+  },
+  {
+   "id": "YAN_MINER_LIANGJIANG",
+   "track": "YAN_MINER",
+   "name": "양강 유역 오리지늄 광산",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_MINER:miner_liangjiang"
+  },
+  {
+   "id": "YAN_OUTLAW_RIVER",
+   "track": "YAN_OUTLAW",
+   "name": "강제 수적 씨족",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_OUTLAW:outlaw_river"
+  },
+  {
+   "id": "YAN_OUTLAW_HILL",
+   "track": "YAN_OUTLAW",
+   "name": "산적",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_OUTLAW:outlaw_hill"
+  },
+  {
+   "id": "YAN_WUXIA_TRAD",
+   "track": "YAN_WUXIA",
+   "name": "전통 문파",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_WUXIA:wuxia_trad"
+  },
+  {
+   "id": "YAN_WUXIA_COMM",
+   "track": "YAN_WUXIA",
+   "name": "상업 문파",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_WUXIA:wuxia_comm"
+  },
+  {
+   "id": "YAN_WUXIA_XINGYOU",
+   "track": "YAN_WUXIA",
+   "name": "행유표국",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_WUXIA:wuxia_xingyou"
+  },
+  {
+   "id": "YAN_WUXIA_BORDER",
+   "track": "YAN_WUXIA",
+   "name": "국경 보안회사",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_WUXIA:wuxia_border"
+  },
+  {
+   "id": "YAN_ARMY_IMPERIAL",
+   "track": "YAN_ARMY",
+   "name": "금위군",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "YAN_ARMY:army_imperial"
+  },
+  {
+   "id": "YAN_ARMY_YUMEN",
+   "track": "YAN_ARMY",
+   "name": "옥문 관군",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_ARMY:army_yumen"
+  },
+  {
+   "id": "YAN_ARMY_TIANJI",
+   "track": "YAN_ARMY",
+   "name": "천기각 요새선",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_ARMY:army_tianji"
+  },
+  {
+   "id": "YAN_ARMY_NOBLE",
+   "track": "YAN_ARMY",
+   "name": "귀족 사병",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 0.8, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_ARMY:army_noble"
+  },
+  {
+   "id": "YAN_MSG_VILLAGE",
+   "track": "YAN_MESSENGER",
+   "name": "마을 전달자 조합",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_MESSENGER:msg_village"
+  },
+  {
+   "id": "YAN_MSG_CARAVAN",
+   "track": "YAN_MESSENGER",
+   "name": "새북 상단 전령",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_MESSENGER:msg_caravan"
+  },
+  {
+   "id": "YAN_RESCUE_CHUNJIAN",
+   "track": "YAN_RESCUE",
+   "name": "춘건",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_RESCUE:rescue_chunjian"
+  },
+  {
+   "id": "YAN_RESCUE_TIANJI",
+   "track": "YAN_RESCUE",
+   "name": "천극 관측망",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_RESCUE:rescue_tianji"
+  },
+  {
+   "id": "YAN_OFFICE_XINGYOU",
+   "track": "YAN_OFFICE",
+   "name": "행유물류",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_OFFICE:office_xingyou"
+  },
+  {
+   "id": "YAN_OFFICE_CHIDAO",
+   "track": "YAN_OFFICE",
+   "name": "치다오 정비 대행사",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_OFFICE:office_chidao"
+  },
+  {
+   "id": "YAN_OFFICE_INN",
+   "track": "YAN_OFFICE",
+   "name": "객잔",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_OFFICE:office_inn"
+  },
+  {
+   "id": "YAN_OFFICE_FILM",
+   "track": "YAN_OFFICE",
+   "name": "영화 촬영팀",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_OFFICE:office_film"
+  },
+  {
+   "id": "YAN_OFFICE_HERB",
+   "track": "YAN_OFFICE",
+   "name": "약재상",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_OFFICE:office_herb"
+  },
+  {
+   "id": "YAN_STUDENT_BAIZHAO",
+   "track": "YAN_STUDENT",
+   "name": "백조학궁",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "YAN_STUDENT:student_baizhao"
+  },
+  {
+   "id": "YAN_STUDENT_JIPU",
+   "track": "YAN_STUDENT",
+   "name": "지푸 학원",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_STUDENT:student_jipu"
+  },
+  {
+   "id": "YAN_STUDENT_MANGSHAN",
+   "track": "YAN_STUDENT",
+   "name": "망산 민간 학교",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 0.8, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_STUDENT:student_mangshan"
+  },
+  {
+   "id": "YAN_BUREAU_LIUBU",
+   "track": "YAN_BUREAU",
+   "name": "육부",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_BUREAU:bureau_liubu"
+  },
+  {
+   "id": "YAN_BUREAU_DALISI",
+   "track": "YAN_BUREAU",
+   "name": "대리시",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "YAN_BUREAU:bureau_dalisi"
+  },
+  {
+   "id": "YAN_BUREAU_SUZHENG",
+   "track": "YAN_BUREAU",
+   "name": "숙정원",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1.1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "YAN_BUREAU:bureau_suzheng"
+  },
+  {
+   "id": "YAN_BUREAU_LOCAL",
+   "track": "YAN_BUREAU",
+   "name": "지방관(부·주·현)",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_BUREAU:bureau_local"
+  },
+  {
+   "id": "YAN_TIANSHI_CIVIL",
+   "track": "YAN_TIANSHI",
+   "name": "토목 천사",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_TIANSHI:tianshi_civil"
+  },
+  {
+   "id": "YAN_TIANSHI_AGRI",
+   "track": "YAN_TIANSHI",
+   "name": "농업 천사",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_TIANSHI:tianshi_agri"
+  },
+  {
+   "id": "YAN_TIANSHI_MIL",
+   "track": "YAN_TIANSHI",
+   "name": "군사 천사",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "YAN_TIANSHI:tianshi_mil"
+  },
+  {
+   "id": "YAN_TIANSHI_THUNDER",
+   "track": "YAN_TIANSHI",
+   "name": "뇌법 유파",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_TIANSHI:tianshi_thunder"
+  },
+  {
+   "id": "YAN_SUI_GUAIYI",
+   "track": "YAN_SUI",
+   "name": "괴이실",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_SUI:sui_guaiyi"
+  },
+  {
+   "id": "YAN_SUI_LIBRARY",
+   "track": "YAN_SUI",
+   "name": "백조 도서관",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 0.7, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "YAN_SUI:sui_library"
+  },
+  {
+   "id": "YAN_SHANHAI_SECT",
+   "track": "YAN_SHANHAI",
+   "name": "산해중",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "YAN_SHANHAI:shanhai_sect"
+  },
+  {
+   "id": "LGM_SLUM_RATKING",
+   "track": "LGM_SLUM",
+   "name": "래트킹 자치",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_SLUM:slum_ratking"
+  },
+  {
+   "id": "LGM_SLUM_TRIADFRONT",
+   "track": "LGM_SLUM",
+   "name": "삼합회 위장 점포",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LGM_SLUM:slum_triadfront"
+  },
+  {
+   "id": "LGM_SLUM_CANDY",
+   "track": "LGM_SLUM",
+   "name": "사탕가게",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.7, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LGM_SLUM:slum_candy"
+  },
+  {
+   "id": "LGM_TRIAD_TRIAD",
+   "track": "LGM_TRIAD",
+   "name": "삼합회",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_TRIAD:triad_triad"
+  },
+  {
+   "id": "LGM_TRIAD_CAPONE",
+   "track": "LGM_TRIAD",
+   "name": "카포네 잔당",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LGM_TRIAD:triad_capone"
+  },
+  {
+   "id": "LGM_TRIAD_GAMBINO",
+   "track": "LGM_TRIAD",
+   "name": "감비노 잔당",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LGM_TRIAD:triad_gambino"
+  },
+  {
+   "id": "LGM_SEC_CORP",
+   "track": "LGM_SECURITY",
+   "name": "기업 경비",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_SECURITY:sec_corp"
+  },
+  {
+   "id": "LGM_SEC_MALL",
+   "track": "LGM_SECURITY",
+   "name": "쇼핑몰 경비",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LGM_SECURITY:sec_mall"
+  },
+  {
+   "id": "LGM_MSG_PENGUIN",
+   "track": "LGM_MESSENGER",
+   "name": "펭귄 로지스틱스",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.3, "standingStart": 10 },
+   "tags": ["elite"],
+   "events": "LGM_MESSENGER:msg_penguin"
+  },
+  {
+   "id": "LGM_MSG_MOUNTAINDASH",
+   "track": "LGM_MESSENGER",
+   "name": "마운틴대쉬",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_MESSENGER:msg_mountaindash"
+  },
+  {
+   "id": "LGM_MSG_STARTUP",
+   "track": "LGM_MESSENGER",
+   "name": "창업 붐 소업체",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.3, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LGM_MESSENGER:msg_startup"
+  },
+  {
+   "id": "LGM_SHOP_SIAUSAN",
+   "track": "LGM_SHOP",
+   "name": "조능산 상업단지",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_SHOP:shop_siausan"
+  },
+  {
+   "id": "LGM_SHOP_PLAZA",
+   "track": "LGM_SHOP",
+   "name": "파시 플라자",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_SHOP:shop_plaza"
+  },
+  {
+   "id": "LGM_SHOP_HOTPOT",
+   "track": "LGM_SHOP",
+   "name": "훠궈집",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 0.8, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LGM_SHOP:shop_hotpot"
+  },
+  {
+   "id": "LGM_BUTLER_FIDES",
+   "track": "LGM_BUTLER",
+   "name": "피데스 가문",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_BUTLER:butler_fides"
+  },
+  {
+   "id": "LGM_BUTLER_SWIRE",
+   "track": "LGM_BUTLER",
+   "name": "스와이어 가문",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_BUTLER:butler_swire"
+  },
+  {
+   "id": "LGM_CORP_PHARMA",
+   "track": "LGM_CORP",
+   "name": "제약회사",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_CORP:corp_pharma"
+  },
+  {
+   "id": "LGM_CORP_SWIRE",
+   "track": "LGM_CORP",
+   "name": "스와이어 그룹",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 0.9, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LGM_CORP:corp_swire"
+  },
+  {
+   "id": "LGM_CORP_MOUNTAINDASH",
+   "track": "LGM_CORP",
+   "name": "마운틴대쉬 본사",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_CORP:corp_mountaindash"
+  },
+  {
+   "id": "LGM_FIRE_DEPT",
+   "track": "LGM_FIRE",
+   "name": "용문 소방서",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_FIRE:fire_dept"
+  },
+  {
+   "id": "LGM_LGD_GENERAL",
+   "track": "LGM_LGD",
+   "name": "일반 경찰",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_LGD:lgd_general"
+  },
+  {
+   "id": "LGM_LGD_SPECIAL",
+   "track": "LGM_LGD",
+   "name": "특별심문대",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1.2, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LGM_LGD:lgd_special"
+  },
+  {
+   "id": "LGM_LGD_SHADOW",
+   "track": "LGM_LGD",
+   "name": "그림자 부대 접촉",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LGM_LGD:lgd_shadow"
+  },
+  {
+   "id": "LGM_DET_LEE",
+   "track": "LGM_DETECTIVE",
+   "name": "리 탐정사무소",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_DETECTIVE:det_lee"
+  },
+  {
+   "id": "LGM_STU_UNION",
+   "track": "LGM_STUDENT",
+   "name": "용문연합대학",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_STUDENT:stu_union"
+  },
+  {
+   "id": "LGM_STU_TECH",
+   "track": "LGM_STUDENT",
+   "name": "용문 과기대",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1.1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LGM_STUDENT:stu_tech"
+  },
+  {
+   "id": "LGM_STU_EXCHANGE",
+   "track": "LGM_STUDENT",
+   "name": "극동 교환",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LGM_STUDENT:stu_exchange"
+  },
+  {
+   "id": "HIG_RURAL_NOGE",
+   "track": "HIG_RURAL",
+   "name": "노화마을",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_RURAL:rural_noge"
+  },
+  {
+   "id": "HIG_RURAL_MINE",
+   "track": "HIG_RURAL",
+   "name": "광산촌",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_RURAL:rural_mine"
+  },
+  {
+   "id": "HIG_FACT_KOKAWA",
+   "track": "HIG_FACTORY",
+   "name": "고카와 화학 공장",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_FACTORY:fact_kokawa"
+  },
+  {
+   "id": "HIG_FACT_KINSEKI",
+   "track": "HIG_FACTORY",
+   "name": "킨세키 부품 공장",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_FACTORY:fact_kinseki"
+  },
+  {
+   "id": "HIG_STREET_ODEN",
+   "track": "HIG_STREET",
+   "name": "오뎅 포장마차",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "HIG_STREET:street_oden"
+  },
+  {
+   "id": "HIG_STREET_NITA",
+   "track": "HIG_STREET",
+   "name": "니타 상점가",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_STREET:street_nita"
+  },
+  {
+   "id": "HIG_STREET_RINGONES",
+   "track": "HIG_STREET",
+   "name": "링고네스 백화점",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_STREET:street_ringones"
+  },
+  {
+   "id": "HIG_RONIN_NONE",
+   "track": "HIG_RONIN",
+   "name": "무소속",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "HIG_RONIN:ronin_none"
+  },
+  {
+   "id": "HIG_TEMPLE_MOUNTAIN",
+   "track": "HIG_TEMPLE",
+   "name": "산사",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_TEMPLE:temple_mountain"
+  },
+  {
+   "id": "HIG_TEMPLE_TAISHA",
+   "track": "HIG_TEMPLE",
+   "name": "타이샤",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 0.8, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "HIG_TEMPLE:temple_taisha"
+  },
+  {
+   "id": "HIG_TEMPLE_KIZUNA",
+   "track": "HIG_TEMPLE",
+   "name": "키즈나 신사",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "HIG_TEMPLE:temple_kizuna"
+  },
+  {
+   "id": "HIG_OFF_ELEC",
+   "track": "HIG_OFFICE",
+   "name": "전자·부품 기업",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_OFFICE:off_elec"
+  },
+  {
+   "id": "HIG_OFF_MITSUKUE",
+   "track": "HIG_OFFICE",
+   "name": "미츠쿠에 상사",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_OFFICE:off_mitsukue"
+  },
+  {
+   "id": "HIG_OFF_KINSEKI",
+   "track": "HIG_OFFICE",
+   "name": "킨세키 그룹",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "HIG_OFFICE:off_kinseki"
+  },
+  {
+   "id": "HIG_STU_BAR",
+   "track": "HIG_STUDENT",
+   "name": "바 아르바이트",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "HIG_STUDENT:stu_bar"
+  },
+  {
+   "id": "HIG_STU_EXCHANGE",
+   "track": "HIG_STUDENT",
+   "name": "용문 교환",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1.1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "HIG_STUDENT:stu_exchange"
+  },
+  {
+   "id": "HIG_POL_MITSUKUE",
+   "track": "HIG_POLICE",
+   "name": "미츠쿠에 경찰",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_POLICE:pol_mitsukue"
+  },
+  {
+   "id": "HIG_ENT_KINSEKI",
+   "track": "HIG_ENT",
+   "name": "킨세키 채널",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_ENT:ent_kinseki"
+  },
+  {
+   "id": "HIG_ENT_AGENCY",
+   "track": "HIG_ENT",
+   "name": "탤런트 에이전시",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "HIG_ENT:ent_agency"
+  },
+  {
+   "id": "HIG_POLI_DIET",
+   "track": "HIG_POLITICS",
+   "name": "국회",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_POLITICS:poli_diet"
+  },
+  {
+   "id": "HIG_POLI_CABINET",
+   "track": "HIG_POLITICS",
+   "name": "내각",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1.2, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "HIG_POLITICS:poli_cabinet"
+  },
+  {
+   "id": "HIG_POLI_KUGE",
+   "track": "HIG_POLITICS",
+   "name": "공경",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 0.8, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "HIG_POLITICS:poli_kuge"
+  },
+  {
+   "id": "HIG_YAK_KINSEKIKAI",
+   "track": "HIG_YAKUZA",
+   "name": "킨세키가이",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_YAKUZA:yak_kinsekikai"
+  },
+  {
+   "id": "HIG_YAK_KYOKAKU",
+   "track": "HIG_YAKUZA",
+   "name": "협객 이탈파",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "HIG_YAKUZA:yak_kyokaku"
+  },
+  {
+   "id": "HIG_YAK_GROUP",
+   "track": "HIG_YAKUZA",
+   "name": "킨세키 그룹 합법화",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.7, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "HIG_YAKUZA:yak_group"
+  },
+  {
+   "id": "HIG_NINJA_CLAN",
+   "track": "HIG_NINJA",
+   "name": "닌자 가문",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_NINJA:ninja_clan"
+  },
+  {
+   "id": "HIG_NINJA_BIZ",
+   "track": "HIG_NINJA",
+   "name": "당주 사업체",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 0.7, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "HIG_NINJA:ninja_biz"
+  },
+  {
+   "id": "HIG_NA_KUSARIKAWA",
+   "track": "HIG_NORTH_ARMY",
+   "name": "쿠사리카와 막부군",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "HIG_NORTH_ARMY:na_kusarikawa"
+  },
+  {
+   "id": "HIG_NA_BLOODPEAK",
+   "track": "HIG_NORTH_ARMY",
+   "name": "혈봉 전선",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1.3, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "HIG_NORTH_ARMY:na_bloodpeak"
+  },
+  {
+   "id": "URS_MINE_VOLGRAD",
+   "track": "URS_MINE",
+   "name": "볼그라드 광구",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_MINE:mine_volgrad"
+  },
+  {
+   "id": "URS_MINE_URAL",
+   "track": "URS_MINE",
+   "name": "우랄 광구",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_MINE:mine_ural"
+  },
+  {
+   "id": "URS_MINE_FARNORTH",
+   "track": "URS_MINE",
+   "name": "극북 광구",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "URS_MINE:mine_farnorth"
+  },
+  {
+   "id": "URS_MINE_CHORNA",
+   "track": "URS_MINE",
+   "name": "초르나 교도소",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "URS_MINE:mine_chorna"
+  },
+  {
+   "id": "URS_UNDER_REUNION",
+   "track": "URS_UNDER",
+   "name": "리유니온",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_UNDER:under_reunion"
+  },
+  {
+   "id": "URS_UNDER_UNBOUND",
+   "track": "URS_UNDER",
+   "name": "언바운드",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "URS_UNDER:under_unbound"
+  },
+  {
+   "id": "URS_UNDER_16",
+   "track": "URS_UNDER",
+   "name": "16 용사",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "URS_UNDER:under_16"
+  },
+  {
+   "id": "URS_UNDER_FARNORTH",
+   "track": "URS_UNDER",
+   "name": "극북 반란군",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "URS_UNDER:under_farnorth"
+  },
+  {
+   "id": "URS_PATROL_UNIT",
+   "track": "URS_PATROL",
+   "name": "순찰대",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_PATROL:patrol_unit"
+  },
+  {
+   "id": "URS_SOL_LEGION",
+   "track": "URS_SOLDIER",
+   "name": "제1~7군단",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_SOLDIER:sol_legion"
+  },
+  {
+   "id": "URS_SOL_CENTRAL",
+   "track": "URS_SOLDIER",
+   "name": "중앙군",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "URS_SOLDIER:sol_central"
+  },
+  {
+   "id": "URS_SOL_SAMI",
+   "track": "URS_SOLDIER",
+   "name": "사미 국경 수비",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "URS_SOLDIER:sol_sami"
+  },
+  {
+   "id": "URS_WORK_KATORGA",
+   "track": "URS_WORKER",
+   "name": "카토르가 공장",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_WORKER:work_katorga"
+  },
+  {
+   "id": "URS_WORK_PERRO",
+   "track": "URS_WORKER",
+   "name": "페로 공장",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_WORKER:work_perro"
+  },
+  {
+   "id": "URS_WORK_ROSTOV",
+   "track": "URS_WORKER",
+   "name": "로스토프 플랫폼",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_WORKER:work_rostov"
+  },
+  {
+   "id": "URS_FARM_NORTH",
+   "track": "URS_FARM",
+   "name": "북부 이끼귀리",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.3, "income": 0.8, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_FARM:farm_north"
+  },
+  {
+   "id": "URS_FARM_SOUTH",
+   "track": "URS_FARM",
+   "name": "남부 초원",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_FARM:farm_south"
+  },
+  {
+   "id": "URS_CRAFT_COBBLER",
+   "track": "URS_CRAFT",
+   "name": "구두 수선공",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "URS_CRAFT:craft_cobbler"
+  },
+  {
+   "id": "URS_CRAFT_CAFE",
+   "track": "URS_CRAFT",
+   "name": "카페·술집",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_CRAFT:craft_cafe"
+  },
+  {
+   "id": "URS_CRAFT_THEATER",
+   "track": "URS_CRAFT",
+   "name": "극장",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "URS_CRAFT:craft_theater"
+  },
+  {
+   "id": "URS_CAR_SAMI",
+   "track": "URS_CARAVAN",
+   "name": "사미 교역 캐러밴",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_CARAVAN:car_sami"
+  },
+  {
+   "id": "URS_CAR_MARKET",
+   "track": "URS_CARAVAN",
+   "name": "도시 시장 상단",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_CARAVAN:car_market"
+  },
+  {
+   "id": "URS_GUARD_ROYAL",
+   "track": "URS_GUARD",
+   "name": "근위군",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "URS_GUARD:guard_royal"
+  },
+  {
+   "id": "URS_GUARD_POLICE",
+   "track": "URS_GUARD",
+   "name": "수도 경찰",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_GUARD:guard_police"
+  },
+  {
+   "id": "URS_OFF_LEGION",
+   "track": "URS_OFFICER",
+   "name": "군단 봉토",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_OFFICER:off_legion"
+  },
+  {
+   "id": "URS_OFF_MARSHAL",
+   "track": "URS_OFFICER",
+   "name": "원수 파벌",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1.3, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "URS_OFFICER:off_marshal"
+  },
+  {
+   "id": "URS_UNIV_SYMPOSIUM",
+   "track": "URS_UNIV",
+   "name": "심포지엄",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_UNIV:univ_symposium"
+  },
+  {
+   "id": "URS_UNIV_VANGUARD",
+   "track": "URS_UNIV",
+   "name": "뱅가드",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "URS_UNIV:univ_vanguard"
+  },
+  {
+   "id": "URS_UNIV_AUTONOMY",
+   "track": "URS_UNIV",
+   "name": "자치단",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "URS_UNIV:univ_autonomy"
+  },
+  {
+   "id": "URS_RES_SARCOPHAGUS",
+   "track": "URS_RESEARCH",
+   "name": "석관 연구소",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "URS_RESEARCH:res_sarcophagus"
+  },
+  {
+   "id": "URS_RES_ZELGRAD",
+   "track": "URS_RESEARCH",
+   "name": "젤그라드",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_RESEARCH:res_zelgrad"
+  },
+  {
+   "id": "URS_RES_OKA",
+   "track": "URS_RESEARCH",
+   "name": "오카",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "URS_RESEARCH:res_oka"
+  },
+  {
+   "id": "URS_TEA_USHINSKY",
+   "track": "URS_TEACHER",
+   "name": "우신스키 교육대",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_TEACHER:tea_ushinsky"
+  },
+  {
+   "id": "URS_TEA_PETERHEIM",
+   "track": "URS_TEACHER",
+   "name": "피터하임 중학교",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_TEACHER:tea_peterheim"
+  },
+  {
+   "id": "URS_ART_THEATER",
+   "track": "URS_ARTIST",
+   "name": "극장",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_ARTIST:art_theater"
+  },
+  {
+   "id": "URS_ART_POETS",
+   "track": "URS_ARTIST",
+   "name": "시 동인",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.3, "income": 0.7, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "URS_ARTIST:art_poets"
+  },
+  {
+   "id": "URS_NOB_BORIS",
+   "track": "URS_NOBLE",
+   "name": "보리스 그룹",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "URS_NOBLE:nob_boris"
+  },
+  {
+   "id": "URS_NOB_COUNCIL",
+   "track": "URS_NOBLE",
+   "name": "국무회의",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1.2, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "URS_NOBLE:nob_council"
+  },
+  {
+   "id": "SAM_OUT_BORDER",
+   "track": "SAM_OUTCAST",
+   "name": "국경 방랑",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAM_OUTCAST:out_border"
+  },
+  {
+   "id": "SAM_OUT_WANTED",
+   "track": "SAM_OUTCAST",
+   "name": "우르수스 수배자",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAM_OUTCAST:out_wanted"
+  },
+  {
+   "id": "SAM_TRIBE_MOUNTAIN",
+   "track": "SAM_TRIBE",
+   "name": "산지인",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAM_TRIBE:tribe_mountain"
+  },
+  {
+   "id": "SAM_TRIBE_FOREST",
+   "track": "SAM_TRIBE",
+   "name": "숲지인",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAM_TRIBE:tribe_forest"
+  },
+  {
+   "id": "SAM_TRIBE_MARSH",
+   "track": "SAM_TRIBE",
+   "name": "늪지인",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAM_TRIBE:tribe_marsh"
+  },
+  {
+   "id": "SAM_HUNT_FOREST",
+   "track": "SAM_HUNTER",
+   "name": "숲 사냥꾼",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAM_HUNTER:hunt_forest"
+  },
+  {
+   "id": "SAM_HUNT_CYCLOPS",
+   "track": "SAM_HUNTER",
+   "name": "사이클롭스 양녀 혈통",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAM_HUNTER:hunt_cyclops"
+  },
+  {
+   "id": "SAM_WAR_WOUNDED",
+   "track": "SAM_WARRIOR",
+   "name": "나무 상처 부족 전선",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAM_WARRIOR:war_wounded"
+  },
+  {
+   "id": "SAM_WAR_BORDER",
+   "track": "SAM_WARRIOR",
+   "name": "우르수스 국경 전선",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAM_WARRIOR:war_border"
+  },
+  {
+   "id": "SAM_SAR_MARSH",
+   "track": "SAM_SAR",
+   "name": "늪지 부족 SAR",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAM_SAR:sar_marsh"
+  },
+  {
+   "id": "SAM_SHA_DISCIPLE",
+   "track": "SAM_SHAMAN",
+   "name": "사제 제자",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAM_SHAMAN:sha_disciple"
+  },
+  {
+   "id": "SAM_SHA_TREE",
+   "track": "SAM_SHAMAN",
+   "name": "성스러운 나무 입양",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1.3, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "SAM_SHAMAN:sha_tree"
+  },
+  {
+   "id": "SAM_TRD_URSUS",
+   "track": "SAM_TRADER",
+   "name": "우르수스 캐러밴 시장",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAM_TRADER:trd_ursus"
+  },
+  {
+   "id": "SAM_TRD_CANDLE",
+   "track": "SAM_TRADER",
+   "name": "사미식 양초 교환",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAM_TRADER:trd_candle"
+  },
+  {
+   "id": "SAM_GUI_CHAPAT",
+   "track": "SAM_GUIDE",
+   "name": "차파트 교역소",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAM_GUIDE:gui_chapat"
+  },
+  {
+   "id": "SAM_GUI_EXPEDITION",
+   "track": "SAM_GUIDE",
+   "name": "탐사대 고용",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAM_GUIDE:gui_expedition"
+  },
+  {
+   "id": "SAM_GUI_RHINE",
+   "track": "SAM_GUIDE",
+   "name": "라인 랩 전초",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAM_GUIDE:gui_rhine"
+  },
+  {
+   "id": "SAM_RES_CHAPAT",
+   "track": "SAM_RESORT",
+   "name": "차파트 호텔",
+   "canon": false,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAM_RESORT:res_chapat"
+  },
+  {
+   "id": "SAM_RES_SPRING",
+   "track": "SAM_RESORT",
+   "name": "온천",
+   "canon": false,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAM_RESORT:res_spring"
+  },
+  {
+   "id": "KJE_EX_CHERNOBOG",
+   "track": "KJE_EXILE",
+   "name": "체르노보그 이주",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_EXILE:ex_chernobog"
+  },
+  {
+   "id": "KJE_EX_HOUSE",
+   "track": "KJE_EXILE",
+   "name": "몰락 가문",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KJE_EXILE:ex_house"
+  },
+  {
+   "id": "KJE_MINE_PAILLOSH",
+   "track": "KJE_MINE",
+   "name": "페일로쉬 고원 광산",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_MINE:mine_paillosh"
+  },
+  {
+   "id": "KJE_FAC_TURICUM",
+   "track": "KJE_FACTORY",
+   "name": "투리쿰 공장",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_FACTORY:fac_turicum"
+  },
+  {
+   "id": "KJE_FAC_RAIL",
+   "track": "KJE_FACTORY",
+   "name": "국영철도",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_FACTORY:fac_rail"
+  },
+  {
+   "id": "KJE_FOR_BROWNTAIL",
+   "track": "KJE_FOREST",
+   "name": "브라운테일 숲 편지 전령",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_FOREST:for_browntail"
+  },
+  {
+   "id": "KJE_GUI_JUNGFRAU",
+   "track": "KJE_GUIDE",
+   "name": "융프라우 허가제",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_GUIDE:gui_jungfrau"
+  },
+  {
+   "id": "KJE_CLAN_SILVERASH",
+   "track": "KJE_CLAN",
+   "name": "실버애쉬 가문",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1.2, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_CLAN:clan_silverash"
+  },
+  {
+   "id": "KJE_CLAN_PAILLOSH",
+   "track": "KJE_CLAN",
+   "name": "페일로쉬 가문",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_CLAN:clan_paillosh"
+  },
+  {
+   "id": "KJE_CLAN_BROWNTAIL",
+   "track": "KJE_CLAN",
+   "name": "브라운테일 가문",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 0.9, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_CLAN:clan_browntail"
+  },
+  {
+   "id": "KJE_COURT_ELDERS",
+   "track": "KJE_COURT",
+   "name": "만주원 장로단",
+   "canon": true,
+   "weight": 0.55,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_COURT:court_elders"
+  },
+  {
+   "id": "KJE_COURT_MAIDS",
+   "track": "KJE_COURT",
+   "name": "시녀단",
+   "canon": true,
+   "weight": 0.45,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_COURT:court_maids"
+  },
+  {
+   "id": "KJE_KT_DEPT",
+   "track": "KJE_KT",
+   "name": "카란 무역 부서",
+   "canon": true,
+   "weight": 0.85,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_KT:kt_dept"
+  },
+  {
+   "id": "KJE_KT_SNOWDEVIL",
+   "track": "KJE_KT",
+   "name": "설산귀",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1.3, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KJE_KT:kt_snowdevil"
+  },
+  {
+   "id": "KJE_SCH_COLUMBIA",
+   "track": "KJE_SCHOLAR",
+   "name": "컬럼비아 유학",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_SCHOLAR:sch_columbia"
+  },
+  {
+   "id": "KJE_SCH_RHINE",
+   "track": "KJE_SCHOLAR",
+   "name": "라인 랩 카란 관측소",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KJE_SCHOLAR:sch_rhine"
+  },
+  {
+   "id": "KJE_TOUR_BURDENPEAK",
+   "track": "KJE_TOUR",
+   "name": "버든피크 호텔",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_TOUR:tour_burdenpeak"
+  },
+  {
+   "id": "KJE_TOUR_BEAST",
+   "track": "KJE_TOUR",
+   "name": "버든비스트 대여",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KJE_TOUR:tour_beast"
+  },
+  {
+   "id": "KJE_TOUR_CABLE",
+   "track": "KJE_TOUR",
+   "name": "케이블카",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KJE_TOUR:tour_cable"
+  },
+  {
+   "id": "KJE_TOUR_SPRING",
+   "track": "KJE_TOUR",
+   "name": "온천",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KJE_TOUR:tour_spring"
+  },
+  {
+   "id": "KJE_PARL_THREE",
+   "track": "KJE_PARL",
+   "name": "삼족 의회",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KJE_PARL:parl_three"
+  },
+  {
+   "id": "KJE_PARL_NEW",
+   "track": "KJE_PARL",
+   "name": "쉐라그 의회",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KJE_PARL:parl_new"
+  },
+  {
+   "id": "LEI_QUAR_AFTERGLOW",
+   "track": "LEI_QUAR",
+   "name": "비세하임 애프터글로",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_QUAR:quar_afterglow"
+  },
+  {
+   "id": "LEI_QUAR_WOLUMONDE",
+   "track": "LEI_QUAR",
+   "name": "월루몽드 지정구역",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_QUAR:quar_wolumonde"
+  },
+  {
+   "id": "LEI_REM_ECHO",
+   "track": "LEI_REMNANT",
+   "name": "헤르쿤프츠호른의 여음",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_REMNANT:rem_echo"
+  },
+  {
+   "id": "LEI_REM_MUDROCK",
+   "track": "LEI_REMNANT",
+   "name": "머드락 부대 접촉",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LEI_REMNANT:rem_mudrock"
+  },
+  {
+   "id": "LEI_STR_PLAYER",
+   "track": "LEI_STREET",
+   "name": "거리 연주자",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_STREET:str_player"
+  },
+  {
+   "id": "LEI_STR_AUDITION",
+   "track": "LEI_STREET",
+   "name": "오디션 줄",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1.3, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LEI_STREET:str_audition"
+  },
+  {
+   "id": "LEI_TUN_PIANO",
+   "track": "LEI_TUNER",
+   "name": "피아노 조율",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_TUNER:tun_piano"
+  },
+  {
+   "id": "LEI_TUN_ORGAN",
+   "track": "LEI_TUNER",
+   "name": "오르간 청소",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LEI_TUNER:tun_organ"
+  },
+  {
+   "id": "LEI_TUN_RECORD",
+   "track": "LEI_TUNER",
+   "name": "음반 가게",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LEI_TUNER:tun_record"
+  },
+  {
+   "id": "LEI_INN_WOLUMONDE",
+   "track": "LEI_INN",
+   "name": "월루몽드 북부 교역망",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_INN:inn_wolumonde"
+  },
+  {
+   "id": "LEI_INN_CAFE",
+   "track": "LEI_INN",
+   "name": "카페",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_INN:inn_cafe"
+  },
+  {
+   "id": "LEI_FARM_CAPRINAE",
+   "track": "LEI_FARM",
+   "name": "산중 카프리니 정주민",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_FARM:farm_caprinae"
+  },
+  {
+   "id": "LEI_FARM_WINTERWISP",
+   "track": "LEI_FARM",
+   "name": "윈터위스프족",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LEI_FARM:farm_winterwisp"
+  },
+  {
+   "id": "LEI_MUS_ORCHESTRA",
+   "track": "LEI_MUSIC",
+   "name": "제국 오케스트라",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LEI_MUSIC:mus_orchestra"
+  },
+  {
+   "id": "LEI_MUS_AFTERGLOW",
+   "track": "LEI_MUSIC",
+   "name": "애프터글로 작곡가",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_MUSIC:mus_afterglow"
+  },
+  {
+   "id": "LEI_MUS_TOWER",
+   "track": "LEI_MUSIC",
+   "name": "고탑 하인 악사",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LEI_MUSIC:mus_tower"
+  },
+  {
+   "id": "LEI_GEND_CORPS",
+   "track": "LEI_GEND",
+   "name": "헌병대",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_GEND:gend_corps"
+  },
+  {
+   "id": "LEI_GEND_GESETZ",
+   "track": "LEI_GEND",
+   "name": "게사츠슈베이터",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1.2, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LEI_GEND:gend_gesetz"
+  },
+  {
+   "id": "LEI_GEND_TOWER",
+   "track": "LEI_GEND",
+   "name": "고탑 캐스터",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LEI_GEND:gend_tower"
+  },
+  {
+   "id": "LEI_CIV_COUNCIL",
+   "track": "LEI_CIVIC",
+   "name": "시의회",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_CIVIC:civ_council"
+  },
+  {
+   "id": "LEI_CIV_RATHAUS",
+   "track": "LEI_CIVIC",
+   "name": "라트하우스",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LEI_CIVIC:civ_rathaus"
+  },
+  {
+   "id": "LEI_UNI_LUDWIGS",
+   "track": "LEI_UNIV",
+   "name": "루트비히스 대학",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1.1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LEI_UNIV:uni_ludwigs"
+  },
+  {
+   "id": "LEI_UNI_LEOPOLD",
+   "track": "LEI_UNIV",
+   "name": "신 레오폴트 대학",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_UNIV:uni_leopold"
+  },
+  {
+   "id": "LEI_UNI_GUTENBERG",
+   "track": "LEI_UNIV",
+   "name": "구텐베르크 대학",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_UNIV:uni_gutenberg"
+  },
+  {
+   "id": "LEI_ARTS_SCHMITZ",
+   "track": "LEI_ARTS",
+   "name": "아틀리에 슈미츠",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_ARTS:arts_schmitz"
+  },
+  {
+   "id": "LEI_ARTS_PAINTER",
+   "track": "LEI_ARTS",
+   "name": "화가 공방",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LEI_ARTS:arts_painter"
+  },
+  {
+   "id": "LEI_COURT_ELECTOR",
+   "track": "LEI_COURT",
+   "name": "선제후령 7곳",
+   "canon": true,
+   "weight": 0.8,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LEI_COURT:court_elector"
+  },
+  {
+   "id": "LEI_COURT_VOICE",
+   "track": "LEI_COURT",
+   "name": "여황의 목소리",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1.3, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LEI_COURT:court_voice"
+  },
+  {
+   "id": "VIC_GANG_GLASGOW",
+   "track": "VIC_GANG",
+   "name": "글래스고",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_GANG:gang_glasgow"
+  },
+  {
+   "id": "VIC_GANG_GYM",
+   "track": "VIC_GANG",
+   "name": "슬로버노커 체육관",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 0.8, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "VIC_GANG:gang_gym"
+  },
+  {
+   "id": "VIC_INF_CALADON",
+   "track": "VIC_INFECTED",
+   "name": "칼라돈 감염자 노동법 사업장",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_INFECTED:inf_caladon"
+  },
+  {
+   "id": "VIC_INF_ZONE",
+   "track": "VIC_INFECTED",
+   "name": "격리구역",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "VIC_INFECTED:inf_zone"
+  },
+  {
+   "id": "VIC_CON_ROYAL",
+   "track": "VIC_CONSCRIPT",
+   "name": "왕실군",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_CONSCRIPT:con_royal"
+  },
+  {
+   "id": "VIC_CON_SECOND",
+   "track": "VIC_CONSCRIPT",
+   "name": "제2군",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_CONSCRIPT:con_second"
+  },
+  {
+   "id": "VIC_CON_LONDINIUM",
+   "track": "VIC_CONSCRIPT",
+   "name": "런디니움 방위군",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "VIC_CONSCRIPT:con_londinium"
+  },
+  {
+   "id": "VIC_FAC_HIGHBURY",
+   "track": "VIC_FACTORY",
+   "name": "하이버리",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_FACTORY:fac_highbury"
+  },
+  {
+   "id": "VIC_FAC_SUDIAN",
+   "track": "VIC_FACTORY",
+   "name": "수디언",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "VIC_FACTORY:fac_sudian"
+  },
+  {
+   "id": "VIC_FAC_CALADON",
+   "track": "VIC_FACTORY",
+   "name": "칼라돈",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_FACTORY:fac_caladon"
+  },
+  {
+   "id": "VIC_FAC_ROYALDELL",
+   "track": "VIC_FACTORY",
+   "name": "로열 델 병기창",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "VIC_FACTORY:fac_royaldell"
+  },
+  {
+   "id": "VIC_CRAFT_BAKERY",
+   "track": "VIC_CRAFT",
+   "name": "제빵",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_CRAFT:craft_bakery"
+  },
+  {
+   "id": "VIC_CRAFT_SPICE",
+   "track": "VIC_CRAFT",
+   "name": "향신료 도매",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "VIC_CRAFT:craft_spice"
+  },
+  {
+   "id": "VIC_CRAFT_FLOWER",
+   "track": "VIC_CRAFT",
+   "name": "꽃집",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "VIC_CRAFT:craft_flower"
+  },
+  {
+   "id": "VIC_CRAFT_VIDEO",
+   "track": "VIC_CRAFT",
+   "name": "비디오 대여",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "VIC_CRAFT:craft_video"
+  },
+  {
+   "id": "VIC_RUR_NOMAD",
+   "track": "VIC_RURAL",
+   "name": "유목 마을",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "VIC_RURAL:rur_nomad"
+  },
+  {
+   "id": "VIC_RUR_BRENTWOOD",
+   "track": "VIC_RURAL",
+   "name": "브렌트우드 꽃",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_RURAL:rur_brentwood"
+  },
+  {
+   "id": "VIC_RUR_EASTHAM",
+   "track": "VIC_RURAL",
+   "name": "이스트햄 가죽",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_RURAL:rur_eastham"
+  },
+  {
+   "id": "VIC_RUR_TORUN",
+   "track": "VIC_RURAL",
+   "name": "토룬 항구",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "VIC_RURAL:rur_torun"
+  },
+  {
+   "id": "VIC_PRI_REDIRON",
+   "track": "VIC_PRIVATE",
+   "name": "적철 근위대",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "VIC_PRIVATE:pri_rediron"
+  },
+  {
+   "id": "VIC_PRI_GREYHAT",
+   "track": "VIC_PRIVATE",
+   "name": "회색 모자",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "VIC_PRIVATE:pri_greyhat"
+  },
+  {
+   "id": "VIC_PRI_SWORDBEARER",
+   "track": "VIC_PRIVATE",
+   "name": "소드베어러",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_PRIVATE:pri_swordbearer"
+  },
+  {
+   "id": "VIC_POL_NATIONAL",
+   "track": "VIC_POLICE",
+   "name": "국가 기마 경찰",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_POLICE:pol_national"
+  },
+  {
+   "id": "VIC_POL_COUNTY",
+   "track": "VIC_POLICE",
+   "name": "카운티 경찰",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_POLICE:pol_county"
+  },
+  {
+   "id": "VIC_POL_CITY",
+   "track": "VIC_POLICE",
+   "name": "시 경찰",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "VIC_POLICE:pol_city"
+  },
+  {
+   "id": "VIC_OFF_PRESS",
+   "track": "VIC_OFFICE",
+   "name": "신문사",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_OFFICE:off_press"
+  },
+  {
+   "id": "VIC_OFF_MP",
+   "track": "VIC_OFFICE",
+   "name": "의원 비서",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "VIC_OFFICE:off_mp"
+  },
+  {
+   "id": "VIC_OFF_WHOLESALE",
+   "track": "VIC_OFFICE",
+   "name": "도매상",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "VIC_OFFICE:off_wholesale"
+  },
+  {
+   "id": "VIC_OFF_FINANCE",
+   "track": "VIC_OFFICE",
+   "name": "금융",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_OFFICE:off_finance"
+  },
+  {
+   "id": "VIC_TEA_STMARCEL",
+   "track": "VIC_TEACHER",
+   "name": "생 마르셸 학교",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_TEACHER:tea_stmarcel"
+  },
+  {
+   "id": "VIC_TEA_PRIMARY",
+   "track": "VIC_TEACHER",
+   "name": "초등학교",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_TEACHER:tea_primary"
+  },
+  {
+   "id": "VIC_MIL_CORPS",
+   "track": "VIC_MILITIA",
+   "name": "런디니움 시민 자경단",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_MILITIA:mil_corps"
+  },
+  {
+   "id": "VIC_ACA_ROYAL",
+   "track": "VIC_ACADEMY",
+   "name": "왕립 근위 사관학교",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1.1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "VIC_ACADEMY:aca_royal"
+  },
+  {
+   "id": "VIC_ACA_STORM",
+   "track": "VIC_ACADEMY",
+   "name": "폭풍돌격대",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "VIC_ACADEMY:aca_storm"
+  },
+  {
+   "id": "VIC_ACA_SECOND",
+   "track": "VIC_ACADEMY",
+   "name": "제2군단",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_ACADEMY:aca_second"
+  },
+  {
+   "id": "VIC_KNI_TOWER",
+   "track": "VIC_KNIGHT",
+   "name": "탑의 기사",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_KNIGHT:kni_tower"
+  },
+  {
+   "id": "VIC_KNI_STEAM",
+   "track": "VIC_KNIGHT",
+   "name": "증기 기사",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "VIC_KNIGHT:kni_steam"
+  },
+  {
+   "id": "VIC_SCH_ADVANCED",
+   "track": "VIC_SCHOLAR",
+   "name": "고등연구원",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "VIC_SCHOLAR:sch_advanced"
+  },
+  {
+   "id": "VIC_SCH_NATIONAL",
+   "track": "VIC_SCHOLAR",
+   "name": "국립대학",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_SCHOLAR:sch_national"
+  },
+  {
+   "id": "VIC_SCH_ROYALSOC",
+   "track": "VIC_SCHOLAR",
+   "name": "왕립 과학원",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 0.9, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "VIC_SCHOLAR:sch_royalsoc"
+  },
+  {
+   "id": "VIC_NOB_DUCHY",
+   "track": "VIC_NOBLE",
+   "name": "8대 공작령",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "VIC_NOBLE:nob_duchy"
+  },
+  {
+   "id": "VIC_NOB_PARLIAMENT",
+   "track": "VIC_NOBLE",
+   "name": "의회",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 0.8, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "VIC_NOBLE:nob_parliament"
+  },
+  {
+   "id": "TAR_WAN_SCATANA",
+   "track": "TAR_WANDER",
+   "name": "스카타나 들판",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "TAR_WANDER:wan_scatana"
+  },
+  {
+   "id": "TAR_WAN_TRENT",
+   "track": "TAR_WANDER",
+   "name": "트렌트 카운티 추방자",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "TAR_WANDER:wan_trent"
+  },
+  {
+   "id": "TAR_DUB_SIX",
+   "track": "TAR_DUBLIN",
+   "name": "간부 6인 직속",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1.3, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "TAR_DUBLIN:dub_six"
+  },
+  {
+   "id": "TAR_DUB_HARDLINE",
+   "track": "TAR_DUBLIN",
+   "name": "강경파",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "TAR_DUBLIN:dub_hardline"
+  },
+  {
+   "id": "TAR_DUB_INFECTED",
+   "track": "TAR_DUBLIN",
+   "name": "감염자 대표단",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "TAR_DUBLIN:dub_infected"
+  },
+  {
+   "id": "TAR_DUB_WYVERN",
+   "track": "TAR_DUBLIN",
+   "name": "와이번 부대",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "TAR_DUBLIN:dub_wyvern"
+  },
+  {
+   "id": "TAR_HIL_COUNTY",
+   "track": "TAR_HILLOCK",
+   "name": "힐록 카운티",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "TAR_HILLOCK:hil_county"
+  },
+  {
+   "id": "TAR_HIL_GARRISON",
+   "track": "TAR_HILLOCK",
+   "name": "빅토리아 주둔지 노역",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "TAR_HILLOCK:hil_garrison"
+  },
+  {
+   "id": "TAR_FARM_RURAL",
+   "track": "TAR_FARM",
+   "name": "타라 농촌",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "TAR_FARM:farm_rural"
+  },
+  {
+   "id": "TAR_NOM_OUTSKIRTS",
+   "track": "TAR_NOMAD",
+   "name": "나 시어셔 외곽 유목민",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "TAR_NOMAD:nom_outskirts"
+  },
+  {
+   "id": "TAR_RED_GUARD",
+   "track": "TAR_REDIRON",
+   "name": "적철 근위대",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "TAR_REDIRON:red_guard"
+  },
+  {
+   "id": "TAR_RED_EXDUBLINN",
+   "track": "TAR_REDIRON",
+   "name": "구 더블린 편입병",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 0.8, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "TAR_REDIRON:red_exdublinn"
+  },
+  {
+   "id": "TAR_SMI_FORGE",
+   "track": "TAR_SMITH",
+   "name": "나 시어셔 대장간",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "TAR_SMITH:smi_forge"
+  },
+  {
+   "id": "TAR_POET_NATIONAL",
+   "track": "TAR_POET",
+   "name": "민족주의 시인",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "TAR_POET:poet_national"
+  },
+  {
+   "id": "TAR_POET_WYVERN",
+   "track": "TAR_POET",
+   "name": "와이번 출신 작가",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "TAR_POET:poet_wyvern"
+  },
+  {
+   "id": "TAR_RAT_CITY",
+   "track": "TAR_RATION",
+   "name": "나 시어셔 시정",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "TAR_RATION:rat_city"
+  },
+  {
+   "id": "TAR_SPI_ORDER",
+   "track": "TAR_SPIRIT",
+   "name": "영혼수호자 사제단",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "TAR_SPIRIT:spi_order"
+  },
+  {
+   "id": "TAR_VIC_INTEL",
+   "track": "TAR_VICSERV",
+   "name": "빅토리아군 정보부",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1.2, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "TAR_VICSERV:vic_intel"
+  },
+  {
+   "id": "TAR_VIC_HILLOCK",
+   "track": "TAR_VICSERV",
+   "name": "힐록 주둔군",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "TAR_VICSERV:vic_hillock"
+  },
+  {
+   "id": "KAZ_SLA_HOUSE",
+   "track": "KAZ_SLAVE",
+   "name": "가내 노예",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KAZ_SLAVE:sla_house"
+  },
+  {
+   "id": "KAZ_SLA_ASK",
+   "track": "KAZ_SLAVE",
+   "name": "감정회 경호 발탁 대상",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1.3, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KAZ_SLAVE:sla_ask"
+  },
+  {
+   "id": "KAZ_GHE_UNDER",
+   "track": "KAZ_GHETTO",
+   "name": "지하 거주구",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_GHETTO:ghe_under"
+  },
+  {
+   "id": "KAZ_GHE_OGNISKO",
+   "track": "KAZ_GHETTO",
+   "name": "오그니스코",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KAZ_GHETTO:ghe_ognisko"
+  },
+  {
+   "id": "KAZ_LAB_ZBONEK",
+   "track": "KAZ_LABOR",
+   "name": "즈보넉 공장",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_LABOR:lab_zbonek"
+  },
+  {
+   "id": "KAZ_LAB_CITY",
+   "track": "KAZ_LABOR",
+   "name": "상업 도시 잡역",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KAZ_LABOR:lab_city"
+  },
+  {
+   "id": "KAZ_FARM_TWIERDZA",
+   "track": "KAZ_FARM",
+   "name": "트비에르자",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_FARM:farm_twierdza"
+  },
+  {
+   "id": "KAZ_FARM_STRUMYKOWO",
+   "track": "KAZ_FARM",
+   "name": "스트루미코보",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_FARM:farm_strumykowo"
+  },
+  {
+   "id": "KAZ_FARM_BORDER",
+   "track": "KAZ_FARM",
+   "name": "국경 마을",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KAZ_FARM:farm_border"
+  },
+  {
+   "id": "KAZ_KNI_GRAND8",
+   "track": "KAZ_KNIGHT",
+   "name": "8대 대기사단",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1.3, "fall": 1, "income": 1.3, "standingStart": 15 },
+   "tags": ["elite","major"],
+   "events": "KAZ_KNIGHT:kni_grand8"
+  },
+  {
+   "id": "KAZ_KNI_64",
+   "track": "KAZ_KNIGHT",
+   "name": "64 기사단",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_KNIGHT:kni_64"
+  },
+  {
+   "id": "KAZ_KNI_INDEP",
+   "track": "KAZ_KNIGHT",
+   "name": "독립 기사",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.2, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KAZ_KNIGHT:kni_indep"
+  },
+  {
+   "id": "KAZ_KNI_SPONSOR",
+   "track": "KAZ_KNIGHT",
+   "name": "스폰서 전속",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor","elite"],
+   "events": "KAZ_KNIGHT:kni_sponsor"
+  },
+  {
+   "id": "KAZ_INF_PINUS",
+   "track": "KAZ_INFECTED",
+   "name": "피누스 실베스트리스",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1.3, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KAZ_INFECTED:inf_pinus"
+  },
+  {
+   "id": "KAZ_INF_SYSTEM",
+   "track": "KAZ_INFECTED",
+   "name": "감염자 참가 제도",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_INFECTED:inf_system"
+  },
+  {
+   "id": "KAZ_STA_NORTHWOOD",
+   "track": "KAZ_STAFF",
+   "name": "노스우드 클럽",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_STAFF:sta_northwood"
+  },
+  {
+   "id": "KAZ_STA_BLADEHELMET",
+   "track": "KAZ_STAFF",
+   "name": "블레이드헬멧 클럽",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_STAFF:sta_bladehelmet"
+  },
+  {
+   "id": "KAZ_OFF_MATERIALS",
+   "track": "KAZ_OFFICE",
+   "name": "건자재",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_OFFICE:off_materials"
+  },
+  {
+   "id": "KAZ_OFF_MIESZKO",
+   "track": "KAZ_OFFICE",
+   "name": "미에슈코",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_OFFICE:off_mieszko"
+  },
+  {
+   "id": "KAZ_OFF_GALE",
+   "track": "KAZ_OFFICE",
+   "name": "게일 산업",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KAZ_OFFICE:off_gale"
+  },
+  {
+   "id": "KAZ_OFF_SWORMA",
+   "track": "KAZ_OFFICE",
+   "name": "스워마 식품",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KAZ_OFFICE:off_sworma"
+  },
+  {
+   "id": "KAZ_MED_ROSE",
+   "track": "KAZ_MEDIA",
+   "name": "로즈 미디어",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_MEDIA:med_rose"
+  },
+  {
+   "id": "KAZ_MED_PAPER",
+   "track": "KAZ_MEDIA",
+   "name": "로즈 페이퍼 유니온",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KAZ_MEDIA:med_paper"
+  },
+  {
+   "id": "KAZ_MED_FILM",
+   "track": "KAZ_MEDIA",
+   "name": "영화",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KAZ_MEDIA:med_film"
+  },
+  {
+   "id": "KAZ_CRA_GUILD",
+   "track": "KAZ_CRAFT",
+   "name": "카시미어 장인 길드",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_CRAFT:cra_guild"
+  },
+  {
+   "id": "KAZ_MSG_CORP",
+   "track": "KAZ_MSG",
+   "name": "기술 기업 제휴 월간 예보",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_MSG:msg_corp"
+  },
+  {
+   "id": "KAZ_ASK_ASK",
+   "track": "KAZ_ASK",
+   "name": "감정회 A.S.K.",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_ASK:ask_ask"
+  },
+  {
+   "id": "KAZ_CAM_ORDER",
+   "track": "KAZ_CAMPAIGN",
+   "name": "출정 기사단",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_CAMPAIGN:cam_order"
+  },
+  {
+   "id": "KAZ_CAM_SILVERLANCE",
+   "track": "KAZ_CAMPAIGN",
+   "name": "실버랜스 페가수스",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1.2, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KAZ_CAMPAIGN:cam_silverlance"
+  },
+  {
+   "id": "KAZ_AU_UNION",
+   "track": "KAZ_AU",
+   "name": "A.U.",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_AU:au_union"
+  },
+  {
+   "id": "KAZ_AU_SHAMPOO",
+   "track": "KAZ_AU",
+   "name": "\"샴푸 회사\" 리브랜딩",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KAZ_AU:au_shampoo"
+  },
+  {
+   "id": "KAZ_KGCC_COUNCIL",
+   "track": "KAZ_KGCC",
+   "name": "K.G.C.C.",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KAZ_KGCC:kgcc_council"
+  },
+  {
+   "id": "KAZ_KGCC_ASSEMBLY",
+   "track": "KAZ_KGCC",
+   "name": "국민원",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KAZ_KGCC:kgcc_assembly"
+  },
+  {
+   "id": "COL_SLUM_TRIMOUNTS",
+   "track": "COL_SLUM",
+   "name": "트리마운츠 판자촌",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_SLUM:slum_trimounts"
+  },
+  {
+   "id": "COL_SLUM_REDHAND",
+   "track": "COL_SLUM",
+   "name": "티카론토 레드 핸드",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_SLUM:slum_redhand"
+  },
+  {
+   "id": "COL_ORP_TRENTON",
+   "track": "COL_ORPHAN",
+   "name": "트렌턴 고아원",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_ORPHAN:orp_trenton"
+  },
+  {
+   "id": "COL_ORP_MAYLANDER",
+   "track": "COL_ORPHAN",
+   "name": "메이랜더 고아원",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1.3, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_ORPHAN:orp_maylander"
+  },
+  {
+   "id": "COL_FRO_BASEWOOD",
+   "track": "COL_FRONTIER",
+   "name": "베이스우드",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_FRONTIER:fro_basewood"
+  },
+  {
+   "id": "COL_FRO_DEADHORSE",
+   "track": "COL_FRONTIER",
+   "name": "데드호스",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_FRONTIER:fro_deadhorse"
+  },
+  {
+   "id": "COL_FRO_RICHMOND",
+   "track": "COL_FRONTIER",
+   "name": "뉴 리치먼드",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_FRONTIER:fro_richmond"
+  },
+  {
+   "id": "COL_FRO_DAVIS",
+   "track": "COL_FRONTIER",
+   "name": "데이비스 타운",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_FRONTIER:fro_davis"
+  },
+  {
+   "id": "COL_LAB_QUARRY",
+   "track": "COL_LABOR",
+   "name": "채석 소도시",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_LABOR:lab_quarry"
+  },
+  {
+   "id": "COL_LAB_MINE",
+   "track": "COL_LABOR",
+   "name": "광산",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_LABOR:lab_mine"
+  },
+  {
+   "id": "COL_LAB_DEMOLITION",
+   "track": "COL_LABOR",
+   "name": "폭파 엔지니어",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_LABOR:lab_demolition"
+  },
+  {
+   "id": "COL_SHOP_MAMAJONES",
+   "track": "COL_SHOP",
+   "name": "마마존스",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_SHOP:shop_mamajones"
+  },
+  {
+   "id": "COL_SHOP_BAR",
+   "track": "COL_SHOP",
+   "name": "바",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_SHOP:shop_bar"
+  },
+  {
+   "id": "COL_SHOP_SIESTA",
+   "track": "COL_SHOP",
+   "name": "시에스타 호텔",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_SHOP:shop_siesta"
+  },
+  {
+   "id": "COL_PMC_WESTERN",
+   "track": "COL_PMC",
+   "name": "웨스턴 시큐리티",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_PMC:pmc_western"
+  },
+  {
+   "id": "COL_PMC_REDMARK",
+   "track": "COL_PMC",
+   "name": "레드마크",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_PMC:pmc_redmark"
+  },
+  {
+   "id": "COL_PMC_SUB",
+   "track": "COL_PMC",
+   "name": "하청 용병단",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_PMC:pmc_sub"
+  },
+  {
+   "id": "COL_BSW_APD",
+   "track": "COL_BSW",
+   "name": "APD",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_BSW:bsw_apd"
+  },
+  {
+   "id": "COL_BSW_DEAT",
+   "track": "COL_BSW",
+   "name": "DEAT",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "COL_BSW:bsw_deat"
+  },
+  {
+   "id": "COL_BSW_OBHR",
+   "track": "COL_BSW",
+   "name": "OBHR",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "COL_BSW:bsw_obhr"
+  },
+  {
+   "id": "COL_BSW_ACCOUNT",
+   "track": "COL_BSW",
+   "name": "비전투 회계",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.7, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_BSW:bsw_account"
+  },
+  {
+   "id": "COL_OFF_TECH",
+   "track": "COL_OFFICE",
+   "name": "기술 기업",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_OFFICE:off_tech"
+  },
+  {
+   "id": "COL_OFF_BANK",
+   "track": "COL_OFFICE",
+   "name": "은행",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_OFFICE:off_bank"
+  },
+  {
+   "id": "COL_OFF_RAYTHEAN",
+   "track": "COL_OFFICE",
+   "name": "레이시언",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1.1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "COL_OFFICE:off_raythean"
+  },
+  {
+   "id": "COL_OFF_HYDEBRO",
+   "track": "COL_OFFICE",
+   "name": "하이드브로",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_OFFICE:off_hydebro"
+  },
+  {
+   "id": "COL_UNI_TRIMOUNTS",
+   "track": "COL_UNIV",
+   "name": "트리마운츠 공과대학",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_UNIV:uni_trimounts"
+  },
+  {
+   "id": "COL_GOV_FEDERAL",
+   "track": "COL_GOV",
+   "name": "연방군",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_GOV:gov_federal"
+  },
+  {
+   "id": "COL_GOV_POLICE",
+   "track": "COL_GOV",
+   "name": "시 경찰·교통경찰",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_GOV:gov_police"
+  },
+  {
+   "id": "COL_GOV_AGENCY",
+   "track": "COL_GOV",
+   "name": "관리국·CDC·국세청",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 0.7, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_GOV:gov_agency"
+  },
+  {
+   "id": "COL_MED_RANKWOOD",
+   "track": "COL_MEDIA",
+   "name": "랭크우드",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_MEDIA:med_rankwood"
+  },
+  {
+   "id": "COL_MED_TBS",
+   "track": "COL_MEDIA",
+   "name": "TBS 라디오",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_MEDIA:med_tbs"
+  },
+  {
+   "id": "COL_MED_TELEGRAPH",
+   "track": "COL_MEDIA",
+   "name": "D.C. 텔레그래프",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_MEDIA:med_telegraph"
+  },
+  {
+   "id": "COL_INS_PRIVATE",
+   "track": "COL_INSURANCE",
+   "name": "민영 의료보험",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 0.7, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_INSURANCE:ins_private"
+  },
+  {
+   "id": "COL_INS_PUBLIC",
+   "track": "COL_INSURANCE",
+   "name": "격리구역 공공보험",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_INSURANCE:ins_public"
+  },
+  {
+   "id": "COL_RHI_CONTROL",
+   "track": "COL_RHINE",
+   "name": "통제 섹션",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "COL_RHINE:rhi_control"
+  },
+  {
+   "id": "COL_RHI_ECOLOGY",
+   "track": "COL_RHINE",
+   "name": "생태 섹션",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_RHINE:rhi_ecology"
+  },
+  {
+   "id": "COL_RHI_ENERGY",
+   "track": "COL_RHINE",
+   "name": "에너지 섹션",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_RHINE:rhi_energy"
+  },
+  {
+   "id": "COL_RHI_ARTS",
+   "track": "COL_RHINE",
+   "name": "아츠 섹션",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "COL_RHINE:rhi_arts"
+  },
+  {
+   "id": "COL_RHI_DEFENSE",
+   "track": "COL_RHINE",
+   "name": "방위 섹션",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "COL_RHINE:rhi_defense"
+  },
+  {
+   "id": "COL_RHI_OTHER",
+   "track": "COL_RHINE",
+   "name": "기타 섹션",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_RHINE:rhi_other"
+  },
+  {
+   "id": "COL_LAW_INHOUSE",
+   "track": "COL_LAW",
+   "name": "사내 변호사",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_LAW:law_inhouse"
+  },
+  {
+   "id": "COL_LAW_LITIGATION",
+   "track": "COL_LAW",
+   "name": "소송 전문",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_LAW:law_litigation"
+  },
+  {
+   "id": "COL_EXE_RAYTHEAN",
+   "track": "COL_EXEC",
+   "name": "레이시언",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "COL_EXEC:exe_raythean"
+  },
+  {
+   "id": "COL_EXE_MAYLANDER",
+   "track": "COL_EXEC",
+   "name": "메이랜더",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "COL_EXEC:exe_maylander"
+  },
+  {
+   "id": "COL_EXE_HYDE",
+   "track": "COL_EXEC",
+   "name": "하이드 형제",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COL_EXEC:exe_hyde"
+  },
+  {
+   "id": "COL_EXE_SIMON",
+   "track": "COL_EXEC",
+   "name": "사이먼",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COL_EXEC:exe_simon"
+  },
+  {
+   "id": "SIR_BELLONE",
+   "track": "SIR_FAMIGLIA",
+   "name": "벨로네 패밀리",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1.3, "standingStart": 10 },
+   "tags": ["major"],
+   "events": "SIR_FAMIGLIA:bellone"
+  },
+  {
+   "id": "SIR_ROSSATI",
+   "track": "SIR_FAMIGLIA",
+   "name": "로사티 패밀리",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.9, "income": 1.2, "standingStart": 5 },
+   "tags": ["major"],
+   "events": "SIR_FAMIGLIA:rossati"
+  },
+  {
+   "id": "SIR_SALUZZO",
+   "track": "SIR_FAMIGLIA",
+   "name": "살루초 패밀리",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 0.9, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_FAMIGLIA:saluzzo"
+  },
+  {
+   "id": "SIR_ACTIVE",
+   "track": "SIR_FAMIGLIA",
+   "name": "활동 패밀리(베네치아·메디치·레오티)",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1.1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_FAMIGLIA:active"
+  },
+  {
+   "id": "SIR_MINOR",
+   "track": "SIR_FAMIGLIA",
+   "name": "군소 패밀리(토코·보르자·리날디)",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_FAMIGLIA:minor"
+  },
+  {
+   "id": "SIR_GANG_CHIAVE",
+   "track": "SIR_GANG",
+   "name": "키아베 갱",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_GANG:gang_chiave"
+  },
+  {
+   "id": "SIR_GANG_NONE",
+   "track": "SIR_GANG",
+   "name": "무소속",
+   "canon": false,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_GANG:gang_none"
+  },
+  {
+   "id": "SIR_CLE_FAMILY",
+   "track": "SIR_CLEANER",
+   "name": "패밀리 전속",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_CLEANER:cle_family"
+  },
+  {
+   "id": "SIR_CLE_FREELANCE",
+   "track": "SIR_CLEANER",
+   "name": "프리랜서",
+   "canon": false,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_CLEANER:cle_freelance"
+  },
+  {
+   "id": "SIR_FAMBIZ_SALUZZO",
+   "track": "SIR_FAMBIZ",
+   "name": "살루초 비노",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_FAMBIZ:fambiz_saluzzo"
+  },
+  {
+   "id": "SIR_FAMBIZ_VENEZIA",
+   "track": "SIR_FAMBIZ",
+   "name": "베네치아 자동차",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_FAMBIZ:fambiz_venezia"
+  },
+  {
+   "id": "SIR_FAMBIZ_MEDICI",
+   "track": "SIR_FAMBIZ",
+   "name": "메디치 금융",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "SIR_FAMBIZ:fambiz_medici"
+  },
+  {
+   "id": "SIR_FAMBIZ_STEFANO",
+   "track": "SIR_FAMBIZ",
+   "name": "스테파노 외식",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_FAMBIZ:fambiz_stefano"
+  },
+  {
+   "id": "SIR_FOR_BIO",
+   "track": "SIR_FOREIGN",
+   "name": "바이오",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_FOREIGN:for_bio"
+  },
+  {
+   "id": "SIR_FOR_ARMS",
+   "track": "SIR_FOREIGN",
+   "name": "군수",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_FOREIGN:for_arms"
+  },
+  {
+   "id": "SIR_FOR_SECURITY",
+   "track": "SIR_FOREIGN",
+   "name": "보안",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_FOREIGN:for_security"
+  },
+  {
+   "id": "SIR_FOR_LOGISTICS",
+   "track": "SIR_FOREIGN",
+   "name": "물류",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_FOREIGN:for_logistics"
+  },
+  {
+   "id": "SIR_FOR_TRAINING",
+   "track": "SIR_FOREIGN",
+   "name": "직업훈련",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_FOREIGN:for_training"
+  },
+  {
+   "id": "SIR_LEG_BELLONE",
+   "track": "SIR_LEGAL",
+   "name": "벨로네 후원",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_LEGAL:leg_bellone"
+  },
+  {
+   "id": "SIR_LEG_ROSSATI",
+   "track": "SIR_LEGAL",
+   "name": "로사티 후원",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_LEGAL:leg_rossati"
+  },
+  {
+   "id": "SIR_LEG_GRAYHALL",
+   "track": "SIR_LEGAL",
+   "name": "그레이홀 연합 법원",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "SIR_LEGAL:leg_grayhall"
+  },
+  {
+   "id": "SIR_PUB_GRAYHALL",
+   "track": "SIR_PUBLIC",
+   "name": "그레이홀·코무니 의회",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_PUBLIC:pub_grayhall"
+  },
+  {
+   "id": "SIR_PUB_SETTECOLLI",
+   "track": "SIR_PUBLIC",
+   "name": "세티 콜리 협의회",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "SIR_PUBLIC:pub_settecolli"
+  },
+  {
+   "id": "SIR_PUB_CITYHALL",
+   "track": "SIR_PUBLIC",
+   "name": "뉴 볼시니 시청",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_PUBLIC:pub_cityhall"
+  },
+  {
+   "id": "SIR_POL_DEPT",
+   "track": "SIR_POLICE",
+   "name": "뉴 볼시니 경찰국",
+   "canon": true,
+   "weight": 0.75,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_POLICE:pol_dept"
+  },
+  {
+   "id": "SIR_POL_EMERGENCY",
+   "track": "SIR_POLICE",
+   "name": "계엄 긴급조치반",
+   "canon": false,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "SIR_POLICE:pol_emergency"
+  },
+  {
+   "id": "SIR_TRU_UNION",
+   "track": "SIR_TRUCK",
+   "name": "트럭상조회",
+   "canon": true,
+   "weight": 0.75,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_TRUCK:tru_union"
+  },
+  {
+   "id": "SIR_TRU_NIGHT",
+   "track": "SIR_TRUCK",
+   "name": "패밀리 야간 운전(보르자)",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_TRUCK:tru_night"
+  },
+  {
+   "id": "SIR_LIV_TAILOR",
+   "track": "SIR_LIVING",
+   "name": "재단사",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_LIVING:liv_tailor"
+  },
+  {
+   "id": "SIR_LIV_PIZZA",
+   "track": "SIR_LIVING",
+   "name": "피자·슈퍼마켓",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_LIVING:liv_pizza"
+  },
+  {
+   "id": "SIR_LIV_CARWASH",
+   "track": "SIR_LIVING",
+   "name": "세차장",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_LIVING:liv_carwash"
+  },
+  {
+   "id": "SIR_LIV_WINERY",
+   "track": "SIR_LIVING",
+   "name": "와이너리 노동",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_LIVING:liv_winery"
+  },
+  {
+   "id": "SIR_MED_PALERMO",
+   "track": "SIR_MEDIC",
+   "name": "팔레르모 의학원",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_MEDIC:med_palermo"
+  },
+  {
+   "id": "SIR_MED_FAMILY",
+   "track": "SIR_MEDIC",
+   "name": "패밀리 전속",
+   "canon": false,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "SIR_MEDIC:med_family"
+  },
+  {
+   "id": "SIR_ART_CARNEVALE",
+   "track": "SIR_ART",
+   "name": "카르니발레",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_ART:art_carnevale"
+  },
+  {
+   "id": "SIR_ART_FAMILY",
+   "track": "SIR_ART",
+   "name": "연예 패밀리",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "SIR_ART:art_family"
+  },
+  {
+   "id": "SIR_ART_FILM",
+   "track": "SIR_ART",
+   "name": "극장·영화",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_ART:art_film"
+  },
+  {
+   "id": "SIR_CLE_CHURCH",
+   "track": "SIR_CLERGY",
+   "name": "교회",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_CLERGY:cle_church"
+  },
+  {
+   "id": "SIR_CLE_CONFESSOR",
+   "track": "SIR_CLERGY",
+   "name": "패밀리 고해 전담",
+   "canon": false,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "SIR_CLERGY:cle_confessor"
+  },
+  {
+   "id": "SIR_WILD_AGNESE",
+   "track": "SIR_WILD",
+   "name": "늑대 군주 아녜제",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SIR_WILD:wild_agnese"
+  },
+  {
+   "id": "SIR_WILD_LONE",
+   "track": "SIR_WILD",
+   "name": "무소속",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SIR_WILD:wild_lone"
+  },
+  {
+   "id": "LAT_NOT_PAGUS",
+   "track": "LAT_NOTARY",
+   "name": "파구스 공증소",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_NOTARY:not_pagus"
+  },
+  {
+   "id": "LAT_NOT_FALLEN",
+   "track": "LAT_NOTARY",
+   "name": "타락자 감독관",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_NOTARY:not_fallen"
+  },
+  {
+   "id": "LAT_NOT_ABROAD",
+   "track": "LAT_NOTARY",
+   "name": "해외 공민 보호 파견",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LAT_NOTARY:not_abroad"
+  },
+  {
+   "id": "LAT_CUR_1TO4",
+   "track": "LAT_CURIA",
+   "name": "제1~4청(입법·조정·산업·물류)",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_CURIA:cur_1to4"
+  },
+  {
+   "id": "LAT_CUR_6",
+   "track": "LAT_CURIA",
+   "name": "제6청 민정·장례",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_CURIA:cur_6"
+  },
+  {
+   "id": "LAT_CUR_7",
+   "track": "LAT_CURIA",
+   "name": "제7청 외교·국방",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1.2, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LAT_CURIA:cur_7"
+  },
+  {
+   "id": "LAT_LEG_7",
+   "track": "LAT_LEGATUS",
+   "name": "제7청 직할",
+   "canon": true,
+   "weight": 0.8,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_LEGATUS:leg_7"
+  },
+  {
+   "id": "LAT_LEG_APPLEPIE",
+   "track": "LAT_LEGATUS",
+   "name": "애플파이 개편",
+   "canon": false,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_LEGATUS:leg_applepie"
+  },
+  {
+   "id": "LAT_COH_PLATOON",
+   "track": "LAT_COHORS",
+   "name": "호위대 소대",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_COHORS:coh_platoon"
+  },
+  {
+   "id": "LAT_COH_DETACH",
+   "track": "LAT_COHORS",
+   "name": "총기사 분견대",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1.2, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LAT_COHORS:coh_detach"
+  },
+  {
+   "id": "LAT_COH_PAPAL",
+   "track": "LAT_COHORS",
+   "name": "교황 기사(과거)",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LAT_COHORS:coh_papal"
+  },
+  {
+   "id": "LAT_MON_LANDEN",
+   "track": "LAT_MONASTERY",
+   "name": "랜든 수도원",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_MONASTERY:mon_landen"
+  },
+  {
+   "id": "LAT_MON_ALSTER",
+   "track": "LAT_MONASTERY",
+   "name": "알스터 수도원",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_MONASTERY:mon_alster"
+  },
+  {
+   "id": "LAT_MON_AMBROSIUS",
+   "track": "LAT_MONASTERY",
+   "name": "암브로시우스 이동 수도원",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_MONASTERY:mon_ambrosius"
+  },
+  {
+   "id": "LAT_MON_NURSERY",
+   "track": "LAT_MONASTERY",
+   "name": "양육 신전",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_MONASTERY:mon_nursery"
+  },
+  {
+   "id": "LAT_GUA_LANDEN",
+   "track": "LAT_GUARD",
+   "name": "랜든 수도원 직속",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_GUARD:gua_landen"
+  },
+  {
+   "id": "LAT_GUA_NOTARY",
+   "track": "LAT_GUARD",
+   "name": "공증소 이관",
+   "canon": false,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_GUARD:gua_notary"
+  },
+  {
+   "id": "LAT_GUN_PAGANINI",
+   "track": "LAT_GUN",
+   "name": "파가니니",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LAT_GUN:gun_paganini"
+  },
+  {
+   "id": "LAT_GUN_VANNINI",
+   "track": "LAT_GUN",
+   "name": "반니니",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_GUN:gun_vannini"
+  },
+  {
+   "id": "LAT_GUN_GRIFFIN",
+   "track": "LAT_GUN",
+   "name": "그리핀 아스널",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_GUN:gun_griffin"
+  },
+  {
+   "id": "LAT_GUN_MICHAELION",
+   "track": "LAT_GUN",
+   "name": "미카엘리온 공방가",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_GUN:gun_michaelion"
+  },
+  {
+   "id": "LAT_DES_GELATO",
+   "track": "LAT_DESSERT",
+   "name": "젤라토",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_DESSERT:des_gelato"
+  },
+  {
+   "id": "LAT_DES_CACTUS",
+   "track": "LAT_DESSERT",
+   "name": "선인장 타르트",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_DESSERT:des_cactus"
+  },
+  {
+   "id": "LAT_DES_SUGARFREE",
+   "track": "LAT_DESSERT",
+   "name": "무설탕(치과 구역)",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_DESSERT:des_sugarfree"
+  },
+  {
+   "id": "LAT_DES_ALSTER",
+   "track": "LAT_DESSERT",
+   "name": "알스터 납품",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_DESSERT:des_alster"
+  },
+  {
+   "id": "LAT_TEA_STMARCEL",
+   "track": "LAT_TEACHER",
+   "name": "생 마르셀 학교",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_TEACHER:tea_stmarcel"
+  },
+  {
+   "id": "LAT_TEA_UNIVERSITAS",
+   "track": "LAT_TEACHER",
+   "name": "우니베르시타스 미카엘리오니스",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LAT_TEACHER:tea_universitas"
+  },
+  {
+   "id": "LAT_MED_CENTRAL",
+   "track": "LAT_MEDIC",
+   "name": "파구스 스테보누스 중앙병원",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_MEDIC:med_central"
+  },
+  {
+   "id": "LAT_MED_EMPATHY",
+   "track": "LAT_MEDIC",
+   "name": "공감과",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "LAT_MEDIC:med_empathy"
+  },
+  {
+   "id": "LAT_MED_PSYCH",
+   "track": "LAT_MEDIC",
+   "name": "심리과",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_MEDIC:med_psych"
+  },
+  {
+   "id": "LAT_OFF_MONTBLANC",
+   "track": "LAT_OFFICE",
+   "name": "몽블랑 체스트넛 바스크 출판사",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_OFFICE:off_montblanc"
+  },
+  {
+   "id": "LAT_OFF_TOUR",
+   "track": "LAT_OFFICE",
+   "name": "관광 회사",
+   "canon": false,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_OFFICE:off_tour"
+  },
+  {
+   "id": "LAT_DEN_DISTRICT",
+   "track": "LAT_DENTIST",
+   "name": "치과의사 구역",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_DENTIST:den_district"
+  },
+  {
+   "id": "LAT_FAL_EXPELLED",
+   "track": "LAT_FALLEN",
+   "name": "추방 감염 공민",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "LAT_FALLEN:fal_expelled"
+  },
+  {
+   "id": "LAT_FAL_ABROAD",
+   "track": "LAT_FALLEN",
+   "name": "타락 산크타(해외)",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_FALLEN:fal_abroad"
+  },
+  {
+   "id": "LAT_FAL_SERVICE",
+   "track": "LAT_FALLEN",
+   "name": "경범 정부 복무",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "LAT_FALLEN:fal_service"
+  },
+  {
+   "id": "IBE_INQ_CARMEN",
+   "track": "IBE_INQ",
+   "name": "카르멘 제자단",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1.2, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "IBE_INQ:inq_carmen"
+  },
+  {
+   "id": "IBE_INQ_GRANFARO",
+   "track": "IBE_INQ",
+   "name": "그란파로 주둔",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "IBE_INQ:inq_granfaro"
+  },
+  {
+   "id": "IBE_INQ_RHODES",
+   "track": "IBE_INQ",
+   "name": "로도스 파견 메신저",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_INQ:inq_rhodes"
+  },
+  {
+   "id": "IBE_PEN_TERCIO",
+   "track": "IBE_PENAL",
+   "name": "테르시오",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "IBE_PENAL:pen_tercio"
+  },
+  {
+   "id": "IBE_PEN_COAST",
+   "track": "IBE_PENAL",
+   "name": "해안 순찰대",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "IBE_PENAL:pen_coast"
+  },
+  {
+   "id": "IBE_PEN_SWEEP",
+   "track": "IBE_PENAL",
+   "name": "교단 소탕대",
+   "canon": false,
+   "weight": 0.2,
+   "mods": { "promo": 1.2, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "IBE_PENAL:pen_sweep"
+  },
+  {
+   "id": "IBE_CLK_PRIEST",
+   "track": "IBE_CLERK",
+   "name": "격하 사제",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "IBE_CLERK:clk_priest"
+  },
+  {
+   "id": "IBE_CLK_BISHOP",
+   "track": "IBE_CLERK",
+   "name": "격하 주교",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "IBE_CLERK:clk_bishop"
+  },
+  {
+   "id": "IBE_CLK_MAYOR",
+   "track": "IBE_CLERK",
+   "name": "이장 겸임",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_CLERK:clk_mayor"
+  },
+  {
+   "id": "IBE_COA_SALVIENTO",
+   "track": "IBE_COAST",
+   "name": "살비엔토",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "IBE_COAST:coa_salviento"
+  },
+  {
+   "id": "IBE_COA_ROCAMAREA",
+   "track": "IBE_COAST",
+   "name": "로카마레아",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_COAST:coa_rocamarea"
+  },
+  {
+   "id": "IBE_COA_FAROMUERTO",
+   "track": "IBE_COAST",
+   "name": "파로 무에르토",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_COAST:coa_faromuerto"
+  },
+  {
+   "id": "IBE_COA_ARON",
+   "track": "IBE_COAST",
+   "name": "아론(해적 착취)",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 0.7, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_COAST:coa_aron"
+  },
+  {
+   "id": "IBE_FIS_FINCATCHER",
+   "track": "IBE_FISH",
+   "name": "핀캐처",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "IBE_FISH:fis_fincatcher"
+  },
+  {
+   "id": "IBE_FIS_SALT",
+   "track": "IBE_FISH",
+   "name": "소금배",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_FISH:fis_salt"
+  },
+  {
+   "id": "IBE_FIS_SALTSCALE",
+   "track": "IBE_FISH",
+   "name": "염린 사냥",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "IBE_FISH:fis_saltscale"
+  },
+  {
+   "id": "IBE_PIR_JUANA",
+   "track": "IBE_PIRATE",
+   "name": "후아나 선단(네네의 요람호)",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "IBE_PIRATE:pir_juana"
+  },
+  {
+   "id": "IBE_PIR_ARON",
+   "track": "IBE_PIRATE",
+   "name": "아론 해적",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_PIRATE:pir_aron"
+  },
+  {
+   "id": "IBE_PIR_RELIC",
+   "track": "IBE_PIRATE",
+   "name": "유물 발굴단",
+   "canon": false,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_PIRATE:pir_relic"
+  },
+  {
+   "id": "IBE_LIG_GRANFARO",
+   "track": "IBE_LIGHT",
+   "name": "그란파로",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "IBE_LIGHT:lig_granfaro"
+  },
+  {
+   "id": "IBE_LIG_ROCKY",
+   "track": "IBE_LIGHT",
+   "name": "로키 코스트",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_LIGHT:lig_rocky"
+  },
+  {
+   "id": "IBE_SCH_INQ",
+   "track": "IBE_SCHOLAR",
+   "name": "재판소 산하 연구",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "IBE_SCHOLAR:sch_inq"
+  },
+  {
+   "id": "IBE_SCH_TRANSLATOR",
+   "track": "IBE_SCHOLAR",
+   "name": "민간 번역가",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_SCHOLAR:sch_translator"
+  },
+  {
+   "id": "IBE_SCH_BIO",
+   "track": "IBE_SCHOLAR",
+   "name": "생명공학",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_SCHOLAR:sch_bio"
+  },
+  {
+   "id": "IBE_NUR_CHAPEL",
+   "track": "IBE_NURSE",
+   "name": "예배당",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "IBE_NURSE:nur_chapel"
+  },
+  {
+   "id": "IBE_NUR_MEDIC",
+   "track": "IBE_NURSE",
+   "name": "재판소 의무반",
+   "canon": false,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_NURSE:nur_medic"
+  },
+  {
+   "id": "IBE_FARM_INLAND",
+   "track": "IBE_FARM",
+   "name": "내륙 농촌",
+   "canon": false,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "IBE_FARM:farm_inland"
+  },
+  {
+   "id": "IBE_FARM_PERDONIDORA",
+   "track": "IBE_FARM",
+   "name": "페르도니도라 상인",
+   "canon": false,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_FARM:farm_perdonidora"
+  },
+  {
+   "id": "IBE_BUI_STRANDED",
+   "track": "IBE_BUILDER",
+   "name": "좌초 도시 보수",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "IBE_BUILDER:bui_stranded"
+  },
+  {
+   "id": "IBE_BUI_RUINS",
+   "track": "IBE_BUILDER",
+   "name": "황금기 유적",
+   "canon": false,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_BUILDER:bui_ruins"
+  },
+  {
+   "id": "IBE_DEE_VILLAGE",
+   "track": "IBE_DEEP",
+   "name": "해안 마을 교단",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "IBE_DEEP:dee_village"
+  },
+  {
+   "id": "IBE_DEE_INFILTRATOR",
+   "track": "IBE_DEEP",
+   "name": "재판소 내부 침투",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "IBE_DEEP:dee_infiltrator"
+  },
+  {
+   "id": "IBE_DEE_BISHOP",
+   "track": "IBE_DEEP",
+   "name": "위장 주교 계열",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "IBE_DEEP:dee_bishop"
+  },
+  {
+   "id": "AEG_CON_LEGION",
+   "track": "AEG_CONSUL",
+   "name": "군단 집정관",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_CONSUL:con_legion"
+  },
+  {
+   "id": "AEG_CON_TECH",
+   "track": "AEG_CONSUL",
+   "name": "기술 집정관",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_CONSUL:con_tech"
+  },
+  {
+   "id": "AEG_CON_SOCIAL",
+   "track": "AEG_CONSUL",
+   "name": "사회행정감독연구소 집정관",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1.1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "AEG_CONSUL:con_social"
+  },
+  {
+   "id": "AEG_RES_PREHISTORY",
+   "track": "AEG_RESEARCH",
+   "name": "선사 연구소",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_RESEARCH:res_prehistory"
+  },
+  {
+   "id": "AEG_RES_SOCIAL",
+   "track": "AEG_RESEARCH",
+   "name": "사회행정감독연구소",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_RESEARCH:res_social"
+  },
+  {
+   "id": "AEG_RES_MILIARIUM",
+   "track": "AEG_RESEARCH",
+   "name": "밀리아리움 채널 계획",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "AEG_RESEARCH:res_miliarium"
+  },
+  {
+   "id": "AEG_LEG_LEGION",
+   "track": "AEG_LEGION",
+   "name": "에기르 군단",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_LEGION:leg_legion"
+  },
+  {
+   "id": "AEG_LEG_PATROL",
+   "track": "AEG_LEGION",
+   "name": "해양 순찰대",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_LEGION:leg_patrol"
+  },
+  {
+   "id": "AEG_LEG_SUPERVISOR",
+   "track": "AEG_LEGION",
+   "name": "헌터 감독관",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "AEG_LEGION:leg_supervisor"
+  },
+  {
+   "id": "AEG_HUN_2",
+   "track": "AEG_HUNTER",
+   "name": "2중대",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_HUNTER:hun_2"
+  },
+  {
+   "id": "AEG_HUN_3",
+   "track": "AEG_HUNTER",
+   "name": "3중대",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_HUNTER:hun_3"
+  },
+  {
+   "id": "AEG_HUN_INFECTED",
+   "track": "AEG_HUNTER",
+   "name": "감염 헌터",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "AEG_HUNTER:hun_infected"
+  },
+  {
+   "id": "AEG_ADM_DATA",
+   "track": "AEG_ADMIN",
+   "name": "데이터 관리",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_ADMIN:adm_data"
+  },
+  {
+   "id": "AEG_ADM_FACILITY",
+   "track": "AEG_ADMIN",
+   "name": "시설 관리",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_ADMIN:adm_facility"
+  },
+  {
+   "id": "AEG_ADM_ARENA",
+   "track": "AEG_ADMIN",
+   "name": "투지장 운영",
+   "canon": false,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "AEG_ADMIN:adm_arena"
+  },
+  {
+   "id": "AEG_FAR_FARM",
+   "track": "AEG_FARM",
+   "name": "해조 농장",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_FARM:far_farm"
+  },
+  {
+   "id": "AEG_FAR_GALLERY",
+   "track": "AEG_FARM",
+   "name": "갤러리 다이버",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "AEG_FARM:far_gallery"
+  },
+  {
+   "id": "AEG_ART_ALIVE",
+   "track": "AEG_ARTIST",
+   "name": "'얼라이브 언틸 선셋'",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_ARTIST:art_alive"
+  },
+  {
+   "id": "AEG_ART_PHILO",
+   "track": "AEG_ARTIST",
+   "name": "철학·예술 창작",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "AEG_ARTIST:art_philo"
+  },
+  {
+   "id": "AEG_ART_ARENA",
+   "track": "AEG_ARTIST",
+   "name": "투지장",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "AEG_ARTIST:art_arena"
+  },
+  {
+   "id": "AEG_EXP_913",
+   "track": "AEG_EXPAT",
+   "name": "913 섬사람",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "AEG_EXPAT:exp_913"
+  },
+  {
+   "id": "AEG_EXP_HIGASHI",
+   "track": "AEG_EXPAT",
+   "name": "극동 상어인",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_EXPAT:exp_higashi"
+  },
+  {
+   "id": "AEG_EXP_TECH",
+   "track": "AEG_EXPAT",
+   "name": "컬럼비아·염국 기술자",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "AEG_EXPAT:exp_tech"
+  },
+  {
+   "id": "MIN_CIV_ATHENUS",
+   "track": "MIN_CIVIC",
+   "name": "아테누스",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "MIN_CIVIC:civ_athenus"
+  },
+  {
+   "id": "MIN_CIV_CORINIA",
+   "track": "MIN_CIVIC",
+   "name": "코리니아",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "MIN_CIVIC:civ_corinia"
+  },
+  {
+   "id": "MIN_CIV_LACEDAEMON",
+   "track": "MIN_CIVIC",
+   "name": "라케다이몬 평의회",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "MIN_CIVIC:civ_lacedaemon"
+  },
+  {
+   "id": "MIN_TEM_HEROES",
+   "track": "MIN_TEMPLE",
+   "name": "12영웅 신전",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "MIN_TEMPLE:tem_heroes"
+  },
+  {
+   "id": "MIN_TEM_ENDYMION",
+   "track": "MIN_TEMPLE",
+   "name": "엔디미온 신전",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "MIN_TEMPLE:tem_endymion"
+  },
+  {
+   "id": "MIN_TEM_AKROTI",
+   "track": "MIN_TEMPLE",
+   "name": "변경 아크로티",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 0.7, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "MIN_TEMPLE:tem_akroti"
+  },
+  {
+   "id": "MIN_ATH_LACEDAEMON",
+   "track": "MIN_ATHLETE",
+   "name": "라케다이몬 격투",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "MIN_ATHLETE:ath_lacedaemon"
+  },
+  {
+   "id": "MIN_ATH_HYMNOI",
+   "track": "MIN_ATHLETE",
+   "name": "힘노이의 지혜",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "MIN_ATHLETE:ath_hymnoi"
+  },
+  {
+   "id": "MIN_ATH_TRACK",
+   "track": "MIN_ATHLETE",
+   "name": "미노스 육상",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "MIN_ATHLETE:ath_track"
+  },
+  {
+   "id": "MIN_SEC_COMMITTEE",
+   "track": "MIN_SECURITY",
+   "name": "인터락킹 컴페티션 위원회",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "MIN_SECURITY:sec_committee"
+  },
+  {
+   "id": "MIN_SEC_FIRM",
+   "track": "MIN_SECURITY",
+   "name": "민간 보안 기업",
+   "canon": false,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "MIN_SECURITY:sec_firm"
+  },
+  {
+   "id": "MIN_SOL_ARMY",
+   "track": "MIN_SOLDIER",
+   "name": "미노스군",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "MIN_SOLDIER:sol_army"
+  },
+  {
+   "id": "MIN_SOL_GUERRILLA",
+   "track": "MIN_SOLDIER",
+   "name": "게릴라·의용 전선",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "MIN_SOLDIER:sol_guerrilla"
+  },
+  {
+   "id": "MIN_SOL_BORDER",
+   "track": "MIN_SOLDIER",
+   "name": "변경 수비대",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "MIN_SOLDIER:sol_border"
+  },
+  {
+   "id": "MIN_BOA_DOCK",
+   "track": "MIN_BOAT",
+   "name": "델피 운하 선착장",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "MIN_BOAT:boa_dock"
+  },
+  {
+   "id": "MIN_BOA_INDEP",
+   "track": "MIN_BOAT",
+   "name": "독립 뱃사공",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "MIN_BOAT:boa_indep"
+  },
+  {
+   "id": "MIN_FAR_APPLE",
+   "track": "MIN_FARM",
+   "name": "사과 과수",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "MIN_FARM:far_apple"
+  },
+  {
+   "id": "MIN_FAR_RICE",
+   "track": "MIN_FARM",
+   "name": "습지 논",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "MIN_FARM:far_rice"
+  },
+  {
+   "id": "MIN_FAR_FLOWER",
+   "track": "MIN_FARM",
+   "name": "꽃밭·리큐르",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "MIN_FARM:far_flower"
+  },
+  {
+   "id": "MIN_TRA_CORINIA",
+   "track": "MIN_TRADE",
+   "name": "코리니아 상단",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "MIN_TRADE:tra_corinia"
+  },
+  {
+   "id": "MIN_TRA_PEDDLER",
+   "track": "MIN_TRADE",
+   "name": "행상",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "MIN_TRADE:tra_peddler"
+  },
+  {
+   "id": "MIN_TRA_RANKWOOD",
+   "track": "MIN_TRADE",
+   "name": "랭크우드 수입상",
+   "canon": false,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "MIN_TRADE:tra_rankwood"
+  },
+  {
+   "id": "MIN_ART_THEATER",
+   "track": "MIN_ART",
+   "name": "아테누스 극장",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "MIN_ART:art_theater"
+  },
+  {
+   "id": "MIN_ART_SCHOOL",
+   "track": "MIN_ART",
+   "name": "철학 학파",
+   "canon": false,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "MIN_ART:art_school"
+  },
+  {
+   "id": "MIN_BOR_AKROTI",
+   "track": "MIN_BORDER",
+   "name": "아크로티",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "MIN_BORDER:bor_akroti"
+  },
+  {
+   "id": "MIN_BOR_AGNES",
+   "track": "MIN_BORDER",
+   "name": "아그네스 강 변경",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "MIN_BORDER:bor_agnes"
+  },
+  {
+   "id": "MIN_BOR_SARGON",
+   "track": "MIN_BORDER",
+   "name": "사르곤 접경",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "MIN_BORDER:bor_sargon"
+  },
+  {
+   "id": "SAR_COU_EXAM",
+   "track": "SAR_COURT",
+   "name": "시험 출신",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_COURT:cou_exam"
+  },
+  {
+   "id": "SAR_COU_NOBLE",
+   "track": "SAR_COURT",
+   "name": "추천 귀족",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "SAR_COURT:cou_noble"
+  },
+  {
+   "id": "SAR_COU_GUILD",
+   "track": "SAR_COURT",
+   "name": "길드 대표",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_COURT:cou_guild"
+  },
+  {
+   "id": "SAR_COU_JESTER",
+   "track": "SAR_COURT",
+   "name": "궁정 어릿광대",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1, "fall": 1.3, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_COURT:cou_jester"
+  },
+  {
+   "id": "SAR_ARM_SHAH",
+   "track": "SAR_ARMY",
+   "name": "샤 상비군",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "SAR_ARMY:arm_shah"
+  },
+  {
+   "id": "SAR_ARM_PADISHAH",
+   "track": "SAR_ARMY",
+   "name": "파디샤 사병",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_ARMY:arm_padishah"
+  },
+  {
+   "id": "SAR_ARM_AMIR",
+   "track": "SAR_ARMY",
+   "name": "아미르 사병",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_ARMY:arm_amir"
+  },
+  {
+   "id": "SAR_ARM_MILITIA",
+   "track": "SAR_ARMY",
+   "name": "마을 민병대",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 0.7, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_ARMY:arm_militia"
+  },
+  {
+   "id": "SAR_ZHA_TRIBUTE",
+   "track": "SAR_ZHAYEDAN",
+   "name": "파디샤별 공물",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_ZHAYEDAN:zha_tribute"
+  },
+  {
+   "id": "SAR_ZHA_GEM",
+   "track": "SAR_ZHAYEDAN",
+   "name": "5보석 의식",
+   "canon": false,
+   "weight": 0.3,
+   "mods": { "promo": 1.3, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "SAR_ZHAYEDAN:zha_gem"
+  },
+  {
+   "id": "SAR_TRI_GAVIAL",
+   "track": "SAR_TRIBE",
+   "name": "가비알의 의지",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_TRIBE:tri_gavial"
+  },
+  {
+   "id": "SAR_TRI_EUNECTES",
+   "track": "SAR_TRIBE",
+   "name": "유넥티스(철광)",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_TRIBE:tri_eunectes"
+  },
+  {
+   "id": "SAR_TRI_FLINT",
+   "track": "SAR_TRIBE",
+   "name": "플린트",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_TRIBE:tri_flint"
+  },
+  {
+   "id": "SAR_TRI_INAM",
+   "track": "SAR_TRIBE",
+   "name": "이남 상회",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_TRIBE:tri_inam"
+  },
+  {
+   "id": "SAR_TRI_YOTA",
+   "track": "SAR_TRIBE",
+   "name": "요타",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_TRIBE:tri_yota"
+  },
+  {
+   "id": "SAR_FAR_PADISHAH",
+   "track": "SAR_FARM",
+   "name": "파디샤령 농촌",
+   "canon": true,
+   "weight": 0.45,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_FARM:far_padishah"
+  },
+  {
+   "id": "SAR_FAR_AMIR",
+   "track": "SAR_FARM",
+   "name": "아미르령 농촌",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_FARM:far_amir"
+  },
+  {
+   "id": "SAR_FAR_OASIS",
+   "track": "SAR_FARM",
+   "name": "오아시스 부족",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_FARM:far_oasis"
+  },
+  {
+   "id": "SAR_TRA_OASIS",
+   "track": "SAR_TRADE",
+   "name": "오아시스 상단",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_TRADE:tra_oasis"
+  },
+  {
+   "id": "SAR_TRA_PECON",
+   "track": "SAR_TRADE",
+   "name": "페콘 상단",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_TRADE:tra_pecon"
+  },
+  {
+   "id": "SAR_TRA_COLUMBIA",
+   "track": "SAR_TRADE",
+   "name": "컬럼비아 상단 현지 고용",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 0.7, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_TRADE:tra_columbia"
+  },
+  {
+   "id": "SAR_TRA_BLACK",
+   "track": "SAR_TRADE",
+   "name": "암시장",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_TRADE:tra_black"
+  },
+  {
+   "id": "SAR_MIN_LONGSPRING",
+   "track": "SAR_MINE",
+   "name": "롱스프링 툴라 씨족",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_MINE:min_longspring"
+  },
+  {
+   "id": "SAR_MIN_ACAHUALLA",
+   "track": "SAR_MINE",
+   "name": "아카후알라 철광",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 0.7, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_MINE:min_acahualla"
+  },
+  {
+   "id": "SAR_MIN_CLINIC",
+   "track": "SAR_MINE",
+   "name": "격리 구역 진료소",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_MINE:min_clinic"
+  },
+  {
+   "id": "SAR_TEA_PUBLIC",
+   "track": "SAR_TEACHER",
+   "name": "공립학교",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_TEACHER:tea_public"
+  },
+  {
+   "id": "SAR_TEA_PRIVATE",
+   "track": "SAR_TEACHER",
+   "name": "사립학교(외국 교과)",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_TEACHER:tea_private"
+  },
+  {
+   "id": "SAR_MSG_PECON",
+   "track": "SAR_MESSENGER",
+   "name": "페콘 선거 전달자",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_MESSENGER:msg_pecon"
+  },
+  {
+   "id": "SAR_MSG_COURT",
+   "track": "SAR_MESSENGER",
+   "name": "궁정 임명",
+   "canon": false,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "SAR_MESSENGER:msg_court"
+  },
+  {
+   "id": "SAR_MER_CARNSYPH",
+   "track": "SAR_MERC",
+   "name": "카른사이프 이탈자",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_MERC:mer_carnsyph"
+  },
+  {
+   "id": "SAR_MER_PMC",
+   "track": "SAR_MERC",
+   "name": "외국 PMC",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_MERC:mer_pmc"
+  },
+  {
+   "id": "SAR_MER_AMIR",
+   "track": "SAR_MERC",
+   "name": "아미르 위장 용병",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_MERC:mer_amir"
+  },
+  {
+   "id": "SAR_MER_WYVERN",
+   "track": "SAR_MERC",
+   "name": "와이번 연합 공납 용병",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_MERC:mer_wyvern"
+  },
+  {
+   "id": "SAR_TOU_TOURISM",
+   "track": "SAR_TOUR",
+   "name": "관광",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_TOUR:tou_tourism"
+  },
+  {
+   "id": "SAR_TOU_GEM",
+   "track": "SAR_TOUR",
+   "name": "보석상",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_TOUR:tou_gem"
+  },
+  {
+   "id": "SAR_TOU_MUSEUM",
+   "track": "SAR_TOUR",
+   "name": "박물관",
+   "canon": false,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_TOUR:tou_museum"
+  },
+  {
+   "id": "SAR_SLA_CHESHME",
+   "track": "SAR_SLAVE",
+   "name": "샤르-체슈메 노예",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "SAR_SLAVE:sla_cheshme"
+  },
+  {
+   "id": "SAR_SLA_HOUSE",
+   "track": "SAR_SLAVE",
+   "name": "가내 노예",
+   "canon": false,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 0.7, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "SAR_SLAVE:sla_house"
+  },
+  {
+   "id": "BOL_SIN_ARMY",
+   "track": "BOL_SINGAS",
+   "name": "왕조군",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_SINGAS:sin_army"
+  },
+  {
+   "id": "BOL_SIN_LEITH",
+   "track": "BOL_SINGAS",
+   "name": "라이타니엔 직접 지휘 부대",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_SINGAS:sin_leith"
+  },
+  {
+   "id": "BOL_SIN_FIRE",
+   "track": "BOL_SINGAS",
+   "name": "퇴역 소방관",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 0.7, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_SINGAS:sin_fire"
+  },
+  {
+   "id": "BOL_COA_ARMY",
+   "track": "BOL_COALITION",
+   "name": "연립정부군",
+   "canon": true,
+   "weight": 0.45,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_COALITION:coa_army"
+  },
+  {
+   "id": "BOL_COA_GUARD",
+   "track": "BOL_COALITION",
+   "name": "볼리바르 시민 경비대",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 0.9, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_COALITION:coa_guard"
+  },
+  {
+   "id": "BOL_COA_ESTATE",
+   "track": "BOL_COALITION",
+   "name": "과두 영지군",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_COALITION:coa_estate"
+  },
+  {
+   "id": "BOL_TRU_GUERRILLA",
+   "track": "BOL_TRUE",
+   "name": "12+ 게릴라",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_TRUE:tru_guerrilla"
+  },
+  {
+   "id": "BOL_TRU_YOUTH",
+   "track": "BOL_TRUE",
+   "name": "청년당",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "BOL_TRUE:tru_youth"
+  },
+  {
+   "id": "BOL_TRU_ADMIN",
+   "track": "BOL_TRUE",
+   "name": "해방구 계엄 행정",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_TRUE:tru_admin"
+  },
+  {
+   "id": "BOL_PLA_MELON",
+   "track": "BOL_PLANT",
+   "name": "멜론",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_PLANT:pla_melon"
+  },
+  {
+   "id": "BOL_PLA_BEET",
+   "track": "BOL_PLANT",
+   "name": "사탕무",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_PLANT:pla_beet"
+  },
+  {
+   "id": "BOL_PLA_CACTUS",
+   "track": "BOL_PLANT",
+   "name": "선인장",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_PLANT:pla_cactus"
+  },
+  {
+   "id": "BOL_PLA_COFFEE",
+   "track": "BOL_PLANT",
+   "name": "커피",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_PLANT:pla_coffee"
+  },
+  {
+   "id": "BOL_PLA_CANE",
+   "track": "BOL_PLANT",
+   "name": "사탕수수",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_PLANT:pla_cane"
+  },
+  {
+   "id": "BOL_FAC_LUXURY",
+   "track": "BOL_FACTORY",
+   "name": "도심 밖 사치품 공장",
+   "canon": true,
+   "weight": 0.75,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_FACTORY:fac_luxury"
+  },
+  {
+   "id": "BOL_FAC_GANG",
+   "track": "BOL_FACTORY",
+   "name": "범죄 조직 연계",
+   "canon": false,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_FACTORY:fac_gang"
+  },
+  {
+   "id": "BOL_FRA_COFFEE",
+   "track": "BOL_FRANCHISE",
+   "name": "커피 플레인",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_FRANCHISE:fra_coffee"
+  },
+  {
+   "id": "BOL_FRA_CERVEZA",
+   "track": "BOL_FRANCHISE",
+   "name": "세르베사",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_FRANCHISE:fra_cerveza"
+  },
+  {
+   "id": "BOL_FRA_FIDOS",
+   "track": "BOL_FRANCHISE",
+   "name": "피도스",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_FRANCHISE:fra_fidos"
+  },
+  {
+   "id": "BOL_FRA_BANDIDOS",
+   "track": "BOL_FRANCHISE",
+   "name": "반디도스",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_FRANCHISE:fra_bandidos"
+  },
+  {
+   "id": "BOL_FRA_TIOMARCO",
+   "track": "BOL_FRANCHISE",
+   "name": "티오 마르코",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_FRANCHISE:fra_tiomarco"
+  },
+  {
+   "id": "BOL_CIT_TRADE",
+   "track": "BOL_CITYHALL",
+   "name": "국제무역관리부",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_CITYHALL:cit_trade"
+  },
+  {
+   "id": "BOL_CIT_HALL",
+   "track": "BOL_CITYHALL",
+   "name": "시청",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_CITYHALL:cit_hall"
+  },
+  {
+   "id": "BOL_CIT_FIRE",
+   "track": "BOL_CITYHALL",
+   "name": "소방서",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_CITYHALL:cit_fire"
+  },
+  {
+   "id": "BOL_CAS_BAR",
+   "track": "BOL_CASINO",
+   "name": "카지노 바",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_CASINO:cas_bar"
+  },
+  {
+   "id": "BOL_CAS_CRUISE",
+   "track": "BOL_CASINO",
+   "name": "크루즈선 승무원",
+   "canon": false,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_CASINO:cas_cruise"
+  },
+  {
+   "id": "BOL_CAS_TOUR",
+   "track": "BOL_CASINO",
+   "name": "관광",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_CASINO:cas_tour"
+  },
+  {
+   "id": "BOL_PMC_BLACKSTEEL",
+   "track": "BOL_PMC",
+   "name": "블랙스틸 계약",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "BOL_PMC:pmc_blacksteel"
+  },
+  {
+   "id": "BOL_PMC_BOUNTY",
+   "track": "BOL_PMC",
+   "name": "현상금 사냥꾼",
+   "canon": true,
+   "weight": 0.45,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_PMC:pmc_bounty"
+  },
+  {
+   "id": "BOL_PMC_HOUND",
+   "track": "BOL_PMC",
+   "name": "사냥개 조련사",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_PMC:pmc_hound"
+  },
+  {
+   "id": "BOL_CHA_FACTORY",
+   "track": "BOL_CHAMPION",
+   "name": "공장 팀",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_CHAMPION:cha_factory"
+  },
+  {
+   "id": "BOL_CHA_ARMY",
+   "track": "BOL_CHAMPION",
+   "name": "군인 팀",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_CHAMPION:cha_army"
+  },
+  {
+   "id": "BOL_CHA_FOREIGN",
+   "track": "BOL_CHAMPION",
+   "name": "외국 용병 팀",
+   "canon": false,
+   "weight": 0.25,
+   "mods": { "promo": 1.3, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_CHAMPION:cha_foreign"
+  },
+  {
+   "id": "BOL_STR_COMMUNITY",
+   "track": "BOL_STREET",
+   "name": "거리예술 공동체",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_STREET:str_community"
+  },
+  {
+   "id": "BOL_STR_DURIN",
+   "track": "BOL_STREET",
+   "name": "두린 이주민",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_STREET:str_durin"
+  },
+  {
+   "id": "BOL_REF_LIBERATED",
+   "track": "BOL_REFUGEE",
+   "name": "해방구 수용",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_REFUGEE:ref_liberated"
+  },
+  {
+   "id": "BOL_REF_DOSSOLES",
+   "track": "BOL_REFUGEE",
+   "name": "도솔레스 유입",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "BOL_REFUGEE:ref_dossoles"
+  },
+  {
+   "id": "BOL_REF_COLUMBIA",
+   "track": "BOL_REFUGEE",
+   "name": "컬럼비아 월경",
+   "canon": false,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "BOL_REFUGEE:ref_columbia"
+  },
+  {
+   "id": "RIM_MIN_IRONCARROT",
+   "track": "RIM_MINER",
+   "name": "아이언 캐럿",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_MINER:min_ironcarrot"
+  },
+  {
+   "id": "RIM_MIN_IRONFIST",
+   "track": "RIM_MINER",
+   "name": "아이언 피스트",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_MINER:min_ironfist"
+  },
+  {
+   "id": "RIM_MIN_RUSTDREG",
+   "track": "RIM_MINER",
+   "name": "러스트드레그",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_MINER:min_rustdreg"
+  },
+  {
+   "id": "RIM_MIN_GREENING",
+   "track": "RIM_MINER",
+   "name": "그리닝 밸리(폐쇄)",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_MINER:min_greening"
+  },
+  {
+   "id": "RIM_AIR_UNIT",
+   "track": "RIM_AIRWATCH",
+   "name": "광산별 관리반",
+   "canon": false,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_AIRWATCH:air_unit"
+  },
+  {
+   "id": "RIM_COM_HQ",
+   "track": "RIM_COMPANY",
+   "name": "광업회사 본사",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "RIM_COMPANY:com_hq"
+  },
+  {
+   "id": "RIM_COM_SUB",
+   "track": "RIM_COMPANY",
+   "name": "건설·운송·가공·제조 자회사",
+   "canon": true,
+   "weight": 0.45,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_COMPANY:com_sub"
+  },
+  {
+   "id": "RIM_COM_RMIA",
+   "track": "RIM_COMPANY",
+   "name": "RMIA 보안부 사무",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_COMPANY:com_rmia"
+  },
+  {
+   "id": "RIM_SEC_COMPANY",
+   "track": "RIM_SECURITY",
+   "name": "광산회사 경비",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_SECURITY:sec_company"
+  },
+  {
+   "id": "RIM_SEC_RMIA",
+   "track": "RIM_SECURITY",
+   "name": "RMIA 보안부",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "RIM_SECURITY:sec_rmia"
+  },
+  {
+   "id": "RIM_SEC_ESCORT",
+   "track": "RIM_SECURITY",
+   "name": "임원 경호",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_SECURITY:sec_escort"
+  },
+  {
+   "id": "RIM_BUI_SUB",
+   "track": "RIM_BUILDER",
+   "name": "플랫폼 건설 자회사",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_BUILDER:bui_sub"
+  },
+  {
+   "id": "RIM_BUI_FOREIGN",
+   "track": "RIM_BUILDER",
+   "name": "타국 주문 현장",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_BUILDER:bui_foreign"
+  },
+  {
+   "id": "RIM_BUI_REPAIR",
+   "track": "RIM_BUILDER",
+   "name": "이동도시 보수",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_BUILDER:bui_repair"
+  },
+  {
+   "id": "RIM_TRA_GGF",
+   "track": "RIM_TRANSPORT",
+   "name": "Gotta Go Fast Transport",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_TRANSPORT:tra_ggf"
+  },
+  {
+   "id": "RIM_TRA_SUB",
+   "track": "RIM_TRANSPORT",
+   "name": "광산회사 운송 자회사",
+   "canon": true,
+   "weight": 0.45,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_TRANSPORT:tra_sub"
+  },
+  {
+   "id": "RIM_TRA_INDEP",
+   "track": "RIM_TRANSPORT",
+   "name": "독립 기사",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_TRANSPORT:tra_indep"
+  },
+  {
+   "id": "RIM_MED_COMPANY",
+   "track": "RIM_MEDIC",
+   "name": "의료회사",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_MEDIC:med_company"
+  },
+  {
+   "id": "RIM_MED_LAB",
+   "track": "RIM_MEDIC",
+   "name": "연구소",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "RIM_MEDIC:med_lab"
+  },
+  {
+   "id": "RIM_MED_RHODES",
+   "track": "RIM_MEDIC",
+   "name": "로도스 인턴",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1.3, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_MEDIC:med_rhodes"
+  },
+  {
+   "id": "RIM_MSG_TEAM",
+   "track": "RIM_MSG",
+   "name": "광산팀 전속",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_MSG:msg_team"
+  },
+  {
+   "id": "RIM_MSG_INDEP",
+   "track": "RIM_MSG",
+   "name": "독립 컨설턴트",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_MSG:msg_indep"
+  },
+  {
+   "id": "RIM_MSG_CC",
+   "track": "RIM_MSG",
+   "name": "긴급 계약 참여",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_MSG:msg_cc"
+  },
+  {
+   "id": "RIM_FAC_PROCESS",
+   "track": "RIM_FACTORY",
+   "name": "가공 자회사",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_FACTORY:fac_process"
+  },
+  {
+   "id": "RIM_FAC_MANUF",
+   "track": "RIM_FACTORY",
+   "name": "제조 자회사",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_FACTORY:fac_manuf"
+  },
+  {
+   "id": "RIM_FAC_SUNVALLEY",
+   "track": "RIM_FACTORY",
+   "name": "선밸리 공업",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_FACTORY:fac_sunvalley"
+  },
+  {
+   "id": "RIM_FAM_COMMUNITY",
+   "track": "RIM_FAMILY",
+   "name": "가족공동체",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_FAMILY:fam_community"
+  },
+  {
+   "id": "RIM_FAM_GUILD",
+   "track": "RIM_FAMILY",
+   "name": "길드",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_FAMILY:fam_guild"
+  },
+  {
+   "id": "RIM_FAM_MINERS",
+   "track": "RIM_FAMILY",
+   "name": "광부 조직",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_FAMILY:fam_miners"
+  },
+  {
+   "id": "RIM_FAM_PRODUCTION",
+   "track": "RIM_FAMILY",
+   "name": "생산팀",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_FAMILY:fam_production"
+  },
+  {
+   "id": "RIM_UNI_UNION",
+   "track": "RIM_UNION",
+   "name": "노조",
+   "canon": false,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_UNION:uni_union"
+  },
+  {
+   "id": "RIM_UNI_ALLIANCE",
+   "track": "RIM_UNION",
+   "name": "광부·노동자 연합",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1.2, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "RIM_UNION:uni_alliance"
+  },
+  {
+   "id": "RIM_EUR_VICMINE",
+   "track": "RIM_EUREKA",
+   "name": "유레카 자치주 빅토리아 광산회사",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_EUREKA:eur_vicmine"
+  },
+  {
+   "id": "RIM_EUR_CAGE",
+   "track": "RIM_EUREKA",
+   "name": "도적단 우리",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_EUREKA:eur_cage"
+  },
+  {
+   "id": "RIM_INF_EXPENDABLE",
+   "track": "RIM_INFECTED",
+   "name": "소모성 노동",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RIM_INFECTED:inf_expendable"
+  },
+  {
+   "id": "RIM_INF_SELFEXILE",
+   "track": "RIM_INFECTED",
+   "name": "자발 추방",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 0.9, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_INFECTED:inf_selfexile"
+  },
+  {
+   "id": "RIM_INF_ZONE",
+   "track": "RIM_INFECTED",
+   "name": "중앙 격리구역",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_INFECTED:inf_zone"
+  },
+  {
+   "id": "RIM_INF_ABROAD",
+   "track": "RIM_INFECTED",
+   "name": "국외 이주",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RIM_INFECTED:inf_abroad"
+  },
+  {
+   "id": "KZD_MER_W",
+   "track": "KZD_MERC",
+   "name": "W의 부대",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1.3, "fall": 1.2, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KZD_MERC:mer_w"
+  },
+  {
+   "id": "KZD_MER_HOEDERER",
+   "track": "KZD_MERC",
+   "name": "호디어러의 부대",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_MERC:mer_hoederer"
+  },
+  {
+   "id": "KZD_MER_MUDROCK",
+   "track": "KZD_MERC",
+   "name": "머드락 부대",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_MERC:mer_mudrock"
+  },
+  {
+   "id": "KZD_MER_SCAREYE",
+   "track": "KZD_MERC",
+   "name": "스케어아이",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_MERC:mer_scareye"
+  },
+  {
+   "id": "KZD_MER_INDEP",
+   "track": "KZD_MERC",
+   "name": "독립 팀",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.3, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_MERC:mer_indep"
+  },
+  {
+   "id": "KZD_SLA_SCAR",
+   "track": "KZD_SLAVE",
+   "name": "흉터의 상점 노예 암시장",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_SLAVE:sla_scar"
+  },
+  {
+   "id": "KZD_SLA_HOUSE",
+   "track": "KZD_SLAVE",
+   "name": "귀족 가내 노예",
+   "canon": false,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 0.7, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_SLAVE:sla_house"
+  },
+  {
+   "id": "KZD_CHI_GRAVE",
+   "track": "KZD_CHILD",
+   "name": "무덤 구역",
+   "canon": false,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_CHILD:chi_grave"
+  },
+  {
+   "id": "KZD_COM_MAIN",
+   "track": "KZD_COMMISSION",
+   "name": "위원회 본대",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_COMMISSION:com_main"
+  },
+  {
+   "id": "KZD_COM_NACHZEHRER",
+   "track": "KZD_COMMISSION",
+   "name": "나흐체러르",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KZD_COMMISSION:com_nachzehrer"
+  },
+  {
+   "id": "KZD_COM_HEIR",
+   "track": "KZD_COMMISSION",
+   "name": "후계 전달자",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KZD_COMMISSION:com_heir"
+  },
+  {
+   "id": "KZD_COM_ABSURD",
+   "track": "KZD_COMMISSION",
+   "name": "부조리주의자",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_COMMISSION:com_absurd"
+  },
+  {
+   "id": "KZD_COM_BONGARD",
+   "track": "KZD_COMMISSION",
+   "name": "본가드",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_COMMISSION:com_bongard"
+  },
+  {
+   "id": "KZD_BAB_SCHOOL",
+   "track": "KZD_BABEL",
+   "name": "바벨 학교",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_BABEL:bab_school"
+  },
+  {
+   "id": "KZD_BAB_HOSPITAL",
+   "track": "KZD_BABEL",
+   "name": "병원",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_BABEL:bab_hospital"
+  },
+  {
+   "id": "KZD_BAB_FARM",
+   "track": "KZD_BABEL",
+   "name": "이동 농지",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_BABEL:bab_farm"
+  },
+  {
+   "id": "KZD_BAB_ENGINEER",
+   "track": "KZD_BABEL",
+   "name": "엔지니어링팀",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KZD_BABEL:bab_engineer"
+  },
+  {
+   "id": "KZD_COU_BLOOD",
+   "track": "KZD_COURT",
+   "name": "선혈",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_COURT:cou_blood"
+  },
+  {
+   "id": "KZD_COU_BANSHEE",
+   "track": "KZD_COURT",
+   "name": "밴시",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_COURT:cou_banshee"
+  },
+  {
+   "id": "KZD_COU_ROT",
+   "track": "KZD_COURT",
+   "name": "부패",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_COURT:cou_rot"
+  },
+  {
+   "id": "KZD_COU_DAMAZTI",
+   "track": "KZD_COURT",
+   "name": "다마즈티",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_COURT:cou_damazti"
+  },
+  {
+   "id": "KZD_COU_TEMPLE",
+   "track": "KZD_COURT",
+   "name": "지식의 신전",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KZD_COURT:cou_temple"
+  },
+  {
+   "id": "KZD_CON_ORDER",
+   "track": "KZD_CONFESSOR",
+   "name": "고해신부단",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_CONFESSOR:con_order"
+  },
+  {
+   "id": "KZD_CON_SUDARIUM",
+   "track": "KZD_CONFESSOR",
+   "name": "수다림",
+   "canon": false,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "KZD_CONFESSOR:con_sudarium"
+  },
+  {
+   "id": "KZD_BOI_GARGOYLE",
+   "track": "KZD_BOILER",
+   "name": "가고일 골조",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_BOILER:boi_gargoyle"
+  },
+  {
+   "id": "KZD_BOI_GOLIATH",
+   "track": "KZD_BOILER",
+   "name": "골리앗 인프라",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_BOILER:boi_goliath"
+  },
+  {
+   "id": "KZD_BOI_REVENANT",
+   "track": "KZD_BOILER",
+   "name": "레버넌트 영혼 용광로",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_BOILER:boi_revenant"
+  },
+  {
+   "id": "KZD_FAR_BABEL",
+   "track": "KZD_FARM",
+   "name": "바벨 이동 농지",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_FARM:far_babel"
+  },
+  {
+   "id": "KZD_FAR_REBUILD",
+   "track": "KZD_FARM",
+   "name": "재건기 농지",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_FARM:far_rebuild"
+  },
+  {
+   "id": "KZD_FAR_VILLAGE",
+   "track": "KZD_FARM",
+   "name": "마을 소규모 물물교환",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 0.7, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_FARM:far_village"
+  },
+  {
+   "id": "KZD_FAC_PLANT",
+   "track": "KZD_FACTORY",
+   "name": "1098 재가동 공장",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_FACTORY:fac_plant"
+  },
+  {
+   "id": "KZD_FAC_LANGUAGE",
+   "track": "KZD_FACTORY",
+   "name": "언어학교",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_FACTORY:fac_language"
+  },
+  {
+   "id": "KZD_FAC_TRAINING",
+   "track": "KZD_FACTORY",
+   "name": "임시정부 직업훈련",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_FACTORY:fac_training"
+  },
+  {
+   "id": "KZD_DES_MARTHE",
+   "track": "KZD_DESIGNER",
+   "name": "마르트(MARTHE)",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_DESIGNER:des_marthe"
+  },
+  {
+   "id": "KZD_BRO_RECRUIT",
+   "track": "KZD_BROKER",
+   "name": "용병 알선",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_BROKER:bro_recruit"
+  },
+  {
+   "id": "KZD_BRO_INFO",
+   "track": "KZD_BROKER",
+   "name": "정보 거래",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_BROKER:bro_info"
+  },
+  {
+   "id": "KZD_BRO_SLAVE",
+   "track": "KZD_BROKER",
+   "name": "노예 암시장(1086 이전)",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_BROKER:bro_slave"
+  },
+  {
+   "id": "KZD_ASS_ORDER",
+   "track": "KZD_ASSASSIN",
+   "name": "유해 결사대",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_ASSASSIN:ass_order"
+  },
+  {
+   "id": "KZD_DIA_COLUMBIA",
+   "track": "KZD_DIASPORA",
+   "name": "컬럼비아 남부",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_DIASPORA:dia_columbia"
+  },
+  {
+   "id": "KZD_DIA_LEITH",
+   "track": "KZD_DIASPORA",
+   "name": "라이타니엔 서부",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "KZD_DIASPORA:dia_leith"
+  },
+  {
+   "id": "KZD_DIA_VICTORIA",
+   "track": "KZD_DIASPORA",
+   "name": "빅토리아(1098 전범 취급)",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_DIASPORA:dia_victoria"
+  },
+  {
+   "id": "KZD_DIA_DISGUISE",
+   "track": "KZD_DIASPORA",
+   "name": "카프리니 위장",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.7, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "KZD_DIASPORA:dia_disguise"
+  },
+  {
+   "id": "DUR_DES_DOME",
+   "track": "DUR_DESIGN",
+   "name": "대돔 보수반",
+   "canon": true,
+   "weight": 0.6,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "DUR_DESIGN:des_dome"
+  },
+  {
+   "id": "DUR_DES_SURFACE",
+   "track": "DUR_DESIGN",
+   "name": "지속가능 도시 계획(지상)",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "DUR_DESIGN:des_surface"
+  },
+  {
+   "id": "DUR_IND_AUTOMATA",
+   "track": "DUR_INDUSTRY",
+   "name": "R3-E3 자동기계",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "DUR_INDUSTRY:ind_automata"
+  },
+  {
+   "id": "DUR_IND_LIFT",
+   "track": "DUR_INDUSTRY",
+   "name": "승강기 보수",
+   "canon": false,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "DUR_INDUSTRY:ind_lift"
+  },
+  {
+   "id": "DUR_IND_GENERATOR",
+   "track": "DUR_INDUSTRY",
+   "name": "아카후알라 발전기",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "DUR_INDUSTRY:ind_generator"
+  },
+  {
+   "id": "DUR_GEO_UNDER",
+   "track": "DUR_GEO",
+   "name": "지하 탐사",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "DUR_GEO:geo_under"
+  },
+  {
+   "id": "DUR_GEO_SURFACE",
+   "track": "DUR_GEO",
+   "name": "지상 광산 지질학자",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "DUR_GEO:geo_surface"
+  },
+  {
+   "id": "DUR_TRA_ZERUERTZA",
+   "track": "DUR_TRADE",
+   "name": "쎄루에르차 상업",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "DUR_TRADE:tra_zeruertza"
+  },
+  {
+   "id": "DUR_TRA_AQUAPIT",
+   "track": "DUR_TRADE",
+   "name": "그레이트 아쿠아핏(철거)",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "DUR_TRADE:tra_aquapit"
+  },
+  {
+   "id": "DUR_TRA_SURFACE",
+   "track": "DUR_TRADE",
+   "name": "지상 교역",
+   "canon": false,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "DUR_TRADE:tra_surface"
+  },
+  {
+   "id": "DUR_LIT_LIBRARY",
+   "track": "DUR_LIT",
+   "name": "도서관",
+   "canon": true,
+   "weight": 0.7,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "DUR_LIT:lit_library"
+  },
+  {
+   "id": "DUR_LIT_PULP",
+   "track": "DUR_LIT",
+   "name": "지상 펄프 잡지",
+   "canon": false,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "DUR_LIT:lit_pulp"
+  },
+  {
+   "id": "DUR_LIF_LIFTOMATIC",
+   "track": "DUR_LIFT",
+   "name": "초간편 리프트-오-매틱 1호",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "DUR_LIFT:lif_liftomatic"
+  },
+  {
+   "id": "DUR_BRE_MEAD",
+   "track": "DUR_BREW",
+   "name": "벌꿀주",
+   "canon": false,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "DUR_BREW:bre_mead"
+  },
+  {
+   "id": "DUR_BRE_SPIRIT",
+   "track": "DUR_BREW",
+   "name": "증류주",
+   "canon": false,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "DUR_BREW:bre_spirit"
+  },
+  {
+   "id": "DUR_BRE_CANNON",
+   "track": "DUR_BREW",
+   "name": "아카후알라 술 대포",
+   "canon": false,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "DUR_BREW:bre_cannon"
+  },
+  {
+   "id": "DUR_SUR_MINE",
+   "track": "DUR_SURFACE",
+   "name": "지상 광산",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "DUR_SURFACE:sur_mine"
+  },
+  {
+   "id": "DUR_SUR_DOSSOLES",
+   "track": "DUR_SURFACE",
+   "name": "도솔레스 거리",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "DUR_SURFACE:sur_dossoles"
+  },
+  {
+   "id": "DUR_SUR_ACAHUALLA",
+   "track": "DUR_SURFACE",
+   "name": "아카후알라 잔류 난민",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "DUR_SURFACE:sur_acahualla"
+  },
+  {
+   "id": "DUR_SUR_RHODES",
+   "track": "DUR_SURFACE",
+   "name": "로도스",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.7, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "DUR_SURFACE:sur_rhodes"
+  },
+  {
+   "id": "RHO_OP_A1",
+   "track": "RHO_OPERATOR",
+   "name": "예비작전팀 A1",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_OPERATOR:op_a1"
+  },
+  {
+   "id": "RHO_OP_A4",
+   "track": "RHO_OPERATOR",
+   "name": "예비작전팀 A4",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_OPERATOR:op_a4"
+  },
+  {
+   "id": "RHO_OP_A6",
+   "track": "RHO_OPERATOR",
+   "name": "예비작전팀 A6",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_OPERATOR:op_a6"
+  },
+  {
+   "id": "RHO_OP_TEAM",
+   "track": "RHO_OPERATOR",
+   "name": "작전팀",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_OPERATOR:op_team"
+  },
+  {
+   "id": "RHO_OP_SWEEP",
+   "track": "RHO_OPERATOR",
+   "name": "S.W.E.E.P.",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1.3, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "RHO_OPERATOR:op_sweep"
+  },
+  {
+   "id": "RHO_MED_ER",
+   "track": "RHO_MEDICAL",
+   "name": "응급과",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_MEDICAL:med_er"
+  },
+  {
+   "id": "RHO_MED_REHAB",
+   "track": "RHO_MEDICAL",
+   "name": "재활회복과",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_MEDICAL:med_rehab"
+  },
+  {
+   "id": "RHO_MED_ANALYSIS",
+   "track": "RHO_MEDICAL",
+   "name": "분석과",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1.1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "RHO_MEDICAL:med_analysis"
+  },
+  {
+   "id": "RHO_MED_ADMIN",
+   "track": "RHO_MEDICAL",
+   "name": "의료행정과",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.7, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_MEDICAL:med_admin"
+  },
+  {
+   "id": "RHO_MED_EQUIP",
+   "track": "RHO_MEDICAL",
+   "name": "의료장비과",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_MEDICAL:med_equip"
+  },
+  {
+   "id": "RHO_ENG_ASSET",
+   "track": "RHO_ENGINEER",
+   "name": "고정자산과",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_ENGINEER:eng_asset"
+  },
+  {
+   "id": "RHO_ENG_OPS",
+   "track": "RHO_ENGINEER",
+   "name": "운용정비과",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_ENGINEER:eng_ops"
+  },
+  {
+   "id": "RHO_ENG_CONSTRUCT",
+   "track": "RHO_ENGINEER",
+   "name": "공사과",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_ENGINEER:eng_construct"
+  },
+  {
+   "id": "RHO_ENG_MECHANIST",
+   "track": "RHO_ENGINEER",
+   "name": "메카니스트 연구실",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1.2, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "RHO_ENGINEER:eng_mechanist"
+  },
+  {
+   "id": "RHO_LOG_SUPPLY",
+   "track": "RHO_LOGISTICS",
+   "name": "물자 배급",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_LOGISTICS:log_supply"
+  },
+  {
+   "id": "RHO_LOG_LIVING",
+   "track": "RHO_LOGISTICS",
+   "name": "복장·식사·거주",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_LOGISTICS:log_living"
+  },
+  {
+   "id": "RHO_LOG_LINE",
+   "track": "RHO_LOGISTICS",
+   "name": "생산라인",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_LOGISTICS:log_line"
+  },
+  {
+   "id": "RHO_LOG_BAR",
+   "track": "RHO_LOGISTICS",
+   "name": "바 \"Just One More Pint\"",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_LOGISTICS:log_bar"
+  },
+  {
+   "id": "RHO_HR_RECRUIT",
+   "track": "RHO_HR",
+   "name": "채용과",
+   "canon": true,
+   "weight": 0.55,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_HR:hr_recruit"
+  },
+  {
+   "id": "RHO_HR_SCREEN",
+   "track": "RHO_HR",
+   "name": "심사과",
+   "canon": true,
+   "weight": 0.45,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "RHO_HR:hr_screen"
+  },
+  {
+   "id": "RHO_PUR_CENTER",
+   "track": "RHO_PURCHASE",
+   "name": "구매센터",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_PURCHASE:pur_center"
+  },
+  {
+   "id": "RHO_PUR_PHARMA",
+   "track": "RHO_PURCHASE",
+   "name": "의약품 서비스 판매",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_PURCHASE:pur_pharma"
+  },
+  {
+   "id": "RHO_PUR_PARTNER",
+   "track": "RHO_PURCHASE",
+   "name": "협력사 협상",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "RHO_PURCHASE:pur_partner"
+  },
+  {
+   "id": "RHO_OFF_KAZIMIERZ",
+   "track": "RHO_OFFICE",
+   "name": "카시미어 사무소",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_OFFICE:off_kazimierz"
+  },
+  {
+   "id": "RHO_OFF_VICTORIA",
+   "track": "RHO_OFFICE",
+   "name": "빅토리아·런디니움 사무소",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_OFFICE:off_victoria"
+  },
+  {
+   "id": "RHO_OFF_LEITH",
+   "track": "RHO_OFFICE",
+   "name": "라이타니엔 사무소",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_OFFICE:off_leith"
+  },
+  {
+   "id": "RHO_OFF_URSUS",
+   "track": "RHO_OFFICE",
+   "name": "우르수스 사무소",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_OFFICE:off_ursus"
+  },
+  {
+   "id": "RHO_OFF_SIESTA",
+   "track": "RHO_OFFICE",
+   "name": "시에스타 사무소",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_OFFICE:off_siesta"
+  },
+  {
+   "id": "RHO_OFF_DOSSOLES",
+   "track": "RHO_OFFICE",
+   "name": "도솔레스 사무소",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_OFFICE:off_dossoles"
+  },
+  {
+   "id": "RHO_OFF_KAZDEL",
+   "track": "RHO_OFFICE",
+   "name": "카즈델 사무소",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_OFFICE:off_kazdel"
+  },
+  {
+   "id": "RHO_OFF_CRADLE",
+   "track": "RHO_OFFICE",
+   "name": "네네의 요람호",
+   "canon": true,
+   "weight": 0.05,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_OFFICE:off_cradle"
+  },
+  {
+   "id": "RHO_OFF_HILLOCK",
+   "track": "RHO_OFFICE",
+   "name": "힐록·벙커힐 사무소",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_OFFICE:off_hillock"
+  },
+  {
+   "id": "RHO_OFF_IBERIA",
+   "track": "RHO_OFFICE",
+   "name": "이베리아 사무소",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_OFFICE:off_iberia"
+  },
+  {
+   "id": "RHO_CON_W",
+   "track": "RHO_CONTRACTOR",
+   "name": "독립형(검사 불응)",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "RHO_CONTRACTOR:con_w"
+  },
+  {
+   "id": "RHO_CON_BLACKSTEEL",
+   "track": "RHO_CONTRACTOR",
+   "name": "블랙스틸 교환",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_CONTRACTOR:con_blacksteel"
+  },
+  {
+   "id": "RHO_CON_RAINBOW",
+   "track": "RHO_CONTRACTOR",
+   "name": "레인보우 팀(보급 대가)",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_CONTRACTOR:con_rainbow"
+  },
+  {
+   "id": "RHO_CON_MUDROCK",
+   "track": "RHO_CONTRACTOR",
+   "name": "치료 대가형",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_CONTRACTOR:con_mudrock"
+  },
+  {
+   "id": "RHO_PAT_PAYING",
+   "track": "RHO_PATIENT",
+   "name": "치료비 지불 환자",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 0.8, "income": 0.7, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_PATIENT:pat_paying"
+  },
+  {
+   "id": "RHO_PAT_LABOR",
+   "track": "RHO_PATIENT",
+   "name": "노동 대체 환자",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "RHO_PATIENT:pat_labor"
+  },
+  {
+   "id": "RHO_PAT_VOLUNTEER",
+   "track": "RHO_PATIENT",
+   "name": "자원봉사(상급자 지도)",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_PATIENT:pat_volunteer"
+  },
+  {
+   "id": "RHO_PAT_REMOTE",
+   "track": "RHO_PATIENT",
+   "name": "지부 원격 치료",
+   "canon": true,
+   "weight": 0.1,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "RHO_PATIENT:pat_remote"
+  },
+  {
+   "id": "COM_PEN_LUNGMEN",
+   "track": "COM_PENGUIN",
+   "name": "용문 본부",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_PENGUIN:pen_lungmen"
+  },
+  {
+   "id": "COM_PEN_SIRACUSA",
+   "track": "COM_PENGUIN",
+   "name": "시라쿠사 지사",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_PENGUIN:pen_siracusa"
+  },
+  {
+   "id": "COM_PEN_APPLEPIE",
+   "track": "COM_PENGUIN",
+   "name": "애플파이 로지스틱스",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_PENGUIN:pen_applepie"
+  },
+  {
+   "id": "COM_PEN_HONORARY",
+   "track": "COM_PENGUIN",
+   "name": "임시·명예 직원",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 0.8, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_PENGUIN:pen_honorary"
+  },
+  {
+   "id": "COM_PID_SIREN",
+   "track": "COM_PENGUIN_IDOL",
+   "name": "몬스터 사이렌 레코드",
+   "canon": true,
+   "weight": 1,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_PENGUIN_IDOL:pid_siren"
+  },
+  {
+   "id": "COM_MSG_YAN",
+   "track": "COM_MESSENGER",
+   "name": "염국 흠천감·춘건",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_MESSENGER:msg_yan"
+  },
+  {
+   "id": "COM_MSG_HIGASHI",
+   "track": "COM_MESSENGER",
+   "name": "극동 신사 양성",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_MESSENGER:msg_higashi"
+  },
+  {
+   "id": "COM_MSG_COLUMBIA",
+   "track": "COM_MESSENGER",
+   "name": "컬럼비아 기업 제휴",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.3, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_MESSENGER:msg_columbia"
+  },
+  {
+   "id": "COM_MSG_KAZIMIERZ",
+   "track": "COM_MESSENGER",
+   "name": "카시미어 월간 예보",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_MESSENGER:msg_kazimierz"
+  },
+  {
+   "id": "COM_MSG_RIM",
+   "track": "COM_MESSENGER",
+   "name": "림 광산팀",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_MESSENGER:msg_rim"
+  },
+  {
+   "id": "COM_MSG_SIESTA",
+   "track": "COM_MESSENGER",
+   "name": "시에스타 시 고용",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_MESSENGER:msg_siesta"
+  },
+  {
+   "id": "COM_CC_MESSENGER",
+   "track": "COM_CC",
+   "name": "전달자 운영",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_CC:cc_messenger"
+  },
+  {
+   "id": "COM_CC_MERC",
+   "track": "COM_CC",
+   "name": "용병 연결",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_CC:cc_merc"
+  },
+  {
+   "id": "COM_CC_CORRUPT",
+   "track": "COM_CC",
+   "name": "살인청부 연결(부패)",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_CC:cc_corrupt"
+  },
+  {
+   "id": "COM_BSW_APD",
+   "track": "COM_BLACKSTEEL",
+   "name": "APD(무장인원파견)",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_BLACKSTEEL:bsw_apd"
+  },
+  {
+   "id": "COM_BSW_DEAT",
+   "track": "COM_BLACKSTEEL",
+   "name": "DEAT(장비응용기술)",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "COM_BLACKSTEEL:bsw_deat"
+  },
+  {
+   "id": "COM_BSW_OBHR",
+   "track": "COM_BLACKSTEEL",
+   "name": "OBHR(오리지늄·생물재해)",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "COM_BLACKSTEEL:bsw_obhr"
+  },
+  {
+   "id": "COM_BSW_ACCOUNT",
+   "track": "COM_BLACKSTEEL",
+   "name": "어카운턴트(사무직)",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.7, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_BLACKSTEEL:bsw_account"
+  },
+  {
+   "id": "COM_BSX_TREATMENT",
+   "track": "COM_BLACKSTEEL_EXCHANGE",
+   "name": "치료형",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_BLACKSTEEL_EXCHANGE:bsx_treatment"
+  },
+  {
+   "id": "COM_BSX_DISPATCH",
+   "track": "COM_BLACKSTEEL_EXCHANGE",
+   "name": "파견형",
+   "canon": true,
+   "weight": 0.4,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_BLACKSTEEL_EXCHANGE:bsx_dispatch"
+  },
+  {
+   "id": "COM_BSX_INFO",
+   "track": "COM_BLACKSTEEL_EXCHANGE",
+   "name": "정보형",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_BLACKSTEEL_EXCHANGE:bsx_info"
+  },
+  {
+   "id": "COM_BSX_TECH",
+   "track": "COM_BLACKSTEEL_EXCHANGE",
+   "name": "기술형",
+   "canon": true,
+   "weight": 0.15,
+   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_BLACKSTEEL_EXCHANGE:bsx_tech"
+  },
+  {
+   "id": "COM_PMC_COLUMBIA",
+   "track": "COM_MERC_PMC",
+   "name": "컬럼비아계 PMC",
+   "canon": false,
+   "weight": 0.45,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_MERC_PMC:pmc_columbia"
+  },
+  {
+   "id": "COM_PMC_SARGON",
+   "track": "COM_MERC_PMC",
+   "name": "사르곤 전장 PMC",
+   "canon": false,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_MERC_PMC:pmc_sargon"
+  },
+  {
+   "id": "COM_PMC_BOLIVAR",
+   "track": "COM_MERC_PMC",
+   "name": "볼리바르 삼파 고용",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_MERC_PMC:pmc_bolivar"
+  },
+  {
+   "id": "COM_MT_REWARD",
+   "track": "COM_MERC_TEAM",
+   "name": "의뢰인 보상형",
+   "canon": true,
+   "weight": 0.5,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_MERC_TEAM:mt_reward"
+  },
+  {
+   "id": "COM_MT_BANNER",
+   "track": "COM_MERC_TEAM",
+   "name": "깃발 편입형",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1.1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_MERC_TEAM:mt_banner"
+  },
+  {
+   "id": "COM_MT_RHODES",
+   "track": "COM_MERC_TEAM",
+   "name": "로도스 협력형",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 0.7, "income": 1, "standingStart": 0 },
+   "tags": ["elite"],
+   "events": "COM_MERC_TEAM:mt_rhodes"
+  },
+  {
+   "id": "COM_BTY_BOLIVAR",
+   "track": "COM_BOUNTY",
+   "name": "볼리바르 삼파 고용",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_BOUNTY:bty_bolivar"
+  },
+  {
+   "id": "COM_BTY_KAZIMIERZ",
+   "track": "COM_BOUNTY",
+   "name": "카시미어",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_BOUNTY:bty_kazimierz"
+  },
+  {
+   "id": "COM_BTY_INDEP",
+   "track": "COM_BOUNTY",
+   "name": "독립",
+   "canon": true,
+   "weight": 0.35,
+   "mods": { "promo": 1, "fall": 1, "income": 0.9, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_BOUNTY:bty_indep"
+  },
+  {
+   "id": "COM_MS_CAVENDISH",
+   "track": "COM_MERC_STATE",
+   "name": "캐번디시 공작 고용",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_MERC_STATE:ms_cavendish"
+  },
+  {
+   "id": "COM_MS_REUNION",
+   "track": "COM_MERC_STATE",
+   "name": "리유니온",
+   "canon": true,
+   "weight": 0.25,
+   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_MERC_STATE:ms_reunion"
+  },
+  {
+   "id": "COM_MS_SARGON",
+   "track": "COM_MERC_STATE",
+   "name": "파디샤·아미르 위장 용병",
+   "canon": true,
+   "weight": 0.3,
+   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
+   "tags": ["major"],
+   "events": "COM_MERC_STATE:ms_sargon"
+  },
+  {
+   "id": "COM_MS_MINOS",
+   "track": "COM_MERC_STATE",
+   "name": "미노스 점령기 용병",
+   "canon": true,
+   "weight": 0.2,
+   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
+   "tags": ["minor"],
+   "events": "COM_MERC_STATE:ms_minos"
+  }
+ ]
+}

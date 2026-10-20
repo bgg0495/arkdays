@@ -1,0 +1,14 @@
+{
+  "_meta": { "note": "W7 더미 혼인 제도. 국가 키가 없으면 _default. dowry 는 중위소득 배율(남성이 받고 여성이 낸다). poly 는 두 번째 배우자 허용." },
+  "_default": { "types": [ { "id": "custom", "name": "관습 혼인", "w": 1.0, "age": [18, 40] } ] },
+  "siracusa": { "types": [
+    { "id": "family_approved", "name": "패밀리 승인 혼인", "w": 0.5, "req": { "track": ["SIR_FAMIGLIA", "SIR_FAMBIZ"] }, "age": [20, 30], "dowry": 0, "poly": false, "events": "marriage:siracusa:family" },
+    { "id": "church", "name": "교회 혼인", "w": 0.4, "age": [20, 34] },
+    { "id": "civil", "name": "시청 혼인", "w": 0.1, "age": [22, 40], "since": 1100 } ] },
+  "ursus": { "types": [
+    { "id": "parish", "name": "교구 혼인", "w": 0.7, "age": [18, 34] },
+    { "id": "quarantine", "name": "격리구역 혼인", "w": 0.3, "infected_only": true, "age": [18, 50] } ] },
+  "columbia": { "types": [
+    { "id": "civil", "name": "시청 혼인", "w": 0.7, "age": [20, 40] },
+    { "id": "contract", "name": "계약 결혼", "w": 0.3, "age": [22, 45], "dowry": 0.5, "req": { "income": 1.5 } } ] }
+}

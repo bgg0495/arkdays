@@ -1,0 +1,466 @@
+{
+ "_meta": {
+  "nation": "durin",
+  "source": "진로_카탈로그_v0 §21",
+  "canon": "mixed",
+  "classScale": 1,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "계급 없음(시민 단일층): 모든 q 에 같은 분포. DUR_SURFACE 는 전환 이벤트 전용."
+ },
+ "tracks": [
+  {
+   "id": "DUR_DESIGN",
+   "nation": "durin",
+   "region": null,
+   "name": "구조 설계·건축",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q1": 0.2, "q2": 0.2, "q3": 0.2, "q4": 0.2, "q5": 0.2 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["aptitude"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "견습",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["dome","scandal","demotion"] },
+     "canon": false
+    },
+    {
+     "id": "engineer",
+     "name": "구조 엔지니어",
+     "title": "엔지니어",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.02, "causes": ["dome","scandal","demotion"] }
+    },
+    {
+     "id": "architect",
+     "name": "건축가",
+     "title": "건축가",
+     "minYears": 10,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.02, "causes": ["dome","scandal","demotion"] }
+    },
+    {
+     "id": "rep",
+     "name": "설계 대표",
+     "title": "대표",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["dome","scandal","demotion"] }
+    }
+   ],
+   "income": { "stage": [0.6,1.2,2,3], "job": "dome_architect" },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["DUR_DES_DOME","DUR_DES_SURFACE"],
+   "exits": {
+    "retire": { "age": 80, "to": "DUR_BREW" },
+    "fall": { "dome": "death", "scandal": "disgrace", "demotion": "demote" },
+    "switch": ["DUR_INDUSTRY","DUR_SURFACE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["minimalist"]
+  },
+  {
+   "id": "DUR_INDUSTRY",
+   "nation": "durin",
+   "region": null,
+   "name": "공업·자동기계 제작",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q1": 0.2, "q2": 0.2, "q3": 0.2, "q4": 0.2, "q5": 0.2 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["aptitude"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "견습",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["accident","dome","demotion"] },
+     "canon": false
+    },
+    {
+     "id": "mechanic",
+     "name": "기계공",
+     "title": "기계공",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.02, "causes": ["accident","dome","demotion"] }
+    },
+    {
+     "id": "designer",
+     "name": "자동기계 설계자",
+     "title": "설계자",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.02, "causes": ["accident","dome","demotion"] }
+    },
+    {
+     "id": "rep",
+     "name": "공업 대표",
+     "title": "대표",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["accident","dome","demotion"] }
+    }
+   ],
+   "income": { "stage": [0.6,1.2,2,3], "job": "engineer" },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["DUR_IND_AUTOMATA","DUR_IND_LIFT","DUR_IND_GENERATOR"],
+   "exits": {
+    "retire": { "age": 80, "to": "DUR_BREW" },
+    "fall": { "accident": "injured", "dome": "death", "demotion": "demote" },
+    "switch": ["DUR_DESIGN","DUR_SURFACE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "DUR_GEO",
+   "nation": "durin",
+   "region": null,
+   "name": "지질 탐사",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q1": 0.15, "q2": 0.15, "q3": 0.15, "q4": 0.15, "q5": 0.15 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["aptitude"]
+   },
+   "stages": [
+    {
+     "id": "assistant",
+     "name": "탐사 조수",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["dome","accident","crystallize"] },
+     "canon": false
+    },
+    {
+     "id": "surveyor",
+     "name": "지질 탐사원",
+     "title": "탐사원",
+     "minYears": 10,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["dome","accident","crystallize"] }
+    },
+    {
+     "id": "rep",
+     "name": "지질 대표",
+     "title": "대표",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["dome","accident","crystallize"] }
+    }
+   ],
+   "income": { "stage": [0.6,1.3,3], "job": "geologist" },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["DUR_GEO_UNDER","DUR_GEO_SURFACE"],
+   "exits": {
+    "retire": { "age": 80, "to": "DUR_BREW" },
+    "fall": { "dome": "death", "accident": "death", "crystallize": "death" },
+    "switch": ["DUR_SURFACE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "DUR_TRADE",
+   "nation": "durin",
+   "region": null,
+   "name": "상인",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q1": 0.2, "q2": 0.2, "q3": 0.2, "q4": 0.2, "q5": 0.2 },
+    "gates": [],
+    "via": ["aptitude"]
+   },
+   "stages": [
+    {
+     "id": "clerk",
+     "name": "점원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.02, "causes": ["bankrupt","dome","scandal"] },
+     "canon": false
+    },
+    {
+     "id": "merchant",
+     "name": "상인",
+     "title": "상인",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.02, "causes": ["bankrupt","dome","scandal"] }
+    },
+    {
+     "id": "rep",
+     "name": "상업 대표",
+     "title": "대표",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.04 },
+     "fall": { "base": 0.02, "causes": ["bankrupt","dome","scandal"] }
+    },
+    {
+     "id": "mayor",
+     "name": "시장 겸임",
+     "title": "시장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["bankrupt","dome","scandal"] }
+    }
+   ],
+   "income": { "stage": [0.6,1.2,2,2.5], "job": "merchant" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["DUR_TRA_ZERUERTZA","DUR_TRA_AQUAPIT","DUR_TRA_SURFACE"],
+   "exits": {
+    "retire": { "age": 60, "to": "DUR_TRADE" },
+    "fall": { "bankrupt": "expel", "dome": "death", "scandal": "disgrace" },
+    "switch": ["DUR_BREW","DUR_SURFACE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "DUR_LIT",
+   "nation": "durin",
+   "region": null,
+   "name": "문학·도서관",
+   "archetype": "A12",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q1": 0.1, "q2": 0.1, "q3": 0.1, "q4": 0.1, "q5": 0.1 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["aptitude"]
+   },
+   "stages": [
+    {
+     "id": "librarian",
+     "name": "사서",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.015, "causes": ["fade","dome"] },
+     "canon": false
+    },
+    {
+     "id": "writer",
+     "name": "작가",
+     "title": "작가",
+     "minYears": 10,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.015, "causes": ["fade","dome"] }
+    },
+    {
+     "id": "rep",
+     "name": "문학 대표",
+     "title": "대표",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.015, "causes": ["fade","dome"] }
+    }
+   ],
+   "income": { "stage": [0.6,1,2], "job": "artist" },
+   "standing": { "name": "명성", "start": 20 },
+   "affiliations": ["DUR_LIT_LIBRARY","DUR_LIT_PULP"],
+   "exits": {
+    "retire": { "age": 60, "to": "DUR_TRADE" },
+    "fall": { "fade": "expel", "dome": "death" },
+    "switch": ["DUR_TRADE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "DUR_LIFT",
+   "nation": "durin",
+   "region": null,
+   "name": "승강기 관리",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q1": 0.05, "q2": 0.05, "q3": 0.05, "q4": 0.05, "q5": 0.05 },
+    "gates": [],
+    "via": ["aptitude"]
+   },
+   "stages": [
+    {
+     "id": "helper",
+     "name": "보조",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.025, "causes": ["accident","raid","dome"] }
+    },
+    {
+     "id": "keeper",
+     "name": "승강기 관리인",
+     "title": "관리인",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.025, "causes": ["accident","raid","dome"] },
+     "canon": false
+    },
+    {
+     "id": "controller",
+     "name": "출입 통제 책임",
+     "title": "책임자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["accident","raid","dome"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.6,1,1.5], "job": "nomad_crew" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["DUR_LIF_LIFTOMATIC"],
+   "exits": {
+    "retire": { "age": 60, "to": "DUR_TRADE" },
+    "fall": { "accident": "death", "raid": "injured", "dome": "death" },
+    "switch": ["DUR_INDUSTRY","DUR_SURFACE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "DUR_BREW",
+   "nation": "durin",
+   "region": null,
+   "name": "양조",
+   "archetype": "A11",
+   "canon": false,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,50],
+    "classes": { "q1": 0.1, "q2": 0.1, "q3": 0.1, "q4": 0.1, "q5": 0.1 },
+    "gates": [],
+    "via": ["hobby"]
+   },
+   "stages": [
+    {
+     "id": "hobby",
+     "name": "애호가",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.015, "causes": ["scandal","dome"] },
+     "canon": false
+    },
+    {
+     "id": "brewer",
+     "name": "양조가",
+     "title": "양조가",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.015, "causes": ["scandal","dome"] },
+     "canon": false
+    },
+    {
+     "id": "master",
+     "name": "술 취향 명인",
+     "title": "명인",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.015, "causes": ["scandal","dome"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.6,1,1.6], "job": "brewer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["DUR_BRE_MEAD","DUR_BRE_SPIRIT","DUR_BRE_CANNON"],
+   "exits": {
+    "retire": { "age": 60, "to": "DUR_TRADE" },
+    "fall": { "scandal": "demote", "dome": "death" },
+    "switch": ["DUR_TRADE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "애주가 문화만 캐논, 직업화는 창작"
+  },
+  {
+   "id": "DUR_SURFACE",
+   "nation": "durin",
+   "region": null,
+   "name": "지상행",
+   "archetype": "A5",
+   "canon": true,
+   "itinerant": true,
+   "route": ["sargon","bolivar","columbia","rim"],
+   "entry": {
+    "ages": [14,60],
+    "classes": {},
+    "gates": [],
+    "via": ["curiosity","city_lost"]
+   },
+   "stages": [
+    {
+     "id": "lift",
+     "name": "승강기",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.05, "causes": ["crystallize","accident","starvation"] }
+    },
+    {
+     "id": "surface",
+     "name": "광부·지질학자·거리예술가·엔지니어",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.05, "causes": ["crystallize","accident","starvation"] },
+     "oriMul": 3
+    },
+    {
+     "id": "infected",
+     "name": "감염",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.05, "causes": ["crystallize","accident","starvation"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.8,0.5] },
+   "standing": { "name": "작업반 평판", "start": 20 },
+   "affiliations": ["DUR_SUR_MINE","DUR_SUR_DOSSOLES","DUR_SUR_ACAHUALLA","DUR_SUR_RHODES"],
+   "exits": {
+    "retire": null,
+    "fall": { "crystallize": "death", "accident": "death", "starvation": "death" },
+    "switch": ["RHO_PATIENT","RHO_ENGINEER","BOL_STREET"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "classes 없음: 호기심 롤·도시 소멸 전환. 진입 시 이주 기계로 거주국 변경"
+  }
+ ]
+}

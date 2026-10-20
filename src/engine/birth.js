@@ -8,6 +8,9 @@ import { homeOriMul, parentPrevalence, stageOf } from './oripathy.js';
 import { BALANCE as B } from './balance.js';
 import { toLMD, incomeAt } from './finance.js';
 import { makeName as composeName } from './names.js';
+import { rollCaps } from './caps.js';
+import { raceWeightsFor, relOf } from './relations.js';
+import { SAVE_V } from './save.js';
 
 export const BIRTH_YEARS = [1080, 1100];   // D12
 export const MALE_P = 0.512;
@@ -26,8 +29,9 @@ export function drawNation(data, rng) {
   return data.nationById[pickId] || root;
 }
 
+/** 종족 추첨. 관계 등급 exclude 조합(§9)은 가중 0 */
 export function drawRace(data, nation, rng) {
-  const w = Object.keys(nation.races).length ? nation.races : Object.fromEntries(data.races.map((r) => [r.id, 1]));
+  const w = raceWeightsFor(data, nation);
   const id = rng.wpick(w);
   return data.raceById[id] || data.races[0];
 }
@@ -115,8 +119,11 @@ export function newLife(data, rng, opts = {}) {
     ori.on = true; ori.uL = +(momInf && dadInf ? rng.rf(0.08, 0.2) : rng.rf(0.03, 0.12)).toFixed(3); ori.since = 0; ori.stage = stageOf(ori.uL); oriHow = 'born';
   }
 
-  // 아츠 적성 (§5.6)
-  const arts = +rng.norm(race.artsApt, 1).toFixed(2);
+  // 역량·타고남 롤(v1 §6.1). 구 S.arts 는 cap.arts 와 같은 값(artsTop10 판정 호환)
+  const { cap, innate } = rollCaps(rng, { q, race });
+  const arts = cap.arts;
+  // 신분(§2): 작위·노예·낙인. 작위는 상층에서만, 노예는 nation.slaveP(기본 0)
+  const status = { noble: q === 5 && rng.chance(0.6) ? 'noble' : q === 4 && rng.chance(0.15) ? 'noble' : null, slave: q === 1 && rng.chance(nation.slaveP || 0), stigma: null };
 
   // 생명표·시뮬 기대수명(D19)·플레이 길이(D22: 국가 인간 척도 e0 기준)
   const lt = lifeTable(st, sex, race.lifeMul);
@@ -130,21 +137,24 @@ export function newLife(data, rng, opts = {}) {
 
   const u5 = st.u5 ?? 0.1;        // 0~1
   const S = {
-    v: 1, phase: 'birth', t: 0, age: 0, speed: 2, paused: false,
+    v: SAVE_V, phase: 'birth', t: 0, age: 0, speed: 2, paused: false,
     by, bm: rng.ri(1, 12), born: nation.id, cur: nation.id, root,
     sex, q, urban, bornUrban: urban, city: null, name,
-    race: race.id, eth, arts, ori, home, sub,
+    race: race.id, eth, arts, ori, home: { ...home, housing: null, since: 0, owned: false, forced: false }, sub,
     st: {
       hl: clamp(Math.round(78 + (q - 3) * 2 - u5 * 30 + rng.norm(0, 4)), 40, 95),
       h: clamp(Math.round(60 + rng.norm(0, 7)), 20, 90),
-      sm: 50,
-      so: clamp(Math.round(55 + rng.norm(0, 5)), 20, 90),
     },
+    // v1 §2
+    cap, innate, status,
+    track: null, trackHist: [],
+    res: { nation: nation.id, papers: 'native', since: 0, phase: 'settled', itinerantAt: null },
+    rel: relOf(data, nation.id, race.id, by),
     money: Math.round(toLMD(incomeAt(st.ppp, st.gini, clamp((q - 0.5) / 5, 0.05, 0.95)) * [0, 0.1, 0.5, 1.5, 4, 10][q])),
     income: 0, pct: clamp((q - 0.5) / 5 + rng.norm(0, 0.06), 0.03, 0.97),
     job: null, jobY: 0, edu: 0, school: null, eduEnd: null, retired: false, pension: 0,
     focus: null, fT: {}, focusW: {},
-    trait: null, fam,
+    trait: null, fam: { ...fam, marriage: null },
     served: 0, serving: 0, prison: null, prisonLeft: 0, rhodes: false, mig: null,
     log: [], years: [], queue: [], pending: null, recent: [], flags: {}, done: {}, deathAt: null,
     e0: +e0.toFixed(1), e0Model: +e0Model.toFixed(1), yearSec: +yearSec.toFixed(2), lifeMul: race.lifeMul,
@@ -153,6 +163,7 @@ export function newLife(data, rng, opts = {}) {
   };
   if (S.money < 0) S.money = 0;
   if (ori.on) S.flags.bornInfected = true;
+  if (root === 'higashi' && q >= 4 && rng.chance(0.02)) S.flags.ninja_clan = true;   // W8 gate status:'ninja_clan'(창작 2%)
   const hot = (j) => j && data.jobById[j] && data.jobById[j].oriMul >= 3;
   if (hot(fam.mom.job) || hot(fam.dad.job)) S.flags.minerFamily = true;
   return S;

@@ -1,0 +1,167 @@
+{
+  "_meta": {
+    "note": "W7 더미 로도스 입구 표·기항지·닫힘 조건. 수치 창작. nation 블록은 본함 거주용 가상 국가(출생 불가)."
+  },
+  "nation": {
+    "id": "rhodes",
+    "name": "로도스 아일랜드",
+    "policy": "treat",
+    "oriExp": 1,
+    "catFreq": 1,
+    "conflict": 2,
+    "nomadic": 1.0,
+    "statOrg": "로도스 아일랜드 인사부",
+    "nameLang": "en",
+    "naturalize": "never",
+    "refugeeIn": true,
+    "illegalRisk": 0
+  },
+  "ports": [
+    "columbia",
+    "lungmen",
+    "victoria",
+    "kazimierz",
+    "siracusa",
+    "leithanien",
+    "ursus",
+    "sargon"
+  ],
+  "entries": [
+    {
+      "via": "volunteer",
+      "p": 0.006,
+      "cap": {
+        "learn": 1.0,
+        "skill": 1.0
+      },
+      "infected": false,
+      "ages": [
+        16,
+        45
+      ],
+      "line": "공개 모집 공고를 보고 지원했다",
+      "rarity": "rare"
+    },
+    {
+      "via": "referral",
+      "flag": "rhodesContact",
+      "capMin": 1.0,
+      "line": "눈여겨본 덕에 헤드헌팅 제안이 왔다",
+      "rarity": "rare"
+    },
+    {
+      "via": "treatment",
+      "p": 0.015,
+      "known": true,
+      "policies": [
+        "treat",
+        "ignore",
+        "insurance"
+      ],
+      "money": 1.0,
+      "line": "치료를 받으러 갔다",
+      "rarity": "common"
+    },
+    {
+      "via": "rescue",
+      "p": 0.3,
+      "flag": "rhodesRescue",
+      "line": "구조되었다",
+      "rarity": "rare"
+    },
+    {
+      "via": "agreement",
+      "p": 0.02,
+      "archetypes": [
+        "A6"
+      ],
+      "stageMin": 1,
+      "line": "협정으로 파견됐다",
+      "rarity": "rare"
+    },
+    {
+      "via": "companion",
+      "p": 0.5,
+      "flag": "rhodesCompanion",
+      "line": "가족을 따라갔다",
+      "rarity": "rare"
+    },
+    {
+      "via": "flight",
+      "p": 0.03,
+      "papers": [
+        "refugee",
+        "illegal"
+      ],
+      "line": "도피했다",
+      "rarity": "very_rare"
+    },
+    {
+      "via": "transfer",
+      "p": 0.01,
+      "tracks": [
+        "COL_RHINE",
+        "COL_BSW"
+      ],
+      "stageMin": 1,
+      "line": "이적 제안이 왔다",
+      "rarity": "very_rare"
+    },
+    {
+      "via": "babel",
+      "p": 0.3,
+      "nation": "kazdel",
+      "bornBefore": 1076,
+      "tracks": [
+        "KZD_BABEL"
+      ],
+      "line": "바벨을 승계했다",
+      "rarity": "very_rare"
+    }
+  ],
+  "closed": [
+    {
+      "prison": "camp",
+      "nation": "ursus"
+    },
+    {
+      "nation": "laterano",
+      "race": "sankta",
+      "infected": false
+    },
+    {
+      "nation": "kazdel",
+      "tracks": [
+        "KZD_COMMISSION"
+      ],
+      "years": [
+        1094,
+        1098
+      ]
+    },
+    {
+      "nation": "aegir"
+    },
+    {
+      "nation": "durin"
+    },
+    {
+      "nation": "higashi",
+      "region": "north",
+      "q": [
+        1,
+        1
+      ]
+    }
+  ],
+  "depts": [
+    "field",
+    "medical",
+    "engineer",
+    "logistics",
+    "purchase",
+    "office",
+    "hr",
+    "patient"
+  ]
+}

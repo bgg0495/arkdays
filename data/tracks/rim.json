@@ -1,0 +1,795 @@
+{
+ "_meta": {
+  "nation": "rim",
+  "source": "진로_카탈로그_v0 §19",
+  "canon": "mixed",
+  "classScale": 0.7135,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "최하층 RIM_INFECTED 10은 감염 전환 전용(forced)이라 빼고 재정규화."
+ },
+ "tracks": [
+  {
+   "id": "RIM_MINER",
+   "nation": "rim",
+   "region": null,
+   "name": "광부",
+   "archetype": "A5",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,40],
+    "classes": { "q1": 0.478, "q2": 0.3211 },
+    "gates": [],
+    "via": ["pitsinker","adult"]
+   },
+   "stages": [
+    {
+     "id": "pitsinker",
+     "name": "피트싱커",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.15 },
+     "fall": { "base": 0.06, "causes": ["mine","crystallize","catastrophe","beast"] },
+     "oriMul": 12
+    },
+    {
+     "id": "miner",
+     "name": "광부",
+     "title": "광부",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.06 },
+     "fall": { "base": 0.06, "causes": ["mine","crystallize","catastrophe","beast"] },
+     "oriMul": 8
+    },
+    {
+     "id": "lead",
+     "name": "조장",
+     "title": "조장",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.03 },
+     "fall": { "base": 0.06, "causes": ["mine","crystallize","catastrophe","beast"] },
+     "canon": false,
+     "oriMul": 6
+    },
+    {
+     "id": "exit",
+     "name": "회사 보안 전직·공동체 대표",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["mine","crystallize","catastrophe","beast"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.6,1,1.5], "job": "pitsinker" },
+   "standing": { "name": "작업반 평판", "start": 20 },
+   "affiliations": ["RIM_MIN_IRONCARROT","RIM_MIN_IRONFIST","RIM_MIN_RUSTDREG","RIM_MIN_GREENING"],
+   "exits": {
+    "retire": { "age": 60, "to": "RIM_FACTORY" },
+    "fall": { "mine": "death", "crystallize": "death", "catastrophe": "death", "beast": "death" },
+    "switch": ["RIM_SECURITY","RIM_FAMILY","RIM_UNION"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["savage"]
+  },
+  {
+   "id": "RIM_AIRWATCH",
+   "nation": "rim",
+   "region": null,
+   "name": "공기질 모래짐승 관리",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q2": 0.0357 },
+    "gates": [],
+    "via": ["miner_side"]
+   },
+   "stages": [
+    {
+     "id": "helper",
+     "name": "보조",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.035, "causes": ["layoff","beast","crystallize"] },
+     "canon": false
+    },
+    {
+     "id": "keeper",
+     "name": "관리인",
+     "title": "관리인",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["layoff","beast","crystallize"] },
+     "canon": false
+    },
+    {
+     "id": "replaced",
+     "name": "기계 대체 후 전직",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["layoff","beast","crystallize"] }
+    }
+   ],
+   "income": { "stage": [0.4,0.8,0.9], "job": "laborer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["RIM_AIR_UNIT"],
+   "exits": {
+    "retire": { "age": 60, "to": "RIM_FACTORY" },
+    "fall": { "layoff": "expel", "beast": "death", "crystallize": "death" },
+    "switch": ["RIM_BUILDER","RIM_MINER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "RIM_COMPANY",
+   "nation": "rim",
+   "region": null,
+   "name": "광산회사 사무직",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,32],
+    "classes": { "q3": 0.3924, "q4": 0.4281 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["resume"]
+   },
+   "stages": [
+    {
+     "id": "new",
+     "name": "신입",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.025, "causes": ["bankrupt","layoff","raid"] }
+    },
+    {
+     "id": "middle",
+     "name": "중간 직급",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.025, "causes": ["bankrupt","layoff","raid"] },
+     "canon": false
+    },
+    {
+     "id": "manager",
+     "name": "관리자",
+     "title": "관리자",
+     "minYears": 7,
+     "promo": { "cap": "learn", "k": 0.06 },
+     "fall": { "base": 0.025, "causes": ["bankrupt","layoff","raid"] }
+    },
+    {
+     "id": "exec",
+     "name": "임원",
+     "title": "임원",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["bankrupt","layoff","raid"] }
+    }
+   ],
+   "income": { "stage": [1,1.6,3,8], "job": "clerk" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["RIM_COM_HQ","RIM_COM_SUB","RIM_COM_RMIA"],
+   "exits": {
+    "retire": { "age": 60, "to": "RIM_FACTORY" },
+    "fall": { "bankrupt": "expel", "layoff": "expel", "raid": "injured" },
+    "switch": ["RIM_BUILDER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "RIM_SECURITY",
+   "nation": "rim",
+   "region": null,
+   "name": "광산회사 보안",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,35],
+    "classes": { "q2": 0.0714, "q3": 0.0714 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["miner","hire"]
+   },
+   "stages": [
+    {
+     "id": "guard",
+     "name": "경비",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.045, "causes": ["kia","raid","contract_end"] }
+    },
+    {
+     "id": "agent",
+     "name": "보안 요원",
+     "title": "요원",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["kia","raid","contract_end"] }
+    },
+    {
+     "id": "escort",
+     "name": "임원 경호",
+     "title": "경호",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.045, "causes": ["kia","raid","contract_end"] }
+    },
+    {
+     "id": "rmia",
+     "name": "RMIA 보안부",
+     "title": "보안부",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["kia","raid","contract_end"] }
+    }
+   ],
+   "income": { "stage": [0.8,1.3,2.2,4], "job": "police" },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["RIM_SEC_COMPANY","RIM_SEC_RMIA","RIM_SEC_ESCORT"],
+   "exits": {
+    "retire": { "age": 55, "to": "RIM_COMPANY" },
+    "fall": { "kia": "death", "raid": "death", "contract_end": "expel" },
+    "switch": ["RHO_OPERATOR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["savage"]
+  },
+  {
+   "id": "RIM_BUILDER",
+   "nation": "rim",
+   "region": null,
+   "name": "플랫폼 건설 기술자",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": true,
+   "route": ["rim","columbia","yan","kazimierz"],
+   "entry": {
+    "ages": [15,35],
+    "classes": { "q2": 0.0714, "q3": 0.0714 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["apprentice"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "견습",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.035, "causes": ["accident","raid","layoff"] }
+    },
+    {
+     "id": "technician",
+     "name": "기술자",
+     "title": "기술자",
+     "minYears": 7,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["accident","raid","layoff"] }
+    },
+    {
+     "id": "foreman",
+     "name": "현장 반장",
+     "title": "반장",
+     "minYears": 7,
+     "promo": { "cap": "skill", "k": 0.04 },
+     "fall": { "base": 0.035, "causes": ["accident","raid","layoff"] }
+    },
+    {
+     "id": "contract",
+     "name": "타국 플랫폼 수주 책임",
+     "title": "책임자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["accident","raid","layoff"] }
+    }
+   ],
+   "income": { "stage": [0.5,1.1,1.8,3.5], "job": "platform_builder" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["RIM_BUI_SUB","RIM_BUI_FOREIGN","RIM_BUI_REPAIR"],
+   "exits": {
+    "retire": { "age": 60, "to": "RIM_FACTORY" },
+    "fall": { "accident": "injured", "raid": "death", "layoff": "expel" },
+    "switch": ["RIM_COMPANY","RIM_FACTORY"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "RIM_TRANSPORT",
+   "nation": "rim",
+   "region": null,
+   "name": "운송 기사",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": true,
+   "route": ["rim","victoria","columbia"],
+   "entry": {
+    "ages": [16,35],
+    "classes": { "q2": 0.0714 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["assistant"]
+   },
+   "stages": [
+    {
+     "id": "assistant",
+     "name": "조수",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.04, "causes": ["raid","accident","catastrophe"] }
+    },
+    {
+     "id": "driver",
+     "name": "기사",
+     "title": "기사",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["raid","accident","catastrophe"] }
+    },
+    {
+     "id": "convoy",
+     "name": "수송대장",
+     "title": "수송대장",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.04 },
+     "fall": { "base": 0.04, "causes": ["raid","accident","catastrophe"] }
+    },
+    {
+     "id": "manager",
+     "name": "운송회사 관리",
+     "title": "관리자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["raid","accident","catastrophe"] }
+    }
+   ],
+   "income": { "stage": [0.5,1,1.6,3], "job": "driver" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["RIM_TRA_GGF","RIM_TRA_SUB","RIM_TRA_INDEP"],
+   "exits": {
+    "retire": { "age": 60, "to": "RIM_FACTORY" },
+    "fall": { "raid": "death", "accident": "death", "catastrophe": "death" },
+    "switch": ["RIM_COMPANY"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "RIM_MEDIC",
+   "nation": "rim",
+   "region": null,
+   "name": "의료·연구",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,28],
+    "classes": { "q3": 0.107 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["med_school"]
+   },
+   "stages": [
+    {
+     "id": "student",
+     "name": "의대",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "learn", "k": 0.2 },
+     "fall": { "base": 0.04, "causes": ["ruin","layoff","infected"] }
+    },
+    {
+     "id": "resume",
+     "name": "이력서",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "learn", "k": 0.15 },
+     "fall": { "base": 0.04, "causes": ["ruin","layoff","infected"] }
+    },
+    {
+     "id": "intern",
+     "name": "인턴",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["ruin","layoff","infected"] }
+    },
+    {
+     "id": "researcher",
+     "name": "의료회사 연구원",
+     "title": "연구원",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["ruin","layoff","infected"] }
+    }
+   ],
+   "income": { "stage": [0.1,0.3,1,3.5], "job": "doctor" },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["RIM_MED_COMPANY","RIM_MED_LAB","RIM_MED_RHODES"],
+   "exits": {
+    "retire": { "age": 65, "to": "RIM_COMPANY" },
+    "fall": { "ruin": "expel", "layoff": "expel", "infected": "infected" },
+    "switch": ["RHO_MEDICAL"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["ansel"]
+  },
+  {
+   "id": "RIM_MSG",
+   "nation": "rim",
+   "region": null,
+   "name": "광산팀 컨설턴트",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": true,
+   "route": ["rim"],
+   "entry": {
+    "ages": [16,28],
+    "classes": { "q3": 0.0714 },
+    "gates": [
+     { "cap": "arts", "min": 0.5 }
+    ],
+    "via": ["apprentice"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "수습",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "arts", "k": 0.22 },
+     "fall": { "base": 0.045, "causes": ["infected","catastrophe","bankrupt"] }
+    },
+    {
+     "id": "consultant",
+     "name": "컨설턴트",
+     "title": "컨설턴트",
+     "minYears": 7,
+     "promo": { "cap": "arts", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["infected","catastrophe","bankrupt"] }
+    },
+    {
+     "id": "senior",
+     "name": "선임",
+     "title": "선임",
+     "minYears": 7,
+     "promo": { "cap": "arts", "k": 0.05 },
+     "fall": { "base": 0.045, "causes": ["infected","catastrophe","bankrupt"] }
+    },
+    {
+     "id": "chief",
+     "name": "발굴 현장 총괄",
+     "title": "총괄",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["infected","catastrophe","bankrupt"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.7,1.5,2.5,4], "job": "cat_messenger" },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["RIM_MSG_TEAM","RIM_MSG_INDEP","RIM_MSG_CC"],
+   "exits": {
+    "retire": { "age": 60, "to": "RIM_FACTORY" },
+    "fall": { "infected": "infected", "catastrophe": "death", "bankrupt": "expel" },
+    "switch": ["COM_MESSENGER","COM_CC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["leonhardt"]
+  },
+  {
+   "id": "RIM_FACTORY",
+   "nation": "rim",
+   "region": null,
+   "name": "가공·제조 공장 노동",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q1": 0.1142, "q2": 0.107 },
+    "gates": [],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "worker",
+     "name": "공원",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["layoff","accident","crystallize"] }
+    },
+    {
+     "id": "skilled",
+     "name": "숙련공",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["layoff","accident","crystallize"] }
+    },
+    {
+     "id": "foreman",
+     "name": "반장",
+     "title": "반장",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.04 },
+     "fall": { "base": 0.03, "causes": ["layoff","accident","crystallize"] }
+    },
+    {
+     "id": "lead",
+     "name": "생산팀장",
+     "title": "팀장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["layoff","accident","crystallize"] }
+    }
+   ],
+   "income": { "stage": [0.5,0.9,1.3,2], "job": "factory_worker" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["RIM_FAC_PROCESS","RIM_FAC_MANUF","RIM_FAC_SUNVALLEY"],
+   "exits": {
+    "retire": { "age": 60, "to": "RIM_FACTORY" },
+    "fall": { "layoff": "expel", "accident": "injured", "crystallize": "death" },
+    "switch": ["RIM_MINER","RIM_BUILDER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "RIM_FAMILY",
+   "nation": "rim",
+   "region": null,
+   "name": "가족공동체 대표",
+   "archetype": "A3",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [25,50],
+    "classes": { "q4": 0.2854, "q5": 0.7135 },
+    "gates": [
+     { "cap": "ties", "min": 0.5 }
+    ],
+    "via": ["community"]
+   },
+   "stages": [
+    {
+     "id": "member",
+     "name": "공동체 성원",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "ties", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["betrayal","raid","purge"] }
+    },
+    {
+     "id": "cadre",
+     "name": "길드·생산팀 간부",
+     "title": "간부",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["betrayal","raid","purge"] }
+    },
+    {
+     "id": "rep",
+     "name": "공동체 대표",
+     "title": "대표",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["betrayal","raid","purge"] }
+    },
+    {
+     "id": "rmia",
+     "name": "RMIA 연합 회의",
+     "title": "연합 위원",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["betrayal","raid","purge"] }
+    }
+   ],
+   "income": { "stage": [0.8,1.5,3,6] },
+   "standing": { "name": "관청 평판", "start": 20 },
+   "affiliations": ["RIM_FAM_COMMUNITY","RIM_FAM_GUILD","RIM_FAM_MINERS","RIM_FAM_PRODUCTION"],
+   "exits": {
+    "retire": { "age": 70, "to": "RIM_COMPANY" },
+    "fall": { "betrayal": "disgrace", "raid": "death", "purge": "disgrace" },
+    "switch": ["RIM_UNION"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "RIM_UNION",
+   "nation": "rim",
+   "region": null,
+   "name": "노조·노동자 연합",
+   "archetype": "A1",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,45],
+    "classes": { "q2": 0.0357 },
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["miner"]
+   },
+   "stages": [
+    {
+     "id": "member",
+     "name": "조합원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "ties", "k": 0.25 },
+     "fall": { "base": 0.045, "causes": ["raid","arrest","betrayal"] }
+    },
+    {
+     "id": "cadre",
+     "name": "간부",
+     "title": "간부",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["raid","arrest","betrayal"] }
+    },
+    {
+     "id": "leader",
+     "name": "연합 지도자",
+     "title": "지도자",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.045, "causes": ["raid","arrest","betrayal"] }
+    },
+    {
+     "id": "eureka",
+     "name": "유레카 자치주",
+     "title": "자치주 대표",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["raid","arrest","betrayal"] }
+    }
+   ],
+   "income": { "stage": [0.6,1,1.6,2.5] },
+   "standing": { "name": "조직 신뢰", "start": 20 },
+   "affiliations": ["RIM_UNI_UNION","RIM_UNI_ALLIANCE"],
+   "exits": {
+    "retire": { "age": 60, "to": "RIM_FACTORY" },
+    "fall": { "raid": "death", "arrest": "prison:jail", "betrayal": "disgrace" },
+    "switch": ["RIM_FAMILY","RIM_MINER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "구조 창작"
+  },
+  {
+   "id": "RIM_EUREKA",
+   "nation": "rim",
+   "region": null,
+   "name": "유레카 죄수 채굴·우리 인질",
+   "archetype": "A5",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [6,60],
+    "classes": { "q1": 0.1213 },
+    "gates": [
+     { "status": "prisoner", "weight": 30 }
+    ],
+    "via": ["convict","captured"]
+   },
+   "stages": [
+    {
+     "id": "held",
+     "name": "수감",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.08, "causes": ["execution","mine","starvation","crystallize"] },
+     "forced": true
+    },
+    {
+     "id": "illegal",
+     "name": "불법 채굴",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.08 },
+     "fall": { "base": 0.08, "causes": ["execution","mine","starvation","crystallize"] },
+     "forced": true,
+     "oriMul": 10
+    },
+    {
+     "id": "rescued",
+     "name": "구출",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.08, "causes": ["execution","mine","starvation","crystallize"] }
+    }
+   ],
+   "income": { "stage": [0,0.05,0.3] },
+   "standing": { "name": "작업반 평판", "start": 20 },
+   "affiliations": ["RIM_EUR_VICMINE","RIM_EUR_CAGE"],
+   "exits": {
+    "retire": null,
+    "fall": { "execution": "death", "mine": "death", "starvation": "death", "crystallize": "death" },
+    "switch": ["RIM_MINER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["leonhardt"]
+  },
+  {
+   "id": "RIM_INFECTED",
+   "nation": "rim",
+   "region": null,
+   "name": "감염 광부·자발 추방",
+   "archetype": "A5",
+   "canon": true,
+   "itinerant": true,
+   "route": ["rim","lungmen"],
+   "entry": {
+    "ages": [0,90],
+    "classes": {},
+    "gates": [
+     { "infected": true }
+    ],
+    "via": ["diagnosed"]
+   },
+   "forced": { "infected": true, "policy": ["neglect"] },
+   "stages": [
+    {
+     "id": "diagnosed",
+     "name": "감염 판정",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.07, "causes": ["crystallize","mine","exile"] },
+     "forced": true
+    },
+    {
+     "id": "expendable",
+     "name": "소모품 배치·자발 추방",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.07, "causes": ["crystallize","mine","exile"] },
+     "forced": true,
+     "oriMul": 10
+    },
+    {
+     "id": "zone",
+     "name": "중앙 격리구역·국외 이주",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.07, "causes": ["crystallize","mine","exile"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.3,0.2] },
+   "standing": { "name": "작업반 평판", "start": 20 },
+   "affiliations": ["RIM_INF_EXPENDABLE","RIM_INF_SELFEXILE","RIM_INF_ZONE","RIM_INF_ABROAD"],
+   "exits": {
+    "retire": null,
+    "fall": { "crystallize": "death", "mine": "death", "exile": "exile" },
+    "switch": ["RHO_PATIENT"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  }
+ ]
+}

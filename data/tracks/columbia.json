@@ -1,0 +1,864 @@
+{
+ "_meta": {
+  "nation": "columbia",
+  "source": "진로_카탈로그_v0 §11",
+  "canon": "mixed",
+  "classScale": 1,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "단계 minYears·promo.k·fall.base·income·classes·gates 수치는 전부 창작(명세 §4·§13 기본값). canon:false 표시가 없는 단계 명칭은 카탈로그 캐논 명칭."
+ },
+ "tracks": [
+  {
+   "id": "COL_SLUM",
+   "nation": "columbia",
+   "region": null,
+   "name": "판자촌·갱",
+   "archetype": "A1",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [10,35],
+    "classes": { "q1": 0.25 },
+    "gates": [
+     { "urban": true }
+    ],
+    "via": ["resident","gang"]
+   },
+   "stages": [
+    {
+     "id": "resident",
+     "name": "주민",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "ties", "k": 0.25 },
+     "fall": { "base": 0.06, "causes": ["arrest","vendetta","kia"] }
+    },
+    {
+     "id": "member",
+     "name": "갱 단원",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.06, "causes": ["arrest","vendetta","kia"] }
+    },
+    {
+     "id": "boss",
+     "name": "두목",
+     "title": "두목",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["arrest","vendetta","kia"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.6,2], "job": "criminal" },
+   "standing": { "name": "조직 신뢰", "start": 20 },
+   "affiliations": ["COL_SLUM_TRIMOUNTS","COL_SLUM_REDHAND"],
+   "exits": {
+    "retire": { "age": 60, "to": "COL_SHOP" },
+    "fall": { "arrest": "prison:jail", "vendetta": "death", "kia": "death:violence" },
+    "switch": ["COL_LABOR","COL_PMC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "COL_ORPHAN",
+   "nation": "columbia",
+   "region": null,
+   "name": "고아원 출신",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [5,14],
+    "classes": { "q1": 0.15 },
+    "gates": [
+     { "status": "orphan", "weight": 30 }
+    ],
+    "via": ["orphanage"]
+   },
+   "stages": [
+    {
+     "id": "orphanage",
+     "name": "고아원",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.2 },
+     "fall": { "base": 0.04, "causes": ["experiment","ruin","disappear"] }
+    },
+    {
+     "id": "labor",
+     "name": "노동·요원 훈련",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["experiment","ruin","disappear"] }
+    },
+    {
+     "id": "placed",
+     "name": "배치",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["experiment","ruin","disappear"] }
+    }
+   ],
+   "income": { "stage": [0,0.3,1], "job": "laborer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["COL_ORP_TRENTON","COL_ORP_MAYLANDER"],
+   "exits": {
+    "retire": { "age": 20, "to": "COL_LABOR" },
+    "fall": { "experiment": "death", "ruin": "expel", "disappear": "death" },
+    "switch": ["COL_LABOR","COL_BSW","COL_RHINE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["muelsyse"],
+   "note": "status.orphan 은 출생 시 최하층 일부에 부여(엔진 고아 판정)"
+  },
+  {
+   "id": "COL_FRONTIER",
+   "nation": "columbia",
+   "region": null,
+   "name": "개척민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,45],
+    "classes": { "q1": 0.35, "q2": 0.25 },
+    "gates": [
+     { "urban": false, "weight": 3 }
+    ],
+    "via": ["team","debt","expelled"]
+   },
+   "stages": [
+    {
+     "id": "member",
+     "name": "개척민 팀원",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.04, "causes": ["ruin","raid","catastrophe","infected"] }
+    },
+    {
+     "id": "leader",
+     "name": "팀 리더",
+     "title": "팀 리더",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["ruin","raid","catastrophe","infected"] }
+    },
+    {
+     "id": "sheriff",
+     "name": "보안관·농장주",
+     "title": "보안관",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["ruin","raid","catastrophe","infected"] }
+    }
+   ],
+   "income": { "stage": [0.4,0.9,2], "job": "pioneer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["COL_FRO_BASEWOOD","COL_FRO_DEADHORSE","COL_FRO_RICHMOND","COL_FRO_DAVIS"],
+   "exits": {
+    "retire": { "age": 60, "to": "COL_SHOP" },
+    "fall": { "ruin": "expel", "raid": "death", "catastrophe": "death", "infected": "infected" },
+    "switch": ["COL_LABOR","COL_PMC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "COL_LABOR",
+   "nation": "columbia",
+   "region": null,
+   "name": "공장·광산 노동",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [15,40],
+    "classes": { "q1": 0.1, "q2": 0.3 },
+    "gates": [],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "worker",
+     "name": "공원",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["accident","infected","layoff"] }
+    },
+    {
+     "id": "skilled",
+     "name": "숙련공",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["accident","infected","layoff"] }
+    },
+    {
+     "id": "supervisor",
+     "name": "현장 감독",
+     "title": "감독",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["accident","infected","layoff"] }
+    }
+   ],
+   "income": { "stage": [0.6,1,1.8], "job": "factory_worker" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["COL_LAB_QUARRY","COL_LAB_MINE","COL_LAB_DEMOLITION"],
+   "exits": {
+    "retire": { "age": 60, "to": "COL_SHOP" },
+    "fall": { "accident": "injured", "infected": "infected", "layoff": "expel" },
+    "switch": ["COL_SHOP","COL_BSW"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["liskarm"]
+  },
+  {
+   "id": "COL_SHOP",
+   "nation": "columbia",
+   "region": null,
+   "name": "유통·서비스 점원",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [15,40],
+    "classes": { "q2": 0.2, "q3": 0.05 },
+    "gates": [],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "clerk",
+     "name": "점원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["layoff","infected","bankrupt"] }
+    },
+    {
+     "id": "manager",
+     "name": "매니저",
+     "title": "매니저",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["layoff","infected","bankrupt"] }
+    },
+    {
+     "id": "owner",
+     "name": "점장",
+     "title": "점장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["layoff","infected","bankrupt"] }
+    }
+   ],
+   "income": { "stage": [0.7,1.3,2.4], "job": "shopkeeper" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["COL_SHOP_MAMAJONES","COL_SHOP_BAR","COL_SHOP_SIESTA"],
+   "exits": {
+    "retire": { "age": 60, "to": "COL_SHOP" },
+    "fall": { "layoff": "expel", "infected": "infected", "bankrupt": "expel" },
+    "switch": ["COL_OFFICE","COL_LABOR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "COL_PMC",
+   "nation": "columbia",
+   "region": null,
+   "name": "기타 용병단",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": true,
+   "route": ["columbia","bolivar","sargon","siracusa"],
+   "entry": {
+    "ages": [16,35],
+    "classes": { "q2": 0.05 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "merc",
+     "name": "용병",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.065, "causes": ["kia","contract_end","infected"] }
+    },
+    {
+     "id": "lead",
+     "name": "팀장",
+     "title": "팀장",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.065, "causes": ["kia","contract_end","infected"] }
+    },
+    {
+     "id": "boss",
+     "name": "하청 두목",
+     "title": "두목",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.065, "causes": ["kia","contract_end","infected"] }
+    }
+   ],
+   "income": { "stage": [0.9,1.8,3.5], "job": "blacksteel" },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["COL_PMC_WESTERN","COL_PMC_REDMARK","COL_PMC_SUB"],
+   "exits": {
+    "retire": { "age": 60, "to": "COL_SHOP" },
+    "fall": { "kia": "death", "contract_end": "expel", "infected": "infected" },
+    "switch": ["COL_BSW","COM_MERC_PMC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "사다리 창작"
+  },
+  {
+   "id": "COL_BSW",
+   "nation": "columbia",
+   "region": null,
+   "name": "블랙스틸",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": true,
+   "route": ["columbia","kazimierz","bolivar","sargon"],
+   "entry": {
+    "ages": [16,28],
+    "classes": { "q1": 0.15, "q2": 0.15, "q3": 0.1 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["recruit","referral"]
+   },
+   "stages": [
+    {
+     "id": "trainee",
+     "name": "연습생",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.24 },
+     "fall": { "base": 0.055, "causes": ["elimination","kia","infected"] },
+     "contract": 2
+    },
+    {
+     "id": "operator",
+     "name": "오퍼레이터",
+     "title": "오퍼레이터",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.055, "causes": ["elimination","kia","infected"] },
+     "contract": 3
+    },
+    {
+     "id": "elite",
+     "name": "정예·교관",
+     "title": "교관",
+     "minYears": 7,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.055, "causes": ["elimination","kia","infected"] }
+    },
+    {
+     "id": "exec",
+     "name": "임원",
+     "title": "임원",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.02 },
+     "fall": { "base": 0.055, "causes": ["elimination","kia","infected"] }
+    },
+    {
+     "id": "ceo",
+     "name": "CEO",
+     "title": "CEO",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.055, "causes": ["elimination","kia","infected"] }
+    }
+   ],
+   "income": { "stage": [0.6,1.8,3.5,8,25], "job": "blacksteel" },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["COL_BSW_APD","COL_BSW_DEAT","COL_BSW_OBHR","COL_BSW_ACCOUNT"],
+   "exits": {
+    "retire": { "age": 50, "to": "COL_OFFICE" },
+    "fall": { "elimination": "expel", "kia": "death", "infected": "expel" },
+    "switch": ["COM_BLACKSTEEL_EXCHANGE","COL_PMC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["liskarm"]
+  },
+  {
+   "id": "COL_OFFICE",
+   "nation": "columbia",
+   "region": null,
+   "name": "회사원",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,32],
+    "classes": { "q2": 0.05, "q3": 0.45, "q4": 0.2 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["hire","graduate"]
+   },
+   "stages": [
+    {
+     "id": "staff",
+     "name": "사원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["layoff","infected","overwork"] }
+    },
+    {
+     "id": "senior",
+     "name": "주임",
+     "title": "주임",
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["layoff","infected","overwork"] }
+    },
+    {
+     "id": "manager",
+     "name": "매니저",
+     "title": "매니저",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.06 },
+     "fall": { "base": 0.02, "causes": ["layoff","infected","overwork"] }
+    },
+    {
+     "id": "exec",
+     "name": "임원",
+     "title": "임원",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["layoff","infected","overwork"] }
+    }
+   ],
+   "income": { "stage": [1.1,1.6,3,8], "job": "clerk" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["COL_OFF_TECH","COL_OFF_BANK","COL_OFF_RAYTHEAN","COL_OFF_HYDEBRO"],
+   "exits": {
+    "retire": { "age": 60, "to": "COL_SHOP" },
+    "fall": { "layoff": "expel", "infected": "infected", "overwork": "death" },
+    "switch": ["COL_SHOP","COL_LAW"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "COL_UNIV",
+   "nation": "columbia",
+   "region": null,
+   "name": "대학생",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [17,22],
+    "classes": { "q3": 0.2, "q4": 0.15 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["admission"]
+   },
+   "stages": [
+    {
+     "id": "freshman",
+     "name": "입학",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.035, "causes": ["ruin","infected"] }
+    },
+    {
+     "id": "undergrad",
+     "name": "학부",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["ruin","infected"] }
+    },
+    {
+     "id": "graduate",
+     "name": "석박사",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.035, "causes": ["ruin","infected"] }
+    },
+    {
+     "id": "placed",
+     "name": "진로 결정",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["ruin","infected"] }
+    }
+   ],
+   "income": { "stage": [0.1,0.2,0.5,0.6] },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["COL_UNI_TRIMOUNTS"],
+   "exits": {
+    "retire": { "age": 28, "to": "COL_OFFICE" },
+    "fall": { "ruin": "expel", "infected": "infected" },
+    "switch": ["COL_RHINE","COL_OFFICE","COL_LAW","COL_GOV"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "COL_GOV",
+   "nation": "columbia",
+   "region": null,
+   "name": "공무원·군·경찰",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,32],
+    "classes": { "q3": 0.15, "q5": 0.1 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 },
+     { "rel": "<=subtle" }
+    ],
+    "via": ["exam","enlist"]
+   },
+   "stages": [
+    {
+     "id": "rookie",
+     "name": "신입",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["kia","scandal","layoff"] }
+    },
+    {
+     "id": "officer",
+     "name": "경관·병",
+     "title": "경관",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["kia","scandal","layoff"] }
+    },
+    {
+     "id": "chief",
+     "name": "반장",
+     "title": "반장",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["kia","scandal","layoff"] }
+    },
+    {
+     "id": "director",
+     "name": "국장",
+     "title": "국장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["kia","scandal","layoff"] }
+    }
+   ],
+   "income": { "stage": [1,1.4,2.5,6], "job": "police" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["COL_GOV_FEDERAL","COL_GOV_POLICE","COL_GOV_AGENCY"],
+   "exits": {
+    "retire": { "age": 60, "to": "COL_OFFICE" },
+    "fall": { "kia": "death", "scandal": "disgrace", "layoff": "expel" },
+    "switch": ["COL_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "COL_MEDIA",
+   "nation": "columbia",
+   "region": null,
+   "name": "방송·영화",
+   "archetype": "A12",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,30],
+    "classes": { "q3": 0.05, "q4": 0.1 },
+    "gates": [
+     { "born": "looks", "min": 0.5 }
+    ],
+    "via": ["staff","casting"]
+   },
+   "stages": [
+    {
+     "id": "staff",
+     "name": "스태프",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "looks", "k": 0.22 },
+     "fall": { "base": 0.045, "causes": ["scandal","fade","accident"] }
+    },
+    {
+     "id": "rookie",
+     "name": "신인",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "looks", "k": 0.12 },
+     "fall": { "base": 0.045, "causes": ["scandal","fade","accident"] }
+    },
+    {
+     "id": "star",
+     "name": "스타·진행자",
+     "title": "스타",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["scandal","fade","accident"] }
+    }
+   ],
+   "income": { "stage": [0.6,1.5,10], "job": "entertainer" },
+   "standing": { "name": "명성", "start": 20 },
+   "affiliations": ["COL_MED_RANKWOOD","COL_MED_TBS","COL_MED_TELEGRAPH"],
+   "exits": {
+    "retire": { "age": 60, "to": "COL_SHOP" },
+    "fall": { "scandal": "disgrace", "fade": "expel", "accident": "death" },
+    "switch": ["COL_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "COL_INSURANCE",
+   "nation": "columbia",
+   "region": null,
+   "name": "보험 의존 감염자",
+   "archetype": "A5",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [0,90],
+    "classes": {},
+    "gates": [
+     { "infected": true }
+    ],
+    "via": ["diagnosed"]
+   },
+   "forced": { "infected": true, "policy": ["insurance"] },
+   "stages": [
+    {
+     "id": "private",
+     "name": "민영 보험 유지",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.06, "causes": ["crystallize","experiment","exile"] },
+     "forced": true
+    },
+    {
+     "id": "public",
+     "name": "공공보험 격리",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.15 },
+     "fall": { "base": 0.06, "causes": ["crystallize","experiment","exile"] },
+     "forced": true
+    },
+    {
+     "id": "frontier",
+     "name": "개척지",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["crystallize","experiment","exile"] },
+     "forced": true
+    }
+   ],
+   "income": { "stage": [0.5,0.2,0.3] },
+   "standing": { "name": "작업반 평판", "start": 20 },
+   "affiliations": ["COL_INS_PRIVATE","COL_INS_PUBLIC"],
+   "exits": {
+    "retire": null,
+    "fall": { "crystallize": "death", "experiment": "death", "exile": "exile" },
+    "switch": ["COL_FRONTIER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "돈이 분기 변수(콘텐츠 결정으로 단계 역행 가능)"
+  },
+  {
+   "id": "COL_RHINE",
+   "nation": "columbia",
+   "region": null,
+   "name": "라인 랩 연구원",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [20,30],
+    "classes": { "q4": 0.3, "q5": 0.1 },
+    "gates": [
+     { "cap": "learn", "min": 1.4 }
+    ],
+    "via": ["director_experiment","intern","exhibition"]
+   },
+   "stages": [
+    {
+     "id": "intern",
+     "name": "인턴",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.035, "causes": ["accident","disappear","infected"] }
+    },
+    {
+     "id": "researcher",
+     "name": "연구원",
+     "title": "연구원",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["accident","disappear","infected"] }
+    },
+    {
+     "id": "director",
+     "name": "디렉터",
+     "title": "섹션장",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.035, "causes": ["accident","disappear","infected"] }
+    },
+    {
+     "id": "board",
+     "name": "이사회",
+     "title": "이사",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["accident","disappear","infected"] }
+    }
+   ],
+   "income": { "stage": [1.2,3,8,25], "job": "rhine_lab" },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["COL_RHI_CONTROL","COL_RHI_ECOLOGY","COL_RHI_ENERGY","COL_RHI_ARTS","COL_RHI_DEFENSE","COL_RHI_OTHER"],
+   "exits": {
+    "retire": { "age": 65, "to": "COL_OFFICE" },
+    "fall": { "accident": "death:experiment", "disappear": "death", "infected": "infected" },
+    "switch": ["COL_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["saria","muelsyse","dorothy","kristen"]
+  },
+  {
+   "id": "COL_LAW",
+   "nation": "columbia",
+   "region": null,
+   "name": "변호사·전문직",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [22,32],
+    "classes": { "q4": 0.25 },
+    "gates": [
+     { "cap": "learn", "min": 1.4 }
+    ],
+    "via": ["law_school"]
+   },
+   "stages": [
+    {
+     "id": "school",
+     "name": "로스쿨",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.025, "causes": ["infected","scandal","bankrupt"] }
+    },
+    {
+     "id": "inhouse",
+     "name": "사내 변호사",
+     "title": "변호사",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.025, "causes": ["infected","scandal","bankrupt"] }
+    },
+    {
+     "id": "partner",
+     "name": "파트너",
+     "title": "파트너",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["infected","scandal","bankrupt"] }
+    }
+   ],
+   "income": { "stage": [0.3,4,12], "job": "lawyer" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["COL_LAW_INHOUSE","COL_LAW_LITIGATION"],
+   "exits": {
+    "retire": { "age": 68, "to": "COL_OFFICE" },
+    "fall": { "infected": "demote", "scandal": "disgrace", "bankrupt": "expel" },
+    "switch": ["COL_EXEC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "COL_EXEC",
+   "nation": "columbia",
+   "region": null,
+   "name": "기업 과두",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [28,50],
+    "classes": { "q5": 0.8 },
+    "gates": [
+     { "status": "noble", "weight": 10 },
+     { "cap": "ties", "min": 1.4 }
+    ],
+    "via": ["heir","founder"]
+   },
+   "stages": [
+    {
+     "id": "exec",
+     "name": "임원",
+     "title": "임원",
+     "minYears": 5,
+     "promo": { "cap": "ties", "k": 0.15 },
+     "fall": { "base": 0.03, "causes": ["bankrupt","assassination","arrest"] }
+    },
+    {
+     "id": "ceo",
+     "name": "CEO",
+     "title": "CEO",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["bankrupt","assassination","arrest"] }
+    },
+    {
+     "id": "elite",
+     "name": "10대 엘리트",
+     "title": "거물",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["bankrupt","assassination","arrest"] }
+    }
+   ],
+   "income": { "stage": [8,25,80] },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["COL_EXE_RAYTHEAN","COL_EXE_MAYLANDER","COL_EXE_HYDE","COL_EXE_SIMON"],
+   "exits": {
+    "retire": { "age": 75, "to": "COL_LAW" },
+    "fall": { "bankrupt": "demote", "assassination": "death", "arrest": "prison:jail" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  }
+ ]
+}

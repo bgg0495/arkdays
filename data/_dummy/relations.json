@@ -1,0 +1,12 @@
+{
+  "_meta": { "note": "W7 더미 관계 매트릭스. 캐논 근거 있는 조합만(D49). race 앞 '!' 는 '그 종족 외 전부'." },
+  "grades": ["exclude", "institutional", "cultural", "subtle", "neutral", "favored"],
+  "default": "neutral",
+  "sarkaz_default": { "grade": "subtle", "by": { "ursus": "institutional", "victoria": "institutional", "victoria_since": 1098, "kjerag": "neutral", "durin": "neutral", "kazdel": "favored" } },
+  "pairs": [
+    { "nation": "laterano", "race": "sarkaz", "grade": "exclude", "canon": true, "note": "입국 자체가 신성모독" },
+    { "nation": "laterano", "race": "sankta", "grade": "favored", "canon": true },
+    { "nation": "iberia", "race": "aegir", "grade": "institutional", "canon": true },
+    { "nation": "siracusa", "race": "!lupo", "grade": "subtle", "canon": true }
+  ]
+}

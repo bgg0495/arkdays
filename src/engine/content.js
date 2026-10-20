@@ -43,13 +43,33 @@ function validateBig(b) {
   b.a = b.a || [0, 999];
 }
 
-/** S 의 태그 집합: 국가·상위국가·종족·소수민족·감염·직업·거주·성별·정책·위협·등급 */
-export function tagsOf(sim) {
-  const { S, nation, race } = sim;
-  const t = new Set([S.cur, S.root, S.born, 'nation:' + S.cur, 'nation:' + S.root, S.race, 'race:' + S.race, S.sex, S.sex === 'F' ? 'female' : 'male',
+/** S 의 태그 집합: 국가·상위국가·종족·소수민족·감염·직업·거주·성별·정책·위협·등급 + v1(track/aff/archetype/newcomer/rel/rhodes/papers/visit/cap 등급).
+ *  visit 을 주면 국가 태그를 그 방문국으로 바꾼 집합(§7.4 순회형 피드) */
+export function tagsOf(sim, visit = null) {
+  const { S, race } = sim;
+  const nation = visit ? sim.data.nationById[visit] : sim.nation;
+  const cur = visit || S.cur, root = visit ? (sim.data.nationById[visit].parent || visit) : S.root;
+  const t = new Set([cur, root, S.born, 'nation:' + cur, 'nation:' + root, S.race, 'race:' + S.race, S.sex, S.sex === 'F' ? 'female' : 'male',
     S.urban ? 'urban' : 'rural', 'q' + S.q,
     S.home.type, S.home.type + '_' + S.home.deck, 'policy:' + sim.policy,
     'ori' + nation.oriExp, 'cat' + nation.catFreq, 'conflict' + nation.conflict]);
+  if (visit) t.add('visit:' + visit);
+  // v1
+  if (S.track) {
+    const tr = sim.data.trackById[S.track.id];
+    t.add('track:' + S.track.id);
+    if (tr) { const st = tr.stages[Math.min(S.track.stage, tr.stages.length - 1)]; if (st) t.add('track:' + S.track.id + ':' + st.id); if (tr.archetype === 'A10') t.add('archetype:A10'); t.add('arch:' + tr.archetype); if (tr.itinerant) t.add('itinerant'); }
+    if (S.track.aff) t.add('aff:' + S.track.aff);
+  }
+  if (S.res) { if (S.res.phase === 'settling') t.add('newcomer'); if (S.res.papers && S.res.papers !== 'native') t.add('papers:' + S.res.papers); if (S.res.phase === 'naturalized') t.add('naturalized'); if (S.cur !== S.born) t.add('migrant'); }
+  if (S.rel) t.add('rel:' + S.rel);
+  if (S.rhodes && S.rhodes !== true) { t.add('rhodes:' + S.rhodes.dept); t.add('rhodes_' + S.rhodes.status); }
+  if (S.status) { if (S.status.noble) t.add('noble'); if (S.status.slave) t.add('slave'); if (S.status.stigma) t.add('stigma:' + S.status.stigma); }
+  if (S.home.housing) t.add('home:' + S.home.housing);
+  if (S.home.owned) t.add('homeowner');
+  if (S.fam.marriage) t.add('marriage:' + S.fam.marriage.type);
+  if (S.cap) for (const k of ['skill', 'learn', 'arts', 'ties']) t.add('cap:' + k + ':' + capKey(S.cap[k]));
+  if (S.innate && S.innate.looks > 1.5) t.add('looks:high'); else if (S.innate && S.innate.looks < -1.5) t.add('looks:low');
   if (S.eth) t.add(S.eth);
   if (S.flags.bornInfected) t.add('born_infected');
   if (S.flags.minerFamily) t.add('miner_family');
@@ -71,6 +91,7 @@ export function tagsOf(sim) {
   for (const tr of race.traits || []) t.add('trait:' + tr);
   return t;
 }
+const capKey = (z) => (z < -0.8 ? 'low' : z < 0.5 ? 'mid' : z < 1.4 ? 'high' : 'top');
 
 /** 사인용 태그 판정: 같은 접두(threat:, nation:)끼리는 OR, 접두 그룹끼리는 AND. '!' 는 부정. */
 export function tagsOkGrouped(tags, set) {
@@ -95,9 +116,9 @@ export function tagsOk(tags, set) {
 }
 
 /** 올해 피드 이벤트 추첨(중복 없이). recent 14개 안에 있으면 ×0.08(rep면 ×0.5), gap 미경과 제외 */
-export function chooseFeed(sim, used) {
+export function chooseFeed(sim, used, visit = null) {
   const { S, rng, content } = sim;
-  const tags = tagsOf(sim);
+  const tags = tagsOf(sim, visit);
   const cands = [];
   for (const e of content.events) {
     if (used.has(e.id)) continue;
@@ -141,7 +162,8 @@ export function dueBigEvents(sim) {
   for (const b of content.big) {
     if (b.year !== year) continue;
     if (b.once && S.flags['big_' + b.id] != null) continue;
-    if (b.nation && b.nation !== S.cur && b.nation !== S.root) continue;
+    const visit = S.res && S.res.itinerantAt;   // §7.4: 대사건은 거주국과 방문국 둘 다
+    if (b.nation && b.nation !== S.cur && b.nation !== S.root && b.nation !== visit) continue;
     if (S.age < b.a[0] || S.age > b.a[1]) continue;
     if (!tagsOk(b.tags, tags)) continue;
     if (b.c && !b.c(sim)) continue;

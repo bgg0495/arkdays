@@ -1,0 +1,640 @@
+{
+ "_meta": {
+  "nation": "lungmen",
+  "source": "진로_카탈로그_v0 §2",
+  "canon": "mixed",
+  "classScale": 0.8686,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "단계 minYears·promo.k·fall.base·income·classes·gates 수치는 전부 창작(명세 §4·§13 기본값). canon:false 표시가 없는 단계 명칭은 카탈로그 캐논 명칭."
+ },
+ "tracks": [
+  {
+   "id": "LGM_SLUM",
+   "nation": "lungmen",
+   "region": null,
+   "name": "빈민가 노점",
+   "archetype": "A1",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [10,40],
+    "classes": { "q1": 0.5646, "q2": 0.2172, "q5": 0.1737 },
+    "gates": [],
+    "via": ["stall","ratking","fallen"]
+   },
+   "stages": [
+    {
+     "id": "helper",
+     "name": "노점 보조",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "ties", "k": 0.22 },
+     "fall": { "base": 0.04, "causes": ["arrest","purge","vendetta"] }
+    },
+    {
+     "id": "stall",
+     "name": "노점·위장 사업",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "ties", "k": 0.08 },
+     "fall": { "base": 0.04, "causes": ["arrest","purge","vendetta"] }
+    },
+    {
+     "id": "greytail",
+     "name": "그레이테일",
+     "title": "그레이테일",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.02 },
+     "fall": { "base": 0.04, "causes": ["arrest","purge","vendetta"] }
+    },
+    {
+     "id": "heir",
+     "name": "래트킹 후계",
+     "title": "후계자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["arrest","purge","vendetta"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.5,1.5,4], "job": "criminal" },
+   "standing": { "name": "조직 신뢰", "start": 20 },
+   "affiliations": ["LGM_SLUM_RATKING","LGM_SLUM_TRIADFRONT","LGM_SLUM_CANDY"],
+   "exits": {
+    "retire": { "age": 60, "to": "LGM_SHOP" },
+    "fall": { "arrest": "prison:jail", "purge": "death", "vendetta": "death" },
+    "switch": ["LGM_SHOP","LGM_SECURITY"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["lin"]
+  },
+  {
+   "id": "LGM_TRIAD",
+   "nation": "lungmen",
+   "region": null,
+   "name": "삼합회·시칠리안 잔당",
+   "archetype": "A1",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q1": 0.1303, "q2": 0.0434 },
+    "gates": [
+     { "rel": "<=cultural" }
+    ],
+    "via": ["recruit","debt"]
+   },
+   "stages": [
+    {
+     "id": "underling",
+     "name": "졸개",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "ties", "k": 0.25 },
+     "fall": { "base": 0.06, "causes": ["purge","vendetta","arrest"] }
+    },
+    {
+     "id": "cadre",
+     "name": "간부",
+     "title": "간부",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.06, "causes": ["purge","vendetta","arrest"] }
+    },
+    {
+     "id": "front",
+     "name": "위장 사업주",
+     "title": "사장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["purge","vendetta","arrest"] }
+    }
+   ],
+   "income": { "stage": [0.5,1.8,4], "job": "criminal" },
+   "standing": { "name": "조직 신뢰", "start": 20 },
+   "affiliations": ["LGM_TRIAD_TRIAD","LGM_TRIAD_CAPONE","LGM_TRIAD_GAMBINO"],
+   "exits": {
+    "retire": { "age": 60, "to": "LGM_SHOP" },
+    "fall": { "purge": "death", "vendetta": "death", "arrest": "prison:jail" },
+    "switch": ["LGM_SLUM"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "사다리 창작"
+  },
+  {
+   "id": "LGM_SECURITY",
+   "nation": "lungmen",
+   "region": null,
+   "name": "회사 경비원",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,40],
+    "classes": { "q1": 0.1303, "q2": 0.1737 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "guard",
+     "name": "경비원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["layoff","injury"] }
+    },
+    {
+     "id": "senior",
+     "name": "선임 경비",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["layoff","injury"] }
+    },
+    {
+     "id": "chief",
+     "name": "경비 반장",
+     "title": "반장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["layoff","injury"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.7,1,1.5], "job": "police" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["LGM_SEC_CORP","LGM_SEC_MALL"],
+   "exits": {
+    "retire": { "age": 60, "to": "LGM_SHOP" },
+    "fall": { "layoff": "expel", "injury": "injured" },
+    "switch": ["LGM_DETECTIVE","LGM_MESSENGER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "LGM_MESSENGER",
+   "nation": "lungmen",
+   "region": null,
+   "name": "메신저·물류",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": true,
+   "route": ["lungmen","yan","siracusa","columbia"],
+   "entry": {
+    "ages": [16,35],
+    "classes": { "q2": 0.1737, "q3": 0.1303 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["hire","startup","emperor"]
+   },
+   "stages": [
+    {
+     "id": "messenger",
+     "name": "메신저",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["bankrupt","kia","layoff"] }
+    },
+    {
+     "id": "escort",
+     "name": "호위·정보",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["bankrupt","kia","layoff"] }
+    },
+    {
+     "id": "lead",
+     "name": "팀장",
+     "title": "팀장",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.06 },
+     "fall": { "base": 0.02, "causes": ["bankrupt","kia","layoff"] }
+    },
+    {
+     "id": "owner",
+     "name": "경영",
+     "title": "대표",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["bankrupt","kia","layoff"] }
+    }
+   ],
+   "income": { "stage": [0.8,1.3,2.2,4], "job": "penguin_courier" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["LGM_MSG_PENGUIN","LGM_MSG_MOUNTAINDASH","LGM_MSG_STARTUP"],
+   "exits": {
+    "retire": { "age": 60, "to": "LGM_SHOP" },
+    "fall": { "bankrupt": "expel", "kia": "death", "layoff": "expel" },
+    "switch": ["COM_PENGUIN","LGM_CORP"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["emperor","texas"]
+  },
+  {
+   "id": "LGM_SHOP",
+   "nation": "lungmen",
+   "region": null,
+   "name": "상업단지 점원",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [15,40],
+    "classes": { "q2": 0.1737, "q3": 0.1303 },
+    "gates": [],
+    "via": ["hire","family"]
+   },
+   "stages": [
+    {
+     "id": "clerk",
+     "name": "점원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt","overwork"] }
+    },
+    {
+     "id": "manager",
+     "name": "매니저",
+     "title": "매니저",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt","overwork"] }
+    },
+    {
+     "id": "head",
+     "name": "총점장",
+     "title": "총점장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt","overwork"] }
+    }
+   ],
+   "income": { "stage": [0.7,1.3,2.5], "job": "shopkeeper" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["LGM_SHOP_SIAUSAN","LGM_SHOP_PLAZA","LGM_SHOP_HOTPOT"],
+   "exits": {
+    "retire": { "age": 60, "to": "LGM_SHOP" },
+    "fall": { "layoff": "expel", "bankrupt": "expel", "overwork": "death" },
+    "switch": ["LGM_MESSENGER","LGM_CORP"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "LGM_BUTLER",
+   "nation": "lungmen",
+   "region": null,
+   "name": "재벌가 사용인",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q2": 0.0869 },
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["referral","family"]
+   },
+   "stages": [
+    {
+     "id": "servant",
+     "name": "하인",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "ties", "k": 0.2 },
+     "fall": { "base": 0.015, "causes": ["layoff","scandal"] }
+    },
+    {
+     "id": "assistant",
+     "name": "집사 보조",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.015, "causes": ["layoff","scandal"] }
+    },
+    {
+     "id": "butler",
+     "name": "집사",
+     "title": "집사",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.015, "causes": ["layoff","scandal"] }
+    }
+   ],
+   "income": { "stage": [0.6,1,2], "job": "domestic" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["LGM_BUTLER_FIDES","LGM_BUTLER_SWIRE"],
+   "exits": {
+    "retire": { "age": 60, "to": "LGM_SHOP" },
+    "fall": { "layoff": "expel", "scandal": "disgrace" },
+    "switch": ["LGM_SHOP"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "사다리 창작"
+  },
+  {
+   "id": "LGM_CORP",
+   "nation": "lungmen",
+   "region": null,
+   "name": "대기업 사원",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [20,32],
+    "classes": { "q3": 0.2606, "q4": 0.304, "q5": 0.4343 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["hire","graduate"]
+   },
+   "stages": [
+    {
+     "id": "staff",
+     "name": "사원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["layoff","overwork","bankrupt"] }
+    },
+    {
+     "id": "assistant",
+     "name": "대리",
+     "title": "대리",
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["layoff","overwork","bankrupt"] }
+    },
+    {
+     "id": "manager",
+     "name": "부장",
+     "title": "부장",
+     "minYears": 7,
+     "promo": { "cap": "learn", "k": 0.06 },
+     "fall": { "base": 0.02, "causes": ["layoff","overwork","bankrupt"] }
+    },
+    {
+     "id": "exec",
+     "name": "임원",
+     "title": "임원",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["layoff","overwork","bankrupt"] }
+    }
+   ],
+   "income": { "stage": [1.2,1.8,3.5,8], "job": "clerk" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["LGM_CORP_PHARMA","LGM_CORP_SWIRE","LGM_CORP_MOUNTAINDASH"],
+   "exits": {
+    "retire": { "age": 60, "to": "LGM_SHOP" },
+    "fall": { "layoff": "expel", "overwork": "death", "bankrupt": "expel" },
+    "switch": ["LGM_SHOP"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "직급 창작"
+  },
+  {
+   "id": "LGM_FIRE",
+   "nation": "lungmen",
+   "region": null,
+   "name": "소방관",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,30],
+    "classes": { "q3": 0.0869 },
+    "gates": [
+     { "cap": "skill", "min": 0.5 }
+    ],
+    "via": ["exam"]
+   },
+   "stages": [
+    {
+     "id": "firefighter",
+     "name": "소방사",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.035, "causes": ["injury","kia","infected"] }
+    },
+    {
+     "id": "chief",
+     "name": "반장",
+     "title": "반장",
+     "minYears": 7,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["injury","kia","infected"] }
+    },
+    {
+     "id": "head",
+     "name": "서장",
+     "title": "서장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["injury","kia","infected"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [1,1.6,3] },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["LGM_FIRE_DEPT"],
+   "exits": {
+    "retire": { "age": 55, "to": "LGM_SHOP" },
+    "fall": { "injury": "injured", "kia": "death:accident", "infected": "infected" },
+    "switch": ["LGM_SECURITY"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "LGM_LGD",
+   "nation": "lungmen",
+   "region": null,
+   "name": "근위국 경찰",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,30],
+    "classes": { "q1": 0.0434, "q3": 0.0869, "q4": 0.3474, "q5": 0.2606 },
+    "gates": [
+     { "cap": "skill", "min": 0.5 },
+     { "cap": "learn", "min": -0.8 },
+     { "rel": "<=subtle" }
+    ],
+    "via": ["exam","referral"]
+   },
+   "stages": [
+    {
+     "id": "officer",
+     "name": "경관",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.035, "causes": ["kia","infected","courtmartial","desert"] },
+     "canon": false
+    },
+    {
+     "id": "inspector",
+     "name": "경감",
+     "title": "경감",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["kia","infected","courtmartial","desert"] }
+    },
+    {
+     "id": "superintendent",
+     "name": "총경",
+     "title": "총경",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.035, "causes": ["kia","infected","courtmartial","desert"] }
+    },
+    {
+     "id": "chief",
+     "name": "근위국장",
+     "title": "국장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["kia","infected","courtmartial","desert"] }
+    }
+   ],
+   "income": { "stage": [1.2,2.2,4.5,9], "job": "lgd_officer" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["LGM_LGD_GENERAL","LGM_LGD_SPECIAL","LGM_LGD_SHADOW"],
+   "exits": {
+    "retire": { "age": 58, "to": "LGM_SECURITY" },
+    "fall": { "kia": "death", "infected": "infected", "courtmartial": "disgrace", "desert": "exile" },
+    "switch": ["LGM_DETECTIVE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["chen","wei_yenwu"]
+  },
+  {
+   "id": "LGM_DETECTIVE",
+   "nation": "lungmen",
+   "region": null,
+   "name": "탐정사무소",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,35],
+    "classes": { "q3": 0.0434 },
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["invited"]
+   },
+   "stages": [
+    {
+     "id": "errand",
+     "name": "심부름",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "ties", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["kia","ruin"] }
+    },
+    {
+     "id": "investigator",
+     "name": "조사원",
+     "title": "조사원",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["kia","ruin"] }
+    },
+    {
+     "id": "partner",
+     "name": "파트너",
+     "title": "파트너",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["kia","ruin"] }
+    }
+   ],
+   "income": { "stage": [0.6,1.4,3] },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["LGM_DET_LEE"],
+   "exits": {
+    "retire": { "age": 70, "to": "LGM_SHOP" },
+    "fall": { "kia": "death", "ruin": "demote" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["lee"]
+  },
+  {
+   "id": "LGM_STUDENT",
+   "nation": "lungmen",
+   "region": null,
+   "name": "대학생",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [17,22],
+    "classes": { "q3": 0.1303, "q4": 0.2172 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["admission"]
+   },
+   "stages": [
+    {
+     "id": "freshman",
+     "name": "입학",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["ruin","infected"] }
+    },
+    {
+     "id": "parttime",
+     "name": "파트타임",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["ruin","infected"] }
+    },
+    {
+     "id": "graduate",
+     "name": "졸업",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["ruin","infected"] }
+    },
+    {
+     "id": "abroad",
+     "name": "해외 유학",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["ruin","infected"] }
+    }
+   ],
+   "income": { "stage": [0.1,0.4,0.6,0.5] },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["LGM_STU_UNION","LGM_STU_TECH","LGM_STU_EXCHANGE"],
+   "exits": {
+    "retire": { "age": 26, "to": "LGM_CORP" },
+    "fall": { "ruin": "expel", "infected": "infected" },
+    "switch": ["LGM_CORP","LGM_LGD","LGM_MESSENGER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  }
+ ]
+}

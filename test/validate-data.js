@@ -247,6 +247,350 @@ for (const [k, f] of Object.entries(nationsDoc.ethnicFlags || {})) {
   if (f.nameLang && !langs[f.nameLang]) err(`ethnicFlags[${k}]: nameLang '${f.nameLang}' 없음`);
 }
 
+// =====================================================================
+// W8 (v0.3 진로·소속): data/tracks/*.json, affiliations, relations, marriage, housing, rhodes, canon_figures
+// =====================================================================
+const W8 = { tracks: 0, affs: 0, figures: 0, relPairs: 0, marriageTypes: 0, housingTypes: 0 };
+(function validateW8() {
+  const TRACK_NATIONS = new Set([...nationIds, 'rhodes', 'common']);
+  const tracksDir = path.join(DATA, 'tracks');
+  if (!fs.existsSync(tracksDir)) { err('tracks/: 폴더 없음'); return; }
+  const files = fs.readdirSync(tracksDir).filter((f) => f.endsWith('.json')).sort();
+  const expectFiles = [...nationIds].map((n) => `${n}.json`).concat(['rhodes.json', 'common.json']);
+  for (const f of expectFiles) if (!files.includes(f)) err(`tracks/${f}: 파일 없음`);
+  const tracks = [];
+  let fallDeath = null, fallDefault = null;
+  for (const f of files) {
+    const doc = load(`tracks/${f}`);
+    if (!doc) continue;
+    if (!doc._meta || !isStr(doc._meta.nation)) err(`tracks/${f}: _meta.nation 누락`);
+    if (doc._meta && doc._meta.fallDeathCause) fallDeath = doc._meta.fallDeathCause;
+    if (doc._meta && doc._meta.fallDefaultOutcome) fallDefault = doc._meta.fallDefaultOutcome;
+    if (!Array.isArray(doc.tracks)) { err(`tracks/${f}: tracks 배열 없음`); continue; }
+    for (const t of doc.tracks) tracks.push({ ...t, _file: f });
+  }
+  if (!fallDeath) err('tracks/common.json: _meta.fallDeathCause 누락(§11.4 사인 매핑)');
+  if (!fallDefault) err('tracks/common.json: _meta.fallDefaultOutcome 누락');
+  const knownCauses = new Set([...Object.keys(fallDefault || {}), ...Object.keys(fallDeath || {})]);
+  for (const [c, cid] of Object.entries(fallDeath || {})) if (!causeIds.has(cid)) err(`tracks/common _meta.fallDeathCause['${c}'] = '${cid}' 가 causes.json 에 없음`);
+  const trackIds = uniqueIds(tracks, 'tracks');
+  W8.tracks = tracks.length;
+  if (tracks.length < 271 || tracks.length > 281) err(`tracks: 276±5 개여야 함 (현재 ${tracks.length})`);
+
+  const affDoc = load('affiliations.json');
+  const affs = (affDoc && affDoc.affiliations) || [];
+  const affIds = uniqueIds(affs, 'affiliations');
+  const affById = Object.fromEntries(affs.map((a) => [a.id, a]));
+  const figDoc = load('canon_figures.json');
+  const figures = (figDoc && figDoc.figures) || [];
+  const figIds = uniqueIds(figures, 'canon_figures');
+  const relDoc = load('relations.json');
+  const marDoc = load('marriage.json');
+  const houDoc = load('housing.json');
+  const rhoDoc = load('rhodes.json');
+
+  const EXIT_RE = /^(death(:[a-z_]+)?|prison:(jail|camp)|exile|demote|expel|injured|infected|disgrace|arena:[A-Z0-9_]+)$/;
+  const GATE_KEYS = new Set(['cap', 'born', 'min', 'max', 'weight', 'status', 'rel', 'race', 'only', 'sex', 'year', 'urban', 'infected', 'region', 'eth', 'newcomer', 'note']);
+  const CAPS = ['skill', 'learn', 'arts', 'ties', 'looks'];
+  const REL_RE = /^(<=|>=|<|>|=)?(exclude|institutional|cultural|subtle|neutral|favored)$/;
+  const classSum = {};  // nation → q → sum
+  const regionsByNation = {};
+  for (const t of tracks) {
+    const w = `tracks/${t._file}[${t.id}]`;
+    need(t, 'id', isStr, w); need(t, 'name', isStr, w);
+    if (!TRACK_NATIONS.has(t.nation)) err(`${w}: nation '${t.nation}' 없음`);
+    if (t._file !== `${t.nation}.json`) err(`${w}: 파일명과 nation 불일치`);
+    if (!/^A([1-9]|1[0-2])$/.test(t.archetype)) err(`${w}: archetype '${t.archetype}' (A1~A12)`);
+    if (typeof t.canon !== 'boolean') err(`${w}: canon boolean`);
+    if (typeof t.itinerant !== 'boolean') err(`${w}: itinerant boolean`);
+    if (t.itinerant && t.route != null) { if (!Array.isArray(t.route)) err(`${w}: route 배열`); else for (const r of t.route) if (!TRACK_NATIONS.has(r)) err(`${w}: route '${r}' 국가 없음`); }
+    if (t.region != null) { if (!isStr(t.region)) err(`${w}: region 문자열`); else (regionsByNation[t.nation] = regionsByNation[t.nation] || new Set()).add(t.region); }
+    if (t.oriPolicyOverride != null && !isStr(t.oriPolicyOverride)) err(`${w}: oriPolicyOverride 문자열|null`);
+    // entry
+    const e = t.entry || {};
+    if (!Array.isArray(e.ages) || e.ages.length !== 2 || !inRange(e.ages[0], 0, 100) || e.ages[0] > e.ages[1]) err(`${w}: entry.ages`);
+    const cls = e.classes || {};
+    let tsum = 0;
+    for (const [q, v] of Object.entries(cls)) {
+      if (!/^q[1-5]$/.test(q)) err(`${w}: classes 키 '${q}'`);
+      if (!inRange(v, 0, 1)) err(`${w}: classes['${q}'] 범위`);
+      tsum += v;
+      const cs = (classSum[t.nation] = classSum[t.nation] || {});
+      cs[q] = (cs[q] || 0) + v;
+    }
+    if (tsum > 1 + 1e-6) err(`${w}: 진로 안 classes 합 ${tsum.toFixed(3)} > 1`);
+    if (!Object.keys(cls).length && !t.forced && !['rhodes', 'common'].includes(t.nation) && !(t.note || '').includes('classes 없음')) warn(`${w}: classes 비어 있음(전환 전용이면 note 에 'classes 없음' 명시)`);
+    if (!Array.isArray(e.gates)) err(`${w}: entry.gates 배열`);
+    else for (const g of e.gates) {
+      for (const k of Object.keys(g)) if (!GATE_KEYS.has(k)) err(`${w}: gate 키 '${k}' 미정의`);
+      if (g.cap && (!CAPS.includes(g.cap) || !isNum(g.min))) err(`${w}: gate cap '${g.cap}' 또는 min 오류`);
+      if (g.born && (!['looks', 'luck'].includes(g.born) || !isNum(g.min))) err(`${w}: gate born`);
+      if (g.race) { for (const r of g.race) if (!raceIds.has(r)) err(`${w}: gate race '${r}' 없음`); if (!g.only && !isNum(g.weight)) err(`${w}: gate race 는 weight 또는 only:true`); }
+      if (g.rel && !REL_RE.test(g.rel)) err(`${w}: gate rel '${g.rel}'`);
+      if (g.year && (!Array.isArray(g.year) || g.year.length !== 2 || g.year[0] > g.year[1])) err(`${w}: gate year`);
+      if (g.sex && !['M', 'F'].includes(g.sex)) err(`${w}: gate sex`);
+      if (g.eth && !(nationsDoc.ethnicFlags || {})[g.eth]) err(`${w}: gate eth '${g.eth}' 가 ethnicFlags 에 없음`);
+      if (g.weight != null && !inRange(g.weight, 0, 100)) err(`${w}: gate weight`);
+    }
+    if (!Array.isArray(e.via) || !e.via.length || !e.via.every(isStr)) err(`${w}: entry.via 문자열 배열(1개 이상)`);
+    // stages
+    const st = Array.isArray(t.stages) ? t.stages : [];
+    if (st.length < 2 || st.length > 6) err(`${w}: stages ${st.length}개 (2~6)`);
+    const sids = new Set();
+    st.forEach((s, i) => {
+      const sw = `${w}:${s.id}`;
+      if (!isStr(s.id) || !isStr(s.name)) err(`${sw}: id/name`);
+      if (sids.has(s.id)) err(`${sw}: stage id 중복`); sids.add(s.id);
+      if (s.title != null && !isStr(s.title)) err(`${sw}: title 문자열|null`);
+      if (!inRange(s.minYears, 0, 60)) err(`${sw}: minYears`);
+      const last = i === st.length - 1;
+      if (last) { if (s.promo !== null) err(`${sw}: 마지막 단계 promo 는 null`); }
+      else {
+        if (!s.promo || !CAPS.includes(s.promo.cap) || !inRange(s.promo.k, 0.01, 0.25)) err(`${sw}: promo {cap, k 0.01~0.25}`);
+        else if (s.promo.requires && typeof s.promo.requires !== 'object') err(`${sw}: promo.requires 객체`);
+      }
+      if (!s.fall || !inRange(s.fall.base, 0.01, 0.08)) err(`${sw}: fall.base 0.01~0.08`);
+      if (!s.fall || !Array.isArray(s.fall.causes) || !s.fall.causes.length) err(`${sw}: fall.causes 1개 이상`);
+      else for (const c of s.fall.causes) if (!knownCauses.has(c) && !(t.exits && t.exits.fall && t.exits.fall[c])) err(`${sw}: 몰락 원인 '${c}' 미정의`);
+      if (s.canon != null && s.canon !== false) err(`${sw}: canon 은 false 일 때만 적는다`);
+      if (s.oriMul != null && !inRange(s.oriMul, 0, 20)) err(`${sw}: oriMul`);
+    });
+    // income
+    if (!t.income || !Array.isArray(t.income.stage)) err(`${w}: income.stage 배열`);
+    else {
+      if (t.income.stage.length !== st.length) err(`${w}: income.stage 길이 ${t.income.stage.length} ≠ stages ${st.length}`);
+      if (!t.income.stage.every((x) => inRange(x, 0, 100))) err(`${w}: income.stage 값 0~100`);
+      if (t.income.job != null && !jobIds.has(t.income.job)) err(`${w}: income.job '${t.income.job}' jobs.json 에 없음`);
+      if (t.archetype === 'A11' && !t.income.job && t.nation !== 'rhodes') warn(`${w}: A11 생업인데 income.job 없음`);
+    }
+    if (!t.standing || !isStr(t.standing.name) || !inRange(t.standing.start, 0, 100)) err(`${w}: standing {name, start}`);
+    // affiliations
+    if (!Array.isArray(t.affiliations)) err(`${w}: affiliations 배열`);
+    else {
+      for (const a of t.affiliations) { if (!affIds.has(a)) err(`${w}: affiliation '${a}' 없음`); else if (affById[a].track !== t.id) err(`${w}: affiliation '${a}' 의 track 이 ${affById[a].track}`); }
+      if (!t.affiliations.length) warn(`${w}: 소속 변주 없음`);
+    }
+    // exits
+    const ex = t.exits || {};
+    if (ex.retire != null) { if (!inRange(ex.retire.age, 10, 120) || !isStr(ex.retire.to)) err(`${w}: exits.retire {age, to}`); else if (!trackIds.has(ex.retire.to)) err(`${w}: exits.retire.to '${ex.retire.to}' 없음`); }
+    if (!ex.fall || typeof ex.fall !== 'object') err(`${w}: exits.fall 객체`);
+    else {
+      const used = new Set(st.flatMap((s) => (s.fall && s.fall.causes) || []));
+      for (const c of used) if (!ex.fall[c]) err(`${w}: exits.fall['${c}'] 없음(단계 fall.causes 전부 결과 필요)`);
+      for (const [c, v] of Object.entries(ex.fall)) {
+        if (!isStr(v) || !EXIT_RE.test(v)) err(`${w}: exits.fall['${c}'] = ${JSON.stringify(v)} (§3.5 사전 밖)`);
+        else if (v.startsWith('death:') && !causeIds.has(v.slice(6))) err(`${w}: exits.fall['${c}'] 사인 '${v.slice(6)}' 없음`);
+        else if (v === 'death' && !(fallDeath || {})[c]) err(`${w}: exits.fall['${c}']=death 인데 fallDeathCause 에 '${c}' 매핑 없음`);
+        else if (v.startsWith('arena:') && !trackIds.has(v.slice(6))) err(`${w}: arena 대상 '${v.slice(6)}' 없음`);
+      }
+    }
+    if (!Array.isArray(ex.switch)) err(`${w}: exits.switch 배열`);
+    else for (const s of ex.switch) { if (!trackIds.has(s)) err(`${w}: switch '${s}' 없음`); if (s === t.id) err(`${w}: switch 가 자기 자신`); }
+    if (!Array.isArray(t.canonFigures)) err(`${w}: canonFigures 배열`);
+    else for (const f of t.canonFigures) { if (!figIds.has(f)) err(`${w}: canonFigures '${f}' 없음`); }
+    if (t.forced != null && typeof t.forced !== 'object') err(`${w}: forced 객체`);
+  }
+  for (const [n, cs] of Object.entries(classSum)) for (const [q, s] of Object.entries(cs)) if (s > 1 + 1e-6) err(`tracks/${n}: 계층 ${q} 유입 합 ${s.toFixed(3)} > 1`);
+  for (const n of nationIds) {
+    const own = tracks.filter((t) => t.nation === n);
+    if (own.length < 8) err(`tracks/${n}: 진로 ${own.length}개 (국가당 8개 이상, D40)`);
+    if (!own.some((t) => t.archetype === 'A11')) err(`tracks/${n}: A11 생업 진로 없음`);
+    const scale = (load(`tracks/${n}.json`) || {})._meta?.classScale;
+    for (const q of ['q1', 'q2', 'q3', 'q4', 'q5']) { const s = (classSum[n] || {})[q] || 0; if (s <= 0) err(`tracks/${n}: 계층 ${q} 유입 합 0`); else if (scale && Math.abs(s - scale) > 0.02) warn(`tracks/${n}: 계층 ${q} 유입 합 ${s.toFixed(3)} ≠ classScale ${scale}`); }
+  }
+  // ---------- affiliations ----------
+  W8.affs = affs.length;
+  const TAGS = new Set((affDoc && affDoc._meta && affDoc._meta.tagEnum) || ['major', 'minor', 'elite']);
+  const affSum = {};
+  for (const a of affs) {
+    const w = `affiliations[${a.id}]`;
+    need(a, 'id', isStr, w); need(a, 'name', isStr, w);
+    if (!trackIds.has(a.track)) err(`${w}: track '${a.track}' 없음`);
+    if (typeof a.canon !== 'boolean') err(`${w}: canon boolean`);
+    if (!inRange(a.weight, 0, 1)) err(`${w}: weight 0~1`);
+    affSum[a.track] = (affSum[a.track] || 0) + (a.weight || 0);
+    if (!a.mods || typeof a.mods !== 'object') err(`${w}: mods 객체`);
+    else {
+      for (const k of ['promo', 'fall', 'income']) { if (!isNum(a.mods[k])) err(`${w}: mods.${k} 숫자`); else if (a.mods[k] < 0.5 || a.mods[k] > 2.0) err(`${w}: mods.${k} ${a.mods[k]} (0.5~2.0)`); else if (a.mods[k] < 0.7 || a.mods[k] > 1.3) warn(`${w}: mods.${k} ${a.mods[k]} 가 ±30% 밖`); }
+      if (!inRange(a.mods.standingStart, -50, 50)) err(`${w}: mods.standingStart`);
+    }
+    if (!Array.isArray(a.tags) || !a.tags.length) err(`${w}: tags 1개 이상`); else for (const tg of a.tags) if (!TAGS.has(tg)) err(`${w}: tag '${tg}' enum 아님`);
+    if (a.events != null && !isStr(a.events)) err(`${w}: events 문자열`);
+  }
+  for (const [tid, s] of Object.entries(affSum)) if (Math.abs(s - 1) > 0.02) err(`affiliations: track ${tid} weight 합 ${s.toFixed(2)} (1 필요)`);
+  // 단계 requires.aff 태그가 그 진로 소속에 존재하는지
+  for (const t of tracks) for (const s of t.stages || []) if (s.promo && s.promo.requires && s.promo.requires.aff) {
+    const tag = s.promo.requires.aff;
+    if (!(t.affiliations || []).some((a) => affById[a] && affById[a].tags.includes(tag))) err(`tracks/${t._file}[${t.id}]:${s.id}: requires.aff '${tag}' 태그를 가진 소속 없음`);
+  }
+  // ---------- canon_figures ----------
+  W8.figures = figures.length;
+  if (figures.length < 40 || figures.length > 80) err(`canon_figures: 40~80명이어야 함 (현재 ${figures.length})`);
+  for (const f of figures) {
+    const w = `canon_figures[${f.id}]`;
+    need(f, 'id', isStr, w); need(f, 'name', isStr, w); need(f, 'line', isStr, w);
+    if (!TRACK_NATIONS.has(f.nation)) err(`${w}: nation '${f.nation}' 없음`);
+    if (!Array.isArray(f.years) || f.years.length !== 2 || !inRange(f.years[0], 900, 1300) || f.years[0] > f.years[1]) err(`${w}: years [y0, y1]`);
+    if (!Array.isArray(f.tracks) || !f.tracks.length) err(`${w}: tracks 1개 이상`); else for (const tid of f.tracks) if (!trackIds.has(tid)) err(`${w}: track '${tid}' 없음`);
+    if (isStr(f.line) && isStr(f.name) && f.name.length >= 2 && f.line.includes(f.name)) err(`${w}: line 에 이름이 들어 있음(D43)`);
+    if (isStr(f.line) && /추정|임시|시뮬|1950|창작|캐논/.test(f.line)) err(`${w}: line 에 D25 금지 문구`);
+    if (f.stage != null && !isStr(f.stage)) err(`${w}: stage 문자열`);
+  }
+  // ---------- relations ----------
+  if (relDoc) {
+    const G = relDoc.grades || [];
+    if (JSON.stringify(G) !== JSON.stringify(['exclude', 'institutional', 'cultural', 'subtle', 'neutral', 'favored'])) err('relations: grades 가 §9 순서와 다름');
+    if (!G.includes(relDoc.default)) err('relations: default 등급 오류');
+    const sd = relDoc.sarkaz_default || {};
+    if (!G.includes(sd.grade)) err('relations: sarkaz_default.grade');
+    for (const [k, v] of Object.entries(sd.by || {})) { if (k.endsWith('_since')) { if (!isNum(v)) err(`relations: sarkaz_default.by.${k} 연도`); continue; } if (!TRACK_NATIONS.has(k)) err(`relations: sarkaz_default.by 국가 '${k}' 없음`); if (!G.includes(v)) err(`relations: sarkaz_default.by.${k} 등급 '${v}'`); }
+    const pairs = relDoc.pairs || [];
+    W8.relPairs = pairs.length + (relDoc.ethPairs || []).length;
+    if (pairs.length < 20 || pairs.length + (relDoc.ethPairs || []).length > 40) err(`relations: 20~40쌍이어야 함 (현재 ${W8.relPairs})`);
+    const seenPair = new Set();
+    for (const p of pairs.concat(relDoc.ethPairs || [])) {
+      const key = `${p.nation}×${p.race || 'eth:' + p.eth}${p.scope ? '@' + p.scope : ''}`;
+      const w = `relations[${key}]`;
+      if (seenPair.has(key)) err(`${w}: 중복`); seenPair.add(key);
+      if (!nationIds.has(p.nation)) err(`${w}: 국가 없음`);
+      if (p.race != null) { if (!raceIds.has(String(p.race).replace(/^!/, ''))) err(`${w}: 종족 없음`); }
+      else if (p.eth != null) { if (!(nationsDoc.ethnicFlags || {})[p.eth]) err(`${w}: eth '${p.eth}' 없음`); }
+      else err(`${w}: race 또는 eth 필요`);
+      if (!G.includes(p.grade)) err(`${w}: 등급 '${p.grade}'`);
+      if (!(p.canon === true || p.canon === 'partial')) err(`${w}: canon 은 true|'partial'(근거 없는 쌍은 기입 금지, D49)`);
+      if (!isStr(p.note)) err(`${w}: note(근거) 필수`);
+      if (p.since != null && !isNum(p.since)) err(`${w}: since 연도`);
+      if (p.scope != null && !/^track:[A-Z0-9_]+$/.test(p.scope)) err(`${w}: scope 형식`); else if (p.scope && !trackIds.has(p.scope.slice(6))) err(`${w}: scope 진로 없음`);
+    }
+    const must = [['laterano', 'sarkaz', 'exclude'], ['kazdel', 'sankta', 'exclude'], ['iberia', 'aegir', 'institutional'], ['higashi', 'oni', 'cultural']];
+    for (const [n, r, g] of must) if (!pairs.some((p) => p.nation === n && p.race === r && p.grade === g)) err(`relations: D49 필수 쌍 ${n}×${r}=${g} 없음`);
+  }
+  // ---------- marriage / housing ----------
+  const checkTypes = (doc, name, minT, maxT) => {
+    if (!doc) return;
+    for (const n of nationIds) {
+      const sec = doc[n];
+      if (!sec || !Array.isArray(sec.types)) { err(`${name}: 국가 '${n}' 없음`); continue; }
+      const ids = new Set();
+      const nonForced = sec.types.filter((t) => !t.forced && !(t.req && t.req.infected));
+      if (nonForced.length < minT || nonForced.length > maxT) err(`${name}[${n}]: 유형 ${nonForced.length}개 (${minT}~${maxT})`);
+      let ws = 0;
+      for (const t of sec.types) {
+        const w = `${name}[${n}:${t.id}]`;
+        need(t, 'id', isStr, w); need(t, 'name', isStr, w);
+        if (ids.has(t.id)) err(`${w}: id 중복`); ids.add(t.id);
+        if (!inRange(t.w, 0, 1)) err(`${w}: w 0~1`); ws += t.w || 0;
+        if (t.req) {
+          for (const tid of t.req.track || []) if (!trackIds.has(tid)) err(`${w}: req.track '${tid}' 없음`);
+          if (t.req.eth && !(nationsDoc.ethnicFlags || {})[t.req.eth]) err(`${w}: req.eth 없음`);
+          for (const k of Object.keys(t.req)) if (!['track', 'urban', 'nomadic', 'status', 'infected', 'eth', 'region', 'income', 'money', 'q'].includes(k)) err(`${w}: req 키 '${k}' 미정의`);
+        }
+        if (t.region != null && !isStr(t.region)) err(`${w}: region 문자열`);
+        if (t.since != null && !isNum(t.since)) err(`${w}: since`);
+        if (t.until != null && !isNum(t.until)) err(`${w}: until`);
+        if (!(t.canon === true || t.canon === false || t.canon === 'partial')) err(`${w}: canon true|false|'partial'`);
+        if (name === 'marriage') {
+          if (!Array.isArray(t.age) || t.age.length !== 2 || t.age[0] > t.age[1] || !inRange(t.age[0], 12, 60)) err(`${w}: age [min,max]`);
+          if (!isNum(t.dowry) || t.dowry < -10 || t.dowry > 10) err(`${w}: dowry 숫자`);
+          if (t.poly != null && typeof t.poly !== 'boolean') err(`${w}: poly boolean`);
+          if (t.polyReq && !inRange(t.polyReq.income, 0, 100)) err(`${w}: polyReq.income`);
+          W8.marriageTypes++;
+        } else {
+          if (!inRange(t.cost, 0, 2)) err(`${w}: cost 0~2(중위소득 배율)`);
+          if (t.own && !inRange(t.price, 0, 100)) err(`${w}: own 이면 price(중위소득 배율) 필요`);
+          if (t.forced) {
+            for (const k of Object.keys(t.forced)) if (!['oriPolicy', 'known', 'prison', 'res', 'track', 'archetype', 'stageMax', 'stageMin', 'papers'].includes(k)) err(`${w}: forced 키 '${k}' 미정의`);
+            for (const tid of t.forced.track || []) if (!trackIds.has(tid)) err(`${w}: forced.track '${tid}' 없음`);
+            for (const p of t.forced.oriPolicy || []) if (!POLICIES.includes(p)) err(`${w}: forced.oriPolicy '${p}'`);
+          }
+          W8.housingTypes++;
+        }
+      }
+      if (Math.abs(ws - 1) > 0.02) warn(`${name}[${n}]: w 합 ${ws.toFixed(2)} (1 권장)`);
+      // 감염자 전용 유형은 격리·박해 정책 국가에 있어야 함(marriage)
+      if (name === 'marriage') { const nat = nations.find((x) => x.id === n); const pol = [nat.policy].concat((nat.policyVariants || []).map((v) => v.policy)); if (pol.some((p) => ['quarantine', 'euthanasia', 'persecute'].includes(p)) && !sec.types.some((t) => t.req && t.req.infected)) warn(`marriage[${n}]: 격리·박해 정책 국가인데 감염자 전용 유형 없음`); }
+    }
+    for (const k of Object.keys(doc)) if (!k.startsWith('_') && !nationIds.has(k)) err(`${name}: 알 수 없는 키 '${k}'`);
+  };
+  checkTypes(marDoc, 'marriage', 2, 4);
+  checkTypes(houDoc, 'housing', 2, 5);
+  if (houDoc && (!houDoc._default || !Array.isArray(houDoc._default.types))) err('housing: _default.types(공통 강제 유형) 필요');
+  else if (houDoc) for (const id of ['quarantine', 'camp', 'ship_cabin']) if (!houDoc._default.types.some((t) => t.id === id)) err(`housing._default: '${id}' 강제 유형 없음`);
+  // ---------- rhodes ----------
+  if (rhoDoc) {
+    const VIA = ['volunteer', 'referral', 'treatment', 'rescue', 'agreement', 'companion', 'flight', 'transfer', 'babel'];
+    const entries = rhoDoc.entries || [];
+    const vias = entries.map((e) => e.via);
+    for (const v of VIA) if (!vias.includes(v)) err(`rhodes.entries: via '${v}' 없음`);
+    if (new Set(vias).size !== vias.length) err('rhodes.entries: via 중복');
+    for (const e of entries) {
+      const w = `rhodes.entries[${e.via}]`;
+      if (!VIA.includes(e.via)) err(`${w}: via enum 아님`);
+      if (!inRange(e.p, 0, 1)) err(`${w}: p 0~1`);
+      if (!['common', 'rare', 'very_rare'].includes(e.rarity)) err(`${w}: rarity`);
+      need(e, 'line', isStr, w); need(e, 'tag', isStr, w);
+      for (const tid of e.tracks || []) if (!trackIds.has(tid)) err(`${w}: track '${tid}' 없음`);
+      if (e.nation && !nationIds.has(e.nation)) err(`${w}: nation 없음`);
+      if (e.cap) for (const [k, v] of Object.entries(e.cap)) if (!CAPS.includes(k) || !isNum(v)) err(`${w}: cap`);
+      if (e.policies) for (const p of e.policies) if (!POLICIES.includes(p)) err(`${w}: policies '${p}'`);
+    }
+    const DEPTS = ['field', 'medical', 'engineer', 'logistics', 'hr', 'purchase', 'office'];
+    if (!Array.isArray(rhoDoc.depts) || !DEPTS.every((d) => rhoDoc.depts.includes(d))) err('rhodes.depts: 7개 부서 id 배열 필요');
+    for (const d of rhoDoc.deptInfo || []) if (!trackIds.has(d.track)) err(`rhodes.deptInfo[${d.id}]: track '${d.track}' 없음`);
+    for (const r of (rhoDoc.statusRules || {}).rules || []) { if (!['operator', 'contractor', 'patient'].includes(r.status)) err(`rhodes.statusRules: status '${r.status}'`); if (r.track && !trackIds.has(r.track)) err(`rhodes.statusRules: track '${r.track}' 없음`); if (r.laborFor && !trackIds.has(r.laborFor)) err(`rhodes.statusRules: laborFor 없음`); }
+    if (!Array.isArray(rhoDoc.ports) || rhoDoc.ports.length < 8 || rhoDoc.ports.length > 12) err(`rhodes.ports: 8~12개국 (현재 ${(rhoDoc.ports || []).length})`);
+    else for (const p of rhoDoc.ports) if (!nationIds.has(p)) err(`rhodes.ports: '${p}' 국가 없음`);
+    const pw = (rhoDoc.portWeights || {}).weights || {};
+    const pws = Object.values(pw).reduce((a, b) => a + b, 0);
+    if (Math.abs(pws - 1) > 0.02) err(`rhodes.portWeights 합 ${pws.toFixed(2)}`);
+    for (const k of Object.keys(pw)) if (!(rhoDoc.ports || []).includes(k)) err(`rhodes.portWeights: '${k}' 가 ports 에 없음`);
+    for (const n of (rhoDoc.portWeights || {}).offices || []) if (!nationIds.has(n)) err(`rhodes.portWeights.offices '${n}'`);
+    for (const c of rhoDoc.closed || []) {
+      if (c.nation && !nationIds.has(c.nation)) err(`rhodes.closed: 국가 '${c.nation}' 없음`);
+      for (const tid of c.tracks || []) if (!trackIds.has(tid)) err(`rhodes.closed: track '${tid}' 없음`);
+      if (c.race && !raceIds.has(c.race)) err(`rhodes.closed: race '${c.race}' 없음`);
+      if (c.prison && !['camp', 'jail'].includes(c.prison)) err('rhodes.closed: prison');
+      if (!isStr(c.note)) err('rhodes.closed: note 필수');
+    }
+    const tp = (rhoDoc.diagnosis || {}).templates || [];
+    if (tp.length !== 6) err(`rhodes.diagnosis.templates: 6종 (현재 ${tp.length})`);
+    for (const t of tp) {
+      const w = `rhodes.diagnosis[${t.id}]`;
+      need(t, 'text', isStr, w);
+      if (![0, 1, 2, 3].includes(t.stage)) err(`${w}: stage 0~3`);
+      if (!Array.isArray(t.uL) || t.uL.length !== 2 || t.uL[0] > t.uL[1]) err(`${w}: uL [lo, hi]`);
+      if (isStr(t.text) && /추정|임시|시뮬|1950|창작|신뢰구간|플레이어|게임/.test(t.text)) err(`${w}: D25 금지 문구`);
+      if (isStr(t.text) && !/방사선 검사 결과/.test(t.text)) warn(`${w}: 캐논 프로필 톤 문두('방사선 검사 결과') 아님`);
+    }
+    const os = (rhoDoc.operatorStats || {}).stats || [];
+    if (os.length !== 6) err(`rhodes.operatorStats.stats: 6종 (현재 ${os.length})`);
+    if (JSON.stringify((rhoDoc.operatorStats || {}).grades) !== JSON.stringify(['결함', '보통', '표준', '우수', '뛰어남', '탁월'])) err('rhodes.operatorStats.grades: 캐논 6등급');
+  }
+  // ---------- nations 추가 필드(§7.3, D26) / races.skillApt ----------
+  for (const n of nations) {
+    const w = `nations[${n.id}]`;
+    if (typeof n.refugeeIn !== 'boolean') err(`${w}: refugeeIn boolean`);
+    if (!['open', 'hard', 'never'].includes(n.naturalize)) err(`${w}: naturalize open|hard|never`);
+    if (!inRange(n.illegalRisk, 0, 1)) err(`${w}: illegalRisk 0~1`);
+    if (typeof n.expelsInfected !== 'boolean') err(`${w}: expelsInfected boolean`);
+    if (n.expelsInfected !== (n.policy === 'expel')) warn(`${w}: expelsInfected 와 policy(${n.policy}) 불일치`);
+    if (!n.mig || typeof n.mig !== 'object' || !Object.keys(n.mig).length) err(`${w}: mig 비어 있음`);
+    else {
+      let s = 0;
+      for (const [k, v] of Object.entries(n.mig)) { if (!nationIds.has(k)) err(`${w}: mig '${k}' 국가 없음`); if (k === n.id) err(`${w}: mig 에 자기 자신`); if (!inRange(v, 0, 1)) err(`${w}: mig['${k}']`); s += v; }
+      if (Math.abs(s - 1) > 0.02) err(`${w}: mig 합 ${s.toFixed(2)}`);
+    }
+    if (!Array.isArray(n.specialTracks)) err(`${w}: specialTracks 배열`);
+    else {
+      if (!n.specialTracks.length) err(`${w}: specialTracks 비어 있음(D26: 국가 특수 진로 최소 1개)`);
+      for (const tid of n.specialTracks) { if (!trackIds.has(tid)) err(`${w}: specialTracks '${tid}' 없음`); else { const t = tracks.find((x) => x.id === tid); if (t.nation !== n.id) err(`${w}: specialTracks '${tid}' 는 ${t.nation} 진로`); if (['A10', 'A11'].includes(t.archetype) || !t.canon) err(`${w}: specialTracks '${tid}' 는 canon:true && 원형≠A10/A11 이어야`); } }
+    }
+  }
+  for (const r of races) if (!inRange(r.skillApt, -2, 2)) err(`races[${r.id}]: skillApt -2~2 (§6.1)`);
+  // 하위 지역: 진로 region 값이 policyVariants 의 region 과 어긋나지 않는지(정보용)
+  W8.regions = Object.fromEntries(Object.entries(regionsByNation).map(([n, rs]) => [n, [...rs]]));
+})();
+
 report();
 process.exit(errors.length ? 1 : 0);
 
@@ -255,6 +599,7 @@ function report() {
     nations: nations?.length, shareSum: +shareSum?.toFixed(2), races: races?.length, jobs: jobs?.length,
     commonJobs: commonJobs?.length, causes: causes?.length, nameLangs: Object.keys(langs || {}).length,
     statCountries: Object.keys(stats || {}).length, statCustom: Object.keys(statsDoc?.custom || {}).length,
+    ...(typeof W8 === 'object' ? W8 : {}),
   };
   console.log('요약:', JSON.stringify(summary));
   for (const w of warns) console.log('경고:', w);

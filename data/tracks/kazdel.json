@@ -1,0 +1,838 @@
+{
+ "_meta": {
+  "nation": "kazdel",
+  "source": "진로_카탈로그_v0 §20",
+  "canon": "mixed",
+  "classScale": 0.6889,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "출생 연도(바벨기 1031~1086 / 내전기 1086~1098 / 재건기 1098~)가 year gate 로 입구를 가른다. KZD_DIASPORA 는 해외 출생 살카즈(eth outsider) 가중."
+ },
+ "tracks": [
+  {
+   "id": "KZD_MERC",
+   "nation": "kazdel",
+   "region": null,
+   "name": "살카즈 용병",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": true,
+   "route": ["kazdel","victoria","columbia","leithanien","sargon"],
+   "entry": {
+    "ages": [12,30],
+    "classes": { "q1": 0.3444, "q2": 0.3789, "q4": 0.2756 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["team","child_errand","survivor"]
+   },
+   "stages": [
+    {
+     "id": "new",
+     "name": "팀 신입",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.075, "causes": ["kia","crystallize","contract_end"] },
+     "contract": 2
+    },
+    {
+     "id": "member",
+     "name": "팀원",
+     "title": "용병",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.075, "causes": ["kia","crystallize","contract_end"] },
+     "contract": 3
+    },
+    {
+     "id": "captain",
+     "name": "팀 대장",
+     "title": "대장",
+     "minYears": 7,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.075, "causes": ["kia","crystallize","contract_end"] },
+     "contract": 4
+    },
+    {
+     "id": "banner",
+     "name": "깃발 편입·독립",
+     "title": "깃발 대장",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.02 },
+     "fall": { "base": 0.075, "causes": ["kia","crystallize","contract_end"] }
+    },
+    {
+     "id": "chair",
+     "name": "바벨 의장",
+     "title": "의장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.075, "causes": ["kia","crystallize","contract_end"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.8,2,4,8], "job": "mercenary" },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["KZD_MER_W","KZD_MER_HOEDERER","KZD_MER_MUDROCK","KZD_MER_SCAREYE","KZD_MER_INDEP"],
+   "exits": {
+    "retire": { "age": 50, "to": "KZD_FARM" },
+    "fall": { "kia": "death", "crystallize": "death", "contract_end": "expel" },
+    "switch": ["KZD_COMMISSION","COM_MERC_TEAM","RHO_CONTRACTOR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["w","hoederer","mudrock"]
+  },
+  {
+   "id": "KZD_SLAVE",
+   "nation": "kazdel",
+   "region": null,
+   "name": "자기 노예 계약",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [8,40],
+    "classes": { "q1": 0.1033 },
+    "gates": [
+     { "year": [1000,1086] }
+    ],
+    "via": ["family_protection"]
+   },
+   "stages": [
+    {
+     "id": "contract",
+     "name": "노예 계약",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.08, "causes": ["kia","starvation","execution"] },
+     "forced": true
+    },
+    {
+     "id": "expendable",
+     "name": "소모 용병 투입",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.08, "causes": ["kia","starvation","execution"] },
+     "forced": true
+    },
+    {
+     "id": "freed",
+     "name": "해방",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.08, "causes": ["kia","starvation","execution"] }
+    }
+   ],
+   "income": { "stage": [0,0.1,0.4], "job": "laborer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["KZD_SLA_SCAR","KZD_SLA_HOUSE"],
+   "exits": {
+    "retire": null,
+    "fall": { "kia": "death", "starvation": "death", "execution": "death" },
+    "switch": ["KZD_MERC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "쌍둥이 왕 해방(1086 이전 종료) 캐논"
+  },
+  {
+   "id": "KZD_CHILD",
+   "nation": "kazdel",
+   "region": null,
+   "name": "무덤 금속 채집 아동",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [6,13],
+    "classes": { "q1": 0.1722 },
+    "gates": [],
+    "via": ["born"]
+   },
+   "stages": [
+    {
+     "id": "gather",
+     "name": "채집",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.06, "causes": ["starvation","accident","crystallize"] }
+    },
+    {
+     "id": "barter",
+     "name": "물물교환",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.06, "causes": ["starvation","accident","crystallize"] }
+    },
+    {
+     "id": "errand",
+     "name": "용병 팀 심부름",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["starvation","accident","crystallize"] }
+    }
+   ],
+   "income": { "stage": [0.05,0.1,0.2], "job": "laborer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["KZD_CHI_GRAVE"],
+   "exits": {
+    "retire": { "age": 14, "to": "KZD_MERC" },
+    "fall": { "starvation": "death", "accident": "death", "crystallize": "death" },
+    "switch": ["KZD_MERC","KZD_BOILER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KZD_COMMISSION",
+   "nation": "kazdel",
+   "region": null,
+   "name": "군사위원회 장교",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,40],
+    "classes": { "q3": 0.0689, "q4": 0.4133 },
+    "gates": [
+     { "year": [1086,1098] },
+     { "race": ["sarkaz"], "only": true },
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["promoted_captain","noble"]
+   },
+   "stages": [
+    {
+     "id": "adjutant",
+     "name": "부관",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.07, "causes": ["kia","purge","suicide"] }
+    },
+    {
+     "id": "officer",
+     "name": "장교",
+     "title": "장교",
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.15 },
+     "fall": { "base": 0.07, "causes": ["kia","purge","suicide"] }
+    },
+    {
+     "id": "lieutenant",
+     "name": "중위",
+     "title": "중위",
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.08 },
+     "fall": { "base": 0.07, "causes": ["kia","purge","suicide"] }
+    },
+    {
+     "id": "commander",
+     "name": "사령관",
+     "title": "사령관",
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.03 },
+     "fall": { "base": 0.07, "causes": ["kia","purge","suicide"] }
+    },
+    {
+     "id": "supreme",
+     "name": "총사령관",
+     "title": "총사령관",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.07, "causes": ["kia","purge","suicide"] }
+    }
+   ],
+   "income": { "stage": [1,2,3,6,12] },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["KZD_COM_MAIN","KZD_COM_NACHZEHRER","KZD_COM_HEIR","KZD_COM_ABSURD","KZD_COM_BONGARD"],
+   "exits": {
+    "retire": null,
+    "fall": { "kia": "death", "purge": "death", "suicide": "death" },
+    "switch": ["KZD_MERC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["theresis"],
+   "note": "계급 창작. 1098 런디니움 패전으로 닫힘"
+  },
+  {
+   "id": "KZD_BABEL",
+   "nation": "kazdel",
+   "region": null,
+   "name": "바벨 전문직",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q3": 0.3444 },
+    "gates": [
+     { "year": [1031,1086] },
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["babel_school"]
+   },
+   "stages": [
+    {
+     "id": "student",
+     "name": "바벨 학교 학생",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.045, "causes": ["kia","purge","disappear"] }
+    },
+    {
+     "id": "professional",
+     "name": "교사·의사·엔지니어",
+     "title": "전문직",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["kia","purge","disappear"] }
+    },
+    {
+     "id": "head",
+     "name": "부서 책임",
+     "title": "책임자",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.045, "causes": ["kia","purge","disappear"] }
+    },
+    {
+     "id": "dissolved",
+     "name": "1094 해체 후",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["kia","purge","disappear"] }
+    }
+   ],
+   "income": { "stage": [0.3,1.5,3,1] },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["KZD_BAB_SCHOOL","KZD_BAB_HOSPITAL","KZD_BAB_FARM","KZD_BAB_ENGINEER"],
+   "exits": {
+    "retire": { "age": 70, "to": "KZD_FACTORY" },
+    "fall": { "kia": "death", "purge": "exile", "disappear": "death" },
+    "switch": ["KZD_MERC","KZD_COMMISSION","RHO_ENGINEER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["theresa","closure","kaltsit"]
+  },
+  {
+   "id": "KZD_COURT",
+   "nation": "kazdel",
+   "region": null,
+   "name": "왕정 직속군",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,20],
+    "classes": { "q5": 0.5511 },
+    "gates": [
+     { "race": ["sarkaz"], "only": true },
+     { "status": "noble", "weight": 30 }
+    ],
+    "via": ["pureblood"]
+   },
+   "stages": [
+    {
+     "id": "scion",
+     "name": "순혈 자제",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "arts", "k": 0.2 },
+     "fall": { "base": 0.055, "causes": ["kia","purge","betrayal"] }
+    },
+    {
+     "id": "trained",
+     "name": "특정 아츠 강화 훈련",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "arts", "k": 0.1 },
+     "fall": { "base": 0.055, "causes": ["kia","purge","betrayal"] }
+    },
+    {
+     "id": "guard",
+     "name": "직속군",
+     "title": "직속군",
+     "minYears": 8,
+     "promo": { "cap": "arts", "k": 0.05 },
+     "fall": { "base": 0.055, "causes": ["kia","purge","betrayal"] }
+    },
+    {
+     "id": "royal",
+     "name": "영주 근위",
+     "title": "근위",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.055, "causes": ["kia","purge","betrayal"] }
+    }
+   ],
+   "income": { "stage": [1,1.5,3,6] },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["KZD_COU_BLOOD","KZD_COU_BANSHEE","KZD_COU_ROT","KZD_COU_DAMAZTI","KZD_COU_TEMPLE"],
+   "exits": {
+    "retire": { "age": 80, "to": "KZD_FARM" },
+    "fall": { "kia": "death", "purge": "death", "betrayal": "death" },
+    "switch": ["KZD_CONFESSOR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KZD_CONFESSOR",
+   "nation": "kazdel",
+   "region": null,
+   "name": "고해신부·인공 살카즈 제작",
+   "archetype": "A8",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,30],
+    "classes": { "q5": 0.1378 },
+    "gates": [
+     { "race": ["sarkaz"], "only": true },
+     { "cap": "arts", "min": 1.4 },
+     { "status": "noble", "weight": 10 }
+    ],
+    "via": ["initiated"]
+   },
+   "stages": [
+    {
+     "id": "novice",
+     "name": "수습",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "arts", "k": 0.18 },
+     "fall": { "base": 0.045, "causes": ["purge","betrayal","backlash"] },
+     "canon": false
+    },
+    {
+     "id": "confessor",
+     "name": "고해신부",
+     "title": "고해신부",
+     "minYears": 10,
+     "promo": { "cap": "arts", "k": 0.08 },
+     "fall": { "base": 0.045, "causes": ["purge","betrayal","backlash"] }
+    },
+    {
+     "id": "maker",
+     "name": "인공 살카즈 제작",
+     "title": "제작자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["purge","betrayal","backlash"] }
+    }
+   ],
+   "income": { "stage": [1,3,6] },
+   "standing": { "name": "교단 신망", "start": 20 },
+   "affiliations": ["KZD_CON_ORDER","KZD_CON_SUDARIUM"],
+   "exits": {
+    "retire": { "age": 90, "to": "KZD_FARM" },
+    "fall": { "purge": "death", "betrayal": "death", "backlash": "death" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KZD_BOILER",
+   "nation": "kazdel",
+   "region": null,
+   "name": "보일러공·용광로 정비",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q2": 0.1033 },
+    "gates": [],
+    "via": ["apprentice","training_1098"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "견습",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.045, "causes": ["accident","crystallize","layoff"] }
+    },
+    {
+     "id": "boilerman",
+     "name": "보일러공",
+     "title": "보일러공",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["accident","crystallize","layoff"] }
+    },
+    {
+     "id": "furnace",
+     "name": "용광로 정비",
+     "title": "정비공",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.04 },
+     "fall": { "base": 0.045, "causes": ["accident","crystallize","layoff"] }
+    },
+    {
+     "id": "foreman",
+     "name": "이동도시 건조 반장",
+     "title": "반장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["accident","crystallize","layoff"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.7,1.1,1.8], "job": "boilerman" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["KZD_BOI_GARGOYLE","KZD_BOI_GOLIATH","KZD_BOI_REVENANT"],
+   "exits": {
+    "retire": { "age": 60, "to": "KZD_FARM" },
+    "fall": { "accident": "death", "crystallize": "death", "layoff": "expel" },
+    "switch": ["KZD_FACTORY","KZD_MERC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KZD_FARM",
+   "nation": "kazdel",
+   "region": null,
+   "name": "이동 농지 농민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,50],
+    "classes": { "q2": 0.0689 },
+    "gates": [],
+    "via": ["babel_farm","rebuild"]
+   },
+   "stages": [
+    {
+     "id": "labor",
+     "name": "농지 노동",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.045, "causes": ["starvation","raid","ruin"] }
+    },
+    {
+     "id": "manage",
+     "name": "농지 관리",
+     "title": null,
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["starvation","raid","ruin"] }
+    },
+    {
+     "id": "ration",
+     "name": "귀환 용병 식량 배급 담당",
+     "title": "배급 담당",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["starvation","raid","ruin"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.2,0.5,0.8], "job": "farmer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["KZD_FAR_BABEL","KZD_FAR_REBUILD","KZD_FAR_VILLAGE"],
+   "exits": {
+    "retire": { "age": 60, "to": "KZD_FARM" },
+    "fall": { "starvation": "death", "raid": "death", "ruin": "demote" },
+    "switch": ["KZD_BOILER","KZD_MERC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KZD_FACTORY",
+   "nation": "kazdel",
+   "region": null,
+   "name": "공장·언어학교",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,45],
+    "classes": { "q2": 0.0689, "q3": 0.1378 },
+    "gates": [
+     { "year": [1098,9999] }
+    ],
+    "via": ["training"]
+   },
+   "stages": [
+    {
+     "id": "trainee",
+     "name": "훈련생",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.2 },
+     "fall": { "base": 0.035, "causes": ["layoff","accident","raid"] }
+    },
+    {
+     "id": "worker",
+     "name": "공원·언어 강사",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["layoff","accident","raid"] }
+    },
+    {
+     "id": "foreman",
+     "name": "반장·교장",
+     "title": "반장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["layoff","accident","raid"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.3,0.8,1.4], "job": "factory_worker" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["KZD_FAC_PLANT","KZD_FAC_LANGUAGE","KZD_FAC_TRAINING"],
+   "exits": {
+    "retire": { "age": 60, "to": "KZD_FARM" },
+    "fall": { "layoff": "expel", "accident": "death", "raid": "death" },
+    "switch": ["KZD_BOILER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KZD_DESIGNER",
+   "nation": "kazdel",
+   "region": null,
+   "name": "마르트 디자이너",
+   "archetype": "A12",
+   "canon": true,
+   "itinerant": true,
+   "route": ["leithanien","columbia","victoria"],
+   "entry": {
+    "ages": [16,30],
+    "classes": { "q3": 0.0689 },
+    "gates": [
+     { "cap": "arts", "min": -0.8 },
+     { "born": "looks", "min": -0.8 }
+    ],
+    "via": ["apprentice"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "수습",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "arts", "k": 0.22 },
+     "fall": { "base": 0.035, "causes": ["bankrupt","exile","fade"] },
+     "canon": false
+    },
+    {
+     "id": "designer",
+     "name": "디자이너",
+     "title": "디자이너",
+     "minYears": 8,
+     "promo": { "cap": "arts", "k": 0.12 },
+     "fall": { "base": 0.035, "causes": ["bankrupt","exile","fade"] }
+    },
+    {
+     "id": "brand",
+     "name": "브랜드 대표",
+     "title": "대표",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["bankrupt","exile","fade"] }
+    }
+   ],
+   "income": { "stage": [0.5,1.5,4], "job": "artist" },
+   "standing": { "name": "명성", "start": 20 },
+   "affiliations": ["KZD_DES_MARTHE"],
+   "exits": {
+    "retire": { "age": 60, "to": "KZD_FARM" },
+    "fall": { "bankrupt": "expel", "exile": "exile", "fade": "expel" },
+    "switch": ["KZD_DIASPORA"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KZD_BROKER",
+   "nation": "kazdel",
+   "region": null,
+   "name": "흉터의 상점 중개인",
+   "archetype": "A1",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,35],
+    "classes": { "q2": 0.0344, "q3": 0.0689 },
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["errand"]
+   },
+   "stages": [
+    {
+     "id": "errand",
+     "name": "심부름",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "ties", "k": 0.25 },
+     "fall": { "base": 0.06, "causes": ["betrayal","vendetta","kia"] }
+    },
+    {
+     "id": "broker",
+     "name": "중개인",
+     "title": "중개인",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.06, "causes": ["betrayal","vendetta","kia"] }
+    },
+    {
+     "id": "informant",
+     "name": "정보상",
+     "title": "정보상",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.06, "causes": ["betrayal","vendetta","kia"] }
+    },
+    {
+     "id": "owner",
+     "name": "상점 운영자",
+     "title": "운영자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.06, "causes": ["betrayal","vendetta","kia"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.3,1,2,5] },
+   "standing": { "name": "조직 신뢰", "start": 20 },
+   "affiliations": ["KZD_BRO_RECRUIT","KZD_BRO_INFO","KZD_BRO_SLAVE"],
+   "exits": {
+    "retire": { "age": 60, "to": "KZD_FARM" },
+    "fall": { "betrayal": "death", "vendetta": "death", "kia": "death" },
+    "switch": ["KZD_MERC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "구조 창작"
+  },
+  {
+   "id": "KZD_ASSASSIN",
+   "nation": "kazdel",
+   "region": null,
+   "name": "유해 결사대 자객",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,28],
+    "classes": { "q2": 0.0344 },
+    "gates": [
+     { "cap": "skill", "min": 0.5 },
+     { "race": ["sarkaz"], "only": true }
+    ],
+    "via": ["rite"]
+   },
+   "stages": [
+    {
+     "id": "rite",
+     "name": "지원·의식",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.075, "causes": ["kia","betrayal","crystallize"] }
+    },
+    {
+     "id": "assassin",
+     "name": "자객",
+     "title": "자객",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.075, "causes": ["kia","betrayal","crystallize"] }
+    },
+    {
+     "id": "cadre",
+     "name": "결사 간부",
+     "title": "간부",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.075, "causes": ["kia","betrayal","crystallize"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.3,1.5,3] },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["KZD_ASS_ORDER"],
+   "exits": {
+    "retire": null,
+    "fall": { "kia": "death", "betrayal": "death", "crystallize": "death" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "뿔 절단·피부 태움 의식 캐논, 사다리 창작"
+  },
+  {
+   "id": "KZD_DIASPORA",
+   "nation": "kazdel",
+   "region": null,
+   "name": "해외 살카즈",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": true,
+   "route": ["columbia","leithanien","victoria"],
+   "entry": {
+    "ages": [12,40],
+    "classes": { "q1": 0.0689 },
+    "gates": [
+     { "eth": "outsider", "weight": 20 }
+    ],
+    "via": ["born_abroad","fled"]
+   },
+   "stages": [
+    {
+     "id": "low",
+     "name": "용병 졸개·보일러공",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.07, "causes": ["experiment","kia","starvation","execution"] }
+    },
+    {
+     "id": "excluded",
+     "name": "복지 배제 생활",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.07, "causes": ["experiment","kia","starvation","execution"] }
+    },
+    {
+     "id": "legal",
+     "name": "합법 취업",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.07, "causes": ["experiment","kia","starvation","execution"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.4,1.5] },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["KZD_DIA_COLUMBIA","KZD_DIA_LEITH","KZD_DIA_VICTORIA","KZD_DIA_DISGUISE"],
+   "exits": {
+    "retire": null,
+    "fall": { "experiment": "death", "kia": "death", "starvation": "death", "execution": "death" },
+    "switch": ["KZD_DESIGNER","RHO_OPERATOR","COM_MERC_TEAM"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["ifrit"]
+  }
+ ]
+}

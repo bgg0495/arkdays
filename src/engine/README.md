@@ -1,120 +1,126 @@
-# src/engine — 시뮬레이션 코어 (W2)
+# src/engine — 시뮬레이션 코어 (W2 → W7 v1 개편)
 
 UI 없는 순수 ES 모듈. 브라우저(`<script type="module">` 또는 build 인라인)와 Node 양쪽에서 그대로 import 된다. fetch·fs·DOM 접근 없음.
+
+v0.3(W7)에서 "직업 id + 소득 drift"를 **국가 전용 진로 상태 기계**로 바꾸고, 역량·타고남·신분, 이주 상태 기계, 혼인·주거 데이터, 종족 관계 매트릭스, 로도스 루트를 엔진에 넣었다. 설계는 `docs/설계_명세_v1.md`(§2~§10·§13·§14), 콘텐츠·UI 계약은 그 문서 끝 **"W7 메모 — 스키마 고정"**.
 
 ## 모듈 관계
 
 ```
-data.js       prepareData(raw) ─ W1 의 data/*.json 을 정규화(단위 통일, 상속, 정책 변형 평가)
-rng.js        makeRng(seed) ─ mulberry32 + chance/pick/wpick/norm/poisson, invNorm/normCdf/odds
-lifetable.js  lifeTable(stats, sex, lifeMul) ─ q[0..maxAge], e0 (Gompertz-Makeham 이분법, 종족 lifeMul 연령축 늘림)
-names.js      makeName() ─ names.json 규칙(gf/fg/pat/mono, 부칭, 여성형 성, 귀족 접두, 이중 성)
-birth.js      newLife(data, rng, opts) → S  (국가 → 하위 지역 → 성별 → 종족 → q → 거주 → 이름 → 부모·형제 → 출생 감염 → 아츠 → 스탯)
-content.js    createRegistry() ─ 이벤트/결정/대사건 스키마 검증, tagsOf(S), chooseFeed, scheduledDecisions, dueBigEvents
-sim.js        createSim({data, seed, hooks, content}) ─ planYear / tick / fire / endYear, 초점, 결정 pending, 스탯 수렴, 가족
-  ├ oripathy.js     감염·진행·진단·정책 분기·수용소          (§5.1)
-  ├ catastrophe.js  재앙·분쟁·시테러·붕괴체                   (§5.2, §5.4)
-  ├ finance.js      소득(지니→로그정규)·취업·은퇴·보험료·보호비 (§5.5)
-  ├ death.js        사망확률·사인 가중·die()                 (원작 §9 구조)
-  └ balance.js      밸런스 상수 한곳(명세 초안값은 주석)
+data.js        prepareData(raw) ─ data/*.json 정규화 + v1: tracks(폴더 glob 결과)·affiliations·relations·marriage·housing·rhodes·canon_figures.
+               진로가 없는 국가엔 생업 진로 GEN_<NATION>_LIVING/_FARM 을 합성. 로도스 본함용 가상 국가 'rhodes'(share 0) 추가. tracksFor(data, nation)
+archetypes.js  ARCHETYPES A1~A12 기본값(promo cap·fall base·causes·exits·retireAge·oriMul·flags), FALL_CAUSE_TO_DEATH(§11.4)
+rng.js         makeRng(seed) ─ mulberry32 + chance/pick/wpick/norm/poisson, invNorm/normCdf/odds
+lifetable.js   lifeTable(stats, sex, lifeMul) ─ q[0..maxAge], e0
+names.js       makeName() ─ names.json 규칙
+caps.js        역량·타고남(§6): rollCaps, grade(z), fit, addCap, capYear(초점·학교·쇠퇴), applyLegacyFx(구 sm/so), looks_change, capProfile
+relations.js   관계 매트릭스(§9): relOf(data, nation, race, year, {track, eth}), refreshRel, relMul/relIncomeMul/relCrimeMul, raceWeightsFor(exclude 제외)
+track.js       진로 상태 기계(§3·§4·§5): canSeek, entryCandidates, rollEntry, choiceSet, enterTrack, leaveTrack, promote, demote, fall, applyExit,
+               switchTrack, retireTrack, trackYear(연말), onDiagnosed, trackIncomeMul, trackName
+migration.js   이주 상태 기계(§7): migrateTo(reason, to), destCandidates, papersFor, resYear(settling/settled/naturalized, 불법 발각, 순회형 itinerantAt), naturalize, returnHome, fleeCheck, migrationSummary
+marriage.js    혼인(§8.1): marriageTypes, rollMarriageType, makeProspect, familyOpposes(§9), marry(dowry·poly), marriageP
+housing.js     주거(§8.2): housingTypes, housingCandidates, forcedHousing, setHousing, initHousing, housingYear, homeChangeOpen
+rhodes.js      로도스(§10): rhodesTrigger(9 via), rhodesClosed, placeRhodes(statusRules), joinRhodes, rhodesYear, operatorProfile, clinical, rhodesCard
+choices.js     엔진 내장 결정: track_choose, track_switch, contract_end, looks_change, migrate_work, migrate_study, naturalize, return_home,
+               marry_<type>, marry_second, home_change, rhodes_offer. installEngineDecisions(registry, data) — 콘텐츠가 같은 id 를 등록하면 그쪽 우선
+save.js        migrateSave(S, data)(§14 v0.2→v1), healStats(S)
+birth.js       newLife(data, rng, opts) → S  (… + cap/innate/status/res/rel 초기화, 관계 exclude 종족 제외)
+content.js     createRegistry(), tagsOf(S, visit?), chooseFeed(sim, used, visit?), scheduledDecisions, dueBigEvents(방문국 대사건 포함)
+sim.js         createSim({data, seed, hooks, content}) ─ 조립점. planYear / tick / fire / endYear, ctx getter·헬퍼
+  ├ oripathy.js     감염·진행·진단·정책 분기·수용소(forced 진로 전환)·감옥 형기
+  ├ catastrophe.js  재앙(피해 → 피난·구조 플래그)·분쟁(관계 등급 배율)·시테러·붕괴체
+  ├ finance.js      소득(진로가 정함, drift 없음)·가계·보험료·보호비·배우자 소득. takeJob/retire/becomeHomemaker 는 구 콘텐츠 호환
+  ├ death.js        사망확률·사인 가중·die()
+  └ balance.js      밸런스 상수 한곳. v1 상수는 `track / cap / mig / marriage / housing / rel / rhodes` 블록(§13)
 ```
 
-의존 방향은 위에서 아래로만. `sim.js` 가 유일한 조립 지점이고, 하위 모듈은 전부 `sim` 객체(ctx)를 인자로 받는다.
+의존 방향은 위에서 아래로만(순환 import 는 함수 안에서만 쓰므로 안전). `sim.js` 가 유일한 조립 지점이고, 하위 모듈은 전부 `sim` 객체(ctx)를 인자로 받는다.
 
 ## ctx(= sim 객체)
 
-콘텐츠 콜백과 하위 모듈이 받는 유일한 컨텍스트. 원작의 전역 `S` 대신 이것을 쓴다.
+콘텐츠 콜백과 하위 모듈이 받는 유일한 컨텍스트.
 
 | 멤버 | 설명 |
 |---|---|
-| `S` | 상태 객체(§4). 저장은 이것만 JSON 직렬화하면 된다 |
+| `S` | 상태 객체(아래). 저장은 이것만 JSON 직렬화 |
 | `data`, `rng`, `content`, `HOOK` | 정규화 데이터, 시드 RNG, 콘텐츠 레지스트리, 훅 |
-| `nation`, `race`, `job`, `policy`, `lt`, `year`, `med` | getter. 현재 국가·종족·직업·해석된 감염자 정책·생명표·연도·중위소득(LMD) |
+| `nation`, `race`, `job`, `policy`, `lt`, `year`, `med` | getter. `job` 은 jobs.json 항목 또는 **진로 기반 가짜 job**(id·name·oriMul·special·track·stage — 구 콘텐츠 호환). `policy` 는 진로의 `oriPolicyOverride` 우선 |
+| `track`, `stage`, `aff`, `res`, `rel`, `rhodes` | **v1 getter**. 현재 진로 데이터(정규화된 JSON)·단계·소속·거주 상태·관계 등급·로도스 상태(없으면 null) |
 | `log(text, kind, f?, fx?)` | 기록 한 줄 추가 → `HOOK.log` |
-| `eff({hl,h,sm,so,money})` | 스탯 변화 적용(0~100 clamp) → `HOOK.change` |
-| `die(causeId, label?)` | 사망 처리. causeId 가 causes.json 에 있으면 그 label 사용 |
-| `migrate(reason)` | 타국 이주(추방·보험 미납). 박해·추방·안락사 국가는 피함 |
-| `newLife(opts)`, `start()` | 출생 → 인생 시작(`phase: 'birth' → 'life'`, 첫 planYear) |
-| `tick(dtSec)` | 실시간 초 단위 진행. 결정이 열리면 그 시점에서 멈춤 |
-| `choose(k, text?)`, `autoChoice()` | pending 결정 처리 |
-| `setFocus(k)`, `focusOptions()` | 올해의 초점 |
-| `runYear()` | 테스트용: autoChoice 로 결정을 넘기며 한 해 끝까지 |
+| `eff({hl, h, money, cap:{skill…}, standing, sm, so})` | 스탯 변화. `sm/so` 는 구 호환(1점 = 0.01z 로 learn/ties), `cap` 은 z 증감, `standing` 은 소속 지위 ± |
+| `die(causeId, label?)`, `infect(how)` | 사망·감염 |
+| `migrate(reason, to?, opts?)` | **이주 상태 기계**(§7). reason = work·study·marriage·flee·asylum·exile·contract·caravan·rhodes·return·deport(구 expel·insurance_default·voluntary 도 받음) |
+| `promote(opts)`, `fall(cause?)`, `applyExit(value, cause)`, `switchTrack(id)`, `enterTrack(id, opts)`, `leaveTrack(how)`, `retireTrack(opts)` | **진로 헬퍼**. 콘텐츠가 승급·몰락·전직을 강제할 때 |
+| `joinRhodes(via, opts)`, `setHousing(typeId, opts)` | 로도스 합류·주거 전환 |
+| `newLife(opts)`, `start()`, `load(S)`, `heal()` | 출생 → 시작, 세이브 로드(`migrateSave` 포함, 실패 시 null), NaN 복구 |
+| `tick(dtSec)`, `choose(k, text?)`, `autoChoice()`, `setFocus(k)`, `focusOptions()`, `runYear()` | 유지 |
 
-## HOOK 인터페이스
+## 상태 객체 S (v1 §2 추가·치환분)
 
-`createSim({ hooks })` 로 넘긴다. 없는 항목은 no-op.
-
-| 훅 | 호출 시점 | 인자 |
-|---|---|---|
-| `log(entry, sim)` | 기록이 추가될 때 | `{a:나이, y:연도, t:문구, k:종류, f?:각주, fx?:효과}` |
-| `change(S, sim)` | 스탯·돈·상태가 바뀐 뒤(렌더 힌트) | |
-| `decision(pending, sim)` | 결정 모달을 열어야 할 때. `S.pending = {id, p, view}` | `view = {title, body, fact?, choices:[{k,label,sub?,auto?}], input?}` |
-| `death(S, sim)` | 사망 직후 (`S.deathAt` 채워짐) | |
-| `year(S, sim)` | 연말 정산 후 다음 해 큐를 짠 뒤(저장 타이밍) | |
-
-UI(W3)는 `tick` 을 rAF 에서 부르고, `decision` 훅에서 모달을 열어 `choose()` 를 호출하면 된다. `S.paused`/`S.speed`/`S.yearSec` 는 엔진이 읽기만 한다.
+| 필드 | 설명 |
+|---|---|
+| `st.hl`, `st.h` | 건강·행복 막대. **`st.sm`·`st.so` 삭제**(저장 호환: 로드 시 learn/ties 로 변환) |
+| `cap` | `{skill, learn, arts, ties}` 역량 z(−3~+3). 표시는 `grade(z)` 4등급(낮음/보통/높음/뛰어남) |
+| `innate` | `{looks, luck, trait}` 타고남. (명세의 `born` — 기존 `S.born` 이 출생 국가라 이름을 바꿨다) |
+| `status` | `{noble: 'noble'|null, slave: bool, stigma: 'infected'|'exile'|'disgrace'|…}` |
+| `track` | `{id, stage, since, stageSince, years, standing(0~100), aff, flags{via, contractEnd, contractDue…}}` 또는 null |
+| `trackHist` | `[{id, from, to, stage, how, aff}]`. how = promo·demote·retire·expel·switch·death·prison·exile·infected·injured·disgrace·migrate·rhodes·content·homemaker·discharged·released·forced |
+| `res` | `{nation, papers: native|legal|refugee|illegal|contract|agreement, since, phase: settling|settled|naturalized, itinerantAt}` |
+| `rel` | 현재 거주국×종족 관계 등급 캐시 |
+| `home` | `{type: nomadic|settled(구, 광석병·콘텐츠가 읽음), deck, housing: <유형 id>, since, owned, forced}` |
+| `fam.marriage` | `{type, at, name, aff?, poly}` 또는 null. `fam.partners[]` 는 둘째 배우자 |
+| `rhodes` | `{via, status: operator|contractor|patient, dept, since}` 또는 `false`. 콘텐츠가 `true` 로 두면 다음 planYear/endYear 에 정규화 |
+| `job`, `income`, `pct` | 유지. `job` 은 진로가 정한다(진로의 `job` 필드 또는 진로 id) |
+| `years[]` | 스냅샷에 `cap{…}`·`track`·`stage`·`standing` 추가(`sm/so` 삭제) |
+| `v` | 세이브 버전 2 |
 
 ## 한 해의 흐름
 
 ```
-planYear   큐 = 대사건(연도+나이 게이트) + 결정 앞 2개(at 0.3/0.6) + 피드 이벤트 2~3개(at 0.08~0.94)
-tick       t += dt·speed/yearSec, at ≤ t 인 큐 항목 fire. 결정이 열리면 return (시간 정지)
-endYear    1 초점 효과(시간 비율 focusW) → 2 학교·취업·복무 → 3 돈 → 4 테라 위험(광석병·수용소·재앙·분쟁·시테러/붕괴체)
-           → 5 스탯 수렴(hl/so/h 목표값) → 6 가족(부모·배우자·자녀) → 7 years 스냅샷 → 8 사망 판정 → 9 age++, planYear, HOOK.year
+planYear   normalizeRhodes → 대사건(거주국+방문국) + 결정 앞 2개(엔진 내장 결정이 앞, 우선순위: rhodes_offer > track_choose > contract_end > …) + 피드 2~3개(순회형이면 20% 는 방문국 태그)
+tick       (유지)
+endYear    1 초점 효과(hl/h) → 2 학교·복무 → trackYear(승급·몰락·standing·역량 성장·복무 기간·계약·은퇴) → 3 돈(진로 소득) → 4 테라 위험(감염·수용소·감옥·재앙·분쟁·시테러/붕괴체)
+           → 5 capYear(초점·학교·쇠퇴)·statYear(ties 연동) → 6 familyYear(부모·사별·자녀·타국 배우자 이주)·housingYear(forced)·resYear(정착·불법·귀화·순회)·rhodesYear(환자→직원)
+           → 7 스냅샷 → 8 사망 → 9 age++, planYear, HOOK.year
 ```
 
-## 콘텐츠 스키마(§3.5, ctx 인자 방식)
-
-```js
-// 이벤트
-{ id, a:[min,max], tags?:['yan','infected','!rhodes'], c?:(ctx)=>bool, w?:number|(ctx)=>number, gap?:년, rep?:bool,
-  run:(ctx)=>string | {t, k:'ev'|'bad'|'big'|'warm'|'loss'|'note', f?:각주, fx?:{hl,h,sm,so,money}} }
-// 결정 — 매년 planYear 가 ok() 를 평가해 스케줄. once(기본 true), gap, at(0~1) 지원
-{ id, tags?, ok?:(ctx,p)=>bool, build:(ctx,p)=>{title, body, fact?, choices:[{k,label,sub?,auto?}], input?}|null,
-  apply:(ctx,k,p,text)=>string|{t,k,f,fx}|false }
-// 대사건
-{ id, nation?, year, month?, a?:[min,max], once?, tags?, c?, run:(ctx)=>… }
-```
-
-태그는 `tagsOf(sim)` 이 만드는 집합과 대조한다: 국가 id·상위 국가·`nation:<id>`·종족 id·`race:<id>`·`M/F`·`female/male`·`urban/rural`·`q1~q5`·`nomadic/settled`·`nomadic_under/upper`·`policy:<p>`·`ori1~3`·`cat1~3`·`conflict1~3`·`infected`·`known`·`ori_stage1~3`·`job:<id>`·`serving`·`prison:<k>`·`rhodes`·`retired`·`school`·`married`·`war`·`threat:<key>`·`trait:<key>`·소수민족 플래그(`outsider`, `gaul`…). 이벤트 태그는 전부 AND, `!` 는 부정. 사인 태그는 같은 접두(threat:, nation:)끼리 OR.
-
-레지스트리: `createRegistry().use({events, decisions, big})`. 더미 콘텐츠는 `content/dummy.js`.
+진로 **진입**은 연말이 아니라 planYear 의 내장 결정 `track_choose`(ok 에서 seekP 롤 → 후보 ≥2면 모달, 1이면 즉시 진입)가 한다. 혼인도 `marry_<type>` 결정이 롤·제안·수락을 맡는다.
 
 ## 데이터
 
-`prepareData(raw)` 는 W1 의 `data/*.json` 형식을 기준으로 한다(`data/_dummy/*.json` 은 같은 형식의 최소 더미). Node 에서는 `test/sim.js` 의 `loadData()` 가 파일별로 `data/` 우선, 없으면 `_dummy` 로 대체한다. 브라우저 빌드(W5)는 JSON 을 인라인해서 같은 `prepareData` 에 넘기면 된다.
+`prepareData(raw)` 입력에 v1 키가 추가됐다(없으면 전부 기본값·빈 배열로 동작):
 
-엔진 내부 단위: `u5/im/urb/gini` 0~1, 직업 `lo/hi` 0~1, 소득·돈은 **LMD**(PPP$ × 10) 정수.
+| raw 키 | 모양 |
+|---|---|
+| `tracks` | `data/tracks/*.json` 파일 객체의 **배열** `[{_meta, tracks:[…]}, …]`, 또는 `{파일명: 객체}`, 또는 파일 하나, 또는 진로 배열. 브라우저 빌드는 `window.__DATA__.tracks` 에 같은 모양으로 넣는다 |
+| `affiliations` | `{affiliations:[…]}` |
+| `relations` | `{grades, default, relMul?, sarkaz_default, pairs}` |
+| `marriage`, `housing` | W8 모양 `{_meta, _common?, nations:{id:{types}}}` 또는 더미 모양 `{_default, <id>:{types}}` |
+| `rhodes` | W8 모양(`entries[].pYear+trigger`, `ports.weights`, `closed[].when`, `statusRules.rules`, `diagnosis.templates`, `operatorStats`) 또는 더미 모양(`entries[].p`, `ports[]`, `closed[]`) |
+| `canon_figures` | `{figures:[…]}` |
 
-## 시뮬 기대수명 캐시 (D19)
+Node 에서는 `test/sim.js` 의 `loadData()` 가 `data/tracks/*.json` 을 glob 하고, 없으면 `data/_dummy/tracks.json` 으로, 나머지는 파일별로 `data/` 우선·`_dummy` 대체한다(`DATA=dummy` 면 전부 더미).
 
-출생 신고서의 "기대수명"은 1950 모델 생명표 e0 가 아니라 **테라 위험까지 돌린 시뮬 기대수명**이다. `node test/calibrate.js` 가 국가·성별마다 수백 명을 돌려 `k = 평균 사망 나이 / 생명표 e0` 를 `data/terra_e0.json` 에 쓰고, `prepareData()` 가 `nation.terra` 로 읽어 `birth.js` 가 `S.e0 = 생명표 e0 × k` 로 쓴다(종족 lifeMul 이 섞여도 비율이라 그대로 적용). `S.e0Model` 에 모델값을 따로 두므로 "테라가 아니었다면 N세" 비교 문구가 가능하다. `yearSec` 은 D22 대로 국가 인간 척도 시뮬 e0 로 계산한다. **`balance.js` 나 데이터를 바꾸면 calibrate 를 다시 돌린다.** 캐시가 없으면 k=1(모델값)로 동작한다.
+진로 JSON 정규화 결과(`data.trackById[id]`): §3.1 필드 + `A`(원형 기본값), `special`(canon && A10/A11 외), `forcedEntry`(자발 진입 불가), `noClasses`(switch·이벤트·로도스 배치로만), `job`(= income.job), 단계별 `forced/contract/oriMul/capStage`, `exits.fall` 에 원형 기본값과 `_meta.fallDefaultOutcome` 이 채워진다. `nation:"common"` 진로는 모든 국가에서 열린다.
 
-## 가사 전담·배우자 소득 (D35, W6)
+## 태그 (tagsOf)
 
-- 배우자가 생기면 `initPartner()` 가 `partner.pct`(소득 백분위)·`partner.works`(여성 배우자는 `nation.homemakerP` 확률로 가사 전담)를 정하고, `financeYear` 가 `partner.inc` 를 매년 계산해 **가계 소득 `hh = S.income + partner.inc`** 로 생활비·저축을 센다(`S.flags.hhInc`, `S.flags.hhPct`).
-- 본인이 가사를 맡으면 `S.job = 'homemaker'`(jobs.json 의 가사 전담, sector none), 소득 0, `jobYear` 는 새 직업을 주지 않는다. 콘텐츠 결정 `adult_homemaker`(결혼 1~3년차·첫 아이) / `adult_backtowork`(사별·이혼·배우자 실직) 가 켜고 끈다. 플래그 `homemakerAt / homemakerYears / jobBeforeHome / backToWork / partnerLostJob`.
-- `jobEligible` 은 `sector: 'none'` 직업을 제안하지 않는다.
+기존: 국가 id·상위 국가·`nation:<id>`·종족 id·`race:<id>`·`M/F`·`female/male`·`urban/rural`·`q1~q5`·`nomadic/settled`·`nomadic_under/upper`·`policy:<p>`·`ori1~3`·`cat1~3`·`conflict1~3`·`infected`·`known`·`ori_stage1~3`·`job:<id>`·`serving`·`prison:<k>`·`rhodes`·`retired`·`school`·`married`·`war`·`threat:<key>`·`trait:<key>`·`born_infected`·`miner_family`·`child_labor`·`working_child`·`parent:<job>`·`camp`·소수민족 플래그.
 
-## 각주 규칙 (D31, W6)
-
-`sim.log()` 와 `openDecision()` 이 `keepFootnote(text, f)` 로 거른다: **문장에 숫자가 있을 때만** 각주를 남기고, "기록된 바 없음"·관할·추정 류는 항상 버린다. 콘텐츠는 각주를 계속 써도 되고, 실제 표시 비율은 `node test/check-text.js` 가 센다(목표 10~20%).
-
-## 광산촌·아동 노동 (우르수스류 장면용)
-
-- 부모 직업 `oriMul ≥ 3`(광부 등)이면 부모 유병률 ×2 → 출생 감염이 흔하다. 양쪽 감염이면 신생아 결정 밀도가 높게 시작하고, 출생 감염아는 5세 미만 사망 승수 ×2.5 (`balance.js`).
-- 학교에 못 간 q1 은 9세, q2 는 12세부터 edu 0 직업을 잡는다(임금 ×0.5). `S.flags.childLabor = 시작 나이`.
-- 2기 진단은 나이를 가리지 않으므로 박해 국가의 감염아는 어려서 수용소(`camp`)에 갈 수 있다.
-- 콘텐츠 태그: `born_infected`, `miner_family`, `child_labor`, `working_child`, `camp`, `parent:<job id>`.
+**v1 추가**: `track:<ID>` · `track:<ID>:<stageId>` · `aff:<ID>` · `archetype:A10`(공통 직장 이벤트 전용) · `arch:<A>` · `itinerant` · `newcomer`(정착 중) · `papers:<k>` · `naturalized` · `migrant` · `rel:<grade>` · `rhodes:<dept>` · `rhodes_<status>` · `noble` · `slave` · `stigma:<k>` · `home:<housing id>` · `homeowner` · `marriage:<type>` · `cap:<k>:<low|mid|high|top>` · `looks:high|low` · `visit:<nation>`(순회형 피드에서만, 국가 태그도 방문국으로 바뀐다).
 
 ## 테스트
 
 ```bash
-node test/check-text.js 300      # 조사 오류·D25 금지 문구·각주 비율(W6)
-node test/sim.js 1000            # 기본 (data/ 우선, data/terra_e0.json 있으면 시뮬 e0 기준 검증)
-DATA=dummy node test/sim.js 1000 # 더미 데이터만
-TERRA=0 node test/sim.js 1000    # 테라 위험 끄고 생명표 보정만 확인
-node test/calibrate.js 600       # 시뮬 기대수명 캐시 재생성(약 1분)
+node test/validate-tracks.js        # 진로·소속·혼인·주거·관계·로도스 데이터 검증(§3.1 규칙). --dummy 로 더미
+node test/sim.js 1000               # 기본 (data/ 우선). 끝에 [v1] 집계: 진로 분포·계층별 유입 ±10%p, 이탈·몰락 사유, 로도스 합류율(전체/감염자), 이주 경험률·사유, 결혼 유형, 관계 등급별 소득, 주거
+DATA=dummy node test/sim.js 1000    # 더미 데이터만(시라쿠사·우르수스·컬럼비아 진로 + 나머지 국가는 합성 생업)
+NO_DUMMY_TRACKS=1 node test/sim.js  # content/_dummy_tracks.js 를 빼고
+node test/calibrate.js 600          # 시뮬 기대수명 캐시 재생성(엔진·데이터 밸런스를 바꿨으면 다시)
 ```
 
-출력: 국가별 n·e0·평균수명·Δ·장수종족 평균·감염률·출생 감염·진단·5세 전 사망·로도스·이주·평균 자산, 감염 경로, 사인 분포, 국가별 상위 사인·정책 분기 결과, 검증 줄(예외 0 / Δ ±5 / oriExp 등급별 감염률 단조). 완료 기준 미달이면 exit code 1.
+완료 기준: 예외 0건, 수명 ±5(시뮬 e0 기준, n≥100), 감염률 등급 단조. §13 목표(로도스 1~3%·감염자 중 8~15%, 이주 10~20%)는 `balance.js` 의 `rhodes.pScale`·`mig.*` 로 맞춘다 — 단, 구 콘텐츠(`adult_infected.js` 등)가 직접 `S.rhodes = true` 로 합류시키는 경로가 남아 있어 W11 정리 전까지는 로도스 합류율이 목표보다 높게 나온다.
+
+## 가사 전담·배우자 소득 (D35, W6) / 각주 규칙 (D31) / 광산촌·아동 노동
+
+이전과 같다. 차이: `becomeHomemaker` 는 진로를 떠나고(`how:'homemaker'`), 아동 노동은 A11(및 합성 생업)·A5 진로 진입으로 표현된다(`S.flags.childLabor`).

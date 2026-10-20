@@ -8,7 +8,9 @@ import { prepareData } from '../src/engine/data.js';
 import { lifeTable } from '../src/engine/lifetable.js';
 import { createRegistry } from '../src/engine/content.js';
 import { createSim } from '../src/engine/sim.js';
+import { incomeAt } from '../src/engine/finance.js';
 import content from '../content/index.js';
+import dummyTracks from '../content/_dummy_tracks.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const N = parseInt(process.argv[2] || '1000', 10);
@@ -19,28 +21,44 @@ const FORCE_DUMMY = process.env.DATA === 'dummy';   // DATA=dummy 면 data/_dumm
 export function loadData(root = ROOT) {
   const raw = {};
   const used = {};
+  const readJson = (f) => JSON.parse(fs.readFileSync(f, 'utf8'));
   for (const f of ['nations', 'races', 'jobs', 'causes', 'names', 'stats1950']) {
     const real = path.join(root, 'data', f + '.json');
     const dum = path.join(root, 'data', '_dummy', f + '.json');
     const file = !FORCE_DUMMY && fs.existsSync(real) ? real : dum;
-    raw[f] = JSON.parse(fs.readFileSync(file, 'utf8'));
+    raw[f] = readJson(file);
     used[f] = file === real ? 'data' : '_dummy';
   }
   const terraFile = path.join(root, 'data', 'terra_e0.json');
-  if (!FORCE_DUMMY && fs.existsSync(terraFile)) { raw.terra = JSON.parse(fs.readFileSync(terraFile, 'utf8')); used.terra = 'data'; }
+  if (!FORCE_DUMMY && fs.existsSync(terraFile)) { raw.terra = readJson(terraFile); used.terra = 'data'; }
+  // v1: data/tracks/*.json(폴더 glob) → 없으면 data/_dummy/tracks.json. 나머지는 파일별로 data/ 우선
+  const tracksDir = path.join(root, 'data', 'tracks');
+  const trackFiles = !FORCE_DUMMY && fs.existsSync(tracksDir) ? fs.readdirSync(tracksDir).filter((f) => f.endsWith('.json')).sort() : [];
+  if (trackFiles.length) { raw.tracks = trackFiles.map((f) => readJson(path.join(tracksDir, f))); used.tracks = 'data/tracks(' + trackFiles.length + ')'; }
+  else { const dum = path.join(root, 'data', '_dummy', 'tracks.json'); if (fs.existsSync(dum)) { raw.tracks = readJson(dum); used.tracks = '_dummy'; } }
+  for (const f of ['affiliations', 'relations', 'marriage', 'housing', 'rhodes', 'canon_figures']) {
+    const real = path.join(root, 'data', f + '.json');
+    const dum = path.join(root, 'data', '_dummy', f + '.json');
+    const file = !FORCE_DUMMY && fs.existsSync(real) ? real : (fs.existsSync(dum) ? dum : null);
+    if (!file) { if (f !== 'canon_figures') used[f] = '없음'; continue; }
+    raw[f] = readJson(file);
+    used[f] = file === real ? 'data' : '_dummy';
+  }
   const data = prepareData(raw);
-  return { data, used };
+  return { data, used, real: { tracks: used.tracks && used.tracks.startsWith('data') } };
 }
 
+function medOf(data, nid) { const st = data.nationById[nid].stats; return incomeAt(st.ppp, st.gini, 0.5) * 10; }
 function pad(s, n, right = false) { s = String(s); const w = [...s].reduce((a, ch) => a + (ch.charCodeAt(0) > 0x2e80 ? 2 : 1), 0); const sp = ' '.repeat(Math.max(0, n - w)); return right ? sp + s : s + sp; }
 const f1 = (v) => (Math.round(v * 10) / 10).toFixed(1);
 const pct = (v) => (v * 100).toFixed(1) + '%';
 
 function main() {
-  const { data, used } = loadData();
+  const { data, used, real } = loadData();
   console.log('데이터:', Object.entries(used).map(([k, v]) => k + '←' + v).join(' '));
   if (data.warnings.length) console.log('경고:', data.warnings.join(' | '));
   const registry = content.install(createRegistry());
+  if (process.env.NO_DUMMY_TRACKS !== '1') registry.use(dummyTracks);   // W7 더미 진로 콘텐츠(태그·ctx API 점검용)
   console.log('콘텐츠: 이벤트 ' + registry.events.length + ' / 결정 ' + Object.keys(registry.decisions).length + ' / 대사건 ' + registry.big.length);
 
   const rows = {};           // nation → 집계
@@ -48,6 +66,7 @@ function main() {
   const oriHow = {};
   const scen = { bornInf: 0, bornInfU5: 0, minerFam: 0, minerFamBornInf: 0, childLabor: 0, childLaborAgeSum: 0, campChild: 0 };
   const rowOf = (id) => rows[id] || (rows[id] = { n: 0, nHuman: 0, ageSum: 0, ageSumHuman: 0, inf: 0, known: 0, bornInf: 0, money: 0, causes: {}, outcomes: {}, u5: 0, decisions: 0, logs: 0, rhodes: 0, moved: 0, marF: 0, hmF: 0, marM: 0, hmM: 0, servF: 0, specialY: 0, adultY: 0 });
+  const v1 = { lives: 0, infected: 0, rhodes: 0, rhodesInf: 0, via: {}, rstatus: {}, migrated: 0, migReason: {}, marriage: {}, married: 0, trackByNation: {}, entryByClass: {}, everTrack: 0, how: {}, falls: {}, relIncome: {}, housing: {}, promos: 0, disgrace: 0, stigma: {} };
   let errors = 0;
   const t0 = Date.now();
   const lifeMulByRace = Object.fromEntries(data.races.map((r) => [r.id, r.lifeMul]));
@@ -78,14 +97,40 @@ function main() {
       r.money += S.money;
       if (S.fam.marriedAt != null) { if (S.sex === 'F') { r.marF++; if (S.flags.homemakerAt != null) r.hmF++; } else { r.marM++; if (S.flags.homemakerAt != null) r.hmM++; } }
       if (S.sex === 'F' && S.served) r.servF++;
-      for (const y of S.years) if (y.a >= 19 && y.a <= 64) { r.adultY++; const j = y.job && data.jobById[y.job]; if (j && j.special) r.specialY++; }
       r.decisions += S.stats.decisions; r.logs += S.log.length;
       r.causes[S.deathAt.label] = (r.causes[S.deathAt.label] || 0) + 1;
       causeAll[S.deathAt.label] = (causeAll[S.deathAt.label] || 0) + 1;
       if (S.flags.oriOutcome) r.outcomes[S.flags.oriOutcome] = (r.outcomes[S.flags.oriOutcome] || 0) + 1;
       // 상태 무결성
-      for (const k of ['hl', 'h', 'sm', 'so']) if (!Number.isFinite(S.st[k])) throw new Error('NaN stat ' + k);
+      for (const k of ['hl', 'h']) if (!Number.isFinite(S.st[k])) throw new Error('NaN stat ' + k);
+      for (const k of ['skill', 'learn', 'arts', 'ties']) if (!Number.isFinite(S.cap[k])) throw new Error('NaN cap ' + k);
+      for (const k of ['looks', 'luck']) if (!Number.isFinite(S.innate[k])) throw new Error('NaN innate ' + k);
+      if (S.track && (!data.trackById[S.track.id] || !Number.isFinite(S.track.standing))) throw new Error('track 상태 깨짐 ' + JSON.stringify(S.track));
+      if (S.rhodes === true) throw new Error('S.rhodes 가 정규화되지 않음');
+      if (!S.res || !data.nationById[S.res.nation]) throw new Error('res 깨짐 ' + JSON.stringify(S.res));
       if (!Number.isFinite(S.money)) throw new Error('NaN money');
+      // v1 집계
+      v1.lives++;
+      const tr = rowOf(S.born);
+      if (S.ori.on) v1.infected++;
+      if (S.rhodes) { v1.rhodes++; if (S.ori.on) v1.rhodesInf++; v1.via[S.rhodes.via] = (v1.via[S.rhodes.via] || 0) + 1; v1.rstatus[S.rhodes.status] = (v1.rstatus[S.rhodes.status] || 0) + 1; }
+      const mh = S.flags.migHist || [];
+      if (mh.some((m) => m.reason !== 'rhodes')) v1.migrated++;
+      for (const m of mh) v1.migReason[m.reason] = (v1.migReason[m.reason] || 0) + 1;
+      if (S.fam.marriage) v1.marriage[S.cur + ':' + S.fam.marriage.type] = (v1.marriage[S.cur + ':' + S.fam.marriage.type] || 0) + 1;
+      if (S.fam.marriedAt != null) v1.married++;
+      for (const h of S.trackHist.concat(S.track ? [{ id: S.track.id, how: 'alive' }] : [])) { const t = data.trackById[h.id]; if (!t) continue; const key = t.nation + ':' + t.id; (v1.trackByNation[t.nation] || (v1.trackByNation[t.nation] = {}))[t.id] = (v1.trackByNation[t.nation][t.id] || 0) + 1; if (h.how === 'promo') v1.promos++; }
+      const firstTrack = S.trackHist.find((h) => h.how !== 'promo' && h.how !== 'demote') || (S.track ? { id: S.track.id } : null);
+      if (firstTrack && data.trackById[firstTrack.id]) { const t = data.trackById[firstTrack.id]; const q = 'q' + S.q; const nb = v1.entryByClass[t.nation] || (v1.entryByClass[t.nation] = {}); const qb = nb[q] || (nb[q] = {}); qb[t.id] = (qb[t.id] || 0) + 1; if (t.special) tr.specialY++; }
+      if (S.trackHist.length || S.track) v1.everTrack++;
+      for (const h of S.trackHist) v1.how[h.how] = (v1.how[h.how] || 0) + 1;
+      if (S.flags.lastFall) v1.falls[S.flags.lastFall] = (v1.falls[S.flags.lastFall] || 0) + 1;
+      const rg = v1.relIncome[S.rel] || (v1.relIncome[S.rel] = { n: 0, inc: 0 });
+      if (S.stats.maxIncome > 0) { rg.n++; rg.inc += S.stats.maxIncome / medOf(data, S.born); }
+      if (S.home.housing) v1.housing[S.home.housing] = (v1.housing[S.home.housing] || 0) + 1;
+      for (const y of S.years) if (y.a >= 19 && y.a <= 64) { tr.adultY++; }
+      if (S.flags.disgraceAt != null) v1.disgrace++;
+      if (S.status.stigma) v1.stigma[S.status.stigma] = (v1.stigma[S.status.stigma] || 0) + 1;
     } catch (e) {
       errors++;
       if (errors <= 5) console.error('[#' + i + '] ' + (e && e.stack || e));
@@ -134,6 +179,32 @@ function main() {
     const oc = Object.entries(r.outcomes).sort((a, b) => b[1] - a[1]).map(([l, c]) => l + ' ' + c).join(', ');
     console.log('  ' + pad(n.name, 10) + top + (oc ? '  |  ' + oc : '') + '  | 결정/생 ' + f1(r.decisions / r.n) + ', 기록/생 ' + f1(r.logs / r.n));
   }
+
+  // ── v1 집계(§13): 진로 분포 / 로도스 / 이주 / 결혼 유형 / 관계 등급 소득 ──
+  console.log('\n[v1] 진로 (국가별 진입 분포 · 계층별 유입 vs 카탈로그 classes 가중' + (real.tracks ? ', 실데이터' : ', 더미') + ')');
+  for (const n of data.nations) {
+    const byT = v1.trackByNation[n.id]; if (!byT) continue;
+    const tot = Object.values(byT).reduce((a, b) => a + b, 0);
+    console.log('  ' + pad(n.name, 10) + Object.entries(byT).sort((a, b) => b[1] - a[1]).map(([id, c]) => id + ' ' + pct(c / tot)).join(', '));
+    if (n.tracksSynthetic) continue;
+    const ebc = v1.entryByClass[n.id] || {};
+    const offs = [];
+    for (const q of ['q1', 'q2', 'q3', 'q4', 'q5']) {
+      const got = ebc[q] || {}; const gt = Object.values(got).reduce((a, b) => a + b, 0); if (gt < 20) continue;
+      const exp = {}; let et = 0;
+      for (const t of data.tracksByNation[n.id]) { if (t.forced || t.synthetic) continue; const w = (t.entry.classes || {})[q] || 0; if (w > 0) { exp[t.id] = w; et += w; } }
+      for (const [id, w] of Object.entries(exp)) { const d = (got[id] || 0) / gt - w / et; if (Math.abs(d) > 0.1) offs.push(q + ' ' + id + ' ' + (d > 0 ? '+' : '') + (d * 100).toFixed(0) + 'p'); }
+    }
+    if (offs.length) console.log('    ±10%p 이탈: ' + offs.join(', '));
+  }
+  const fmtObj = (o) => Object.entries(o).sort((a, b) => b[1] - a[1]).map(([k, v]) => k + ' ' + v).join(', ');
+  console.log('[v1] 진로 이탈 사유: ' + fmtObj(v1.how) + ' | 몰락 cause: ' + fmtObj(v1.falls) + ' | 승급 ' + v1.promos + '회 | 불명예 ' + v1.disgrace + ' | 낙인 ' + fmtObj(v1.stigma));
+  console.log('[v1] 로도스 합류율 전체 ' + pct(v1.rhodes / v1.lives) + ' (목표 1~3%) / 감염자 중 ' + pct(v1.infected ? v1.rhodesInf / v1.infected : 0) + ' (목표 8~15%) | via: ' + fmtObj(v1.via) + ' | 신분: ' + fmtObj(v1.rstatus));
+  console.log('[v1] 이주 경험률 ' + pct(v1.migrated / v1.lives) + ' (목표 10~20%) | 사유: ' + fmtObj(v1.migReason));
+  console.log('[v1] 결혼 유형(거주국:유형): ' + fmtObj(v1.marriage) + ' | 기혼 ' + pct(v1.married / v1.lives));
+  console.log('[v1] 관계 등급별 최고소득(중위 배율 평균): ' + Object.entries(v1.relIncome).map(([g, r]) => g + ' ' + (r.n ? f1(r.inc / r.n) : '-') + '×(n=' + r.n + ')').join(', '));
+  console.log('[v1] 주거: ' + fmtObj(v1.housing));
+  console.log('[v1] 생애 중 진로 경험 ' + pct(v1.everTrack / v1.lives));
 
   // ── 완료 기준 ──
   const MIN_N = 100;  // 표본이 이보다 작은 국가는 수명 판정에서 제외(사망 나이 표준편차 약 25년 → n=100 이면 표준오차 2.5년)

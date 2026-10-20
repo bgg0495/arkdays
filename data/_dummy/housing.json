@@ -1,0 +1,33 @@
+{
+  "_meta": { "note": "W7 더미 주거 형태. 국가 키가 없으면 _default. forced 가 맞으면 즉시 전환. cost 는 연 소득 대비 비율, buy 는 중위소득 배율(소유형)." },
+  "_default": { "types": [
+    { "id": "plate_rent", "name": "이동도시 플레이트 임대", "w": 0.5, "nomadic": true, "req": { "urban": true, "nomadic": true }, "cost": 0.25 },
+    { "id": "plate_own", "name": "이동도시 플레이트 소유", "w": 0.1, "nomadic": true, "req": { "urban": true, "nomadic": true, "money": 6 }, "cost": 0.05, "buy": 5 },
+    { "id": "town_rent", "name": "도시 셋방", "w": 0.5, "req": { "urban": true }, "cost": 0.2 },
+    { "id": "village_house", "name": "마을 집", "w": 0.6, "req": { "urban": false }, "cost": 0.05, "buy": 2 },
+    { "id": "quarantine", "name": "격리구역", "forced": { "oriPolicy": ["quarantine", "euthanasia"], "known": true }, "cost": 0.1 },
+    { "id": "camp", "name": "수용소 막사", "forced": { "prison": "camp" }, "cost": 0 },
+    { "id": "jail", "name": "감옥", "forced": { "prison": "jail" }, "cost": 0 },
+    { "id": "ship_cabin", "name": "로도스 선실", "forced": { "res": "rhodes" }, "cost": 0.05 } ] },
+  "siracusa": { "types": [
+    { "id": "plate_rent", "name": "이동도시 플레이트 임대", "w": 0.5, "nomadic": true, "req": { "urban": true, "nomadic": true }, "cost": 0.25 },
+    { "id": "family_house", "name": "패밀리 그늘의 집", "w": 0.3, "req": { "track": ["SIR_FAMIGLIA", "SIR_FAMBIZ"] }, "cost": 0.1 },
+    { "id": "town_rent", "name": "도시 셋방", "w": 0.5, "req": { "urban": true }, "cost": 0.2 },
+    { "id": "village_house", "name": "시골 마을 집", "w": 0.6, "req": { "urban": false }, "cost": 0.05, "buy": 2 },
+    { "id": "jail", "name": "감옥", "forced": { "prison": "jail" }, "cost": 0 },
+    { "id": "ship_cabin", "name": "로도스 선실", "forced": { "res": "rhodes" }, "cost": 0.05 } ] },
+  "ursus": { "types": [
+    { "id": "barracks", "name": "군 막사", "w": 1.0, "req": { "track": ["URS_SOLDIER"] }, "cost": 0 },
+    { "id": "worker_flat", "name": "공장 노동자 숙소", "w": 0.6, "req": { "urban": true }, "cost": 0.15 },
+    { "id": "village_house", "name": "농가", "w": 0.6, "req": { "urban": false }, "cost": 0.05, "buy": 1.5 },
+    { "id": "camp", "name": "광산 수용소 막사", "forced": { "prison": "camp" }, "cost": 0 },
+    { "id": "mine_barracks", "name": "광구 막사", "forced": { "track": ["URS_MINE"] }, "cost": 0 },
+    { "id": "ship_cabin", "name": "로도스 선실", "forced": { "res": "rhodes" }, "cost": 0.05 } ] },
+  "columbia": { "types": [
+    { "id": "plate_rent", "name": "이동도시 플레이트 임대", "w": 0.5, "nomadic": true, "req": { "urban": true, "nomadic": true }, "cost": 0.25 },
+    { "id": "town_rent", "name": "도시 셋방", "w": 0.5, "req": { "urban": true }, "cost": 0.2 },
+    { "id": "suburb_house", "name": "교외 주택", "w": 0.3, "req": { "urban": true, "money": 4 }, "cost": 0.1, "buy": 4 },
+    { "id": "frontier_cabin", "name": "개척지 오두막", "w": 0.6, "req": { "urban": false }, "cost": 0.02, "buy": 0.8 },
+    { "id": "quarantine", "name": "격리구역 공공주택", "forced": { "oriPolicy": ["quarantine"], "known": true }, "cost": 0.1 },
+    { "id": "ship_cabin", "name": "로도스 선실", "forced": { "res": "rhodes" }, "cost": 0.05 } ] }
+}

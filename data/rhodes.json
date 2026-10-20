@@ -1,0 +1,212 @@
+{
+ "_meta": {
+  "schema": "docs/설계_명세_v1.md §10 (D14·D41·D42)",
+  "builtAt": "2026-10-20",
+  "note": "로도스 아일랜드 루트. entries 트리거 파라미터·희귀도(연간 확률)는 전부 창작(§13: 접점 이벤트 연 3%, 합류율 전체 1~3%). ports 가중은 캐논 주재 사무소·작전 지역을 감으로 옮긴 창작. diagnosis 템플릿은 캐론 프로필 '임상 진단 분석' 톤의 창작 문장(메타 문구 없음). 내부 진로는 data/tracks/rhodes.json. W7 호환: entries 는 평탄한 키(p, ages, cap, flag, capMin, policies, money, archetypes, stageMin, tracks, papers, nation, bornBefore), closed 는 평탄한 키(nation, prison, race, infected, tracks, years, region), ports 는 국가 id 배열(portWeights 에 가중), depts 는 id 배열(deptInfo 에 상세).",
+  "statusEnum": ["operator","contractor","patient"],
+  "deptEnum": ["field","medical","engineer","logistics","hr","purchase","office"]
+ },
+ "entries": [
+  {
+   "via": "volunteer",
+   "name": "자원",
+   "rarity": "rare",
+   "p": 0.03,
+   "tag": "rhodes:volunteer",
+   "ages": [16,45],
+   "cap": { "learn": 1.4, "skill": 1.4 },
+   "stageMin": 1,
+   "archetypes": ["A9","A11","A10"],
+   "infected": "undiagnosed_or_none",
+   "officeNation": true,
+   "line": "공개 모집 공고를 보고 지원했다",
+   "status": "operator",
+   "canonCase": "안셀(수련의 지원→인턴 반년→시험)"
+  },
+  {
+   "via": "referral",
+   "name": "추천",
+   "rarity": "rare",
+   "p": 0.03,
+   "tag": "rhodes:referral",
+   "cap": { "skill": 1, "learn": 1, "arts": 1, "ties": 1 },
+   "flag": "rhodesContact",
+   "contactEvents": ["rhodes_operation","rhodes_legal","rhodes_medical_pact","rhodes_rescue"],
+   "capMin": 1,
+   "line": "{cap}를 눈여겨본 덕에 헤드헌팅 제안이 왔다",
+   "status": "operator",
+   "canonCase": "테키스타(첸 추천)"
+  },
+  {
+   "via": "treatment",
+   "name": "치료",
+   "rarity": "common",
+   "p": 0.12,
+   "tag": "rhodes:treatment",
+   "policies": ["treat","ignore","insurance","neglect"],
+   "money": 3,
+   "infected": "diagnosed",
+   "line": "치료를 받으러 갔다",
+   "status": "patient",
+   "canonCase": "미니멀리스트('체류는 일시적')"
+  },
+  {
+   "via": "rescue",
+   "name": "구조",
+   "rarity": "rare",
+   "p": 0.02,
+   "tag": "rhodes:rescue",
+   "flag": "rhodesRescue",
+   "events": ["catastrophe_hit","bigevent_survive","fall_experiment_survive","fall_camp_survive"],
+   "line": "작전 지역에서 구조됐다",
+   "status": "patient",
+   "canonCase": "포푸카(인체 실험 피해 구출)",
+   "toOperatorP": 0.5
+  },
+  {
+   "via": "agreement",
+   "name": "협력 협정",
+   "rarity": "rare",
+   "p": 0.04,
+   "tag": "rhodes:agreement",
+   "tracks": ["KZD_MERC","COL_BSW","COM_BLACKSTEEL","COM_MERC_TEAM","KJE_KT","KJE_CLAN","YAN_RESCUE","LGM_DETECTIVE"],
+   "stageMin": 2,
+   "line": "협정으로 파견됐다",
+   "status": "contractor",
+   "canonCase": "W(전략적 협력 협정)",
+   "keepTrack": true
+  },
+  { "via": "companion", "name": "동행", "rarity": "rare", "p": 0.5, "tag": "rhodes:companion", "flag": "rhodesCompanion", "line": "가족을 따라 배에 올랐다", "status": "patient_or_operator", "canonCase": "토미미(가비알 따라)", "sameDept": true },
+  {
+   "via": "flight",
+   "name": "도피",
+   "rarity": "very_rare",
+   "p": 0.01,
+   "tag": "rhodes:flight",
+   "cap": { "skill": 0.5 },
+   "papers": ["refugee","illegal"],
+   "fallOutcome": ["exile"],
+   "line": "쫓기다가 배에 올랐다",
+   "status": "operator",
+   "canonCase": "캐터펄트(영주 금고 폭파 후)",
+   "approval": "kaltsit"
+  },
+  {
+   "via": "transfer",
+   "name": "이적",
+   "rarity": "very_rare",
+   "p": 0.01,
+   "tag": "rhodes:transfer",
+   "tracks": ["COM_PENGUIN","COL_BSW","COM_BLACKSTEEL","COL_RHINE","KZD_COMMISSION"],
+   "stageMin": 1,
+   "decision": "rhodes_transfer",
+   "line": "소속을 옮겼다",
+   "status": "operator",
+   "canonCase": "호디어러(위원회 재초청)·제시카(퇴사 미승인)"
+  },
+  {
+   "via": "babel",
+   "name": "바벨 승계",
+   "rarity": "very_rare",
+   "p": 1,
+   "tag": "rhodes:babel",
+   "tracks": ["KZD_BABEL"],
+   "nation": "kazdel",
+   "bornBefore": 1076,
+   "years": [1094,1096],
+   "line": "바벨이 해체되고 배는 남았다",
+   "status": "operator",
+   "canonCase": "클로저(엔지니어링부장·구매부 겸임)",
+   "deptPrefer": ["engineer","medical","purchase"]
+  }
+ ],
+ "decision": { "id": "rhodes_offer", "choices": ["join","defer","decline"], "deferGapYears": 3 },
+ "depts": ["field","medical","engineer","logistics","hr","purchase","office"],
+ "statusRules": {
+  "note": "§10.2. 위에서부터 첫 일치. z 는 cap 숨은 값, uL 은 혈중 결정 밀도. 협정(agreement)은 항상 contractor + RHO_CONTRACTOR.",
+  "rules": [
+   { "if": { "via": "agreement" }, "status": "contractor", "dept": "field", "track": "RHO_CONTRACTOR" },
+   { "if": { "infected": true, "via": "treatment", "money": "<3" }, "status": "patient", "dept": "logistics", "track": "RHO_PATIENT", "laborFor": "RHO_LOGISTICS" },
+   { "if": { "infected": true, "via": "treatment" }, "status": "patient", "dept": "medical", "track": "RHO_PATIENT" },
+   {
+    "if": { "cap": { "skill": ">=0.5" }, "infectedStage": "<=1" },
+    "status": "operator",
+    "dept": "field",
+    "track": "RHO_OPERATOR"
+   },
+   {
+    "if": { "cap": { "learn": ">=0.5" }, "prevArchetypes": ["A9"], "prevJobs": ["doctor","nurse"] },
+    "status": "operator",
+    "dept": "medical",
+    "track": "RHO_MEDICAL"
+   },
+   {
+    "if": { "cap": { "learn": ">=0.5" } },
+    "status": "operator",
+    "dept": "engineer",
+    "track": "RHO_ENGINEER"
+   },
+   { "if": { "prevArchetypes": ["A10","A3"] }, "status": "operator", "deptAny": ["hr","purchase"], "track": "RHO_HR" },
+   { "if": {  }, "status": "operator", "dept": "logistics", "track": "RHO_LOGISTICS" }
+  ],
+  "patientToOperator": { "afterYears": 2, "pYear": 0.25, "requires": { "infectedStage": "<=2" } },
+  "contractorToOperator": { "decision": "rhodes_convert", "afterYears": 3 }
+ },
+ "ports": ["lungmen","victoria","columbia","kazimierz","leithanien","ursus","kazdel","bolivar","siracusa","sargon","iberia","rim"],
+ "closed": [
+  { "nation": "ursus", "prison": "camp", "rumorOnly": false, "note": "수용소 수감 중에는 소문도 닫힘" },
+  { "nation": "laterano", "race": "sankta", "infected": false, "rumorOnly": true, "note": "비감염 산크타는 '해외 감염자 제약회사' 소문만. LAT_FALLEN 전환 후 treatment 열림" },
+  { "nation": "kazdel", "tracks": ["KZD_COMMISSION"], "years": [1094,1098], "rumorOnly": false, "note": "군사위원회 소속은 적으로만 인식" },
+  { "nation": "kazdel", "tracks": ["KZD_COURT","KZD_CONFESSOR"], "rumorOnly": false, "note": "왕정 직속·순혈 귀족" },
+  { "nation": "aegir", "tracks": ["AEG_CONSUL","AEG_RESEARCH","AEG_LEGION","AEG_ADMIN","AEG_FARM","AEG_ARTIST"], "rumorOnly": false, "note": "해저 본국. 지상행 후에만" },
+  { "nation": "durin", "tracks": ["DUR_DESIGN","DUR_INDUSTRY","DUR_GEO","DUR_TRADE","DUR_LIT","DUR_LIFT","DUR_BREW"], "rumorOnly": false, "note": "지하 도시. 지상행 후에만" },
+  { "nation": "higashi", "tracks": ["HIG_RURAL"], "region": "north", "rumorOnly": false, "note": "극동 북조 농노(접점 없음)" },
+  { "nation": "iberia", "tracks": ["IBE_COAST"], "rumorOnly": false, "note": "봉쇄 해안은 존재 자체를 모름" },
+  { "nation": "sargon", "tracks": ["SAR_COURT","SAR_ZHAYEDAN"], "rumorOnly": false, "note": "샤르-아가데는 떠날 수 없음" }
+ ],
+ "diagnosis": {
+  "note": "임상 진단 분석 블록. 첫 두 줄은 엔진 수치: [체세포와 오리지늄 융합률] {fusion}% = clamp(uL×28 + N(0,1.5), 0, 60) / [혈중 오리지늄 결정 밀도] {density} u/L. 그 뒤 한 문장을 stage 키로 고른다(uL 기준: I기 <0.30, II기 0.30~0.50, III기 >0.50).",
+  "templates": [
+   { "id": "t1_early", "stage": 1, "uL": [0,0.15], "text": "방사선 검사 결과 피부 표면에 미세한 오리지늄 결정이 소량 확인되었으며, 주요 장기에는 침착 소견이 없음. 정기 관찰 대상으로 분류함." },
+   { "id": "t1_late", "stage": 1, "uL": [0.15,0.3], "text": "방사선 검사 결과 사지 말단과 피하 조직에서 결정 침착이 관찰됨. 진행 속도는 완만하나 억제제 투여를 권고함." },
+   { "id": "t2_early", "stage": 2, "uL": [0.3,0.4], "text": "방사선 검사 결과 체표 결정이 넓게 분포하며 순환계 일부에서 결정 밀도 상승이 확인됨. 작전 투입 시 보호 장비 착용을 전제로 함." },
+   { "id": "t2_late", "stage": 2, "uL": [0.4,0.5], "text": "방사선 검사 결과 장기 주변 조직에 결정 침착이 진행 중이며 융합률 상승 추세가 뚜렷함. 투여량 조정과 격주 검사가 필요함." },
+   { "id": "t3", "stage": 3, "uL": [0.5,2], "text": "방사선 검사 결과 주요 장기 표면에 결정 침착이 확인되었으며 융합률이 임계 범위에 근접함. 작전 참여를 제한하고 집중 치료로 전환함." },
+   { "id": "stable", "stage": 0, "uL": [0,2], "requires": { "treatedYears": 2, "trend": "down" }, "text": "방사선 검사 결과 결정 분포가 이전 검사와 동일하거나 축소되었으며 융합률 변화 없음. 현 치료 계획을 유지함." }
+  ]
+ },
+ "operatorStats": {
+  "note": "§10.3 캐논 6종 등급(D42). z 는 cap 또는 파생값. 등급 경계: <-1 결함 / <-0.3 보통 / <0.4 표준 / <1.0 우수 / <1.7 뛰어남 / 이상 탁월.",
+  "grades": ["결함","보통","표준","우수","뛰어남","탁월"],
+  "bounds": [-1,-0.3,0.4,1,1.7],
+  "stats": [
+   { "id": "strength", "name": "물리적 강도", "formula": "0.6*skill + 0.4*healthZ" },
+   { "id": "mobility", "name": "전장 기동력", "formula": "0.5*skill + 0.3*(trait=='활발함'?1:0) + 0.2*healthZ" },
+   { "id": "endurance", "name": "생체 인내도", "formula": "healthZ - infectedStage*0.5" },
+   { "id": "tactics", "name": "전술 계획력", "formula": "learn" },
+   { "id": "combat", "name": "전투 기술력", "formula": "skill + 0.3*(hasMilitaryHistory?1:0)" },
+   { "id": "arts", "name": "오리지늄 아츠 적응성", "formula": "arts" }
+  ]
+ },
+ "portWeights": {
+  "note": "본함 기항지 순환(§7.4 route). 매년 가중 롤로 S.res.itinerantAt 를 정한다. 1101.7 본함 소실 후에는 지부(offices)로만.",
+  "weights": { "lungmen": 0.16, "kazimierz": 0.1, "victoria": 0.12, "leithanien": 0.08, "ursus": 0.08, "columbia": 0.12, "siracusa": 0.06, "bolivar": 0.07, "kazdel": 0.08, "iberia": 0.04, "sargon": 0.05, "rim": 0.04 },
+  "offices": ["kazimierz","victoria","leithanien","ursus","columbia","bolivar","kazdel","iberia","lungmen","tara"],
+  "lostYear": 1101
+ },
+ "deptInfo": [
+  { "id": "field", "name": "외근부", "track": "RHO_OPERATOR", "sections": ["외근임무과","훈련센터"] },
+  { "id": "medical", "name": "의료부", "track": "RHO_MEDICAL", "sections": ["응급과","재활회복과","분석과","의료행정과","의료장비과"] },
+  { "id": "engineer", "name": "엔지니어링부", "track": "RHO_ENGINEER", "sections": ["고정자산과","운용정비과","공사과"] },
+  { "id": "logistics", "name": "후방지원부", "track": "RHO_LOGISTICS", "sections": ["물자 배급","복장·식사·거주","생산라인"] },
+  { "id": "hr", "name": "인사부", "track": "RHO_HR", "sections": ["채용과","심사과"] },
+  { "id": "purchase", "name": "구매 및 시장 운영부", "track": "RHO_PURCHASE", "sections": ["구매센터"] },
+  { "id": "office", "name": "주재 사무소", "track": "RHO_OFFICE", "sections": [] }
+ ],
+ "rumorOnly": {
+  "note": "닫히지는 않지만 추천·협정 접점이 없으면 치료 입구도 \"먼 소문\"(p 를 0.3배, 창작). 엔진이 읽지 않으면 콘텐츠 태그 rhodes:rumor 로만 쓴다.",
+  "rules": [
+   { "nations": ["yan","sami","minos","durin"], "unlessVia": ["referral","agreement"], "note": "주재 사무소 없는 나라: 추천·협정 없으면 치료도 먼 소문" }
+  ]
+ }
+}

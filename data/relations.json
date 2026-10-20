@@ -1,0 +1,60 @@
+{
+ "_meta": {
+  "schema": "docs/설계_명세_v1.md §9 (D49)",
+  "builtAt": "2026-10-20",
+  "note": "국가×종족 관계 등급. 캐논 근거 있는 쌍만 기입(없으면 default=neutral). race 앞 '!' 는 '그 종족이 아닌 전원'. eth 키는 종족 대신 민족 플래그(nations.ethnicFlags). since/until 은 테라력 적용 구간. scope 는 특정 진로에서만 적용. canon: true(설정 명시) / 'partial'(정황·팬 추정 포함). 등급 효과(§5·§9): relMul favored 1.3 / neutral 1.0 / subtle 0.8 / cultural 0.6 / institutional 0.2 / exclude 0. exclude 는 출생 조합·이주 목적지에서 제외. ethPairs 는 종족이 아니라 민족 플래그(eth) 기준 쌍 — 엔진 relations.js 가 아직 안 읽으면 콘텐츠 태그용.",
+  "gradeNote": { "exclude": "배제(입국·출생 불가)", "institutional": "제도적 차별", "cultural": "문화적 멸시", "subtle": "은근한 편견", "neutral": "무관(기본값)", "favored": "우대" }
+ },
+ "grades": ["exclude","institutional","cultural","subtle","neutral","favored"],
+ "default": "neutral",
+ "relMul": { "favored": 1.3, "neutral": 1, "subtle": 0.8, "cultural": 0.6, "institutional": 0.2, "exclude": 0 },
+ "sarkaz_default": {
+  "grade": "subtle",
+  "note": "살카즈는 전 세계 기본 '편견' 이상(보고서 A-5: 아인 취급, 광석병·재앙 책임 전가). 나라별 강도는 by 에서 덮어씀.",
+  "by": {
+   "ursus": "institutional",
+   "victoria": "institutional",
+   "victoria_since": 1098,
+   "columbia": "institutional",
+   "leithanien": "institutional",
+   "laterano": "exclude",
+   "kjerag": "neutral",
+   "durin": "neutral",
+   "sami": "neutral",
+   "kazdel": "favored",
+   "rhodes": "neutral"
+  }
+ },
+ "pairs": [
+  { "nation": "laterano", "race": "sarkaz", "grade": "exclude", "canon": true, "note": "살카즈의 라테라노 입국 자체가 신성모독(Laterano/Overview, D49)" },
+  { "nation": "laterano", "race": "sankta", "grade": "favored", "canon": true, "note": "산크타 국가. 교황·추기경 등 최상위 공직은 산크타 한정(Curia)" },
+  { "nation": "laterano", "race": "liberi", "grade": "cultural", "canon": true, "note": "비산크타 공민은 공직은 열려 있으나 수호총·공감에서 배제된 구조적 2등 시민(Notarial Hall, 초안 §13)" },
+  { "nation": "kazdel", "race": "sankta", "grade": "exclude", "canon": true, "note": "살카즈–산크타 상호 배척(보고서 A-5, D49)" },
+  { "nation": "kazdel", "race": "sarkaz", "grade": "favored", "canon": true, "note": "살카즈의 땅. 왕정·용병 모두 살카즈 중심(Kazdel/Overview)" },
+  { "nation": "ursus", "race": "sarkaz", "grade": "institutional", "canon": true, "note": "복지 배제·아파르트헤이트·비인도적 실험 대상(Sarkaz, D49)" },
+  { "nation": "victoria", "race": "sarkaz", "grade": "institutional", "since": 1098, "canon": true, "note": "1098 런디니움 이후 살카즈를 전범 취급(Sarkaz, 카탈로그 §20 KZD_DIASPORA)" },
+  { "nation": "columbia", "race": "sarkaz", "grade": "institutional", "canon": "partial", "note": "컬럼비아 남부 살카즈 노예 집단매장지, 라인 랩 실험체(이프리트)(Kazdel, 보고서 A-5)" },
+  { "nation": "leithanien", "race": "sarkaz", "grade": "institutional", "canon": "partial", "note": "라이타니엔 서부 살카즈 매장지, 카프리니 행세로 숨어 삶(히비스커스)(보고서 A-5, 초안 §20)" },
+  { "nation": "kjerag", "race": "sarkaz", "grade": "neutral", "canon": "partial", "note": "D49: 쉐라그는 살카즈 편견 약함. 감염자 차별도 거의 없음(Infected)" },
+  { "nation": "durin", "race": "sarkaz", "grade": "neutral", "canon": "partial", "note": "D49: 두린은 살카즈 편견 약함. 지하 도시는 지상 분쟁과 무관" },
+  { "nation": "sami", "race": "sarkaz", "grade": "neutral", "canon": "partial", "note": "사미는 살카즈 감염을 정상으로 취급(카탈로그 §5 감염 분기)" },
+  { "nation": "iberia", "race": "aegir", "grade": "institutional", "canon": true, "note": "1038 이후 에기르 박해, 해안 봉쇄(Ægir, D49)" },
+  { "nation": "higashi", "race": "oni", "grade": "cultural", "canon": true, "note": "오니 호전적 편견·온라인 괴롭힘. 금지 직종은 두지 않고 채용 페널티로(Oni, 초안 §3)" },
+  { "nation": "siracusa", "race": "!lupo", "grade": "subtle", "canon": true, "note": "루포의 나라. 비루포는 패밀리 핵심에 들기 어려움(Siracusa/Branches, D49)" },
+  { "nation": "siracusa", "race": "lupo", "grade": "favored", "canon": "partial", "note": "패밀리 혈연 중심 사회의 뒷면. 진로 SIR_FAMIGLIA 가중 2.0 과 짝" },
+  { "nation": "kazimierz", "race": "!kuranta", "grade": "subtle", "canon": "partial", "scope": "track:KAZ_KNIGHT", "note": "기사 문화는 쿠란타 중심(Kazimierz Major). 기사 진로에서만 적용(D49)" },
+  { "nation": "kazimierz", "race": "kuranta", "grade": "favored", "canon": "partial", "scope": "track:KAZ_KNIGHT", "note": "같은 근거의 뒷면. 기사 진로 가중 1.5 와 짝" },
+  { "nation": "sargon", "race": "reproba", "grade": "cultural", "canon": true, "note": "리프로바는 살카즈와 닮았다는 이유로 기피(보고서 A-5, races.json sarkaz_lookalike)" },
+  { "nation": "minos", "race": "forte", "grade": "favored", "canon": "partial", "note": "포르테는 미노스 지배 종족(보고서 A-5 종족표)" },
+  { "nation": "victoria", "race": "aslan", "grade": "favored", "canon": "partial", "note": "아슬란 정복 이후 혈통 순수성이 지배층 정치 개념(보고서 A-5). 왕족 혈통 이벤트 키 royal 과 짝" },
+  { "nation": "victoria", "race": "draco", "grade": "favored", "canon": "partial", "note": "드라코 왕가의 나라. 희귀 종족이라 실제 발생은 드묾" },
+  { "nation": "yan", "race": "lung", "grade": "favored", "canon": "partial", "note": "염국 황실 혈통(용). 희귀 종족" },
+  { "nation": "ursus", "race": "ursus", "grade": "favored", "canon": "partial", "note": "국명 종족. 귀족·장교단의 주류(Ursus/Overview)" },
+  { "nation": "aegir", "race": "aegir", "grade": "favored", "canon": "partial", "note": "에기르 단일 종족 국가. 비에기르는 사실상 지상 이주민 역방향(Ægir)" },
+  { "nation": "higashi", "race": "aegir", "grade": "subtle", "canon": "partial", "note": "극동 '상어인'은 편입은 되나 육지 인접 지역의 에기르 배척(보고서 A-5, 카탈로그 §15 AEG_EXPAT)" }
+ ],
+ "ethPairs": [
+  { "nation": "victoria", "eth": "gaul", "grade": "subtle", "canon": true, "note": "가울 유민 복고주의 감시(nations.ethnicFlags.gaul, 카탈로그 §8 빠진 것)" },
+  { "nation": "tara", "eth": "nomad", "grade": "cultural", "canon": true, "note": "타라 유목민은 도시민에게 차별, 근대화로 명맥 단절 중(Bridgid, 초안 §9)" }
+ ]
+}

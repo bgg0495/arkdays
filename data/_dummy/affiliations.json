@@ -1,0 +1,12 @@
+{
+  "_meta": { "note": "W7 더미 소속. 수치 창작. track 은 문자열 또는 배열." },
+  "affiliations": [
+    { "id": "SIR_BELLONE", "track": "SIR_FAMIGLIA", "name": "벨로네 패밀리", "canon": true, "weight": 0.35, "mods": { "promo": 1.0, "fall": 0.8, "income": 1.3, "standingStart": 10 }, "tags": ["major"], "events": "SIR_FAMIGLIA:bellone" },
+    { "id": "SIR_ROSSATI", "track": "SIR_FAMIGLIA", "name": "로사티 패밀리", "canon": true, "weight": 0.35, "mods": { "promo": 1.1, "fall": 1.0, "income": 1.1, "standingStart": 0 }, "tags": ["major"], "events": "SIR_FAMIGLIA:rossati" },
+    { "id": "SIR_SALUZZO", "track": ["SIR_FAMIGLIA", "SIR_FAMBIZ"], "name": "살루초 패밀리", "canon": true, "weight": 0.3, "mods": { "promo": 0.9, "fall": 1.2, "income": 1.0, "standingStart": -5 }, "tags": ["major", "wine"], "events": "SIR_FAMIGLIA:saluzzo" },
+    { "id": "URS_VOLGRAD", "track": "URS_MINE", "name": "볼그라드 광구", "canon": true, "weight": 1.0, "mods": { "promo": 1.0, "fall": 1.0, "income": 1.0, "standingStart": 0 }, "tags": [] },
+    { "id": "URS_LEGION1", "track": ["URS_SOLDIER", "URS_OFFICER"], "name": "제1군단", "canon": true, "weight": 1.0, "mods": { "promo": 1.0, "fall": 1.1, "income": 1.0, "standingStart": 0 }, "tags": ["legion"] },
+    { "id": "COL_RHINE_ECO", "track": "COL_RHINE", "name": "라인 랩 생태과", "canon": true, "weight": 1.0, "mods": { "promo": 1.0, "fall": 0.9, "income": 1.0, "standingStart": 5 }, "tags": ["section"] },
+    { "id": "COL_BSW_APD", "track": "COL_BSW", "name": "블랙스틸 APD", "canon": true, "weight": 1.0, "mods": { "promo": 1.0, "fall": 1.0, "income": 1.1, "standingStart": 0 }, "tags": [] }
+  ]
+}

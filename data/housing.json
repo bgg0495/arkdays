@@ -1,0 +1,203 @@
+{
+ "_meta": {
+  "schema": "docs/설계_명세_v1.md §8.2 (D48)",
+  "builtAt": "2026-10-20",
+  "note": "국가별 주거 형태. w 는 국가 안 가중(합 1 권장), cost 는 연간 주거비(중위소득 배율), own:true 는 자산(v0.1 house 필드 연동). req: urban(도시 여부)·nomadic(이동도시 거주)·track(재직 중)·status·region·infected. forced 는 조건이 맞으면 즉시 전환: oriPolicy(국가 정책 enum)+known(감염 판명), prison(camp|jail), res(rhodes), track. _common 은 전 국가 공통 강제 유형(국가 목록 뒤에 적용). 유형·가중·비용 전부 창작, canon 은 그 주거가 캐논에 언급된 것.",
+  "resolveOrder": "forced(_common → nation) → req 필터 → w 가중 롤. '집을 산다/옮긴다' 결정은 req 를 통과한 후보 안에서만.",
+  "defaultNote": "_default.types 는 전 국가 공통(강제 유형). 국가 types 뒤에 합쳐진다(W7 data.js normTypes)."
+ },
+ "_default": {
+  "types": [
+   { "id": "quarantine", "name": "격리구역", "w": 0, "cost": 0.05, "forced": { "oriPolicy": ["quarantine","euthanasia","persecute"], "known": true }, "canon": true },
+   { "id": "camp", "name": "수용소", "w": 0, "cost": 0, "forced": { "prison": "camp" }, "canon": true },
+   { "id": "jail", "name": "감옥", "w": 0, "cost": 0, "forced": { "prison": "jail" }, "canon": false },
+   { "id": "ship_cabin", "name": "로도스 선실", "w": 0, "cost": 0.05, "forced": { "res": "rhodes" }, "canon": true, "note": "1·2·4인 선실, 인사부 배정" },
+   { "id": "barracks", "name": "군 막사", "w": 0, "cost": 0, "forced": { "archetype": ["A4"], "stageMax": 1 }, "canon": false, "note": "A4 진로 첫 두 단계 재직 중" },
+   { "id": "refugee_tent", "name": "난민 천막", "w": 0, "cost": 0, "forced": { "papers": "refugee" }, "canon": false }
+  ]
+ },
+ "yan": {
+  "types": [
+   { "id": "plate_rent", "name": "이동도시 플레이트 임대", "w": 0.3, "req": { "urban": true, "nomadic": true }, "cost": 0.25, "canon": true },
+   { "id": "plate_own", "name": "이동도시 플레이트 소유", "w": 0.1, "req": { "urban": true, "nomadic": true }, "cost": 0.05, "own": true, "price": 8, "canon": true },
+   { "id": "village_house", "name": "강남 마을 집", "w": 0.4, "req": { "urban": false }, "cost": 0.08, "own": true, "price": 2, "canon": true },
+   { "id": "boat", "name": "강변 배집", "w": 0.1, "req": { "track": ["YAN_RIVER"] }, "cost": 0.03, "own": true, "price": 1, "canon": "partial" },
+   { "id": "yamen_quarters", "name": "관사", "w": 0.1, "req": { "track": ["YAN_BUREAU","YAN_TIANSHI","YAN_SUI"] }, "cost": 0, "canon": false }
+  ]
+ },
+ "lungmen": {
+  "types": [
+   { "id": "plate_rent", "name": "고층 임대 아파트", "w": 0.5, "req": { "urban": true }, "cost": 0.35, "canon": true },
+   { "id": "plate_own", "name": "아파트 소유", "w": 0.15, "req": { "urban": true }, "cost": 0.05, "own": true, "price": 12, "canon": true },
+   { "id": "slum", "name": "빈민가 판잣집", "w": 0.3, "cost": 0.05, "canon": true },
+   { "id": "mansion", "name": "재벌가 저택 사용인 방", "w": 0.05, "req": { "track": ["LGM_BUTLER"] }, "cost": 0, "canon": "partial" }
+  ]
+ },
+ "higashi": {
+  "types": [
+   { "id": "apartment", "name": "남조 아파트 임대", "w": 0.4, "req": { "urban": true }, "cost": 0.3, "region": "south", "canon": "partial" },
+   { "id": "house_own", "name": "단독주택 소유", "w": 0.15, "cost": 0.05, "own": true, "price": 10, "canon": false },
+   { "id": "village", "name": "광산촌 집", "w": 0.3, "req": { "urban": false }, "cost": 0.06, "own": true, "price": 1.5, "region": "north", "canon": "partial" },
+   { "id": "temple", "name": "산사 숙소", "w": 0.05, "req": { "track": ["HIG_TEMPLE"] }, "cost": 0, "canon": "partial" },
+   { "id": "samurai_house", "name": "무가 저택", "w": 0.1, "req": { "track": ["HIG_NORTH_ARMY","HIG_NINJA"] }, "cost": 0.1, "own": true, "price": 15, "region": "north", "canon": false }
+  ]
+ },
+ "ursus": {
+  "types": [
+   { "id": "plate_rent", "name": "이동도시 공동 주택", "w": 0.35, "req": { "urban": true }, "cost": 0.2, "canon": "partial" },
+   { "id": "village_izba", "name": "농촌 통나무집", "w": 0.3, "req": { "urban": false }, "cost": 0.05, "own": true, "price": 1.5, "canon": false },
+   { "id": "factory_dorm", "name": "공장 기숙사", "w": 0.2, "req": { "track": ["URS_WORKER"] }, "cost": 0.1, "canon": false },
+   { "id": "estate", "name": "귀족 저택", "w": 0.1, "req": { "status": "noble" }, "cost": 0.15, "own": true, "price": 25, "canon": "partial" },
+   { "id": "mine_camp", "name": "광산 수용소 막사", "w": 0.05, "cost": 0, "forced": { "track": ["URS_MINE"] }, "canon": true }
+  ]
+ },
+ "sami": {
+  "types": [
+   { "id": "tent", "name": "부족 천막", "w": 0.6, "cost": 0.02, "own": true, "price": 0.3, "canon": true },
+   { "id": "winter_hut", "name": "겨울 움막", "w": 0.25, "cost": 0.03, "own": true, "price": 0.5, "canon": "partial" },
+   { "id": "sacred_tree", "name": "성스러운 나무 곁 거처", "w": 0.05, "req": { "track": ["SAM_SHAMAN"] }, "cost": 0, "canon": "partial" },
+   { "id": "resort_dorm", "name": "남부 리조트 숙소", "w": 0.1, "req": { "track": ["SAM_RESORT","SAM_GUIDE"] }, "cost": 0.1, "canon": false }
+  ]
+ },
+ "kjerag": {
+  "types": [
+   { "id": "fief_house", "name": "영지 마을 집", "w": 0.5, "req": { "urban": false }, "cost": 0.06, "own": true, "price": 2, "canon": "partial" },
+   { "id": "turicum_flat", "name": "투리쿰 임대", "w": 0.3, "req": { "urban": true }, "cost": 0.25, "canon": false },
+   { "id": "monastery", "name": "만주원 숙소", "w": 0.05, "req": { "track": ["KJE_COURT"] }, "cost": 0, "canon": "partial" },
+   { "id": "clan_hall", "name": "가문 저택 거처", "w": 0.1, "req": { "track": ["KJE_CLAN","KJE_PARL"] }, "cost": 0, "canon": "partial" },
+   { "id": "mountain_hut", "name": "고원 광산 오두막", "w": 0.05, "req": { "track": ["KJE_MINE","KJE_GUIDE"] }, "cost": 0.03, "own": true, "price": 0.8, "canon": false }
+  ]
+ },
+ "leithanien": {
+  "types": [
+   { "id": "plate_rent", "name": "이동도시 임대", "w": 0.4, "req": { "urban": true }, "cost": 0.28, "canon": "partial" },
+   { "id": "town_house", "name": "도시 주택 소유", "w": 0.15, "req": { "urban": true }, "cost": 0.05, "own": true, "price": 10, "canon": false },
+   { "id": "village", "name": "산중 정주민 집", "w": 0.3, "req": { "urban": false }, "cost": 0.05, "own": true, "price": 1.5, "canon": "partial" },
+   { "id": "court_quarters", "name": "궁정 숙소", "w": 0.05, "req": { "track": ["LEI_COURT","LEI_MUSIC"] }, "cost": 0, "canon": false },
+   { "id": "quarantine_zone", "name": "격리구역 거처", "w": 0.1, "cost": 0.02, "forced": { "track": ["LEI_QUAR"] }, "canon": true }
+  ]
+ },
+ "victoria": {
+  "types": [
+   { "id": "terrace_rent", "name": "노동자 연립 임대", "w": 0.45, "req": { "urban": true }, "cost": 0.25, "canon": "partial" },
+   { "id": "house_own", "name": "주택 소유", "w": 0.15, "cost": 0.05, "own": true, "price": 10, "canon": false },
+   { "id": "farm", "name": "지방 농가", "w": 0.25, "req": { "urban": false }, "cost": 0.05, "own": true, "price": 2, "canon": "partial" },
+   { "id": "manor", "name": "공작령 저택", "w": 0.05, "req": { "status": "noble" }, "cost": 0.2, "own": true, "price": 40, "canon": "partial" },
+   { "id": "infected_zone", "name": "감염자 격리 노동구역 숙소", "w": 0.1, "cost": 0.02, "forced": { "track": ["VIC_INFECTED"] }, "canon": true }
+  ]
+ },
+ "tara": {
+  "types": [
+   { "id": "cottage", "name": "농촌 오두막", "w": 0.55, "req": { "urban": false }, "cost": 0.04, "own": true, "price": 1, "canon": "partial" },
+   { "id": "town_rent", "name": "나 시어셔 임대", "w": 0.25, "req": { "urban": true }, "cost": 0.2, "canon": false },
+   { "id": "wagon", "name": "유목민 마차", "w": 0.1, "req": { "eth": "nomad" }, "cost": 0.02, "own": true, "price": 0.5, "canon": "partial" },
+   { "id": "field_camp", "name": "들판 야영지", "w": 0.1, "req": { "track": ["TAR_WANDER","TAR_DUBLIN"] }, "cost": 0, "canon": "partial" }
+  ]
+ },
+ "kazimierz": {
+  "types": [
+   { "id": "plate_rent", "name": "상업 도시 임대", "w": 0.4, "req": { "urban": true }, "cost": 0.3, "canon": "partial" },
+   { "id": "plate_own", "name": "상업 도시 주택 소유", "w": 0.1, "req": { "urban": true }, "cost": 0.05, "own": true, "price": 12, "canon": false },
+   { "id": "farm", "name": "남부 농가", "w": 0.25, "req": { "urban": false }, "cost": 0.05, "own": true, "price": 1.5, "canon": "partial" },
+   { "id": "club_dorm", "name": "기사 클럽 숙소", "w": 0.1, "req": { "track": ["KAZ_KNIGHT","KAZ_STAFF","KAZ_CAMPAIGN"] }, "cost": 0.05, "canon": false },
+   { "id": "underground", "name": "지하 거주구", "w": 0.15, "cost": 0.02, "forced": { "track": ["KAZ_GHETTO","KAZ_INFECTED"] }, "canon": true }
+  ]
+ },
+ "columbia": {
+  "types": [
+   { "id": "apartment", "name": "도시 아파트 임대", "w": 0.4, "req": { "urban": true }, "cost": 0.3, "canon": "partial" },
+   { "id": "house_own", "name": "주택 소유(대출)", "w": 0.2, "cost": 0.12, "own": true, "price": 12, "canon": false, "note": "cost 는 대출 상환분" },
+   { "id": "frontier_cabin", "name": "개척지 오두막", "w": 0.2, "req": { "urban": false }, "cost": 0.03, "own": true, "price": 1, "canon": "partial" },
+   { "id": "slum", "name": "판자촌", "w": 0.15, "cost": 0.03, "canon": true },
+   { "id": "insurance_zone", "name": "공공보험 격리구역", "w": 0.05, "cost": 0.05, "forced": { "track": ["COL_INSURANCE"], "stageMin": 1 }, "canon": "partial" }
+  ]
+ },
+ "siracusa": {
+  "types": [
+   { "id": "plate_rent", "name": "이동도시 임대", "w": 0.4, "req": { "urban": true }, "cost": 0.28, "canon": "partial" },
+   { "id": "town_house", "name": "가게 딸린 집", "w": 0.2, "req": { "track": ["SIR_LIVING","SIR_TRUCK"] }, "cost": 0.05, "own": true, "price": 6, "canon": "partial" },
+   { "id": "village", "name": "시골 마을 집", "w": 0.2, "req": { "urban": false }, "cost": 0.05, "own": true, "price": 1.5, "canon": "partial" },
+   { "id": "family_villa", "name": "패밀리 저택 구역", "w": 0.15, "req": { "track": ["SIR_FAMIGLIA","SIR_CLEANER"] }, "cost": 0.05, "canon": "partial" },
+   { "id": "wild", "name": "황야 늑대 거처", "w": 0.05, "req": { "track": ["SIR_WILD"] }, "cost": 0, "canon": "partial" }
+  ]
+ },
+ "laterano": {
+  "types": [
+   { "id": "plate_rent", "name": "이동도시 임대", "w": 0.45, "req": { "nomadic": true }, "cost": 0.25, "canon": true },
+   { "id": "plate_own", "name": "이동도시 주택 소유", "w": 0.3, "cost": 0.05, "own": true, "price": 10, "canon": "partial" },
+   { "id": "monastery", "name": "수도원 거처", "w": 0.1, "req": { "track": ["LAT_MONASTERY","LAT_GUARD"] }, "cost": 0, "canon": true },
+   { "id": "dentist_district", "name": "치과의사 구역 셋방", "w": 0.1, "req": { "track": ["LAT_DENTIST"] }, "cost": 0.1, "canon": "partial" },
+   { "id": "expelled", "name": "국외 임시 거처", "w": 0.05, "cost": 0.15, "forced": { "track": ["LAT_FALLEN"] }, "canon": true }
+  ]
+ },
+ "iberia": {
+  "types": [
+   { "id": "coast_hut", "name": "봉쇄 해안 오두막", "w": 0.35, "req": { "urban": false }, "cost": 0, "own": true, "price": 0.3, "canon": true },
+   { "id": "inland_house", "name": "내륙 주택", "w": 0.3, "cost": 0.08, "own": true, "price": 2, "canon": false },
+   { "id": "stranded_city", "name": "좌초 이동도시 구획", "w": 0.2, "req": { "urban": true }, "cost": 0.15, "canon": "partial" },
+   { "id": "inquisition_quarters", "name": "재판소 숙소", "w": 0.1, "req": { "track": ["IBE_INQ","IBE_PENAL","IBE_NURSE"] }, "cost": 0, "canon": "partial" },
+   { "id": "lighthouse", "name": "등대", "w": 0.05, "req": { "track": ["IBE_LIGHT"] }, "cost": 0, "canon": true }
+  ]
+ },
+ "aegir": {
+  "types": [
+   { "id": "assigned_unit", "name": "배정 주거 구획", "w": 0.85, "cost": 0, "canon": "partial", "note": "발전계획소 배정(창작 확장)" },
+   { "id": "research_quarters", "name": "연구소 숙소", "w": 0.1, "req": { "track": ["AEG_RESEARCH","AEG_CONSUL"] }, "cost": 0, "canon": false },
+   { "id": "surface_lodging", "name": "지상 임시 거처", "w": 0.05, "cost": 0.3, "forced": { "track": ["AEG_EXPAT"] }, "canon": "partial" }
+  ]
+ },
+ "minos": {
+  "types": [
+   { "id": "city_house", "name": "도시국가 주택", "w": 0.4, "req": { "urban": true }, "cost": 0.15, "own": true, "price": 5, "canon": false },
+   { "id": "orchard_house", "name": "과수원 집", "w": 0.3, "req": { "urban": false }, "cost": 0.05, "own": true, "price": 2, "canon": "partial" },
+   { "id": "canal_boat", "name": "운하 배집", "w": 0.1, "req": { "track": ["MIN_BOAT"] }, "cost": 0.03, "own": true, "price": 1, "canon": false },
+   { "id": "temple_quarters", "name": "신전 숙소", "w": 0.05, "req": { "track": ["MIN_TEMPLE"] }, "cost": 0, "canon": "partial" },
+   { "id": "border_village", "name": "변경 마을 집", "w": 0.15, "req": { "track": ["MIN_BORDER"] }, "cost": 0.02, "own": true, "price": 0.5, "canon": "partial" }
+  ]
+ },
+ "sargon": {
+  "types": [
+   { "id": "mud_house", "name": "농촌 흙집", "w": 0.4, "req": { "urban": false }, "cost": 0.04, "own": true, "price": 1, "canon": false },
+   { "id": "oasis_tent", "name": "오아시스 천막", "w": 0.15, "req": { "urban": false }, "cost": 0.02, "own": true, "price": 0.4, "canon": "partial" },
+   { "id": "city_rent", "name": "도시 셋집", "w": 0.2, "req": { "urban": true }, "cost": 0.25, "canon": false },
+   { "id": "tribal_hut", "name": "아카후알라 부족 움막", "w": 0.1, "region": "acahualla", "cost": 0.01, "own": true, "price": 0.3, "canon": "partial" },
+   { "id": "palace", "name": "궁정 거처", "w": 0.05, "req": { "track": ["SAR_COURT"] }, "cost": 0, "canon": "partial", "note": "떠날 수 없음" },
+   { "id": "slave_quarters", "name": "노예 숙소", "w": 0.05, "cost": 0, "forced": { "track": ["SAR_SLAVE"] }, "canon": false },
+   { "id": "quarantine_village", "name": "롱스프링형 격리 구역", "w": 0.05, "cost": 0.02, "forced": { "track": ["SAR_MINE"], "stageMin": 2 }, "canon": true }
+  ]
+ },
+ "bolivar": {
+  "types": [
+   { "id": "plantation_shack", "name": "플랜테이션 숙소", "w": 0.35, "req": { "urban": false }, "cost": 0.03, "canon": "partial" },
+   { "id": "dossoles_rent", "name": "도솔레스 임대", "w": 0.3, "req": { "urban": true }, "cost": 0.3, "canon": "partial" },
+   { "id": "house_own", "name": "주택 소유", "w": 0.1, "cost": 0.05, "own": true, "price": 6, "canon": false },
+   { "id": "liberated_commune", "name": "해방구 공동 주거", "w": 0.15, "region": "liberated", "cost": 0.02, "canon": "partial" },
+   { "id": "refugee_camp", "name": "난민 수용소", "w": 0.1, "cost": 0, "forced": { "track": ["BOL_REFUGEE"], "stageMax": 1 }, "canon": true }
+  ]
+ },
+ "rim": {
+  "types": [
+   { "id": "community_house", "name": "가족공동체 공동 주택", "w": 0.5, "cost": 0.08, "own": true, "price": 2, "canon": "partial" },
+   { "id": "company_dorm", "name": "광산회사 기숙사", "w": 0.3, "req": { "track": ["RIM_MINER","RIM_FACTORY","RIM_SECURITY","RIM_COMPANY"] }, "cost": 0.1, "canon": false },
+   { "id": "plate_rent", "name": "이동도시 임대", "w": 0.1, "req": { "urban": true, "nomadic": true }, "cost": 0.25, "canon": "partial" },
+   { "id": "quarantine_central", "name": "중앙 격리구역", "w": 0.05, "cost": 0.02, "forced": { "track": ["RIM_INFECTED"], "stageMin": 2 }, "canon": true },
+   { "id": "cage", "name": "도적단 우리·유레카 갱도", "w": 0.05, "cost": 0, "forced": { "track": ["RIM_EUREKA"], "stageMax": 1 }, "canon": true }
+  ]
+ },
+ "kazdel": {
+  "types": [
+   { "id": "ruin", "name": "폐허 거처", "w": 0.4, "cost": 0, "canon": "partial" },
+   { "id": "team_camp", "name": "용병 팀 야영지", "w": 0.3, "req": { "track": ["KZD_MERC","KZD_ASSASSIN","KZD_BROKER"] }, "cost": 0.02, "canon": "partial" },
+   { "id": "mobile_farm", "name": "이동 농지 숙소", "w": 0.15, "req": { "track": ["KZD_FARM","KZD_BABEL"] }, "cost": 0.02, "canon": true },
+   { "id": "royal_court", "name": "왕정 영지 거처", "w": 0.05, "req": { "track": ["KZD_COURT","KZD_CONFESSOR"] }, "cost": 0, "canon": "partial" },
+   { "id": "rebuilt_block", "name": "재건기 공동 주택", "w": 0.1, "since": 1098, "cost": 0.05, "canon": "partial" }
+  ]
+ },
+ "durin": {
+  "types": [
+   { "id": "dome_unit", "name": "돔 주거 구획", "w": 0.8, "cost": 0.05, "own": true, "price": 2, "canon": "partial" },
+   { "id": "tavern_room", "name": "술집 위층 방", "w": 0.15, "cost": 0.1, "canon": false },
+   { "id": "surface_lodging", "name": "지상 임시 거처", "w": 0.05, "cost": 0.3, "forced": { "track": ["DUR_SURFACE"] }, "canon": "partial" }
+  ]
+ }
+}

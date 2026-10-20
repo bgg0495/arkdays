@@ -7,7 +7,8 @@
     "conscriptEnum": ["none", "draft", "volunteer", "mandatory"],
     "conscriptSexEnum": ["M", "all"],
     "homemakerPNote": "기혼 여성이 가사 전담을 택할 기본 확률(D35). 남성은 ×0.1",
-    "estimatedFields": ["homemakerP", "share", "statMul", "oriExp", "catFreq", "conflict", "nomadic", "races", "policy(극동·용문 전환 시점 등)"]
+    "w8Fields": { "refugeeIn": "난민 수용 여부(§7.1 flee 목적지)", "naturalize": "open/hard/never(§7.2 귀화)", "illegalRisk": "불법 체류 발각 가중 0~1(연 8% × 값, §7.2)", "expelsInfected": "감염 판정 시 추방(§7.1 exile, 라테라노)", "mig": "이주 목적지 가중(§7.1, 합 1). W1 에 없던 필드라 W8 이 추가", "specialTracks": "국가 특수 진로 id(canon:true && 원형≠A10/A11 && 유입 있음 && 강제 전환 아님). 진로 결정 후보에 최소 1개 노출(D26). 전부 창작" },
+    "estimatedFields": ["homemakerP", "share", "statMul", "oriExp", "catFreq", "conflict", "nomadic", "races", "policy(극동·용문 전환 시점 등)", "refugeeIn", "naturalize", "illegalRisk", "mig"]
   },
   "nations": [
     {
@@ -21,7 +22,10 @@
       "nameLang": "zh", "canon": true,
       "blurb": "오래된 제국. 관료와 술사가 질서를 지키고, 북방에서는 붕괴체가 국경을 두드립니다. 감염자는 신고 후 이동이 제한됩니다.",
       "statOrg": "흠천감",
-      "culture": { "festivals": ["춘절", "추석 연회"], "greet": "평안하셨습니까", "address": "대인", "elder": "어르신", "food": "만두와 국수", "ruler": "진룡", "rulerTitle": "폐하", "drink": "차" }
+      "culture": { "festivals": ["춘절", "추석 연회"], "greet": "평안하셨습니까", "address": "대인", "elder": "어르신", "food": "만두와 국수", "ruler": "진룡", "rulerTitle": "폐하", "drink": "차" },
+      "refugeeIn": true, "naturalize": "hard", "illegalRisk": 0.3, "expelsInfected": false,
+      "mig": { "lungmen": 0.4, "columbia": 0.2, "higashi": 0.15, "kazimierz": 0.1, "rim": 0.15 },
+      "specialTracks": ["YAN_MINER","YAN_OUTLAW","YAN_WUXIA","YAN_ARMY","YAN_RESCUE","YAN_STUDENT","YAN_BUREAU","YAN_TIANSHI","YAN_SUI","YAN_SHANHAI"]
     },
     {
       "id": "lungmen", "name": "용문", "parent": "yan", "share": 3, "model": ["HKG"],
@@ -36,7 +40,10 @@
       "nameLang": "yue", "canon": true,
       "blurb": "염국 변경의 거대 이동도시. 돈이 돌고 빈민가도 돕니다. 1096년 겨울의 사변은 이 도시의 모든 기록에 그림자를 남겼습니다.",
       "statOrg": "근위국 호적과",
-      "culture": { "festivals": ["춘절", "중추절"], "greet": "밥은 드셨습니까", "address": "선생", "elder": "어르신", "food": "완탕면과 딤섬", "ruler": "총경", "rulerTitle": "총경", "drink": "밀크티" }
+      "culture": { "festivals": ["춘절", "중추절"], "greet": "밥은 드셨습니까", "address": "선생", "elder": "어르신", "food": "완탕면과 딤섬", "ruler": "총경", "rulerTitle": "총경", "drink": "밀크티" },
+      "refugeeIn": true, "naturalize": "open", "illegalRisk": 0.4, "expelsInfected": false,
+      "mig": { "yan": 0.3, "columbia": 0.3, "victoria": 0.2, "higashi": 0.2 },
+      "specialTracks": ["LGM_SLUM","LGM_TRIAD","LGM_FIRE","LGM_LGD","LGM_DETECTIVE","LGM_STUDENT"]
     },
     {
       "id": "higashi", "name": "극동", "share": 5, "model": ["JPN"],
@@ -51,7 +58,10 @@
       "nameLang": "ja", "canon": false,
       "blurb": "남북으로 갈린 섬나라. 남쪽은 보험증, 북쪽은 침묵이 감염자를 다룹니다. 재앙은 자주 옵니다.",
       "statOrg": "호적대장소",
-      "culture": { "festivals": ["여름 불꽃놀이 축제", "설날 참배"], "greet": "잘 부탁드립니다", "address": "씨", "elder": "선생님", "food": "쌀밥과 생선", "ruler": "쇼군", "rulerTitle": "쇼군", "drink": "녹차" }
+      "culture": { "festivals": ["여름 불꽃놀이 축제", "설날 참배"], "greet": "잘 부탁드립니다", "address": "씨", "elder": "선생님", "food": "쌀밥과 생선", "ruler": "쇼군", "rulerTitle": "쇼군", "drink": "녹차" },
+      "refugeeIn": false, "naturalize": "hard", "illegalRisk": 0.3, "expelsInfected": false,
+      "mig": { "lungmen": 0.4, "columbia": 0.3, "yan": 0.3 },
+      "specialTracks": ["HIG_RONIN","HIG_TEMPLE","HIG_STUDENT","HIG_POLICE","HIG_ENT","HIG_POLITICS","HIG_YAKUZA","HIG_NINJA","HIG_NORTH_ARMY"]
     },
     {
       "id": "ursus", "name": "우르수스", "share": 14, "model": ["RUS"],
@@ -64,7 +74,10 @@
       "nameLang": "ru", "canon": true,
       "blurb": "가장 넓고 가장 추운 제국. 감염자는 광산 수용소로 보내집니다. 1096년 체르노보그가 하늘에서 떨어진 재앙에 무너졌습니다.",
       "statOrg": "제국 내무성",
-      "culture": { "festivals": ["겨울 무도회", "황제 탄신일"], "greet": "건강하십시오", "address": "동무", "elder": "어르신", "food": "흑빵과 훈제 고기", "ruler": "황제", "rulerTitle": "폐하", "drink": "뜨거운 차" }
+      "culture": { "festivals": ["겨울 무도회", "황제 탄신일"], "greet": "건강하십시오", "address": "동무", "elder": "어르신", "food": "흑빵과 훈제 고기", "ruler": "황제", "rulerTitle": "폐하", "drink": "뜨거운 차" },
+      "refugeeIn": false, "naturalize": "never", "illegalRisk": 0.6, "expelsInfected": false,
+      "mig": { "columbia": 0.3, "kazimierz": 0.2, "kjerag": 0.15, "victoria": 0.15, "sami": 0.1, "lungmen": 0.1 },
+      "specialTracks": ["URS_UNDER","URS_PATROL","URS_SOLDIER","URS_GUARD","URS_OFFICER","URS_UNIV","URS_RESEARCH","URS_ARTIST"]
     },
     {
       "id": "sami", "name": "사미", "share": 1.5, "model": ["FIN", "NOR", "SWE"],
@@ -77,7 +90,10 @@
       "nameLang": "sami", "canon": true,
       "blurb": "얼어붙은 북방의 숲과 설원. 국가라기보다 부족들의 땅입니다. 광석병보다 한파와 붕괴 패러다임이 먼저 사람을 데려갑니다.",
       "statOrg": "사제단 룬 기록",
-      "culture": { "festivals": ["각성 의식", "한겨울 제단제"], "greet": "숲이 너를 보고 있다", "address": "형제", "elder": "장로", "food": "말린 사슴 고기와 이끼 빵", "ruler": "눈의 사제와 장로회", "rulerTitle": "사제님", "drink": "순록 젖" }
+      "culture": { "festivals": ["각성 의식", "한겨울 제단제"], "greet": "숲이 너를 보고 있다", "address": "형제", "elder": "장로", "food": "말린 사슴 고기와 이끼 빵", "ruler": "눈의 사제와 장로회", "rulerTitle": "사제님", "drink": "순록 젖" },
+      "refugeeIn": true, "naturalize": "open", "illegalRisk": 0.05, "expelsInfected": false,
+      "mig": { "ursus": 0.5, "kjerag": 0.3, "columbia": 0.2 },
+      "specialTracks": ["SAM_OUTCAST","SAM_HUNTER","SAM_WARRIOR","SAM_SAR","SAM_SHAMAN","SAM_GUIDE"]
     },
     {
       "id": "kjerag", "name": "쉐라그", "share": 1, "model": ["CHE"],
@@ -90,7 +106,10 @@
       "nameLang": "kjerag", "canon": true,
       "blurb": "설산 사이에 숨은 작은 나라. 세 가문과 산신이 다스리고, 재앙은 1101년까지 한 번도 오지 않았습니다.",
       "statOrg": "삼족 공의회 등기소",
-      "culture": { "festivals": ["카란 광장 축제", "설산 사냥 의식"], "greet": "산이 지켜 주시길", "address": "씨", "elder": "가주 어르신", "food": "치즈 퐁듀", "ruler": "삼족 가주와 산신의 사제", "rulerTitle": "가주님", "drink": "뜨거운 치즈 국물" }
+      "culture": { "festivals": ["카란 광장 축제", "설산 사냥 의식"], "greet": "산이 지켜 주시길", "address": "씨", "elder": "가주 어르신", "food": "치즈 퐁듀", "ruler": "삼족 가주와 산신의 사제", "rulerTitle": "가주님", "drink": "뜨거운 치즈 국물" },
+      "refugeeIn": false, "naturalize": "hard", "illegalRisk": 0.2, "expelsInfected": false,
+      "mig": { "columbia": 0.4, "ursus": 0.3, "leithanien": 0.3 },
+      "specialTracks": ["KJE_MINE","KJE_CLAN","KJE_COURT","KJE_SCHOLAR","KJE_PARL"]
     },
     {
       "id": "leithanien", "name": "라이타니엔", "share": 7, "model": ["DEU", "AUT"],
@@ -103,7 +122,10 @@
       "nameLang": "de", "canon": true,
       "blurb": "음악과 아츠의 나라. 아츠 적성이 낮으면 결함품이라 불리고, 광석병이 깊어지면 국가가 조용히 마지막 절차를 안내합니다.",
       "statOrg": "궁정 기록국",
-      "culture": { "festivals": ["여황 축제", "적포도주 선수권"], "greet": "좋은 저녁입니다", "address": "헤르", "elder": "선생님", "food": "소시지와 적포도주", "ruler": "쌍둥이 여황", "rulerTitle": "폐하", "drink": "적포도주" }
+      "culture": { "festivals": ["여황 축제", "적포도주 선수권"], "greet": "좋은 저녁입니다", "address": "헤르", "elder": "선생님", "food": "소시지와 적포도주", "ruler": "쌍둥이 여황", "rulerTitle": "폐하", "drink": "적포도주" },
+      "refugeeIn": false, "naturalize": "hard", "illegalRisk": 0.4, "expelsInfected": false,
+      "mig": { "columbia": 0.3, "victoria": 0.3, "kazimierz": 0.2, "siracusa": 0.2 },
+      "specialTracks": ["LEI_REMNANT","LEI_STREET","LEI_MUSIC","LEI_GEND","LEI_CIVIC","LEI_UNIV","LEI_COURT"]
     },
     {
       "id": "victoria", "name": "빅토리아", "share": 7.5, "model": ["GBR"],
@@ -116,7 +138,10 @@
       "nameLang": "en_gb", "canon": true,
       "blurb": "왕이 사라진 뒤 공작들이 다투는 산업 제국. 공장 연기와 스모그 아래서 감염자는 노동법 바깥으로 밀려납니다. 수도 런디니움은 1094년부터 4년간 점령당했습니다.",
       "statOrg": "공작령 등기소",
-      "culture": { "festivals": ["전달자 취임 서약식", "공작령 수확제"], "greet": "차 한 잔 하시겠습니까", "address": "미스터", "elder": "경", "food": "차와 파이", "ruler": "공작 평의회", "rulerTitle": "공작 각하", "drink": "홍차" }
+      "culture": { "festivals": ["전달자 취임 서약식", "공작령 수확제"], "greet": "차 한 잔 하시겠습니까", "address": "미스터", "elder": "경", "food": "차와 파이", "ruler": "공작 평의회", "rulerTitle": "공작 각하", "drink": "홍차" },
+      "refugeeIn": true, "naturalize": "hard", "illegalRisk": 0.4, "expelsInfected": false,
+      "mig": { "columbia": 0.35, "leithanien": 0.2, "tara": 0.15, "kazimierz": 0.15, "siracusa": 0.1, "laterano": 0.05 },
+      "specialTracks": ["VIC_GANG","VIC_CONSCRIPT","VIC_PRIVATE","VIC_POLICE","VIC_ACADEMY","VIC_KNIGHT","VIC_SCHOLAR","VIC_NOBLE"]
     },
     {
       "id": "tara", "name": "타라", "parent": "victoria", "share": 1.5, "model": ["IRL"],
@@ -129,7 +154,10 @@
       "nameLang": "ga", "canon": true,
       "blurb": "빅토리아에 삼켜진 옛 왕국. 감자밭과 유목민의 길, 그리고 1098년의 독립 선언. 식량은 늘 부족합니다.",
       "statOrg": "성당 호적부",
-      "culture": { "festivals": ["사윈", "환화 의식"], "greet": "길이 평탄하기를", "address": "아우", "elder": "할아버지", "food": "감자와 양고기 스튜", "ruler": "빅토리아 총독", "rulerTitle": "총독", "drink": "흑맥주" }
+      "culture": { "festivals": ["사윈", "환화 의식"], "greet": "길이 평탄하기를", "address": "아우", "elder": "할아버지", "food": "감자와 양고기 스튜", "ruler": "빅토리아 총독", "rulerTitle": "총독", "drink": "흑맥주" },
+      "refugeeIn": false, "naturalize": "open", "illegalRisk": 0.2, "expelsInfected": false,
+      "mig": { "victoria": 0.6, "columbia": 0.3, "kazimierz": 0.1 },
+      "specialTracks": ["TAR_WANDER","TAR_DUBLIN","TAR_NOMAD","TAR_REDIRON","TAR_POET","TAR_RATION","TAR_SPIRIT","TAR_VICSERV"]
     },
     {
       "id": "kazimierz", "name": "카시미어", "share": 3, "model": ["POL"],
@@ -142,7 +170,10 @@
       "nameLang": "pl", "canon": true,
       "blurb": "기사의 나라이자 스폰서의 나라. 기사 경기는 중계되고, 감염자는 지하 거주구에 모아 둡니다. 1094년 도시가 둘로 갈라졌습니다.",
       "statOrg": "감정회",
-      "culture": { "festivals": ["메이저 기사 경기", "기사 추모제"], "greet": "승리를 빕니다", "address": "파네", "elder": "선생님", "food": "피에로기와 호밀빵", "ruler": "기사 의회와 스폰서", "rulerTitle": "의원님", "drink": "보드카" }
+      "culture": { "festivals": ["메이저 기사 경기", "기사 추모제"], "greet": "승리를 빕니다", "address": "파네", "elder": "선생님", "food": "피에로기와 호밀빵", "ruler": "기사 의회와 스폰서", "rulerTitle": "의원님", "drink": "보드카" },
+      "refugeeIn": true, "naturalize": "open", "illegalRisk": 0.3, "expelsInfected": false,
+      "mig": { "columbia": 0.3, "victoria": 0.3, "leithanien": 0.2, "ursus": 0.2 },
+      "specialTracks": ["KAZ_SLAVE","KAZ_GHETTO","KAZ_KNIGHT","KAZ_MEDIA","KAZ_MSG","KAZ_ASK","KAZ_CAMPAIGN"]
     },
     {
       "id": "columbia", "name": "컬럼비아", "share": 12, "model": ["USA"],
@@ -155,7 +186,10 @@
       "nameLang": "en_us", "canon": true,
       "blurb": "젊고 빠르고 비싼 나라. 감염자도 보험료만 내면 시민입니다. 내지 못하면 개척지 바깥으로 보내집니다.",
       "statOrg": "보험협회",
-      "culture": { "festivals": ["건국 기념일", "흑요석 축제"], "greet": "좋은 하루 되세요", "address": "미스터", "elder": "씨", "food": "스테이크와 맥주", "ruler": "대통령", "rulerTitle": "대통령", "drink": "커피" }
+      "culture": { "festivals": ["건국 기념일", "흑요석 축제"], "greet": "좋은 하루 되세요", "address": "미스터", "elder": "씨", "food": "스테이크와 맥주", "ruler": "대통령", "rulerTitle": "대통령", "drink": "커피" },
+      "refugeeIn": true, "naturalize": "open", "illegalRisk": 0.5, "expelsInfected": false,
+      "mig": { "victoria": 0.25, "kazimierz": 0.15, "siracusa": 0.15, "bolivar": 0.15, "lungmen": 0.15, "sargon": 0.1, "laterano": 0.05 },
+      "specialTracks": ["COL_SLUM","COL_PMC","COL_BSW","COL_UNIV","COL_GOV","COL_MEDIA","COL_RHINE"]
     },
     {
       "id": "siracusa", "name": "시라쿠사", "share": 4, "model": ["ITA"],
@@ -170,7 +204,10 @@
       "nameLang": "it", "canon": true,
       "blurb": "법보다 패밀리가 가까운 나라. 도시에서는 아무도 감염자를 묻지 않고, 시골에서는 보호비가 묻습니다.",
       "statOrg": "시청(패밀리 승인)",
-      "culture": { "festivals": ["카르니발레", "늑대 어머니의 날"], "greet": "가족은 안녕하신가", "address": "시뇨르", "elder": "돈", "food": "파스타와 와인", "ruler": "패밀리 수장들", "rulerTitle": "돈", "drink": "와인" }
+      "culture": { "festivals": ["카르니발레", "늑대 어머니의 날"], "greet": "가족은 안녕하신가", "address": "시뇨르", "elder": "돈", "food": "파스타와 와인", "ruler": "패밀리 수장들", "rulerTitle": "돈", "drink": "와인" },
+      "refugeeIn": false, "naturalize": "hard", "illegalRisk": 0.3, "expelsInfected": false,
+      "mig": { "columbia": 0.4, "leithanien": 0.3, "laterano": 0.2, "victoria": 0.1 },
+      "specialTracks": ["SIR_FAMIGLIA","SIR_GANG","SIR_LEGAL","SIR_PUBLIC","SIR_POLICE","SIR_MEDIC","SIR_ART","SIR_CLERGY","SIR_WILD"]
     },
     {
       "id": "laterano", "name": "라테라노", "share": 0.5, "model": ["ITA"],
@@ -183,7 +220,10 @@
       "nameLang": "la_church", "canon": true,
       "blurb": "천사들의 도시국가. 공식 감염자 수는 0명입니다. 감염되면 권리를 안고 성문 밖으로 나가야 하기 때문입니다. 살카즈는 들어올 수 없습니다.",
       "statOrg": "공증소",
-      "culture": { "festivals": ["세기 축전", "계시의 날"], "greet": "빛이 함께하길", "address": "형제", "elder": "수사님", "food": "선인장 타르트", "ruler": "교황", "rulerTitle": "성하", "drink": "포도주" }
+      "culture": { "festivals": ["세기 축전", "계시의 날"], "greet": "빛이 함께하길", "address": "형제", "elder": "수사님", "food": "선인장 타르트", "ruler": "교황", "rulerTitle": "성하", "drink": "포도주" },
+      "refugeeIn": false, "naturalize": "never", "illegalRisk": 0.8, "expelsInfected": true,
+      "mig": { "siracusa": 0.35, "columbia": 0.3, "leithanien": 0.2, "lungmen": 0.15 },
+      "specialTracks": ["LAT_NOTARY","LAT_CURIA","LAT_LEGATUS","LAT_COHORS","LAT_MONASTERY","LAT_GUARD","LAT_TEACHER","LAT_MEDIC"]
     },
     {
       "id": "iberia", "name": "이베리아", "share": 3, "model": ["ESP", "PRT"],
@@ -197,7 +237,10 @@
       "nameLang": "es_pt", "canon": true,
       "blurb": "바다에 등을 돌린 옛 해양 제국. 해안 마을은 등대와 재판관을 믿고, 그래도 안 되면 제비를 뽑습니다.",
       "statOrg": "재판소",
-      "culture": { "festivals": ["고요함 추모일", "등대 점등제"], "greet": "등대가 꺼지지 않기를", "address": "세뇨르", "elder": "돈", "food": "염장 생선과 해초 술", "ruler": "국왕과 재판소", "rulerTitle": "폐하", "drink": "해초 술" }
+      "culture": { "festivals": ["고요함 추모일", "등대 점등제"], "greet": "등대가 꺼지지 않기를", "address": "세뇨르", "elder": "돈", "food": "염장 생선과 해초 술", "ruler": "국왕과 재판소", "rulerTitle": "폐하", "drink": "해초 술" },
+      "refugeeIn": false, "naturalize": "never", "illegalRisk": 0.7, "expelsInfected": false,
+      "mig": { "bolivar": 0.3, "columbia": 0.3, "laterano": 0.2, "siracusa": 0.2 },
+      "specialTracks": ["IBE_INQ","IBE_PENAL","IBE_CLERK","IBE_PIRATE","IBE_SCHOLAR","IBE_NURSE"]
     },
     {
       "id": "aegir", "name": "에기르", "share": 0.5, "model": ["ESP"],
@@ -210,7 +253,10 @@
       "nameLang": "la", "canon": true,
       "blurb": "바다 밑의 문명. 오리지늄도 재앙도 거의 없지만, 더 깊은 곳에서 시테러가 올라옵니다. 육지는 당신을 반기지 않습니다.",
       "statOrg": "집정관 기록원",
-      "culture": { "festivals": ["심해 빛의 날", "조류 역전제"], "greet": "물결이 고요하기를", "address": "시민", "elder": "집정관", "food": "해조류와 발광 어류", "ruler": "집정관 회의", "rulerTitle": "집정관", "drink": "해수 증류수" }
+      "culture": { "festivals": ["심해 빛의 날", "조류 역전제"], "greet": "물결이 고요하기를", "address": "시민", "elder": "집정관", "food": "해조류와 발광 어류", "ruler": "집정관 회의", "rulerTitle": "집정관", "drink": "해수 증류수" },
+      "refugeeIn": false, "naturalize": "never", "illegalRisk": 0.9, "expelsInfected": false,
+      "mig": { "higashi": 0.3, "columbia": 0.3, "yan": 0.2, "iberia": 0.2 },
+      "specialTracks": ["AEG_CONSUL","AEG_RESEARCH","AEG_LEGION","AEG_ARTIST"]
     },
     {
       "id": "minos", "name": "미노스", "share": 1.5, "model": ["GRC"],
@@ -223,7 +269,10 @@
       "nameLang": "el", "canon": true,
       "blurb": "올리브와 신전의 도시국가 연합. 감염자도 치료를 받을 수 있는 드문 땅이지만, 사제는 될 수 없습니다. 사르곤 국경은 조용한 날이 없습니다.",
       "statOrg": "신전 서기관",
-      "culture": { "festivals": ["힘노이의 지혜", "영웅 찬가제"], "greet": "영웅들이 지켜보신다", "address": "시민", "elder": "어르신", "food": "올리브와 양젖 치즈", "ruler": "도시국가 평의회", "rulerTitle": "의장", "drink": "포도주" }
+      "culture": { "festivals": ["힘노이의 지혜", "영웅 찬가제"], "greet": "영웅들이 지켜보신다", "address": "시민", "elder": "어르신", "food": "올리브와 양젖 치즈", "ruler": "도시국가 평의회", "rulerTitle": "의장", "drink": "포도주" },
+      "refugeeIn": true, "naturalize": "open", "illegalRisk": 0.2, "expelsInfected": false,
+      "mig": { "columbia": 0.4, "sargon": 0.3, "leithanien": 0.3 },
+      "specialTracks": ["MIN_CIVIC","MIN_TEMPLE","MIN_ATHLETE","MIN_SOLDIER","MIN_ART"]
     },
     {
       "id": "sargon", "name": "사르곤", "share": 6, "model": ["IRN", "IRQ", "SAU"],
@@ -238,7 +287,10 @@
       "nameLang": "ar_fa", "canon": true,
       "blurb": "파디샤 아래 수십 아미르가 다투는 느슨한 제국. 사막과 정글, 노예 시장과 궁정 음모. 어느 아미르령에 태어나느냐가 모든 것을 정합니다.",
       "statOrg": "파디샤 궁정 서기국",
-      "culture": { "festivals": ["마비소티아", "오아시스 장날"], "greet": "그늘이 함께하길", "address": "에펜디", "elder": "셰이크", "food": "대추야자와 향신료 양고기", "ruler": "파디샤와 아미르", "rulerTitle": "아미르", "drink": "민트 차" }
+      "culture": { "festivals": ["마비소티아", "오아시스 장날"], "greet": "그늘이 함께하길", "address": "에펜디", "elder": "셰이크", "food": "대추야자와 향신료 양고기", "ruler": "파디샤와 아미르", "rulerTitle": "아미르", "drink": "민트 차" },
+      "refugeeIn": true, "naturalize": "hard", "illegalRisk": 0.3, "expelsInfected": false,
+      "mig": { "columbia": 0.4, "minos": 0.2, "bolivar": 0.2, "yan": 0.2 },
+      "specialTracks": ["SAR_COURT","SAR_ARMY","SAR_TRIBE","SAR_MINE","SAR_TEACHER","SAR_MESSENGER","SAR_MERC"]
     },
     {
       "id": "bolivar", "name": "볼리바르", "share": 2, "model": ["COL", "VEN"],
@@ -252,7 +304,10 @@
       "nameLang": "es_latam", "canon": true,
       "blurb": "세 정부가 50년째 서로를 정부라 부르는 나라. 군인이 가장 벌이가 좋고, 남부에는 사냥개가 돕니다.",
       "statOrg": "등기소(가까운 정부 쪽)",
-      "culture": { "festivals": ["독립기념일(세 번)", "성모 행렬"], "greet": "어느 쪽 사람이오", "address": "세뇨르", "elder": "돈", "food": "옥수수 빵과 커피", "ruler": "세 정부", "rulerTitle": "대통령(셋 중 하나)", "drink": "커피" }
+      "culture": { "festivals": ["독립기념일(세 번)", "성모 행렬"], "greet": "어느 쪽 사람이오", "address": "세뇨르", "elder": "돈", "food": "옥수수 빵과 커피", "ruler": "세 정부", "rulerTitle": "대통령(셋 중 하나)", "drink": "커피" },
+      "refugeeIn": true, "naturalize": "open", "illegalRisk": 0.4, "expelsInfected": false,
+      "mig": { "columbia": 0.6, "sargon": 0.2, "siracusa": 0.1, "leithanien": 0.1 },
+      "specialTracks": ["BOL_SINGAS","BOL_COALITION","BOL_TRUE","BOL_PMC","BOL_STREET"]
     },
     {
       "id": "rim", "name": "림 빌리턴", "share": 1.5, "model": ["AUS"],
@@ -265,7 +320,10 @@
       "nameLang": "en_au", "canon": true,
       "blurb": "광업연합이 국가인 나라. 테라 최대의 오리지늄을 캐고, 캐는 사람은 소모품으로 셉니다. 재앙은 날씨처럼 옵니다.",
       "statOrg": "광업연합 인사부",
-      "culture": { "festivals": ["광산 안전 주간", "수박 케이크 축제"], "greet": "갱도에서 보자", "address": "메이트", "elder": "영감", "food": "수박 케이크와 통조림", "ruler": "광업연합 이사회", "rulerTitle": "이사", "drink": "맥주" }
+      "culture": { "festivals": ["광산 안전 주간", "수박 케이크 축제"], "greet": "갱도에서 보자", "address": "메이트", "elder": "영감", "food": "수박 케이크와 통조림", "ruler": "광업연합 이사회", "rulerTitle": "이사", "drink": "맥주" },
+      "refugeeIn": true, "naturalize": "open", "illegalRisk": 0.2, "expelsInfected": false,
+      "mig": { "victoria": 0.4, "columbia": 0.3, "lungmen": 0.2, "yan": 0.1 },
+      "specialTracks": ["RIM_MINER","RIM_SECURITY","RIM_MEDIC","RIM_MSG","RIM_FAMILY","RIM_UNION","RIM_EUREKA"]
     },
     {
       "id": "kazdel", "name": "카즈델", "share": 3, "model": [], "custom": "KAZDEL",
@@ -279,7 +337,10 @@
       "nameLang": "he", "canon": true,
       "blurb": "살카즈의 고향이자 전장. 1090년부터 4년간 내전, 그 뒤엔 런디니움 원정. 광석병은 여기선 질병이 아니라 날씨입니다.",
       "statOrg": "용병 등록부",
-      "culture": { "festivals": ["사우인"], "greet": "아직 살아 있군", "address": "형제", "elder": "어른", "food": "골수 수프와 딱딱한 빵", "ruler": "군벌과 빈 왕좌", "rulerTitle": "단장", "drink": "싸구려 증류주" }
+      "culture": { "festivals": ["사우인"], "greet": "아직 살아 있군", "address": "형제", "elder": "어른", "food": "골수 수프와 딱딱한 빵", "ruler": "군벌과 빈 왕좌", "rulerTitle": "단장", "drink": "싸구려 증류주" },
+      "refugeeIn": true, "naturalize": "open", "illegalRisk": 0.1, "expelsInfected": false,
+      "mig": { "victoria": 0.3, "columbia": 0.3, "leithanien": 0.25, "siracusa": 0.15 },
+      "specialTracks": ["KZD_MERC","KZD_COMMISSION","KZD_BABEL","KZD_COURT","KZD_CONFESSOR","KZD_DESIGNER","KZD_BROKER","KZD_ASSASSIN","KZD_DIASPORA"]
     },
     {
       "id": "durin", "name": "두린", "share": 0.3, "model": [], "custom": "DURIN",
@@ -292,7 +353,10 @@
       "nameLang": "durin", "canon": true,
       "blurb": "지하 돔 도시의 작은 사람들. 전쟁도 재앙도 거의 없고, 술은 많습니다. 다만 천장이 무너지면 다 같이 무너집니다.",
       "statOrg": "돔 공동체 기록소",
-      "culture": { "festivals": ["도시 확장 축제", "작별 단장식"], "greet": "한 잔 하셨습니까", "address": "이웃", "elder": "어르신", "food": "벌꿀주와 버섯 빵", "ruler": "주민 투표", "rulerTitle": "투표 결과", "drink": "벌꿀주" }
+      "culture": { "festivals": ["도시 확장 축제", "작별 단장식"], "greet": "한 잔 하셨습니까", "address": "이웃", "elder": "어르신", "food": "벌꿀주와 버섯 빵", "ruler": "주민 투표", "rulerTitle": "투표 결과", "drink": "벌꿀주" },
+      "refugeeIn": false, "naturalize": "hard", "illegalRisk": 0.1, "expelsInfected": false,
+      "mig": { "sargon": 0.4, "bolivar": 0.3, "columbia": 0.3 },
+      "specialTracks": ["DUR_DESIGN","DUR_INDUSTRY","DUR_GEO","DUR_LIT"]
     }
   ],
   "ethnicFlags": {

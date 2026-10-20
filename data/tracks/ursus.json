@@ -1,0 +1,881 @@
+{
+ "_meta": {
+  "nation": "ursus",
+  "source": "진로_카탈로그_v0 §4",
+  "canon": "mixed",
+  "classScale": 0.8325,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "최하층 유입에서 URS_MINE 60은 감염·정치범 강제 전환 전용(forced)이라 빼고 나머지를 재정규화(UNDER 20→50, WORKER 10→25, PATROL 10→25)."
+ },
+ "tracks": [
+  {
+   "id": "URS_MINE",
+   "nation": "ursus",
+   "region": null,
+   "name": "광산 수용소",
+   "archetype": "A5",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [6,70],
+    "classes": {},
+    "gates": [
+     { "infected": true }
+    ],
+    "via": ["captured","political","family"]
+   },
+   "forced": { "infected": true, "policy": ["persecute"], "or": ["purge"] },
+   "stages": [
+    {
+     "id": "bell",
+     "name": "종치기",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.08, "causes": ["mine","execution","crystallize","camp"] },
+     "forced": true,
+     "oriMul": 8
+    },
+    {
+     "id": "miner",
+     "name": "광부",
+     "title": null,
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.02 },
+     "fall": { "base": 0.08, "causes": ["mine","execution","crystallize","camp"] },
+     "forced": true,
+     "oriMul": 8
+    },
+    {
+     "id": "driver",
+     "name": "운전사·감독",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.08, "causes": ["mine","execution","crystallize","camp"] },
+     "forced": true,
+     "oriMul": 4
+    }
+   ],
+   "income": { "stage": [0,0.05,0.3] },
+   "standing": { "name": "작업반 평판", "start": 20 },
+   "affiliations": ["URS_MINE_VOLGRAD","URS_MINE_URAL","URS_MINE_FARNORTH","URS_MINE_CHORNA"],
+   "exits": {
+    "retire": null,
+    "fall": { "mine": "death", "execution": "death", "crystallize": "death", "camp": "prison:camp" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["vetochki"]
+  },
+  {
+   "id": "URS_UNDER",
+   "nation": "ursus",
+   "region": null,
+   "name": "지하조직",
+   "archetype": "A1",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,35],
+    "classes": { "q1": 0.4163, "q2": 0.0416 },
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["recruit","infected","student"]
+   },
+   "stages": [
+    {
+     "id": "new",
+     "name": "신입",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "ties", "k": 0.25 },
+     "fall": { "base": 0.07, "causes": ["arrest","kia","betrayal"] }
+    },
+    {
+     "id": "action",
+     "name": "행동대",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.07, "causes": ["arrest","kia","betrayal"] }
+    },
+    {
+     "id": "leadership",
+     "name": "지도부",
+     "title": "지도부",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.07, "causes": ["arrest","kia","betrayal"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.4,0.8], "job": "criminal" },
+   "standing": { "name": "조직 신뢰", "start": 20 },
+   "affiliations": ["URS_UNDER_REUNION","URS_UNDER_UNBOUND","URS_UNDER_16","URS_UNDER_FARNORTH"],
+   "exits": {
+    "retire": { "age": 60, "to": "URS_WORKER" },
+    "fall": { "arrest": "prison:camp", "kia": "death", "betrayal": "exile" },
+    "switch": ["URS_WORKER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "URS_PATROL",
+   "nation": "ursus",
+   "region": null,
+   "name": "감염자 순찰대",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,40],
+    "classes": { "q1": 0.2081, "q2": 0.0416 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 },
+     { "infected": false }
+    ],
+    "via": ["paid","conscript"]
+   },
+   "stages": [
+    {
+     "id": "member",
+     "name": "대원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.045, "causes": ["kia","infected","desert"] }
+    },
+    {
+     "id": "squad",
+     "name": "조장",
+     "title": "조장",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["kia","infected","desert"] },
+     "canon": false
+    },
+    {
+     "id": "driver",
+     "name": "운전사",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["kia","infected","desert"] }
+    }
+   ],
+   "income": { "stage": [0.8,1.1,1.3], "job": "camp_guard" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["URS_PATROL_UNIT"],
+   "exits": {
+    "retire": { "age": 50, "to": "URS_WORKER" },
+    "fall": { "kia": "death:violence", "infected": "infected", "desert": "exile" },
+    "switch": ["URS_SOLDIER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "URS_SOLDIER",
+   "nation": "ursus",
+   "region": null,
+   "name": "병사",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [17,25],
+    "classes": { "q2": 0.2497 },
+    "gates": [
+     { "sex": "M", "weight": 3 },
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["conscript","enlist"]
+   },
+   "stages": [
+    {
+     "id": "private",
+     "name": "병",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.045, "causes": ["kia","desert","courtmartial"] }
+    },
+    {
+     "id": "nco",
+     "name": "상병·중사",
+     "title": "중사",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["kia","desert","courtmartial"] },
+     "capStage": { "q1": true, "q2": true }
+    },
+    {
+     "id": "captain",
+     "name": "대위",
+     "title": "대위",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["kia","desert","courtmartial"] }
+    }
+   ],
+   "income": { "stage": [0.6,1,2], "job": "legionary" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["URS_SOL_LEGION","URS_SOL_CENTRAL","URS_SOL_SAMI"],
+   "exits": {
+    "retire": { "age": 45, "to": "URS_WORKER" },
+    "fall": { "kia": "death", "desert": "prison:camp", "courtmartial": "prison:jail" },
+    "switch": ["URS_PATROL","URS_GUARD"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "URS_WORKER",
+   "nation": "ursus",
+   "region": null,
+   "name": "공장 노동",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q1": 0.2081, "q2": 0.2081 },
+    "gates": [
+     { "urban": true, "weight": 1.6 }
+    ],
+    "via": ["hire","family"]
+   },
+   "stages": [
+    {
+     "id": "worker",
+     "name": "공원",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["layoff","accident","raid"] }
+    },
+    {
+     "id": "skilled",
+     "name": "숙련공",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["layoff","accident","raid"] }
+    },
+    {
+     "id": "manager",
+     "name": "관리자",
+     "title": "관리자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["layoff","accident","raid"] }
+    }
+   ],
+   "income": { "stage": [0.5,0.9,1.6], "job": "factory_worker" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["URS_WORK_KATORGA","URS_WORK_PERRO","URS_WORK_ROSTOV"],
+   "exits": {
+    "retire": { "age": 60, "to": "URS_WORKER" },
+    "fall": { "layoff": "expel", "accident": "injured", "raid": "injured" },
+    "switch": ["URS_CRAFT","URS_UNDER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "URS_FARM",
+   "nation": "ursus",
+   "region": null,
+   "name": "농민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,40],
+    "classes": { "q2": 0.1665 },
+    "gates": [
+     { "urban": false, "weight": 3 }
+    ],
+    "via": ["family"]
+   },
+   "stages": [
+    {
+     "id": "serf",
+     "name": "소작",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["starvation","ruin","raid"] }
+    },
+    {
+     "id": "own",
+     "name": "자영",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["starvation","ruin","raid"] }
+    },
+    {
+     "id": "chief",
+     "name": "촌장",
+     "title": "촌장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["starvation","ruin","raid"] }
+    }
+   ],
+   "income": { "stage": [0.25,0.5,1], "job": "farmer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["URS_FARM_NORTH","URS_FARM_SOUTH"],
+   "exits": {
+    "retire": { "age": 60, "to": "URS_WORKER" },
+    "fall": { "starvation": "death", "ruin": "demote", "raid": "death" },
+    "switch": ["URS_WORKER","URS_SOLDIER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "농노 신분 정의 창작"
+  },
+  {
+   "id": "URS_CRAFT",
+   "nation": "ursus",
+   "region": null,
+   "name": "소상인·장인",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,35],
+    "classes": { "q2": 0.0833, "q3": 0.0416 },
+    "gates": [
+     { "urban": true }
+    ],
+    "via": ["apprentice","family"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "견습",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.015, "causes": ["ruin","arrest"] }
+    },
+    {
+     "id": "own",
+     "name": "자영",
+     "title": null,
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.015, "causes": ["ruin","arrest"] }
+    },
+    {
+     "id": "forum",
+     "name": "시민 포럼 평의원",
+     "title": "평의원",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.015, "causes": ["ruin","arrest"] }
+    }
+   ],
+   "income": { "stage": [0.4,1,1.4], "job": "artisan" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["URS_CRAFT_COBBLER","URS_CRAFT_CAFE","URS_CRAFT_THEATER"],
+   "exits": {
+    "retire": { "age": 60, "to": "URS_WORKER" },
+    "fall": { "ruin": "expel", "arrest": "prison:jail" },
+    "switch": ["URS_WORKER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "URS_CARAVAN",
+   "nation": "ursus",
+   "region": null,
+   "name": "캐러밴 상인",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": true,
+   "route": ["ursus","sami","kjerag","kazimierz"],
+   "entry": {
+    "ages": [14,35],
+    "classes": { "q2": 0.0416, "q3": 0.0416 },
+    "gates": [],
+    "via": ["porter","family"]
+   },
+   "stages": [
+    {
+     "id": "porter",
+     "name": "짐꾼",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.04, "causes": ["raid","freezing","ruin"] }
+    },
+    {
+     "id": "trader",
+     "name": "상인",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["raid","freezing","ruin"] }
+    },
+    {
+     "id": "master",
+     "name": "대상 주인",
+     "title": "대상 주인",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["raid","freezing","ruin"] }
+    }
+   ],
+   "income": { "stage": [0.5,1.2,3], "job": "caravan" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["URS_CAR_SAMI","URS_CAR_MARKET"],
+   "exits": {
+    "retire": { "age": 60, "to": "URS_WORKER" },
+    "fall": { "raid": "death", "freezing": "death", "ruin": "expel" },
+    "switch": ["URS_CRAFT"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "URS_GUARD",
+   "nation": "ursus",
+   "region": null,
+   "name": "근위군·경찰",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,28],
+    "classes": { "q3": 0.1249 },
+    "gates": [
+     { "status": "noble", "weight": 3 },
+     { "cap": "skill", "min": -0.8 },
+     { "rel": "<=subtle" }
+    ],
+    "via": ["appointed","exam"]
+   },
+   "stages": [
+    {
+     "id": "constable",
+     "name": "순경·근위병",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.035, "causes": ["kia","scandal","purge"] }
+    },
+    {
+     "id": "lieutenant",
+     "name": "중위",
+     "title": "중위",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["kia","scandal","purge"] }
+    },
+    {
+     "id": "chief",
+     "name": "국장",
+     "title": "국장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["kia","scandal","purge"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [1,2.2,6], "job": "police" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["URS_GUARD_ROYAL","URS_GUARD_POLICE"],
+   "exits": {
+    "retire": { "age": 55, "to": "URS_CRAFT" },
+    "fall": { "kia": "death", "scandal": "disgrace", "purge": "prison:camp" },
+    "switch": ["URS_OFFICER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "URS_OFFICER",
+   "nation": "ursus",
+   "region": null,
+   "name": "장교",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,26],
+    "classes": { "q3": 0.2081, "q4": 0.3746, "q5": 0.4163 },
+    "gates": [
+     { "status": "noble", "weight": 4 },
+     { "cap": "learn", "min": -0.8 },
+     { "rel": "<=subtle" }
+    ],
+    "via": ["academy","noble"]
+   },
+   "stages": [
+    {
+     "id": "lieutenant",
+     "name": "소위·중위",
+     "title": "중위",
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.035, "causes": ["kia","purge","courtmartial"] }
+    },
+    {
+     "id": "captain",
+     "name": "대위",
+     "title": "대위",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.12 },
+     "fall": { "base": 0.035, "causes": ["kia","purge","courtmartial"] }
+    },
+    {
+     "id": "major",
+     "name": "소령",
+     "title": "소령",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.07 },
+     "fall": { "base": 0.035, "causes": ["kia","purge","courtmartial"] }
+    },
+    {
+     "id": "colonel",
+     "name": "대령",
+     "title": "대령",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.04 },
+     "fall": { "base": 0.035, "causes": ["kia","purge","courtmartial"] }
+    },
+    {
+     "id": "general",
+     "name": "장군",
+     "title": "장군",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.02 },
+     "fall": { "base": 0.035, "causes": ["kia","purge","courtmartial"] }
+    },
+    {
+     "id": "marshal",
+     "name": "원수",
+     "title": "원수",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["kia","purge","courtmartial"] }
+    }
+   ],
+   "income": { "stage": [1.5,2.5,4,7,14,25] },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["URS_OFF_LEGION","URS_OFF_MARSHAL"],
+   "exits": {
+    "retire": { "age": 62, "to": "URS_NOBLE" },
+    "fall": { "kia": "death", "purge": "prison:camp", "courtmartial": "death" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "URS_UNIV",
+   "nation": "ursus",
+   "region": null,
+   "name": "대학생·학생 조직",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,22],
+    "classes": { "q3": 0.2081, "q4": 0.1665 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["peterheim","university"]
+   },
+   "stages": [
+    {
+     "id": "peterheim",
+     "name": "피터하임",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.05, "causes": ["arrest","kia","ruin"] }
+    },
+    {
+     "id": "university",
+     "name": "대학",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.05, "causes": ["arrest","kia","ruin"] }
+    },
+    {
+     "id": "faction",
+     "name": "학생회 분파",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.05, "causes": ["arrest","kia","ruin"] }
+    },
+    {
+     "id": "chair",
+     "name": "의장",
+     "title": "의장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.05, "causes": ["arrest","kia","ruin"] }
+    }
+   ],
+   "income": { "stage": [0.1,0.2,0.3,0.5] },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["URS_UNIV_SYMPOSIUM","URS_UNIV_VANGUARD","URS_UNIV_AUTONOMY"],
+   "exits": {
+    "retire": { "age": 26, "to": "URS_RESEARCH" },
+    "fall": { "arrest": "prison:camp", "kia": "death", "ruin": "expel" },
+    "switch": ["URS_RESEARCH","URS_TEACHER","URS_OFFICER","URS_UNDER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["rosa"]
+  },
+  {
+   "id": "URS_RESEARCH",
+   "nation": "ursus",
+   "region": null,
+   "name": "연구원",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [22,35],
+    "classes": { "q3": 0.0833, "q4": 0.0416 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "assistant",
+     "name": "조교",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.035, "causes": ["purge","accident","disappear"] }
+    },
+    {
+     "id": "researcher",
+     "name": "연구원",
+     "title": "연구원",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["purge","accident","disappear"] }
+    },
+    {
+     "id": "director",
+     "name": "소장",
+     "title": "소장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["purge","accident","disappear"] }
+    }
+   ],
+   "income": { "stage": [1,2,4.5], "job": "scholar" },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["URS_RES_SARCOPHAGUS","URS_RES_ZELGRAD","URS_RES_OKA"],
+   "exits": {
+    "retire": { "age": 60, "to": "URS_WORKER" },
+    "fall": { "purge": "prison:camp", "accident": "injured", "disappear": "death" },
+    "switch": ["URS_TEACHER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "URS_TEACHER",
+   "nation": "ursus",
+   "region": null,
+   "name": "교사",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [20,30],
+    "classes": { "q3": 0.0833 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["college"]
+   },
+   "stages": [
+    {
+     "id": "college",
+     "name": "교육대",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.2 },
+     "fall": { "base": 0.025, "causes": ["arrest","layoff"] }
+    },
+    {
+     "id": "teacher",
+     "name": "교사",
+     "title": "교사",
+     "minYears": 10,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.025, "causes": ["arrest","layoff"] }
+    },
+    {
+     "id": "principal",
+     "name": "교장",
+     "title": "교장",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.04 },
+     "fall": { "base": 0.025, "causes": ["arrest","layoff"] },
+     "canon": false
+    },
+    {
+     "id": "forum",
+     "name": "평의원",
+     "title": "평의원",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["arrest","layoff"] }
+    }
+   ],
+   "income": { "stage": [0.3,1.2,2,2.2], "job": "teacher" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["URS_TEA_USHINSKY","URS_TEA_PETERHEIM"],
+   "exits": {
+    "retire": { "age": 60, "to": "URS_WORKER" },
+    "fall": { "arrest": "prison:camp", "layoff": "expel" },
+    "switch": ["URS_CRAFT"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "URS_ARTIST",
+   "nation": "ursus",
+   "region": null,
+   "name": "극작가·시인",
+   "archetype": "A12",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,30],
+    "classes": { "q3": 0.0416 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["troupe","circle"]
+   },
+   "stages": [
+    {
+     "id": "troupe",
+     "name": "극단 단원",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "arts", "k": 0.22 },
+     "fall": { "base": 0.035, "causes": ["exile","fade","arrest"] }
+    },
+    {
+     "id": "writer",
+     "name": "작가",
+     "title": "작가",
+     "minYears": 8,
+     "promo": { "cap": "arts", "k": 0.12 },
+     "fall": { "base": 0.035, "causes": ["exile","fade","arrest"] }
+    },
+    {
+     "id": "celebrity",
+     "name": "명사",
+     "title": "명사",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["exile","fade","arrest"] }
+    }
+   ],
+   "income": { "stage": [0.3,1,3], "job": "artist" },
+   "standing": { "name": "명성", "start": 20 },
+   "affiliations": ["URS_ART_THEATER","URS_ART_POETS"],
+   "exits": {
+    "retire": { "age": 60, "to": "URS_WORKER" },
+    "fall": { "exile": "exile", "fade": "expel", "arrest": "prison:camp" },
+    "switch": ["URS_TEACHER","URS_CRAFT"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "URS_NOBLE",
+   "nation": "ursus",
+   "region": null,
+   "name": "신 귀족",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [25,45],
+    "classes": { "q4": 0.2497, "q5": 0.4163 },
+    "gates": [
+     { "cap": "ties", "min": 0.5 },
+     { "rel": "<=subtle" }
+    ],
+    "via": ["purchase","factory","heir"]
+   },
+   "stages": [
+    {
+     "id": "dvoryanin",
+     "name": "드보랴닌",
+     "title": "드보랴닌",
+     "minYears": 5,
+     "promo": { "cap": "ties", "k": 0.15 },
+     "fall": { "base": 0.035, "causes": ["purge","assassination","bankrupt"] }
+    },
+    {
+     "id": "baron",
+     "name": "남작",
+     "title": "남작",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.08 },
+     "fall": { "base": 0.035, "causes": ["purge","assassination","bankrupt"] }
+    },
+    {
+     "id": "duma",
+     "name": "하원 말단",
+     "title": "의원",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.035, "causes": ["purge","assassination","bankrupt"] }
+    },
+    {
+     "id": "magistrate",
+     "name": "치안판사",
+     "title": "치안판사",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.02 },
+     "fall": { "base": 0.035, "causes": ["purge","assassination","bankrupt"] }
+    },
+    {
+     "id": "minister",
+     "name": "장관",
+     "title": "장관",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["purge","assassination","bankrupt"] }
+    }
+   ],
+   "income": { "stage": [3,5,8,12,25] },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["URS_NOB_BORIS","URS_NOB_COUNCIL"],
+   "exits": {
+    "retire": { "age": 70, "to": "URS_CRAFT" },
+    "fall": { "purge": "prison:camp", "assassination": "death", "bankrupt": "demote" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  }
+ ]
+}

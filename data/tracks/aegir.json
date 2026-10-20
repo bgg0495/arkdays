@@ -1,0 +1,477 @@
+{
+ "_meta": {
+  "nation": "aegir",
+  "source": "진로_카탈로그_v0 §15",
+  "canon": "mixed",
+  "classScale": 0.6659,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "출생 계층 대신 배정층(발전계획소). AEG_HUNTER는 1080~1095 전 계층 지원 이벤트, AEG_EXPAT은 전환(classes 없음)."
+ },
+ "tracks": [
+  {
+   "id": "AEG_CONSUL",
+   "nation": "aegir",
+   "region": null,
+   "name": "집정관 트랙",
+   "archetype": "A3",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [20,35],
+    "classes": { "q4": 0.2664, "q5": 0.6659 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 },
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["assigned"]
+   },
+   "stages": [
+    {
+     "id": "aide",
+     "name": "보좌",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.2 },
+     "fall": { "base": 0.025, "causes": ["impeach","heresy","seaborn"] },
+     "canon": false
+    },
+    {
+     "id": "technocrat",
+     "name": "기술관료",
+     "title": "기술관료",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.025, "causes": ["impeach","heresy","seaborn"] }
+    },
+    {
+     "id": "consul",
+     "name": "집정관",
+     "title": "집정관",
+     "minYears": 10,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.025, "causes": ["impeach","heresy","seaborn"] }
+    },
+    {
+     "id": "senate",
+     "name": "원로원",
+     "title": "원로",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["impeach","heresy","seaborn"] }
+    }
+   ],
+   "income": { "stage": [1.5,3,6,10], "job": "consul_assigned" },
+   "standing": { "name": "관청 평판", "start": 20 },
+   "affiliations": ["AEG_CON_LEGION","AEG_CON_TECH","AEG_CON_SOCIAL"],
+   "exits": {
+    "retire": { "age": 80, "to": "AEG_ADMIN" },
+    "fall": { "impeach": "expel", "heresy": "prison:jail", "seaborn": "death" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["clementia"]
+  },
+  {
+   "id": "AEG_RESEARCH",
+   "nation": "aegir",
+   "region": null,
+   "name": "연구소 연구원",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,30],
+    "classes": { "q3": 0.1332, "q4": 0.3995 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 },
+     { "cap": "arts", "min": -0.8 }
+    ],
+    "via": ["assigned"]
+   },
+   "stages": [
+    {
+     "id": "assistant",
+     "name": "조수",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["disappear","heresy","accident"] },
+     "canon": false
+    },
+    {
+     "id": "researcher",
+     "name": "연구원",
+     "title": "연구원",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["disappear","heresy","accident"] }
+    },
+    {
+     "id": "senior",
+     "name": "수석 연구원",
+     "title": "수석 연구원",
+     "minYears": 10,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["disappear","heresy","accident"] }
+    },
+    {
+     "id": "director",
+     "name": "총전쟁설계사·소장",
+     "title": "소장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["disappear","heresy","accident"] }
+    }
+   ],
+   "income": { "stage": [1.2,2.5,5,9], "job": "marine_biologist" },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["AEG_RES_PREHISTORY","AEG_RES_SOCIAL","AEG_RES_MILIARIUM"],
+   "exits": {
+    "retire": { "age": 80, "to": "AEG_ADMIN" },
+    "fall": { "disappear": "death", "heresy": "prison:jail", "accident": "injured" },
+    "switch": ["AEG_CONSUL"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["abitus"]
+  },
+  {
+   "id": "AEG_LEGION",
+   "nation": "aegir",
+   "region": null,
+   "name": "군단 병사·장교",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,28],
+    "classes": { "q2": 0.2664, "q3": 0.1998 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["assigned"]
+   },
+   "stages": [
+    {
+     "id": "soldier",
+     "name": "병사",
+     "title": "병사",
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.045, "causes": ["seaborn","kia","backlash"] }
+    },
+    {
+     "id": "nco",
+     "name": "하사관",
+     "title": "하사관",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["seaborn","kia","backlash"] },
+     "canon": false
+    },
+    {
+     "id": "officer",
+     "name": "장교",
+     "title": "장교",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.045, "causes": ["seaborn","kia","backlash"] }
+    },
+    {
+     "id": "commander",
+     "name": "군단 사령관",
+     "title": "사령관",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["seaborn","kia","backlash"] }
+    }
+   ],
+   "income": { "stage": [1,1.5,3,7] },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["AEG_LEG_LEGION","AEG_LEG_PATROL","AEG_LEG_SUPERVISOR"],
+   "exits": {
+    "retire": { "age": 60, "to": "AEG_ADMIN" },
+    "fall": { "seaborn": "death", "kia": "death", "backlash": "death" },
+    "switch": ["AEG_ADMIN"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "AEG_HUNTER",
+   "nation": "aegir",
+   "region": null,
+   "name": "어비설 헌터",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,40],
+    "classes": {},
+    "gates": [
+     { "year": [1080,1095] },
+     { "cap": "skill", "min": 0.5 }
+    ],
+    "via": ["volunteer"]
+   },
+   "stages": [
+    {
+     "id": "applied",
+     "name": "지원·개조",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.07, "causes": ["seaborn","backlash","kia"] }
+    },
+    {
+     "id": "hunter",
+     "name": "중대 헌터",
+     "title": "헌터",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.07, "causes": ["seaborn","backlash","kia"] }
+    },
+    {
+     "id": "captain",
+     "name": "중대장",
+     "title": "중대장",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.04 },
+     "fall": { "base": 0.07, "causes": ["seaborn","backlash","kia"] }
+    },
+    {
+     "id": "instructor",
+     "name": "감독·교관",
+     "title": "교관",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.07, "causes": ["seaborn","backlash","kia"] }
+    }
+   ],
+   "income": { "stage": [1,2,4,5], "job": "abyssal_hunter" },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["AEG_HUN_2","AEG_HUN_3","AEG_HUN_INFECTED"],
+   "exits": {
+    "retire": null,
+    "fall": { "seaborn": "death", "backlash": "death:seaborn_change", "kia": "death" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["gladiia","skadi"],
+   "note": "classes 없음: 1080~1095 전 진로 지원 이벤트. 1100 종료(캐논)"
+  },
+  {
+   "id": "AEG_ADMIN",
+   "nation": "aegir",
+   "region": null,
+   "name": "데이터·시설 관리",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,35],
+    "classes": { "q3": 0.2664 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["assigned"]
+   },
+   "stages": [
+    {
+     "id": "staff",
+     "name": "직원",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["heresy","demotion","seaborn"] }
+    },
+    {
+     "id": "manager",
+     "name": "관리자",
+     "title": "관리자",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["heresy","demotion","seaborn"] }
+    },
+    {
+     "id": "chief",
+     "name": "구역 책임자",
+     "title": "책임자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["heresy","demotion","seaborn"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [1,1.6,3], "job": "consul_assigned" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["AEG_ADM_DATA","AEG_ADM_FACILITY","AEG_ADM_ARENA"],
+   "exits": {
+    "retire": { "age": 60, "to": "AEG_ADMIN" },
+    "fall": { "heresy": "prison:jail", "demotion": "demote", "seaborn": "death" },
+    "switch": ["AEG_ARTIST"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "AEG_FARM",
+   "nation": "aegir",
+   "region": null,
+   "name": "해조 농장·다이버",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q1": 0.6659, "q2": 0.333 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["assigned"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "견습 다이버",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.035, "causes": ["seaborn","drowning","ruin"] }
+    },
+    {
+     "id": "diver",
+     "name": "다이버·농장원",
+     "title": null,
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["seaborn","drowning","ruin"] }
+    },
+    {
+     "id": "chief",
+     "name": "농장 책임자",
+     "title": "책임자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["seaborn","drowning","ruin"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.7,1,1.8], "job": "fisher" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["AEG_FAR_FARM","AEG_FAR_GALLERY"],
+   "exits": {
+    "retire": { "age": 60, "to": "AEG_ADMIN" },
+    "fall": { "seaborn": "death", "drowning": "death", "ruin": "expel" },
+    "switch": ["AEG_LEGION"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "AEG_ARTIST",
+   "nation": "aegir",
+   "region": null,
+   "name": "밴드·창작자",
+   "archetype": "A12",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q2": 0.0666, "q3": 0.0666 },
+    "gates": [
+     { "cap": "arts", "min": -0.8 }
+    ],
+    "via": ["debate","band"]
+   },
+   "stages": [
+    {
+     "id": "debater",
+     "name": "투지장 토론자",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "arts", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["fade","exile","dehydration"] },
+     "canon": false
+    },
+    {
+     "id": "band",
+     "name": "밴드 멤버",
+     "title": "멤버",
+     "minYears": 8,
+     "promo": { "cap": "arts", "k": 0.12 },
+     "fall": { "base": 0.03, "causes": ["fade","exile","dehydration"] }
+    },
+    {
+     "id": "tour",
+     "name": "지상 순회",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["fade","exile","dehydration"] }
+    }
+   ],
+   "income": { "stage": [0.8,1.2,2.5], "job": "artist" },
+   "standing": { "name": "명성", "start": 20 },
+   "affiliations": ["AEG_ART_ALIVE","AEG_ART_PHILO","AEG_ART_ARENA"],
+   "exits": {
+    "retire": { "age": 60, "to": "AEG_ADMIN" },
+    "fall": { "fade": "expel", "exile": "exile", "dehydration": "death" },
+    "switch": ["AEG_EXPAT","AEG_ADMIN"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "AEG_EXPAT",
+   "nation": "aegir",
+   "region": null,
+   "name": "지상 이주민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,50],
+    "classes": {},
+    "gates": [],
+    "via": ["surface","islander"]
+   },
+   "stages": [
+    {
+     "id": "migrate",
+     "name": "이주",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.2 },
+     "fall": { "base": 0.04, "causes": ["dehydration","exile","arrest"] }
+    },
+    {
+     "id": "technician",
+     "name": "현지 기술자·상어인 편입",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["dehydration","exile","arrest"] }
+    },
+    {
+     "id": "settled",
+     "name": "정착",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["dehydration","exile","arrest"] }
+    }
+   ],
+   "income": { "stage": [0.5,1.5,2.5], "job": "engineer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["AEG_EXP_913","AEG_EXP_HIGASHI","AEG_EXP_TECH"],
+   "exits": {
+    "retire": { "age": 60, "to": "AEG_ADMIN" },
+    "fall": { "dehydration": "death", "exile": "exile", "arrest": "prison:jail" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "classes 없음: 지상행 결정 전환. 진입 시 이주 기계(§7)로 거주국 변경"
+  }
+ ]
+}

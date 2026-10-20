@@ -4,6 +4,8 @@ import { clamp, invNorm } from './rng.js';
 import { rootOf } from './data.js';
 import { BALANCE as B } from './balance.js';
 import { ro } from './text.js';
+import { trackIncomeMul, retireTrack, leaveTrack } from './track.js';
+import { relIncomeMul } from './relations.js';
 
 export const LMD_PER_PPP = 10;                 // D15: LMD = PPP$ × 10 (창작 환율)
 export const toLMD = (ppp) => ppp * LMD_PER_PPP;
@@ -66,6 +68,7 @@ export function reqOk(sim, req) {
 /** child=true 면 아동 노동: 직업의 최소 나이를 무시하되 edu 0 의 평범한 직업만 */
 export function jobEligible(sim, j, child = false) {
   const { S, data } = sim;
+  if (!j) return false;
   const root = rootOf(data, S.cur);
   if (j.sector === 'none') return false;
   if (j.only && !j.only.includes(S.cur) && !j.only.includes(root)) return false;
@@ -96,6 +99,7 @@ export function takeJob(sim, jobId, quiet = false) {
 export function retire(sim) {
   const { S } = sim;
   if (!S.job) return;
+  if (S.track) { retireTrack(sim, { full: true }); return; }
   const st = sim.nation.stats;
   S.pension = st.ppp > 1500 ? Math.round(S.income * 0.3) : 0;
   S.job = null; S.retired = true;
@@ -130,6 +134,7 @@ export function partnerIncome(sim) {
 export function becomeHomemaker(sim) {
   const { S } = sim;
   if (S.job && S.job !== 'homemaker') S.flags.jobBeforeHome = S.job;
+  if (S.track) leaveTrack(sim, 'homemaker', { quiet: true });
   S.job = 'homemaker'; S.jobY = 0; S.income = 0; S.retired = false;
   S.flags.homemakerAt = S.flags.homemakerAt ?? S.age;
   S.flags.homemakerYears = S.flags.homemakerYears || 0;
@@ -143,17 +148,8 @@ export function financeYear(sim) {
   const med = medianLMD(sim);
   const fw = S.focusW;
 
-  // 소득
-  if (S.prison === 'camp') { S.income = 0; S.money -= 0; }
-  else if (S.job === 'homemaker') { S.income = 0; S.jobY++; S.flags.homemakerYears = (S.flags.homemakerYears || 0) + 1; }
-  else if (job && !S.retired) {
-    S.jobY++;
-    let drift = S.jobY <= 10 ? 0.012 : S.jobY <= 20 ? 0.006 : 0;
-    if (S.age >= 55) drift -= 0.004;
-    if (S.st.hl < 40) drift -= 0.01;
-    drift += 0.01 * (fw.work || 0) + 0.005 * (fw.learn || 0) - 0.003 * (fw.family || 0);
-    drift += rng.norm(0, 0.01);
-    S.pct = clamp(S.pct + drift, 0.02, Math.min(0.99, job.hi + 0.1));
+  // 소득. v1: 진로가 정한다(§3.3-4, drift 없음). 진로 없이 콘텐츠가 준 구 직업(takeJob)은 백분위 고정.
+  const kFactors = () => {
     let k = (S.sex === 'F' ? 0.8 : 1) * (S.eth === 'outsider' ? 0.9 : 1) * (1 - 0.08 * race.stigma) * (1 + 0.1 * (fw.work || 0));
     if (S.ori.stage >= 2) k *= 0.7;
     if (S.flags.quarantined) k *= 0.6;
@@ -161,7 +157,29 @@ export function financeYear(sim) {
     if (S.serving) k *= 0.5;
     if (S.age < 15) k *= 0.5;                   // 아동 노동 임금
     if (S.ori.on && S.arts >= 1.28) k *= 1.15;   // 감염자 아츠 보너스
-    S.income = Math.round(toLMD(incomeAt(st.ppp, st.gini, S.pct)) * k);
+    k *= relIncomeMul(S.rel);                   // §9 관계 등급 소득 배율
+    if (S.res && S.res.phase === 'settling') k *= 0.85;
+    if (S.res && S.res.papers === 'illegal') k *= 0.7;
+    return k;
+  };
+  const tr = S.track ? sim.data.trackById[S.track.id] : null;
+  if (S.prison === 'camp' && !(tr && tr.forced)) { S.income = 0; }
+  else if (S.job === 'homemaker') { S.income = 0; S.jobY++; S.flags.homemakerYears = (S.flags.homemakerYears || 0) + 1; }
+  else if (tr && !S.retired) {
+    const mul = trackIncomeMul(sim);
+    let base;
+    if (tr.job && sim.data.jobById[tr.job] && tr.archetype === 'A11') {
+      // 생업: jobs.json lo/hi 백분위를 단계 위치로 보간(drift 없음)
+      const j = sim.data.jobById[tr.job];
+      const n = Math.max(1, tr.stages.length - 1);
+      const pct = clamp(j.lo + (j.hi - j.lo) * (S.track.stage / n) + 0.1 * (S.cap ? S.cap.skill : 0) * (j.hi - j.lo), 0.02, 0.98);
+      base = toLMD(incomeAt(st.ppp, st.gini, pct)) * (mul / (tr.income.stage[S.track.stage] ?? 1));
+    } else base = med * mul;
+    S.income = Math.round(base * kFactors());
+    S.pct = S.income > 0 ? clamp(0.5 + Math.log(S.income / med) / (2 * sigmaOf(st.gini)) * 0.5, 0.02, 0.98) : 0.02;
+  } else if (job && !S.retired) {
+    S.jobY++;
+    S.income = Math.round(toLMD(incomeAt(st.ppp, st.gini, S.pct)) * kFactors());
   } else if (S.retired) S.income = S.pension;
   else S.income = 0;
   S.stats.maxIncome = Math.max(S.stats.maxIncome, S.income);
@@ -185,7 +203,7 @@ export function financeYear(sim) {
     net -= prem;
     if (S.money + net < 0) {
       S.flags.premiumMissed = (S.flags.premiumMissed || 0) + 1;
-      if (S.flags.premiumMissed >= 2) { sim.log('보험료 미납으로 추방 통보를 받았습니다.', 'bad'); sim.migrate('insurance_default'); if (S.phase !== 'life') return; }
+      if (S.flags.premiumMissed >= 2) { sim.log('보험료 미납으로 추방 통보를 받았습니다.', 'bad'); S.flags.migReasonDetail = 'insurance_default'; sim.migrate('exile'); if (S.phase !== 'life') return; }
     } else S.flags.premiumMissed = 0;
   }
   if (S.flags.oriFees) net -= Math.max(S.income * B.neglectFee, med * 0.05);

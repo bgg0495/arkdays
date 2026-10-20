@@ -1,6 +1,8 @@
 // 재앙(§5.2)·분쟁(§5.4)·시테러/붕괴체 위험 롤. 모두 연말 1회.
 import { infect } from './oripathy.js';
 import { BALANCE as B } from './balance.js';
+import { fleeCheck } from './migration.js';
+import { relCrimeMul } from './relations.js';
 
 export const CAT_BASE = B.catBase;
 
@@ -27,6 +29,8 @@ export function catYear(sim) {
     S.money = Math.round(S.money * 0.6);
     sim.eff({ hl: -8 });
     sim.log('재앙이 거주지를 덮쳤습니다. 다쳤고, 많은 것을 잃었습니다.', 'bad');
+    S.flags.catastrophe_hit = S.age;                  // §10 구조 입구 후보(그 해·다음 해만 유효)
+    fleeCheck(sim, 'catastrophe');                    // §7 피난
   } else if (r < B.catCut.infect) {
     if (S.ori.on) { S.ori.uL = +(S.ori.uL + 0.1).toFixed(3); sim.log('재앙 피폭으로 결정 밀도가 올라갔습니다.', 'bad'); }
     else { infect(sim, 'catastrophe'); sim.log('재앙의 잔류 오리지늄에 노출되었습니다.', 'bad'); }
@@ -41,10 +45,10 @@ export function conflictYear(sim) {
   if (S.phase !== 'life') return;
   const war = !!S.flags.war;
   if (nation.conflict < 3 && !war) return;
-  const p = B.conflictP * (war ? 3 : 1) * (S.serving ? 3 : 1);
+  const p = B.conflictP * (war ? 3 : 1) * (S.serving ? 3 : 1) * relCrimeMul(S.rel);   // §9 제도적 차별 ×1.5
   if (!rng.chance(p)) return;
   const r = rng.rnd();
-  if (r < B.conflictCut.money) { S.money = Math.round(S.money * 0.85); sim.log('전투가 마을 근처까지 왔습니다. 재산 일부를 잃었습니다.', 'bad'); }
+  if (r < B.conflictCut.money) { S.money = Math.round(S.money * 0.85); sim.log('전투가 마을 근처까지 왔습니다. 재산 일부를 잃었습니다.', 'bad'); if (war) fleeCheck(sim, 'war'); }
   else if (r < B.conflictCut.injury) { sim.eff({ hl: -6, h: -3 }); sim.log('분쟁에 휘말려 다쳤습니다.', 'bad'); }
   else sim.die('war', '전쟁·내전');
 }

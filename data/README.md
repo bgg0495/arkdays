@@ -132,7 +132,81 @@
 
 실제 캐릭터 이름은 넣지 않았다. 검증기에 금지어 목록이 있다(보고서 A-8 근거 사례 등). 언어 매핑 자체가 관찰 기반 추정이다.
 
-## test/validate-data.js
+---
+
+# v0.3 진로·소속 데이터 (W8, 2026-10-20)
+
+스키마 원본은 `docs/설계_명세_v1.md` §3·§8·§9·§10·§11.3, 콘텐츠 원천은 `docs/진로_카탈로그_v0.md`(사용자 승인). 결정은 D39~D49. 아래 파일의 **수치는 전부 창작**이다(카탈로그·캐논에 숫자가 없다). 창작 범위 표시: 진로·단계·소속·유형의 `canon: false`, 관계·혼인·주거의 `canon: 'partial'`(정황 근거), 각 파일 `_meta.note`.
+
+## tracks/<nation>.json — 진로 276개 (21개국 257 + rhodes 9 + common 10)
+
+파일당 `{ _meta: { nation, source, canon, classScale, note }, tracks: [...] }`. 국가 id 와 파일명이 같다. `rhodes.json`(로도스 내부, §10 입구로만 진입)·`common.json`(국가 횡단 고용주, switch·이벤트로만 진입).
+
+| 필드 | 설명 |
+|---|---|
+| `id`, `nation`, `region` | 카탈로그 id 그대로. `region` 은 하위 지역 태그(극동 `north/south`, 사르곤 `acahualla`, 볼리바르 `singas/coalition/liberated/dossoles`, 타라 `hillock`). 엔진 `S.sub.region` 과 gate `{region}` 이 맞춰 쓴다 |
+| `archetype` | §4 원형 A1~A12 (엔진 기본값 묶음) |
+| `canon` | false 면 진로 자체가 창작(SAM_RESORT·KJE_GUIDE·IBE_FARM·DUR_BREW) |
+| `itinerant`, `route` | §7.4 순회형. `route` 가 null 이면 `nation.mig`(로도스는 `rhodes.json.ports`) |
+| `entry.ages` | 진입 가능 나이 |
+| `entry.classes` | `{q1..q5: 가중}`. **카탈로그 "계층별 유입" 비율(0~1) × `_meta.classScale`**. 계층 안의 상대 비율은 카탈로그 그대로. 국가 안에서 계층별 합 = classScale ≤ 1, 진로 안에서 계층 합 ≤ 1(둘 다 만족시키려는 스케일. 엔진은 상대 가중만 쓴다). 비어 있으면 전환·이벤트 전용(`note` 에 명시) 또는 `forced` |
+| `entry.gates` | 전부 통과해야 후보. 키: `cap`+`min`(등급 경계 −0.8/0.5/1.4), `born`(`looks`)+`min`, `status`(`!slave`, `noble`, `slave`, `orphan`, `ninja_clan`, `prisoner` — `weight` 가 있으면 조건이 아니라 가중), `rel`(`<=cultural` 등 §9 등급 상한), `race`+`weight`(가중) 또는 `race`+`only:true`(제한), `infected`(true/false), `year:[y0,y1]`(테라력 입구 열림 구간), `region`, `urban`(+`weight`), `sex`(+`weight`), `eth`(`outsider`/`nomad`/`gaul` + `weight`) |
+| `entry.via` | 입구 서사 변주 id(콘텐츠용 문자열) |
+| `forced` | 강제 전환 전용 진로(`{infected:true, policy:[...]}`): 진입 롤 후보에서 빼고 감염 판정·정책으로만 들어간다(URS_MINE·LEI_QUAR·VIC_INFECTED·KAZ_INFECTED·COL_INSURANCE·LAT_FALLEN·RIM_INFECTED). 카탈로그 유입 비율에서 이들 몫을 빼고 재정규화했다(`_meta.note`) |
+| `stages[]` | `{id, name, title, minYears, promo:{cap,k,requires?}|null, fall:{base, causes[]}, canon?:false, forced?, oriMul?, capStage?, contract?}`. 마지막 단계는 `promo:null`. `k` 0.01~0.25, `base` 0.01~0.08(§13). `requires.aff` 는 affiliations tag, `requires.year` 는 테라력, `requires.race` 종족. `capStage:{q1:true}` 는 그 분위의 승급 상한(A4 평민 상한). `oriMul` 은 그 단계의 감염 배율(A5). `contract` 는 계약 단위 연수(A6) |
+| `income.stage[]` | 단계별 중위소득 배율(길이 = stages). `income.job` 은 `jobs.json` id(소득 범위·risk 참조, A11 필수) |
+| `standing` | 소속 지위 지표 `{name, start}` |
+| `affiliations[]` | `affiliations.json` id. 진입 시 weight 로 하나 배정 |
+| `exits.retire` | `{age, to}` 또는 null(은퇴 없음: 강제·종신 진로) |
+| `exits.fall` | 단계 `fall.causes` 의 모든 원인 → §3.5 사전 값: `death` / `death:<causeId>`(사인 직접 지정) / `prison:jail` / `prison:camp` / `exile` / `demote` / `expel` / `injured` / `infected` / `disgrace` / `arena:<trackId>`. `death` 의 사인은 `tracks/common.json._meta.fallDeathCause[원인]`(§11.4 매핑, 전 파일 공통) |
+| `exits.switch[]` | 자발 전직 후보(타국 common·rhodes 진로 포함 가능) |
+| `oriPolicyOverride` | 감염 처우를 바꾸는 진로만(`kaz_arena` = 카시미어 기사 → 혈투 리그) |
+| `canonFigures[]` | `canon_figures.json` id |
+| `note` | 창작 범위·특이점 |
+
+몰락 원인 어휘(단계 `fall.causes`)와 기본 결과·사인 매핑은 `tracks/common.json._meta.fallDefaultOutcome` / `fallDeathCause` 에 있다(원형 기본: A1 vendetta·arrest·betrayal, A2 injury·scandal·elimination, A3 impeach·purge·exile, A4 kia·desert·courtmartial, A5 accident·execution·crystallize, A6 kia·contract_end, A7 erosion·exile, A8 heresy·demotion·poison, A9 accident·disappear, A10 layoff·bankrupt, A11 ruin, A12 scandal·fade. 국가색으로 raid·freezing·seaborn·poison·overwork·assassination·starvation·mine·drowning·beast·hound·experiment·camp·euthanasia 등을 덧붙임).
+
+## affiliations.json — 소속 756개
+
+`{ id, track, name, canon, weight, mods:{promo, fall, income, standingStart}, tags[], events }`. 진로 안에서 `weight` 합 1. `mods` 배율은 0.7~1.3 으로 클램프(±30%). `tags` ∈ `major | minor | elite`(단계 `requires.aff` 가 읽음). `events` = 콘텐츠 태그 `aff:<id>` 와 짝(`<TRACK>:<slug>`).
+
+## canon_figures.json — 캐논 인물 78명
+
+`{ id, name(KR 정식), nation, years:[y0,y1], tracks[], stage?, line }`. D43: 1회성 이벤트만, `years` 게이트, 생애당 ≤ 3, `line` 에 이름 없음(검증기가 막음). 표기 불확실한 인물은 뺐다.
+
+## relations.json — 국가×종족 관계 (§9, D49)
+
+`grades`(6등급 순서) / `default` / `relMul` / `sarkaz_default:{grade, by:{nation: grade, victoria_since}}` / `pairs[]:{nation, race('!x'=x 외 전부), grade, canon:true|'partial', since?, scope?('track:ID'), note(근거 필수)}` / `ethPairs[]`(종족 대신 `eth` 플래그: 가울·타라 유목민. 엔진이 안 읽으면 콘텐츠 태그용). 캐논 근거 없는 쌍은 넣지 않는다.
+
+## marriage.json — 혼인 제도 (§8.1)
+
+최상위 키 = 국가 id(+`_meta`). `types[]:{id, name, w, age:[a,b], dowry(중위소득 배율), poly?, polyReq?:{income}, req?:{track[]|urban|infected|status|eth|region}, since?/until?, region?, canon, events?, note?}`. 국가당 일반 유형 2~4 + 감염자 전용(`req.infected`) 1(격리·박해 정책 국가). `_meta.forcedRule` 참고.
+
+## housing.json — 주거 형태 (§8.2)
+
+최상위 키 = 국가 id + `_default`(전 국가 공통 강제: quarantine·camp·jail·ship_cabin·barracks·refugee_tent). `types[]:{id, name, w, cost(연간 주거비 배율), own?:true+price(중위소득 배율), req?, forced?:{oriPolicy[]+known | prison | res | track[]+stageMin/stageMax | archetype[]+stageMax | papers}, region?, since?, canon}`. 국가당 일반 유형 2~5 + 강제 유형.
+
+## rhodes.json — 로도스 루트 (§10)
+
+`entries[]`(9 via, 평탄한 트리거 키: `p` 연간 확률, `ages`, `cap`, `flag`, `capMin`, `policies`, `money`, `archetypes`, `stageMin`, `tracks`, `papers`, `nation`, `bornBefore`, `years`; 서사 꼬리표 `line`·`tag`, 배치 `status`) / `decision` / `depts`(id 배열) + `deptInfo` / `statusRules`(§10.2 위에서부터 첫 일치) / `ports`(기항지 id 배열) + `portWeights` / `closed[]`(§10.4 평탄 키) + `rumorOnly` / `diagnosis.templates` 6종(캐논 프로필 톤, 단계·uL 구간) / `operatorStats`(캐논 6종 등급 공식, D42).
+
+## nations.json 추가 필드 (§7.3, D26) — 값 변경 없음, 추가만
+
+`refugeeIn`(난민 수용) · `naturalize`(open/hard/never) · `illegalRisk`(0~1, 불법 체류 발각 가중) · `expelsInfected`(라테라노만 true) · `mig`(이주 목적지 가중, 합 1 — W1 에 없던 필드) · `specialTracks`(국가 특수 진로 id: canon:true && 원형≠A10/A11 && 유입 있음 && 강제 아님. D26 노출용). 전부 창작.
+
+## races.json 추가 필드
+
+`skillApt`(기량 적성 z 보정, −0.3~+0.3, 창작). `causes.json` 에는 진로 몰락 사인 6종 추가(missing·assassination·freezing·poison·overwork·seaborn_change, 전부 terra·창작 가중).
+
+## 검증
+
+```bash
+node test/validate-data.js
+```
+
+W8 추가 검사: tracks 파일 전수(국가당 1 + rhodes + common) / 진로 276±5 / id 유일·nation·archetype·stages 2~6·promo.k·fall.base·exits.fall 사전·사인 매핑·income 길이·income.job·affiliations 역참조·retire/switch/arena 참조·gates 키·canonFigures 참조·진로 안 classes 합 ≤ 1·국가 안 계층별 합 ≤ 1·국가당 8개 이상·A11 존재 / affiliations weight 합·mods 범위·tags enum·requires.aff 존재 / canon_figures 40~80·years·tracks·line 에 이름 금지 / relations 등급 enum·canon·note·D49 필수 쌍·20~40쌍 / marriage·housing 21개국 전수·유형 수·req/forced 참조·w 합 / rhodes 9 via·ports 8~12·템플릿 6·캐논 6등급 / nations 추가 필드·mig 합·specialTracks / races.skillApt. W7 의 `test/validate-tracks.js`(엔진 쪽 해석)도 같이 통과한다.
+
+## test/validate-data.js (W1)
 
 검사 항목: JSON 파싱 / 필수 필드·enum·범위 / share 합 100±0.5 / 참조 무결성(nations.races→races, nations.jobs→jobs(+only 일치), jobs.risk→causes, causes.tags→nations·threats·traits, races.home→nations, nameLang→names.langs, model→stats1950) / stats 셀의 source·estimated 일관성 / 실제 캐릭터 이름 금지어.
 

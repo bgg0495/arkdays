@@ -1,0 +1,549 @@
+{
+ "_meta": {
+  "nation": "rhodes",
+  "source": "진로_카탈로그_v0 §22(c)",
+  "canon": "mixed",
+  "classScale": 1,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "출생 국가가 아니라 §10 입구(rhodes.json entries)로만 진입. classes 없음. 부서 배치는 §10.2 규칙(rhodes.json statusRules)."
+ },
+ "tracks": [
+  {
+   "id": "RHO_OPERATOR",
+   "nation": "rhodes",
+   "region": null,
+   "name": "외근 오퍼레이터",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": true,
+   "route": null,
+   "entry": {
+    "ages": [14,45],
+    "classes": {},
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["training_center"]
+   },
+   "stages": [
+    {
+     "id": "reserve",
+     "name": "예비 인원",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.045, "causes": ["kia","injury","crystallize"] }
+    },
+    {
+     "id": "reserve_team",
+     "name": "예비작전팀",
+     "title": "예비 오퍼레이터",
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.15 },
+     "fall": { "base": 0.045, "causes": ["kia","injury","crystallize"] }
+    },
+    {
+     "id": "regular",
+     "name": "정규 작전팀",
+     "title": "오퍼레이터",
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.08 },
+     "fall": { "base": 0.045, "causes": ["kia","injury","crystallize"] }
+    },
+    {
+     "id": "veteran",
+     "name": "작전팀 A4",
+     "title": "베테랑",
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.03 },
+     "fall": { "base": 0.045, "causes": ["kia","injury","crystallize"] }
+    },
+    {
+     "id": "elite",
+     "name": "정예",
+     "title": "정예 오퍼레이터",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["kia","injury","crystallize"] }
+    }
+   ],
+   "income": { "stage": [0.8,1.2,1.8,2.5,3.5] },
+   "standing": { "name": "작전 평가", "start": 20 },
+   "affiliations": ["RHO_OP_A1","RHO_OP_A4","RHO_OP_A6","RHO_OP_TEAM","RHO_OP_SWEEP"],
+   "exits": {
+    "retire": { "age": 55, "to": "RHO_OFFICE" },
+    "fall": { "kia": "death", "injury": "injured", "crystallize": "death" },
+    "switch": ["RHO_OFFICE","RHO_LOGISTICS"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["amiya","ace"]
+  },
+  {
+   "id": "RHO_MEDICAL",
+   "nation": "rhodes",
+   "region": null,
+   "name": "의료부",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,45],
+    "classes": {},
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["intern","aptitude"]
+   },
+   "stages": [
+    {
+     "id": "intern",
+     "name": "인턴",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.025, "causes": ["overwork","accident","infected"] }
+    },
+    {
+     "id": "team",
+     "name": "의료팀",
+     "title": "의료팀원",
+     "minYears": 5,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.025, "causes": ["overwork","accident","infected"] }
+    },
+    {
+     "id": "section",
+     "name": "과 책임",
+     "title": "과장",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.025, "causes": ["overwork","accident","infected"] }
+    },
+    {
+     "id": "chief",
+     "name": "수석 의사",
+     "title": "수석 의사",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["overwork","accident","infected"] }
+    }
+   ],
+   "income": { "stage": [0.8,1.6,2.8,4], "job": "doctor" },
+   "standing": { "name": "의료부 평가", "start": 20 },
+   "affiliations": ["RHO_MED_ER","RHO_MED_REHAB","RHO_MED_ANALYSIS","RHO_MED_ADMIN","RHO_MED_EQUIP"],
+   "exits": {
+    "retire": { "age": 70, "to": "RHO_OFFICE" },
+    "fall": { "overwork": "death", "accident": "injured", "infected": "infected" },
+    "switch": ["RHO_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["ansel","warfarin","kaltsit"]
+  },
+  {
+   "id": "RHO_ENGINEER",
+   "nation": "rhodes",
+   "region": null,
+   "name": "엔지니어링부",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,45],
+    "classes": {},
+    "gates": [
+     { "cap": "learn", "min": -0.8 },
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["hire","babel"]
+   },
+   "stages": [
+    {
+     "id": "technician",
+     "name": "기사",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.025, "causes": ["accident","disappear","crystallize"] }
+    },
+    {
+     "id": "section",
+     "name": "과 소속",
+     "title": "기사",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.025, "causes": ["accident","disappear","crystallize"] }
+    },
+    {
+     "id": "senior",
+     "name": "수석 연구원",
+     "title": "수석 연구원",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.025, "causes": ["accident","disappear","crystallize"] }
+    },
+    {
+     "id": "chief",
+     "name": "총괄 엔지니어",
+     "title": "총괄",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["accident","disappear","crystallize"] }
+    }
+   ],
+   "income": { "stage": [0.8,1.4,2.5,3.5], "job": "engineer" },
+   "standing": { "name": "엔지니어링 평가", "start": 20 },
+   "affiliations": ["RHO_ENG_ASSET","RHO_ENG_OPS","RHO_ENG_CONSTRUCT","RHO_ENG_MECHANIST"],
+   "exits": {
+    "retire": { "age": 70, "to": "RHO_OFFICE" },
+    "fall": { "accident": "injured", "disappear": "death", "crystallize": "death" },
+    "switch": ["RHO_PURCHASE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["closure","eunectes","minimalist"]
+  },
+  {
+   "id": "RHO_LOGISTICS",
+   "nation": "rhodes",
+   "region": null,
+   "name": "후방지원부",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,70],
+    "classes": {},
+    "gates": [],
+    "via": ["treatment_labor","hire"]
+   },
+   "stages": [
+    {
+     "id": "helper",
+     "name": "보조",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "skill", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["crystallize","layoff","accident"] }
+    },
+    {
+     "id": "member",
+     "name": "팀원",
+     "title": "팀원",
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.12 },
+     "fall": { "base": 0.03, "causes": ["crystallize","layoff","accident"] }
+    },
+    {
+     "id": "lead",
+     "name": "팀장",
+     "title": "팀장",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.06 },
+     "fall": { "base": 0.03, "causes": ["crystallize","layoff","accident"] }
+    },
+    {
+     "id": "line",
+     "name": "생산라인 관리",
+     "title": "관리자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["crystallize","layoff","accident"] }
+    }
+   ],
+   "income": { "stage": [0.4,0.9,1.5,2.2], "job": "cook" },
+   "standing": { "name": "후방지원 평가", "start": 20 },
+   "affiliations": ["RHO_LOG_SUPPLY","RHO_LOG_LIVING","RHO_LOG_LINE","RHO_LOG_BAR"],
+   "exits": {
+    "retire": { "age": 60, "to": "RHO_LOGISTICS" },
+    "fall": { "crystallize": "death", "layoff": "demote", "accident": "death" },
+    "switch": ["RHO_PURCHASE","RHO_OPERATOR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "RHO_HR",
+   "nation": "rhodes",
+   "region": null,
+   "name": "인사부",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,50],
+    "classes": {},
+    "gates": [
+     { "cap": "learn", "min": -0.8 },
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "recruit",
+     "name": "채용과 직원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "ties", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["overwork","scandal","layoff"] }
+    },
+    {
+     "id": "screening",
+     "name": "심사과 감찰",
+     "title": "감찰",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["overwork","scandal","layoff"] }
+    },
+    {
+     "id": "section",
+     "name": "과장",
+     "title": "과장",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.06 },
+     "fall": { "base": 0.02, "causes": ["overwork","scandal","layoff"] },
+     "canon": false
+    },
+    {
+     "id": "head",
+     "name": "인사부장",
+     "title": "부장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["overwork","scandal","layoff"] }
+    }
+   ],
+   "income": { "stage": [0.9,1.3,2,3], "job": "clerk" },
+   "standing": { "name": "인사부 평가", "start": 20 },
+   "affiliations": ["RHO_HR_RECRUIT","RHO_HR_SCREEN"],
+   "exits": {
+    "retire": { "age": 60, "to": "RHO_LOGISTICS" },
+    "fall": { "overwork": "death", "scandal": "disgrace", "layoff": "expel" },
+    "switch": ["RHO_PURCHASE","RHO_OFFICE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "RHO_PURCHASE",
+   "nation": "rhodes",
+   "region": null,
+   "name": "구매 및 시장 운영부",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,50],
+    "classes": {},
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "staff",
+     "name": "구매센터 직원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "ties", "k": 0.22 },
+     "fall": { "base": 0.025, "causes": ["bankrupt","layoff","scandal"] }
+    },
+    {
+     "id": "negotiator",
+     "name": "협상 담당",
+     "title": "협상 담당",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.12 },
+     "fall": { "base": 0.025, "causes": ["bankrupt","layoff","scandal"] }
+    },
+    {
+     "id": "head",
+     "name": "부장",
+     "title": "부장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["bankrupt","layoff","scandal"] }
+    }
+   ],
+   "income": { "stage": [0.9,1.5,2.5], "job": "merchant" },
+   "standing": { "name": "구매부 평가", "start": 20 },
+   "affiliations": ["RHO_PUR_CENTER","RHO_PUR_PHARMA","RHO_PUR_PARTNER"],
+   "exits": {
+    "retire": { "age": 60, "to": "RHO_LOGISTICS" },
+    "fall": { "bankrupt": "demote", "layoff": "expel", "scandal": "disgrace" },
+    "switch": ["RHO_OFFICE","RHO_HR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["closure"]
+  },
+  {
+   "id": "RHO_OFFICE",
+   "nation": "rhodes",
+   "region": null,
+   "name": "주재 사무소",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [20,60],
+    "classes": {},
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["transfer"]
+   },
+   "stages": [
+    {
+     "id": "staff",
+     "name": "사무소 직원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "ties", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["raid","bankrupt","kia"] }
+    },
+    {
+     "id": "support",
+     "name": "현지 의료·외근 지원",
+     "title": "지원 담당",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.12 },
+     "fall": { "base": 0.03, "causes": ["raid","bankrupt","kia"] }
+    },
+    {
+     "id": "head",
+     "name": "사무소장",
+     "title": "소장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["raid","bankrupt","kia"] }
+    }
+   ],
+   "income": { "stage": [1,1.5,2.5], "job": "clerk" },
+   "standing": { "name": "사무소 평가", "start": 20 },
+   "affiliations": ["RHO_OFF_KAZIMIERZ","RHO_OFF_VICTORIA","RHO_OFF_LEITH","RHO_OFF_URSUS","RHO_OFF_SIESTA","RHO_OFF_DOSSOLES","RHO_OFF_KAZDEL","RHO_OFF_CRADLE","RHO_OFF_HILLOCK","RHO_OFF_IBERIA"],
+   "exits": {
+    "retire": { "age": 70, "to": "RHO_LOGISTICS" },
+    "fall": { "raid": "injured", "bankrupt": "expel", "kia": "death" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["nearl"],
+   "note": "진입 시 res.nation 을 사무소 국가로 바꾼다(지부 전근)"
+  },
+  {
+   "id": "RHO_CONTRACTOR",
+   "nation": "rhodes",
+   "region": null,
+   "name": "협력 계약자",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": true,
+   "route": null,
+   "entry": {
+    "ages": [14,60],
+    "classes": {},
+    "gates": [],
+    "via": ["agreement","exchange","treatment_deal"]
+   },
+   "stages": [
+    {
+     "id": "signed",
+     "name": "협정 체결",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.04, "causes": ["kia","contract_end","crystallize"] },
+     "contract": 2
+    },
+    {
+     "id": "deployed",
+     "name": "작전 참여·파견",
+     "title": "계약자",
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["kia","contract_end","crystallize"] },
+     "contract": 3
+    },
+    {
+     "id": "expired",
+     "name": "치료·계약 만료",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["kia","contract_end","crystallize"] }
+    }
+   ],
+   "income": { "stage": [1,1.6,1.2] },
+   "standing": { "name": "협정 신뢰", "start": 30 },
+   "affiliations": ["RHO_CON_W","RHO_CON_BLACKSTEEL","RHO_CON_RAINBOW","RHO_CON_MUDROCK"],
+   "exits": {
+    "retire": null,
+    "fall": { "kia": "death", "contract_end": "expel", "crystallize": "death" },
+    "switch": ["RHO_OPERATOR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["w","hoederer","liskarm"]
+  },
+  {
+   "id": "RHO_PATIENT",
+   "nation": "rhodes",
+   "region": null,
+   "name": "환자",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [0,90],
+    "classes": {},
+    "gates": [
+     { "infected": true }
+    ],
+    "via": ["treatment"]
+   },
+   "stages": [
+    {
+     "id": "admit",
+     "name": "입원",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "learn", "k": 0.25 },
+     "fall": { "base": 0.04, "causes": ["crystallize","suicide"] }
+    },
+    {
+     "id": "band",
+     "name": "디스플레이 밴드",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.2 },
+     "fall": { "base": 0.04, "causes": ["crystallize","suicide"] }
+    },
+    {
+     "id": "suppressant",
+     "name": "억제제 치료",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["crystallize","suicide"] }
+    },
+    {
+     "id": "stable",
+     "name": "안정·전환 또는 III기",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["crystallize","suicide"] }
+    }
+   ],
+   "income": { "stage": [0,0.2,0.4,0.5] },
+   "standing": { "name": "치료 경과", "start": 20 },
+   "affiliations": ["RHO_PAT_PAYING","RHO_PAT_LABOR","RHO_PAT_VOLUNTEER","RHO_PAT_REMOTE"],
+   "exits": {
+    "retire": null,
+    "fall": { "crystallize": "death", "suicide": "death" },
+    "switch": ["RHO_LOGISTICS","RHO_MEDICAL","RHO_OPERATOR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["minimalist"]
+  }
+ ]
+}

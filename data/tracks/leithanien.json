@@ -1,0 +1,710 @@
+{
+ "_meta": {
+  "nation": "leithanien",
+  "source": "진로_카탈로그_v0 §7",
+  "canon": "mixed",
+  "classScale": 0.7992,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "최하층 LEI_QUAR 30은 감염 강제 전환 전용(forced)이라 빼고 재정규화."
+ },
+ "tracks": [
+  {
+   "id": "LEI_QUAR",
+   "nation": "leithanien",
+   "region": null,
+   "name": "격리구역 생활",
+   "archetype": "A5",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [0,90],
+    "classes": {},
+    "gates": [
+     { "infected": true }
+    ],
+    "via": ["diagnosed"]
+   },
+   "forced": { "infected": true, "policy": ["euthanasia","quarantine"] },
+   "stages": [
+    {
+     "id": "admit",
+     "name": "입소",
+     "title": null,
+     "minYears": 1,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.08, "causes": ["euthanasia","crystallize","suicide"] },
+     "forced": true
+    },
+    {
+     "id": "labor",
+     "name": "약값 노동",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.15 },
+     "fall": { "base": 0.08, "causes": ["euthanasia","crystallize","suicide"] },
+     "forced": true
+    },
+    {
+     "id": "severe",
+     "name": "중증",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.25 },
+     "fall": { "base": 0.08, "causes": ["euthanasia","crystallize","suicide"] },
+     "forced": true
+    },
+    {
+     "id": "end",
+     "name": "국가 안락사",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.08, "causes": ["euthanasia","crystallize","suicide"] },
+     "forced": true
+    }
+   ],
+   "income": { "stage": [0.1,0.3,0.1,0] },
+   "standing": { "name": "작업반 평판", "start": 20 },
+   "affiliations": ["LEI_QUAR_AFTERGLOW","LEI_QUAR_WOLUMONDE"],
+   "exits": {
+    "retire": null,
+    "fall": { "euthanasia": "death", "crystallize": "death", "suicide": "death" },
+    "switch": ["LEI_MUSIC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["czerny"]
+  },
+  {
+   "id": "LEI_REMNANT",
+   "nation": "leithanien",
+   "region": null,
+   "name": "위치킹 잔당",
+   "archetype": "A1",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [10,30],
+    "classes": { "q1": 0.1678 },
+    "gates": [
+     { "cap": "arts", "min": -0.8 }
+    ],
+    "via": ["kidnapped","bloodline"]
+   },
+   "stages": [
+    {
+     "id": "believer",
+     "name": "신도",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "arts", "k": 0.25 },
+     "fall": { "base": 0.08, "causes": ["arrest","experiment","kia"] }
+    },
+    {
+     "id": "chief",
+     "name": "수석",
+     "title": "수석",
+     "minYears": 8,
+     "promo": { "cap": "arts", "k": 0.1 },
+     "fall": { "base": 0.08, "causes": ["arrest","experiment","kia"] }
+    },
+    {
+     "id": "vessel",
+     "name": "그릇",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.08, "causes": ["arrest","experiment","kia"] }
+    }
+   ],
+   "income": { "stage": [0.1,0.5,0.5] },
+   "standing": { "name": "조직 신뢰", "start": 20 },
+   "affiliations": ["LEI_REM_ECHO","LEI_REM_MUDROCK"],
+   "exits": {
+    "retire": { "age": 60, "to": "LEI_INN" },
+    "fall": { "arrest": "death", "experiment": "death", "kia": "death" },
+    "switch": ["LEI_STREET"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "LEI_STREET",
+   "nation": "leithanien",
+   "region": null,
+   "name": "거리 악사",
+   "archetype": "A12",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [8,30],
+    "classes": { "q1": 0.3996, "q2": 0.0799 },
+    "gates": [
+     { "cap": "arts", "min": -0.8 }
+    ],
+    "via": ["street","audition_line"]
+   },
+   "stages": [
+    {
+     "id": "street",
+     "name": "거리 연주자",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "arts", "k": 0.22 },
+     "fall": { "base": 0.04, "causes": ["fade","arrest","starvation"] }
+    },
+    {
+     "id": "ballroom",
+     "name": "무도회장",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "arts", "k": 0.12 },
+     "fall": { "base": 0.04, "causes": ["fade","arrest","starvation"] }
+    },
+    {
+     "id": "promoted",
+     "name": "오디션 통과",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["fade","arrest","starvation"] }
+    }
+   ],
+   "income": { "stage": [0.1,0.5,1.2], "job": "musician" },
+   "standing": { "name": "명성", "start": 20 },
+   "affiliations": ["LEI_STR_PLAYER","LEI_STR_AUDITION"],
+   "exits": {
+    "retire": { "age": 60, "to": "LEI_INN" },
+    "fall": { "fade": "expel", "arrest": "prison:jail", "starvation": "death" },
+    "switch": ["LEI_MUSIC","LEI_TUNER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "LEI_TUNER",
+   "nation": "leithanien",
+   "region": null,
+   "name": "조율사·악기점",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,35],
+    "classes": { "q1": 0.1199, "q2": 0.1998 },
+    "gates": [],
+    "via": ["cleaner","apprentice"]
+   },
+   "stages": [
+    {
+     "id": "cleaner",
+     "name": "청소부",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.02, "causes": ["ruin","infected"] }
+    },
+    {
+     "id": "tuner",
+     "name": "조율사",
+     "title": "조율사",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.02, "causes": ["ruin","infected"] }
+    },
+    {
+     "id": "shop",
+     "name": "악기점·음반 가게 주인",
+     "title": "주인",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["ruin","infected"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.9,1.6], "job": "artisan" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["LEI_TUN_PIANO","LEI_TUN_ORGAN","LEI_TUN_RECORD"],
+   "exits": {
+    "retire": { "age": 60, "to": "LEI_INN" },
+    "fall": { "ruin": "demote", "infected": "infected" },
+    "switch": ["LEI_INN","LEI_MUSIC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["czerny"]
+  },
+  {
+   "id": "LEI_INN",
+   "nation": "leithanien",
+   "region": null,
+   "name": "여관·상인·카페",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q2": 0.1598, "q3": 0.1199 },
+    "gates": [],
+    "via": ["hire","family"]
+   },
+   "stages": [
+    {
+     "id": "clerk",
+     "name": "점원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.025, "causes": ["ruin","raid"] }
+    },
+    {
+     "id": "owner",
+     "name": "주인",
+     "title": "주인",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.025, "causes": ["ruin","raid"] }
+    },
+    {
+     "id": "hub",
+     "name": "교역 기착지 운영",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["ruin","raid"] }
+    }
+   ],
+   "income": { "stage": [0.5,1.1,2], "job": "shopkeeper" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["LEI_INN_WOLUMONDE","LEI_INN_CAFE"],
+   "exits": {
+    "retire": { "age": 60, "to": "LEI_INN" },
+    "fall": { "ruin": "expel", "raid": "injured" },
+    "switch": ["LEI_TUNER","LEI_CIVIC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "LEI_FARM",
+   "nation": "leithanien",
+   "region": null,
+   "name": "카프리니 정주민·농민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,40],
+    "classes": { "q2": 0.1598 },
+    "gates": [
+     { "urban": false, "weight": 3 },
+     { "race": ["caprinae","elafia"], "weight": 1.5 }
+    ],
+    "via": ["family"]
+   },
+   "stages": [
+    {
+     "id": "family",
+     "name": "가족",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.015, "causes": ["ruin","infected","catastrophe"] },
+     "canon": false
+    },
+    {
+     "id": "farmer",
+     "name": "농민",
+     "title": null,
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.015, "causes": ["ruin","infected","catastrophe"] },
+     "canon": false
+    },
+    {
+     "id": "chief",
+     "name": "촌장",
+     "title": "촌장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.015, "causes": ["ruin","infected","catastrophe"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.3,0.6,1], "job": "farmer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["LEI_FARM_CAPRINAE","LEI_FARM_WINTERWISP"],
+   "exits": {
+    "retire": { "age": 60, "to": "LEI_INN" },
+    "fall": { "ruin": "expel", "infected": "infected", "catastrophe": "death" },
+    "switch": ["LEI_INN"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "사다리 창작. 1077 이전 출생자는 선제후 공물 이벤트"
+  },
+  {
+   "id": "LEI_MUSIC",
+   "nation": "leithanien",
+   "region": null,
+   "name": "음악가",
+   "archetype": "A12",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [10,30],
+    "classes": { "q1": 0.1119, "q2": 0.0799, "q3": 0.1199, "q4": 0.1598, "q5": 0.1598 },
+    "gates": [
+     { "cap": "arts", "min": 0.5 }
+    ],
+    "via": ["audition","patron","street"]
+   },
+   "stages": [
+    {
+     "id": "local",
+     "name": "지역 무도회장",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "arts", "k": 0.22 },
+     "fall": { "base": 0.035, "causes": ["scandal","fade","assassination"] }
+    },
+    {
+     "id": "patron",
+     "name": "영주 후원 연주회",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "arts", "k": 0.12 },
+     "fall": { "base": 0.035, "causes": ["scandal","fade","assassination"] }
+    },
+    {
+     "id": "royal",
+     "name": "왕실악단",
+     "title": "단원",
+     "minYears": 7,
+     "promo": { "cap": "arts", "k": 0.06 },
+     "fall": { "base": 0.035, "causes": ["scandal","fade","assassination"] }
+    },
+    {
+     "id": "kapellmeister",
+     "name": "악장",
+     "title": "악장",
+     "minYears": 10,
+     "promo": { "cap": "arts", "k": 0.02 },
+     "fall": { "base": 0.035, "causes": ["scandal","fade","assassination"] }
+    },
+    {
+     "id": "empress",
+     "name": "여황",
+     "title": "여황",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["scandal","fade","assassination"] }
+    }
+   ],
+   "income": { "stage": [0.5,1.5,3.5,8,30], "job": "musician" },
+   "standing": { "name": "명성", "start": 20 },
+   "affiliations": ["LEI_MUS_ORCHESTRA","LEI_MUS_AFTERGLOW","LEI_MUS_TOWER"],
+   "exits": {
+    "retire": { "age": 65, "to": "LEI_TUNER" },
+    "fall": { "scandal": "disgrace", "fade": "expel", "assassination": "death" },
+    "switch": ["LEI_UNIV"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["ebenholz","czerny"]
+  },
+  {
+   "id": "LEI_GEND",
+   "nation": "leithanien",
+   "region": null,
+   "name": "헌병",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [17,28],
+    "classes": { "q2": 0.1199, "q3": 0.1199, "q4": 0.1998 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 },
+     { "rel": "<=cultural" }
+    ],
+    "via": ["enlist","test"]
+   },
+   "stages": [
+    {
+     "id": "private",
+     "name": "병",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.035, "causes": ["kia","arrest","courtmartial"] }
+    },
+    {
+     "id": "tested",
+     "name": "적응성 테스트 통과",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["kia","arrest","courtmartial"] }
+    },
+    {
+     "id": "officer",
+     "name": "장교",
+     "title": "장교",
+     "minYears": 7,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.035, "causes": ["kia","arrest","courtmartial"] }
+    },
+    {
+     "id": "chief",
+     "name": "헌병대장",
+     "title": "대장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["kia","arrest","courtmartial"] }
+    }
+   ],
+   "income": { "stage": [0.8,1.2,2.5,6], "job": "gendarme" },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["LEI_GEND_CORPS","LEI_GEND_GESETZ","LEI_GEND_TOWER"],
+   "exits": {
+    "retire": { "age": 55, "to": "LEI_INN" },
+    "fall": { "kia": "death", "arrest": "prison:jail", "courtmartial": "prison:jail" },
+    "switch": ["LEI_CIVIC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "LEI_CIVIC",
+   "nation": "leithanien",
+   "region": null,
+   "name": "시 행정",
+   "archetype": "A3",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,35],
+    "classes": { "q3": 0.1598 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 },
+     { "rel": "<=cultural" }
+    ],
+    "via": ["clerk"]
+   },
+   "stages": [
+    {
+     "id": "scribe",
+     "name": "서기",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.2 },
+     "fall": { "base": 0.025, "causes": ["impeach","arrest","scandal"] },
+     "canon": false
+    },
+    {
+     "id": "schultz",
+     "name": "치안관",
+     "title": "치안관",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.025, "causes": ["impeach","arrest","scandal"] }
+    },
+    {
+     "id": "council",
+     "name": "시의원",
+     "title": "시의원",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.025, "causes": ["impeach","arrest","scandal"] }
+    },
+    {
+     "id": "rathaus",
+     "name": "라트하우스",
+     "title": "참사",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["impeach","arrest","scandal"] }
+    }
+   ],
+   "income": { "stage": [0.9,1.6,3,5], "job": "civil_servant" },
+   "standing": { "name": "관청 평판", "start": 20 },
+   "affiliations": ["LEI_CIV_COUNCIL","LEI_CIV_RATHAUS"],
+   "exits": {
+    "retire": { "age": 65, "to": "LEI_INN" },
+    "fall": { "impeach": "disgrace", "arrest": "prison:jail", "scandal": "disgrace" },
+    "switch": ["LEI_UNIV"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "사다리 창작"
+  },
+  {
+   "id": "LEI_UNIV",
+   "nation": "leithanien",
+   "region": null,
+   "name": "대학·학자",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [17,25],
+    "classes": { "q3": 0.1998, "q4": 0.0799 },
+    "gates": [
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["admission"]
+   },
+   "stages": [
+    {
+     "id": "student",
+     "name": "학생",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["disappear","scandal","arrest"] }
+    },
+    {
+     "id": "assistant",
+     "name": "조교",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["disappear","scandal","arrest"] }
+    },
+    {
+     "id": "professor",
+     "name": "교수",
+     "title": "교수",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["disappear","scandal","arrest"] }
+    }
+   ],
+   "income": { "stage": [0.2,1.2,3.5], "job": "scholar" },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["LEI_UNI_LUDWIGS","LEI_UNI_LEOPOLD","LEI_UNI_GUTENBERG"],
+   "exits": {
+    "retire": { "age": 70, "to": "LEI_INN" },
+    "fall": { "disappear": "exile", "scandal": "disgrace", "arrest": "prison:jail" },
+    "switch": ["LEI_CIVIC"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "LEI_ARTS",
+   "nation": "leithanien",
+   "region": null,
+   "name": "아츠 유닛 장인·화가",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q3": 0.0799 },
+    "gates": [
+     { "cap": "arts", "min": -0.8 }
+    ],
+    "via": ["apprentice"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "견습",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "arts", "k": 0.2 },
+     "fall": { "base": 0.025, "causes": ["ruin","arrest"] }
+    },
+    {
+     "id": "master",
+     "name": "장인",
+     "title": "장인",
+     "minYears": 8,
+     "promo": { "cap": "arts", "k": 0.1 },
+     "fall": { "base": 0.025, "causes": ["ruin","arrest"] }
+    },
+    {
+     "id": "atelier",
+     "name": "공방주",
+     "title": "공방주",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["ruin","arrest"] }
+    }
+   ],
+   "income": { "stage": [0.4,1.3,2.5], "job": "artisan" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["LEI_ARTS_SCHMITZ","LEI_ARTS_PAINTER"],
+   "exits": {
+    "retire": { "age": 60, "to": "LEI_INN" },
+    "fall": { "ruin": "expel", "arrest": "disgrace" },
+    "switch": ["LEI_TUNER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "사다리 창작"
+  },
+  {
+   "id": "LEI_COURT",
+   "nation": "leithanien",
+   "region": null,
+   "name": "선제후령 궁정",
+   "archetype": "A3",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,35],
+    "classes": { "q4": 0.3596, "q5": 0.6394 },
+    "gates": [
+     { "status": "noble", "weight": 5 },
+     { "cap": "ties", "min": 0.5 },
+     { "rel": "<=subtle" }
+    ],
+    "via": ["appointed","heir"]
+   },
+   "stages": [
+    {
+     "id": "page",
+     "name": "시종",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "ties", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["purge","poison","scandal"] }
+    },
+    {
+     "id": "official",
+     "name": "궁정 관리",
+     "title": "궁정 관리",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["purge","poison","scandal"] }
+    },
+    {
+     "id": "chancellor",
+     "name": "재상",
+     "title": "재상",
+     "minYears": 10,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["purge","poison","scandal"] },
+     "canon": false
+    },
+    {
+     "id": "elector",
+     "name": "선제후",
+     "title": "선제후",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["purge","poison","scandal"] }
+    }
+   ],
+   "income": { "stage": [1.5,4,10,30] },
+   "standing": { "name": "관청 평판", "start": 20 },
+   "affiliations": ["LEI_COURT_ELECTOR","LEI_COURT_VOICE"],
+   "exits": {
+    "retire": { "age": 70, "to": "LEI_UNIV" },
+    "fall": { "purge": "exile", "poison": "death", "scandal": "disgrace" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["ebenholz"]
+  }
+ ]
+}

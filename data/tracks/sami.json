@@ -1,0 +1,498 @@
+{
+ "_meta": {
+  "nation": "sami",
+  "source": "진로_카탈로그_v0 §5",
+  "canon": "mixed",
+  "classScale": 0.5876,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "계층은 종교 위계로 대체(카탈로그). q1=추방자·고아, q2=일반 부족민, q3=샤먼 가계, q4=전사·사냥꾼 가문, q5=사제·부족장."
+ },
+ "tracks": [
+  {
+   "id": "SAM_OUTCAST",
+   "nation": "sami",
+   "region": null,
+   "name": "추방자·국경 방랑",
+   "archetype": "A7",
+   "canon": true,
+   "itinerant": true,
+   "route": ["sami","ursus"],
+   "entry": {
+    "ages": [8,50],
+    "classes": { "q1": 0.235 },
+    "gates": [],
+    "via": ["exiled","orphan","infected"]
+   },
+   "stages": [
+    {
+     "id": "wander",
+     "name": "방랑",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.07, "causes": ["freezing","erosion","arrest"] }
+    },
+    {
+     "id": "border",
+     "name": "국경 떠돌이",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "skill", "k": 0.05 },
+     "fall": { "base": 0.07, "causes": ["freezing","erosion","arrest"] }
+    },
+    {
+     "id": "readopt",
+     "name": "재입양·귀속",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.07, "causes": ["freezing","erosion","arrest"] }
+    }
+   ],
+   "income": { "stage": [0.05,0.2,0.4] },
+   "standing": { "name": "부족 신망", "start": 20 },
+   "affiliations": ["SAM_OUT_BORDER","SAM_OUT_WANTED"],
+   "exits": {
+    "retire": null,
+    "fall": { "freezing": "death", "erosion": "death", "arrest": "prison:camp" },
+    "switch": ["SAM_TRIBE","SAM_HUNTER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["santalla"]
+  },
+  {
+   "id": "SAM_TRIBE",
+   "nation": "sami",
+   "region": null,
+   "name": "일반 부족민",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [10,50],
+    "classes": { "q1": 0.1469, "q2": 0.2057 },
+    "gates": [],
+    "via": ["born"]
+   },
+   "stages": [
+    {
+     "id": "child",
+     "name": "아이",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["freezing","erosion","ruin","starvation"] }
+    },
+    {
+     "id": "adult",
+     "name": "성인 부족민",
+     "title": null,
+     "minYears": 15,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["freezing","erosion","ruin","starvation"] }
+    },
+    {
+     "id": "elder",
+     "name": "연장자",
+     "title": "연장자",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["freezing","erosion","ruin","starvation"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.5,0.7], "job": "herder" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["SAM_TRIBE_MOUNTAIN","SAM_TRIBE_FOREST","SAM_TRIBE_MARSH"],
+   "exits": {
+    "retire": { "age": 60, "to": "SAM_TRIBE" },
+    "fall": { "freezing": "death", "erosion": "death", "ruin": "demote", "starvation": "death" },
+    "switch": ["SAM_HUNTER","SAM_TRADER","SAM_SAR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "SAM_HUNTER",
+   "nation": "sami",
+   "region": null,
+   "name": "사냥꾼",
+   "archetype": "A7",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [10,25],
+    "classes": { "q1": 0.1469, "q2": 0.1175, "q3": 0.0881, "q4": 0.1763 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["follow","adopted"]
+   },
+   "stages": [
+    {
+     "id": "follow",
+     "name": "수련",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.12 },
+     "fall": { "base": 0.04, "causes": ["beast","freezing","erosion"] }
+    },
+    {
+     "id": "hunter",
+     "name": "사냥꾼",
+     "title": "사냥꾼",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.06 },
+     "fall": { "base": 0.04, "causes": ["beast","freezing","erosion"] }
+    },
+    {
+     "id": "veteran",
+     "name": "노련한 사냥꾼",
+     "title": "명사냥꾼",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["beast","freezing","erosion"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.6,1], "job": "hunter" },
+   "standing": { "name": "부족 신망", "start": 20 },
+   "affiliations": ["SAM_HUNT_FOREST","SAM_HUNT_CYCLOPS"],
+   "exits": {
+    "retire": { "age": 60, "to": "SAM_TRIBE" },
+    "fall": { "beast": "death", "freezing": "death", "erosion": "death" },
+    "switch": ["SAM_GUIDE","SAM_WARRIOR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["typhon"]
+  },
+  {
+   "id": "SAM_WARRIOR",
+   "nation": "sami",
+   "region": null,
+   "name": "북부 전사",
+   "archetype": "A7",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,25],
+    "classes": { "q2": 0.0881, "q3": 0.0881, "q4": 0.2938, "q5": 0.1175 },
+    "gates": [
+     { "cap": "skill", "min": 0.5 }
+    ],
+    "via": ["apprentice","war"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "견습 전사",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.12 },
+     "fall": { "base": 0.055, "causes": ["kia","erosion","freezing"] }
+    },
+    {
+     "id": "warrior",
+     "name": "전사",
+     "title": "전사",
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.06 },
+     "fall": { "base": 0.055, "causes": ["kia","erosion","freezing"] }
+    },
+    {
+     "id": "chief",
+     "name": "전사장",
+     "title": "전사장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.055, "causes": ["kia","erosion","freezing"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.2,0.6,1], "job": "tribal_warrior" },
+   "standing": { "name": "부족 신망", "start": 20 },
+   "affiliations": ["SAM_WAR_WOUNDED","SAM_WAR_BORDER"],
+   "exits": {
+    "retire": { "age": 45, "to": "SAM_TRIBE" },
+    "fall": { "kia": "death", "erosion": "death", "freezing": "death" },
+    "switch": ["SAM_HUNTER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "SAM_SAR",
+   "nation": "sami",
+   "region": null,
+   "name": "수색구조대",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,30],
+    "classes": { "q2": 0.0588, "q3": 0.0588 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["volunteer"]
+   },
+   "stages": [
+    {
+     "id": "member",
+     "name": "대원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.045, "causes": ["freezing","injury","disappear"] }
+    },
+    {
+     "id": "senior",
+     "name": "선임",
+     "title": "선임",
+     "minYears": 6,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["freezing","injury","disappear"] }
+    },
+    {
+     "id": "leader",
+     "name": "대장",
+     "title": "대장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["freezing","injury","disappear"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.4,0.7,1] },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["SAM_SAR_MARSH"],
+   "exits": {
+    "retire": { "age": 50, "to": "SAM_TRIBE" },
+    "fall": { "freezing": "death", "injury": "injured", "disappear": "death:freezing" },
+    "switch": ["SAM_GUIDE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "SAM_SHAMAN",
+   "nation": "sami",
+   "region": null,
+   "name": "샤먼",
+   "archetype": "A7",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [8,20],
+    "classes": { "q1": 0.0588, "q3": 0.3526, "q4": 0.1175, "q5": 0.4701 },
+    "gates": [
+     { "cap": "arts", "min": 0.5 }
+    ],
+    "via": ["sign","disciple","tree_adopt"]
+   },
+   "stages": [
+    {
+     "id": "apprentice",
+     "name": "샤먼 견습생",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "arts", "k": 0.12 },
+     "fall": { "base": 0.03, "causes": ["erosion","exile","infected"] }
+    },
+    {
+     "id": "shaman",
+     "name": "샤먼",
+     "title": "샤먼",
+     "minYears": 12,
+     "promo": { "cap": "arts", "k": 0.06 },
+     "fall": { "base": 0.03, "causes": ["erosion","exile","infected"] }
+    },
+    {
+     "id": "candidate",
+     "name": "사제 후보",
+     "title": null,
+     "minYears": 10,
+     "promo": { "cap": "arts", "k": 0.03 },
+     "fall": { "base": 0.03, "causes": ["erosion","exile","infected"] }
+    },
+    {
+     "id": "priest",
+     "name": "눈의 사제",
+     "title": "사제",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["erosion","exile","infected"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.7,1,1.5], "job": "snowpriest" },
+   "standing": { "name": "부족 신망", "start": 20 },
+   "affiliations": ["SAM_SHA_DISCIPLE","SAM_SHA_TREE"],
+   "exits": {
+    "retire": { "age": 80, "to": "SAM_TRIBE" },
+    "fall": { "erosion": "death", "exile": "exile", "infected": "expel" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["santalla"]
+  },
+  {
+   "id": "SAM_TRADER",
+   "nation": "sami",
+   "region": null,
+   "name": "시장 교역",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [12,35],
+    "classes": { "q2": 0.0588 },
+    "gates": [],
+    "via": ["helper"]
+   },
+   "stages": [
+    {
+     "id": "helper",
+     "name": "보조",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["ruin","raid","exile"] }
+    },
+    {
+     "id": "exchange",
+     "name": "교환상",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["ruin","raid","exile"] }
+    },
+    {
+     "id": "broker",
+     "name": "캐러밴 중개",
+     "title": "중개인",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["ruin","raid","exile"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.8,1.6], "job": "merchant" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["SAM_TRD_URSUS","SAM_TRD_CANDLE"],
+   "exits": {
+    "retire": { "age": 60, "to": "SAM_TRIBE" },
+    "fall": { "ruin": "expel", "raid": "death", "exile": "exile" },
+    "switch": ["SAM_GUIDE","SAM_TRIBE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "사다리 창작"
+  },
+  {
+   "id": "SAM_GUIDE",
+   "nation": "sami",
+   "region": null,
+   "name": "남부 안내인·연락책",
+   "archetype": "A6",
+   "canon": true,
+   "itinerant": true,
+   "route": ["sami","ursus","columbia"],
+   "entry": {
+    "ages": [14,35],
+    "classes": { "q2": 0.0294 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["porter","contact"]
+   },
+   "stages": [
+    {
+     "id": "porter",
+     "name": "짐꾼",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "ties", "k": 0.22 },
+     "fall": { "base": 0.04, "causes": ["freezing","accident","contract_end"] }
+    },
+    {
+     "id": "guide",
+     "name": "안내인",
+     "title": "안내인",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["freezing","accident","contract_end"] }
+    },
+    {
+     "id": "liaison",
+     "name": "연락책",
+     "title": "연락책",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["freezing","accident","contract_end"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.9,1.8] },
+   "standing": { "name": "계약 평판", "start": 20 },
+   "affiliations": ["SAM_GUI_CHAPAT","SAM_GUI_EXPEDITION","SAM_GUI_RHINE"],
+   "exits": {
+    "retire": { "age": 60, "to": "SAM_TRIBE" },
+    "fall": { "freezing": "death", "accident": "injured", "contract_end": "expel" },
+    "switch": ["SAM_TRADER","SAM_RESORT"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["typhon"]
+  },
+  {
+   "id": "SAM_RESORT",
+   "nation": "sami",
+   "region": null,
+   "name": "남부 리조트 노동",
+   "archetype": "A10",
+   "canon": false,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,35],
+    "classes": { "q2": 0.0294 },
+    "gates": [],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "hand",
+     "name": "잡역",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt"] },
+     "canon": false
+    },
+    {
+     "id": "staff",
+     "name": "호텔 직원",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt"] },
+     "canon": false
+    },
+    {
+     "id": "manager",
+     "name": "매니저",
+     "title": "매니저",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.5,0.9,1.6] },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["SAM_RES_CHAPAT","SAM_RES_SPRING"],
+   "exits": {
+    "retire": { "age": 60, "to": "SAM_TRIBE" },
+    "fall": { "layoff": "expel", "bankrupt": "expel" },
+    "switch": ["SAM_TRADER"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "통째로 창작(개발 중만 캐논)"
+  }
+ ]
+}

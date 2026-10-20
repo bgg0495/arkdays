@@ -74,6 +74,7 @@ export function die(sim, causeId, label) {
   if (S.phase === 'dead') return;
   const c = data.causeById[causeId];
   S.deathAt = { age: S.age, year: S.by + S.age, cause: causeId, label: c ? c.label : (label || causeId), where: S.cur, infected: S.ori.on };
+  if (S.rhodes === true) S.rhodes = { via: S.flags.rhodesVia || 'treatment', status: S.ori.on ? 'patient' : 'operator', dept: S.ori.on ? 'patient' : 'logistics', since: S.flags.rhodesAt ?? S.age };   // 콘텐츠가 같은 해에 true 로 둔 경우
   S.phase = 'dead';
   S.pending = null;
   S.queue = [];

@@ -1,0 +1,653 @@
+{
+ "_meta": {
+  "nation": "kjerag",
+  "source": "진로_카탈로그_v0 §6",
+  "canon": "mixed",
+  "classScale": 1,
+  "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
+  "note": "단계 minYears·promo.k·fall.base·income·classes·gates 수치는 전부 창작(명세 §4·§13 기본값). canon:false 표시가 없는 단계 명칭은 카탈로그 캐논 명칭."
+ },
+ "tracks": [
+  {
+   "id": "KJE_EXILE",
+   "nation": "kjerag",
+   "region": null,
+   "name": "추방자·국외 이주",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": true,
+   "route": ["ursus","columbia","leithanien"],
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q1": 0.5 },
+    "gates": [
+     { "eth": "outsider", "weight": 3 }
+    ],
+    "via": ["mixed_marriage","ruined_house"]
+   },
+   "stages": [
+    {
+     "id": "leave",
+     "name": "국외 이주",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.04, "causes": ["ruin","accident","infected"] }
+    },
+    {
+     "id": "labor",
+     "name": "이주 노동",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["ruin","accident","infected"] }
+    },
+    {
+     "id": "settled",
+     "name": "타향 정착",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["ruin","accident","infected"] }
+    }
+   ],
+   "income": { "stage": [0.2,0.5,0.8], "job": "laborer" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["KJE_EX_CHERNOBOG","KJE_EX_HOUSE"],
+   "exits": {
+    "retire": { "age": 60, "to": "KJE_FACTORY" },
+    "fall": { "ruin": "expel", "accident": "death", "infected": "infected" },
+    "switch": ["KJE_MINE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KJE_MINE",
+   "nation": "kjerag",
+   "region": null,
+   "name": "산악 광부",
+   "archetype": "A5",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,40],
+    "classes": { "q1": 0.3, "q2": 0.3 },
+    "gates": [
+     { "urban": false, "weight": 1.5 }
+    ],
+    "via": ["village"]
+   },
+   "stages": [
+    {
+     "id": "hand",
+     "name": "잡역",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.045, "causes": ["mine","avalanche","crystallize","catastrophe"] },
+     "oriMul": 3
+    },
+    {
+     "id": "miner",
+     "name": "광부",
+     "title": null,
+     "minYears": 10,
+     "promo": { "cap": "skill", "k": 0.04 },
+     "fall": { "base": 0.045, "causes": ["mine","avalanche","crystallize","catastrophe"] },
+     "oriMul": 6
+    },
+    {
+     "id": "foreman",
+     "name": "감독",
+     "title": "감독",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.045, "causes": ["mine","avalanche","crystallize","catastrophe"] },
+     "canon": false,
+     "oriMul": 2
+    }
+   ],
+   "income": { "stage": [0.4,0.8,1.6], "job": "ori_miner" },
+   "standing": { "name": "작업반 평판", "start": 20 },
+   "affiliations": ["KJE_MINE_PAILLOSH"],
+   "exits": {
+    "retire": { "age": 60, "to": "KJE_FACTORY" },
+    "fall": { "mine": "death", "avalanche": "death", "crystallize": "death", "catastrophe": "death" },
+    "switch": ["KJE_FACTORY","KJE_SCHOLAR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["aurora"]
+  },
+  {
+   "id": "KJE_FACTORY",
+   "nation": "kjerag",
+   "region": null,
+   "name": "투리쿰 공장·철도",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [15,40],
+    "classes": { "q2": 0.2 },
+    "gates": [
+     { "urban": true, "weight": 1.5 }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "worker",
+     "name": "공원·철도원",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.025, "causes": ["accident","layoff"] }
+    },
+    {
+     "id": "skilled",
+     "name": "숙련",
+     "title": null,
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.025, "causes": ["accident","layoff"] }
+    },
+    {
+     "id": "foreman",
+     "name": "반장",
+     "title": "반장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["accident","layoff"] },
+     "canon": false
+    }
+   ],
+   "income": { "stage": [0.6,1,1.6], "job": "railway" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["KJE_FAC_TURICUM","KJE_FAC_RAIL"],
+   "exits": {
+    "retire": { "age": 60, "to": "KJE_FACTORY" },
+    "fall": { "accident": "injured", "layoff": "expel" },
+    "switch": ["KJE_KT","KJE_TOUR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KJE_FOREST",
+   "nation": "kjerag",
+   "region": null,
+   "name": "숲 전령·마차",
+   "archetype": "A11",
+   "canon": true,
+   "itinerant": true,
+   "route": ["kjerag"],
+   "entry": {
+    "ages": [14,35],
+    "classes": { "q2": 0.1 },
+    "gates": [
+     { "urban": false }
+    ],
+    "via": ["coachman"]
+   },
+   "stages": [
+    {
+     "id": "coachman",
+     "name": "마부",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["freezing","avalanche","ruin"] },
+     "canon": false
+    },
+    {
+     "id": "courier",
+     "name": "전령",
+     "title": "전령",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["freezing","avalanche","ruin"] },
+     "canon": false
+    },
+    {
+     "id": "station",
+     "name": "기지국 직원",
+     "title": null,
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["freezing","avalanche","ruin"] }
+    }
+   ],
+   "income": { "stage": [0.4,0.8,1.2], "job": "driver" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["KJE_FOR_BROWNTAIL"],
+   "exits": {
+    "retire": { "age": 60, "to": "KJE_FACTORY" },
+    "fall": { "freezing": "death", "avalanche": "death", "ruin": "expel" },
+    "switch": ["KJE_FACTORY","KJE_GUIDE"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "사다리 창작"
+  },
+  {
+   "id": "KJE_GUIDE",
+   "nation": "kjerag",
+   "region": null,
+   "name": "설산 길잡이·짐꾼",
+   "archetype": "A11",
+   "canon": false,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,35],
+    "classes": { "q2": 0.05 },
+    "gates": [
+     { "cap": "skill", "min": -0.8 }
+    ],
+    "via": ["porter"]
+   },
+   "stages": [
+    {
+     "id": "porter",
+     "name": "짐꾼",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "skill", "k": 0.2 },
+     "fall": { "base": 0.04, "causes": ["avalanche","disappear","ruin"] },
+     "canon": false
+    },
+    {
+     "id": "guide",
+     "name": "길잡이",
+     "title": "길잡이",
+     "minYears": 8,
+     "promo": { "cap": "skill", "k": 0.1 },
+     "fall": { "base": 0.04, "causes": ["avalanche","disappear","ruin"] },
+     "canon": false
+    },
+    {
+     "id": "permit",
+     "name": "등반 허가 중개",
+     "title": "중개인",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.04, "causes": ["avalanche","disappear","ruin"] }
+    }
+   ],
+   "income": { "stage": [0.3,0.8,1.5], "job": "mountain_guide" },
+   "standing": { "name": "동네 평판", "start": 20 },
+   "affiliations": ["KJE_GUI_JUNGFRAU"],
+   "exits": {
+    "retire": { "age": 60, "to": "KJE_FACTORY" },
+    "fall": { "avalanche": "death", "disappear": "death:avalanche", "ruin": "expel" },
+    "switch": ["KJE_TOUR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": [],
+   "note": "허가제·실종만 캐논"
+  },
+  {
+   "id": "KJE_CLAN",
+   "nation": "kjerag",
+   "region": null,
+   "name": "가문 가신",
+   "archetype": "A4",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [14,30],
+    "classes": { "q1": 0.2, "q2": 0.15, "q3": 0.15, "q4": 0.4 },
+    "gates": [
+     { "cap": "ties", "min": -0.8 }
+    ],
+    "via": ["picked","debt_of_grace"]
+   },
+   "stages": [
+    {
+     "id": "guard",
+     "name": "호위병",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "ties", "k": 0.22 },
+     "fall": { "base": 0.035, "causes": ["kia","betrayal","poison"] }
+    },
+    {
+     "id": "escort",
+     "name": "호위",
+     "title": "호위",
+     "minYears": 5,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.035, "causes": ["kia","betrayal","poison"] }
+    },
+    {
+     "id": "steward",
+     "name": "집사·비서",
+     "title": "집사",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.035, "causes": ["kia","betrayal","poison"] }
+    },
+    {
+     "id": "retainer",
+     "name": "가신",
+     "title": "가신",
+     "minYears": 8,
+     "promo": { "cap": "ties", "k": 0.02 },
+     "fall": { "base": 0.035, "causes": ["kia","betrayal","poison"] }
+    },
+    {
+     "id": "general",
+     "name": "장군·참모",
+     "title": "참모",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.035, "causes": ["kia","betrayal","poison"] }
+    }
+   ],
+   "income": { "stage": [0.6,1,1.8,3,6] },
+   "standing": { "name": "군공", "start": 20 },
+   "affiliations": ["KJE_CLAN_SILVERASH","KJE_CLAN_PAILLOSH","KJE_CLAN_BROWNTAIL"],
+   "exits": {
+    "retire": { "age": 60, "to": "KJE_TOUR" },
+    "fall": { "kia": "death", "betrayal": "exile", "poison": "death" },
+    "switch": ["KJE_KT"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["silverash","gulo"]
+  },
+  {
+   "id": "KJE_COURT",
+   "nation": "kjerag",
+   "region": null,
+   "name": "만주원",
+   "archetype": "A8",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [10,25],
+    "classes": { "q2": 0.02, "q3": 0.1, "q4": 0.3, "q5": 0.3 },
+    "gates": [
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["monastery","maid"]
+   },
+   "stages": [
+    {
+     "id": "novice",
+     "name": "수도사·시녀",
+     "title": null,
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.18 },
+     "fall": { "base": 0.03, "causes": ["demotion","poison","arrest"] }
+    },
+    {
+     "id": "elder",
+     "name": "장로·시녀장",
+     "title": "장로",
+     "minYears": 10,
+     "promo": { "cap": "learn", "k": 0.08 },
+     "fall": { "base": 0.03, "causes": ["demotion","poison","arrest"] }
+    },
+    {
+     "id": "grand",
+     "name": "대장로·성녀",
+     "title": "대장로",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["demotion","poison","arrest"] }
+    }
+   ],
+   "income": { "stage": [0.3,1.2,4], "job": "priest" },
+   "standing": { "name": "교단 신망", "start": 20 },
+   "affiliations": ["KJE_COURT_ELDERS","KJE_COURT_MAIDS"],
+   "exits": {
+    "retire": { "age": 80, "to": "KJE_TOUR" },
+    "fall": { "demotion": "demote", "poison": "death", "arrest": "prison:jail" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["pramanix"],
+   "note": "입문 절차 창작. 1101 이후 좌천 시대 분기는 콘텐츠"
+  },
+  {
+   "id": "KJE_KT",
+   "nation": "kjerag",
+   "region": null,
+   "name": "카란 무역 집행원",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,35],
+    "classes": { "q2": 0.15, "q3": 0.45, "q4": 0.2 },
+    "gates": [
+     { "year": [1090,9999] },
+     { "cap": "learn", "min": -0.8 }
+    ],
+    "via": ["hire","graduate"]
+   },
+   "stages": [
+    {
+     "id": "executor",
+     "name": "집행원",
+     "title": "집행원",
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.025, "causes": ["layoff","arrest","scandal"] }
+    },
+    {
+     "id": "manager",
+     "name": "매니저",
+     "title": "매니저",
+     "minYears": 5,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.025, "causes": ["layoff","arrest","scandal"] }
+    },
+    {
+     "id": "exec",
+     "name": "임원",
+     "title": "임원",
+     "minYears": 7,
+     "promo": { "cap": "learn", "k": 0.05 },
+     "fall": { "base": 0.025, "causes": ["layoff","arrest","scandal"] }
+    },
+    {
+     "id": "cto",
+     "name": "CTO/CEO",
+     "title": "CEO",
+     "minYears": 8,
+     "promo": { "cap": "learn", "k": 0.02 },
+     "fall": { "base": 0.025, "causes": ["layoff","arrest","scandal"] }
+    },
+    {
+     "id": "chair",
+     "name": "회장",
+     "title": "회장",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.025, "causes": ["layoff","arrest","scandal"] }
+    }
+   ],
+   "income": { "stage": [1,1.8,3.5,8,20] },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["KJE_KT_DEPT","KJE_KT_SNOWDEVIL"],
+   "exits": {
+    "retire": { "age": 60, "to": "KJE_FACTORY" },
+    "fall": { "layoff": "expel", "arrest": "prison:jail", "scandal": "disgrace" },
+    "switch": ["KJE_TOUR"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["gnosis","silverash"]
+  },
+  {
+   "id": "KJE_SCHOLAR",
+   "nation": "kjerag",
+   "region": null,
+   "name": "장학 유학생",
+   "archetype": "A9",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,22],
+    "classes": { "q2": 0.03, "q3": 0.05 },
+    "gates": [
+     { "year": [1090,9999] },
+     { "cap": "learn", "min": 0.5 }
+    ],
+    "via": ["scholarship"]
+   },
+   "stages": [
+    {
+     "id": "abroad",
+     "name": "유학",
+     "title": null,
+     "minYears": 4,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.03, "causes": ["ruin","disappear"] }
+    },
+    {
+     "id": "return",
+     "name": "귀환",
+     "title": null,
+     "minYears": 2,
+     "promo": { "cap": "learn", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["ruin","disappear"] }
+    },
+    {
+     "id": "professional",
+     "name": "전문직",
+     "title": "전문직",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["ruin","disappear"] }
+    }
+   ],
+   "income": { "stage": [0.3,1.5,3] },
+   "standing": { "name": "연구 실적", "start": 20 },
+   "affiliations": ["KJE_SCH_COLUMBIA","KJE_SCH_RHINE"],
+   "exits": {
+    "retire": { "age": 60, "to": "KJE_KT" },
+    "fall": { "ruin": "expel", "disappear": "exile" },
+    "switch": ["KJE_KT"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["aurora"]
+  },
+  {
+   "id": "KJE_TOUR",
+   "nation": "kjerag",
+   "region": null,
+   "name": "관광업",
+   "archetype": "A10",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [16,35],
+    "classes": { "q3": 0.25 },
+    "gates": [
+     { "year": [1097,9999] }
+    ],
+    "via": ["hire"]
+   },
+   "stages": [
+    {
+     "id": "staff",
+     "name": "종업원",
+     "title": null,
+     "minYears": 3,
+     "promo": { "cap": "learn", "k": 0.22 },
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt","catastrophe"] }
+    },
+    {
+     "id": "chef",
+     "name": "주방장·매니저",
+     "title": "매니저",
+     "minYears": 6,
+     "promo": { "cap": "learn", "k": 0.12 },
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt","catastrophe"] }
+    },
+    {
+     "id": "director",
+     "name": "지배인",
+     "title": "지배인",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.02, "causes": ["layoff","bankrupt","catastrophe"] }
+    }
+   ],
+   "income": { "stage": [0.7,1.4,2.5], "job": "cook" },
+   "standing": { "name": "사내 평가", "start": 20 },
+   "affiliations": ["KJE_TOUR_BURDENPEAK","KJE_TOUR_BEAST","KJE_TOUR_CABLE","KJE_TOUR_SPRING"],
+   "exits": {
+    "retire": { "age": 60, "to": "KJE_FACTORY" },
+    "fall": { "layoff": "expel", "bankrupt": "expel", "catastrophe": "death" },
+    "switch": ["KJE_KT","KJE_FACTORY"]
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": []
+  },
+  {
+   "id": "KJE_PARL",
+   "nation": "kjerag",
+   "region": null,
+   "name": "가문 정치·의회",
+   "archetype": "A3",
+   "canon": true,
+   "itinerant": false,
+   "entry": {
+    "ages": [18,40],
+    "classes": { "q4": 0.1, "q5": 0.7 },
+    "gates": [
+     { "status": "noble", "weight": 20 },
+     { "cap": "ties", "min": 0.5 }
+    ],
+    "via": ["heir"]
+   },
+   "stages": [
+    {
+     "id": "member",
+     "name": "가문원",
+     "title": null,
+     "minYears": 5,
+     "promo": { "cap": "ties", "k": 0.2 },
+     "fall": { "base": 0.03, "causes": ["betrayal","assassination","purge"] }
+    },
+    {
+     "id": "envoy",
+     "name": "사절",
+     "title": "사절",
+     "minYears": 6,
+     "promo": { "cap": "ties", "k": 0.1 },
+     "fall": { "base": 0.03, "causes": ["betrayal","assassination","purge"] }
+    },
+    {
+     "id": "head",
+     "name": "가주",
+     "title": "가주",
+     "minYears": 10,
+     "promo": { "cap": "ties", "k": 0.05 },
+     "fall": { "base": 0.03, "causes": ["betrayal","assassination","purge"] }
+    },
+    {
+     "id": "council",
+     "name": "의회",
+     "title": "의원",
+     "minYears": 0,
+     "promo": null,
+     "fall": { "base": 0.03, "causes": ["betrayal","assassination","purge"] }
+    }
+   ],
+   "income": { "stage": [3,5,15,15] },
+   "standing": { "name": "관청 평판", "start": 20 },
+   "affiliations": ["KJE_PARL_THREE","KJE_PARL_NEW"],
+   "exits": {
+    "retire": { "age": 75, "to": "KJE_TOUR" },
+    "fall": { "betrayal": "disgrace", "assassination": "death", "purge": "exile" },
+    "switch": []
+   },
+   "oriPolicyOverride": null,
+   "canonFigures": ["silverash"],
+   "note": "의회 구성 창작"
+  }
+ ]
+}
