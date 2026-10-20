@@ -44,7 +44,7 @@
  },
  "ursus": {
   "types": [
-   { "id": "plate_rent", "name": "이동도시 공동 주택", "w": 0.35, "req": { "urban": true }, "cost": 0.2, "canon": "partial" },
+   { "id": "plate_rent", "name": "이동도시 공동 주택", "w": 0.35, "req": { "urban": true, "nomadic": true }, "cost": 0.2, "canon": "partial" },
    { "id": "village_izba", "name": "농촌 통나무집", "w": 0.3, "req": { "urban": false }, "cost": 0.05, "own": true, "price": 1.5, "canon": false },
    { "id": "factory_dorm", "name": "공장 기숙사", "w": 0.2, "req": { "track": ["URS_WORKER"] }, "cost": 0.1, "canon": false },
    { "id": "estate", "name": "귀족 저택", "w": 0.1, "req": { "status": "noble" }, "cost": 0.15, "own": true, "price": 25, "canon": "partial" },
@@ -70,7 +70,7 @@
  },
  "leithanien": {
   "types": [
-   { "id": "plate_rent", "name": "이동도시 임대", "w": 0.4, "req": { "urban": true }, "cost": 0.28, "canon": "partial" },
+   { "id": "plate_rent", "name": "이동도시 임대", "w": 0.4, "req": { "urban": true, "nomadic": true }, "cost": 0.28, "canon": "partial" },
    { "id": "town_house", "name": "도시 주택 소유", "w": 0.15, "req": { "urban": true }, "cost": 0.05, "own": true, "price": 10, "canon": false },
    { "id": "village", "name": "산중 정주민 집", "w": 0.3, "req": { "urban": false }, "cost": 0.05, "own": true, "price": 1.5, "canon": "partial" },
    { "id": "court_quarters", "name": "궁정 숙소", "w": 0.05, "req": { "track": ["LEI_COURT","LEI_MUSIC"] }, "cost": 0, "canon": false },
@@ -114,7 +114,7 @@
  },
  "siracusa": {
   "types": [
-   { "id": "plate_rent", "name": "이동도시 임대", "w": 0.4, "req": { "urban": true }, "cost": 0.28, "canon": "partial" },
+   { "id": "plate_rent", "name": "이동도시 임대", "w": 0.4, "req": { "urban": true, "nomadic": true }, "cost": 0.28, "canon": "partial" },
    { "id": "town_house", "name": "가게 딸린 집", "w": 0.2, "req": { "track": ["SIR_LIVING","SIR_TRUCK"] }, "cost": 0.05, "own": true, "price": 6, "canon": "partial" },
    { "id": "village", "name": "시골 마을 집", "w": 0.2, "req": { "urban": false }, "cost": 0.05, "own": true, "price": 1.5, "canon": "partial" },
    { "id": "family_villa", "name": "패밀리 저택 구역", "w": 0.15, "req": { "track": ["SIR_FAMIGLIA","SIR_CLEANER"] }, "cost": 0.05, "canon": "partial" },
@@ -124,7 +124,7 @@
  "laterano": {
   "types": [
    { "id": "plate_rent", "name": "이동도시 임대", "w": 0.45, "req": { "nomadic": true }, "cost": 0.25, "canon": true },
-   { "id": "plate_own", "name": "이동도시 주택 소유", "w": 0.3, "cost": 0.05, "own": true, "price": 10, "canon": "partial" },
+   { "id": "plate_own", "name": "이동도시 주택 소유", "w": 0.3, "req": { "nomadic": true }, "cost": 0.05, "own": true, "price": 10, "canon": "partial" },
    { "id": "monastery", "name": "수도원 거처", "w": 0.1, "req": { "track": ["LAT_MONASTERY","LAT_GUARD"] }, "cost": 0, "canon": true },
    { "id": "dentist_district", "name": "치과의사 구역 셋방", "w": 0.1, "req": { "track": ["LAT_DENTIST"] }, "cost": 0.1, "canon": "partial" },
    { "id": "expelled", "name": "국외 거처", "w": 0.05, "cost": 0.15, "forced": { "track": ["LAT_FALLEN"] }, "canon": true }

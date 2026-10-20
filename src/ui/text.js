@@ -2,15 +2,15 @@
 import { normCdf } from '../engine/rng.js';
 import { humanAge } from '../engine/lifetable.js';
 import { toLMD } from '../engine/finance.js';
-import { FOCUS, trackName, migrationSummary, capProfile } from '../engine/sim.js';
+import { FOCUS, focusDef, isTrackFocus, trackName, migrationSummary, capProfile } from '../engine/sim.js';
 import { num, lmd } from './dom.js';
 import { eun, iga, eul, wa, ro, euro } from '../engine/text.js';
 import { deathTexts } from '../../content/death_texts.js';
 
-// v1(W10): 상태 막대는 건강·행복 둘만. 구 fx 의 sm/so 는 역량(학식·연줄)으로 읽어 보여 준다.
+// v1(W10): 상태 막대는 건강·행복 둘만. 구 fx 의 sm/so 는 역량(학식·관계)으로 읽어 보여 준다.
 export const STAT_LABEL = { hl: '건강', h: '행복', money: '돈' };
-export const CAP_LABEL = { skill: '기량', learn: '학식', arts: '아츠', ties: '연줄' };
-export const LEGACY_FX = { sm: '학식', so: '연줄' };
+export const CAP_LABEL = { skill: '기량', learn: '학식', arts: '아츠', ties: '관계' };   // D52: 표시명 '관계'(내부 키 ties 유지)
+export const LEGACY_FX = { sm: '학식', so: '관계' };
 export const PAPERS_LABEL = { native: null, legal: '합법', refugee: '난민', illegal: '미등록', contract: '계약', agreement: '협정' };
 export const PHASE_LABEL = { settling: '정착 중', settled: '정착', naturalized: '귀화' };
 export const RHODES_STATUS = { operator: '정식 직원', contractor: '협력 계약자', patient: '환자' };
@@ -77,8 +77,15 @@ export function fxText(fx) {
   if (fx.standing) parts.push('지위 ' + sign(fx.standing));
   return parts.join(' · ');
 }
-export function focusLabel(k) { return (FOCUS[k] && FOCUS[k].label) || k || '—'; }
-export function focusHint(k) { return FOCUS[k] ? fxText(FOCUS[k].fx) : ''; }
+export function focusLabel(k) { const d = focusDef(k); return (d && d.label) || (isTrackFocus(k) ? '진로 초점' : k) || '—'; }
+/** 칩 힌트. 진로 전용 초점(W12 D53a)은 역량·지위·돈 증감과 몰락 위험 방향까지 */
+export function focusHint(k) {
+  const d = focusDef(k); if (!d) return '';
+  const parts = [fxText(d.fx)];
+  if (d.fall && d.fall < 1) parts.push('위험 ▼'); else if (d.fall && d.fall > 1) parts.push('위험 ▲');
+  return parts.filter(Boolean).join(' · ');
+}
+export { isTrackFocus };
 
 export function artsPercentile(S) { return Math.round((1 - normCdf(S.arts)) * 100); }
 
@@ -94,11 +101,17 @@ export function birthSummary(sim) {
   if (f.dad.absent) s.push('아버지는 곁에 없습니다.');
   if (f.mom.infected || (f.dad.infected && !f.dad.absent)) s.push((f.mom.infected && f.dad.infected ? '부모 모두' : f.mom.infected ? '어머니는' : '아버지는') + ' 감염자입니다.');
   if (S.ori.on) s.push('태어날 때부터 혈중에 오리지늄 결정이 있었습니다.');
-  if (S.eth === 'outsider') s.push('이 땅에서 ' + eun(race.name) + ' 흔치 않은 종족입니다.');
   return s.join(' ');
 }
 
-export function jobName(sim, id) { const j = id && sim.data.jobById[id]; return j ? j.name : (id || '—'); }
+/** W12(D51-8): 진로 id(income.job 없는 진로의 S.job)는 진로 이름으로. 대문자 id 는 화면에 내보내지 않는다 */
+export function jobName(sim, id) {
+  if (!id) return '—';
+  const j = sim.data.jobById[id]; if (j) return j.name;
+  const t = sim.data.trackById && sim.data.trackById[id];
+  if (t) return (sim.S.track && sim.S.track.id === id && trackName(sim)) || t.name;
+  return /^[A-Z][A-Z0-9_]+$/.test(String(id)) ? '일' : String(id);
+}
 export function nationName(sim, id) { const n = id && sim.data.nationById[id]; return n ? n.name : (id || '—'); }
 
 /** 신원 카드 직업란: 진로가 있으면 trackName(소속 · 칭호), 없으면 상태어 */
@@ -149,8 +162,8 @@ export function housingName(sim) {
   return null;
 }
 /** 타고남 특성 줄: capProfile 의 traits 를 라벨로 */
-export function traitWords(S) {
-  return capProfile(S).traits.map((t) => (t.startsWith('작위: ') ? (NOBLE_LABEL[t.slice(4)] || '작위') : t));
+export function traitWords(S, arch = null) {
+  return capProfile(S, arch).traits.map((t) => (t.startsWith('작위: ') ? (NOBLE_LABEL[t.slice(4)] || '작위') : t));
 }
 
 /** 진로 이력 구간 [{label, years, how, aff}] (trackHist + 현재 진로) */

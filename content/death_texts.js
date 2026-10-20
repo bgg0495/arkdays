@@ -22,10 +22,12 @@ export function params(sim) {
   return {
     age: d.age, year: d.year, cause: d.cause, label: d.label,
     nation: nation.name, nationId: nation.id, rootId: rootOf(data, nation.id), bornName: born.name,
-    org: nation.statOrg || (nation.name + ' 기록소'), cul: nation.culture || {},
+    org: (nation.culture && nation.culture.factions && S.sub && nation.culture.factions[S.sub.region]) ? nation.culture.factions[S.sub.region] + ' 등기소' : (nation.statOrg || (nation.name + ' 기록소')), cul: nation.culture || {},
     sex: S.sex, infected: !!S.ori.on, known: !!S.ori.known, rhodes: !!S.rhodes, nomadic: S.home.type === 'nomadic',
     partner: S.fam.partner, kids: S.fam.kids.filter((k) => k.alive).length, retired: !!S.retired, mig: S.mig,
     race: data.raceById[S.race],
+    // W12(D51-7): 볼리바르 출생 진영 이름(nations.json culture.factions × S.sub.region). 없으면 null
+    faction: (nation.culture && nation.culture.factions && S.sub && nation.culture.factions[S.sub.region]) || null,
   };
 }
 function rootOf(data, id) { const n = data.nationById[id]; return n && n.parent ? n.parent : id; }
@@ -84,7 +86,7 @@ export const EXTRA_CAUSES = {
   far_north_1101: { label: '극북 반란', t: (p) => p.age + '세에 극북 반란으로 세상을 떠났습니다. 라디오는 "우르수스가 우리를 버렸다"고 했습니다.', f: () => F('제국 내무성 극북 진압 기록, 1101년') },
   uprising: { label: '봉기', t: (p) => p.age + '세에 봉기 중에 세상을 떠났습니다. 깃발은 이틀을 버텼습니다.', f: (p) => F(p.org + ' 소요 사망 집계') },
   evac_fail: { label: '피난 중 사고', t: (p) => p.age + '세에 피난길에서 세상을 떠났습니다. 길은 하나였고 사람은 많았습니다.', f: () => F('재앙 정보 전달자 협회 대피 경로 사후 보고') },
-  dossoles_1101: { label: '도솔레스 소요', t: (p) => p.age + '세에 도솔레스 소요로 세상을 떠났습니다. 인공 바다 옆이었습니다.', f: () => F('등기소(가까운 정부 쪽) 도솔레스 사망 집계, 1101년') },
+  dossoles_1101: { label: '도솔레스 소요', t: (p) => p.age + '세에 도솔레스 소요로 세상을 떠났습니다. 인공 바다 옆이었습니다.', f: (p) => F((p.faction || '도솔레스 시정') + ' 등기소 도솔레스 사망 집계, 1101년') },
   iberia_silence2: { label: '두 번째 고요함', t: (p) => p.age + '세에 두 번째 고요함 속에서 세상을 떠났습니다. 등대는 꺼져 있었습니다.', f: () => F('재판소 해안 사망 등기') },
   kazdel_war2: { label: '카즈델 내전 재발', t: (p) => p.age + '세에 다시 시작된 내전으로 세상을 떠났습니다. 카즈델에서 평화는 휴전의 다른 이름이었습니다.', f: () => F('용병 등록부 전시 기록') },
 };
@@ -151,8 +153,8 @@ export const RITES = {
     line: () => '해가 지기 전에 묻었습니다. 셰이크가 짧게 기도했고, 묘 위에는 아무것도 세우지 않았습니다. 바람이 사흘이면 자리를 지웁니다.',
     f: () => F('파디샤 궁정 서기국 아미르령 사망 보고'), prayer: '그늘이 함께하기를.' },
   bolivar: { faith: '성모', place: '성당', mourning: '검은 리본',
-    line: () => '성모 행렬이 지나는 길가에 묻혔습니다. 사망 증명서는 세 정부 중 가까운 쪽에서 받았고, 다른 두 정부 쪽에서는 아직 살아 있는 사람입니다.',
-    f: () => F('등기소(가까운 정부 쪽) 사망 등기'), prayer: '성모께서 거두시기를.' },
+    line: (p) => '성모 행렬이 지나는 길가에 묻혔습니다. 사망 증명서는 ' + (p.faction || '세 정부 중 가까운 쪽') + ' 등기소에서 받았고, 다른 두 정부 쪽에서는 아직 살아 있는 사람입니다.',
+    f: (p) => F((p.faction || '가까운 정부') + ' 등기소 사망 등기'), prayer: '성모께서 거두시기를.' },
   rim: { faith: '없음', place: '광산 묘지', mourning: '작업모',
     line: () => '광산 묘지에 묻혔습니다. 광업연합 인사부가 보상 항목표를 보냈고, 해당 없음에 전부 표시가 되어 있었습니다. 동료들이 맥주 한 캔을 묘 위에 두었습니다.',
     f: () => F('광업연합 인사부 사망 처리 통지'), prayer: '갱도에서 보자.' },

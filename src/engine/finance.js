@@ -41,7 +41,7 @@ export function jobOffers(sim, n = 3) {
     if (j.req.includes('artsTop10')) w *= 3;
     return { id: j.id, w };
   });
-  const k = Math.max(1, n - (race.stigma >= 2 ? 1 : 0) - (S.eth === 'outsider' ? 1 : 0));
+  const k = Math.max(1, n - (race.stigma >= 2 ? 1 : 0));
   const out = [];
   const pool = weighted.slice();
   while (out.length < k && pool.length) {
@@ -90,7 +90,7 @@ export function takeJob(sim, jobId, quiet = false) {
   if (!j) return false;
   S.job = j.id; S.jobY = 0; S.school = null; S.retired = false;
   let pct = j.lo + (j.hi - j.lo) * (0.3 * rng.rnd() + 0.7 * (S.q - 1) / 4) + rng.norm(0, 0.05);
-  pct -= 0.05 * race.stigma + (S.eth === 'outsider' ? 0.04 : 0);
+  pct -= 0.05 * race.stigma;
   S.pct = clamp(pct, 0.02, 0.98);
   if (!quiet) sim.log(ro(j.name) + ' 일을 시작했습니다.', 'ev');
   return true;
@@ -150,7 +150,7 @@ export function financeYear(sim) {
 
   // 소득. v1: 진로가 정한다(§3.3-4, drift 없음). 진로 없이 콘텐츠가 준 구 직업(takeJob)은 백분위 고정.
   const kFactors = () => {
-    let k = (S.sex === 'F' ? 0.8 : 1) * (S.eth === 'outsider' ? 0.9 : 1) * (1 - 0.08 * race.stigma) * (1 + 0.1 * (fw.work || 0));
+    let k = (S.sex === 'F' ? 0.8 : 1) * (1 - 0.08 * race.stigma) * (1 + 0.1 * (fw.work || 0));
     if (S.ori.stage >= 2) k *= 0.7;
     if (S.flags.quarantined) k *= 0.6;
     if (S.flags.oriHidden) k *= 0.85;

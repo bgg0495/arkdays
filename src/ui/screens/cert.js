@@ -17,7 +17,7 @@ export function mount(app) {
   // [라벨, 값(HTML), 전폭 여부]
   const rows = [
     ['성별', SEX(S.sex)],
-    ['종족', esc(race.name) + (race.lifeMul !== 1 ? sub('수명 배율 ' + race.lifeMul + '×') : '') + (S.eth === 'outsider' ? sub('이 땅의 소수 종족') : S.eth ? sub(esc(S.eth)) : '')],
+    ['종족', esc(race.name) + (race.lifeMul !== 1 ? sub('수명 배율 ' + race.lifeMul + '×') : '') + (S.eth ? sub(esc(S.eth)) : '')],
     ['출생 국가', esc(n.name) + (n.parent ? sub(esc(sim.data.nationById[n.parent].name) + ' 관할') : '')],
     ['출생지', esc(homeWord(S))],
     ['가정 형편', '<span class="dots">' + Q_DOTS(S.q) + '</span>' + sub(S.q + '분위')],

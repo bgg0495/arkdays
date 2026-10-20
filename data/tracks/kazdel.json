@@ -5,7 +5,7 @@
   "canon": "mixed",
   "classScale": 0.6889,
   "classScaleNote": "entry.classes = 카탈로그 계층별 유입 비율(0~1) × classScale. 계층 안의 상대 비율은 카탈로그 그대로이고, 국가 안에서 계층별 합 = classScale, 진로 안에서 계층 합 ≤ 1.",
-  "note": "출생 연도(바벨기 1031~1086 / 내전기 1086~1098 / 재건기 1098~)가 year gate 로 입구를 가른다. KZD_DIASPORA 는 해외 출생 살카즈(eth outsider) 가중."
+  "note": "출생 연도(바벨기 1031~1086 / 내전기 1086~1098 / 재건기 1098~)가 year gate 로 입구를 가른다. KZD_DIASPORA 는 해외에서 들어온 살카즈(papers 가 native 아님) 가중(W12: 구 eth outsider 폐기)."
  },
  "tracks": [
   {
@@ -793,7 +793,7 @@
     "ages": [12,40],
     "classes": { "q1": 0.0689 },
     "gates": [
-     { "eth": "outsider", "weight": 20 }
+     { "papers": ["legal","refugee","illegal","contract","agreement"], "weight": 20 }
     ],
     "via": ["born_abroad","fled"]
    },

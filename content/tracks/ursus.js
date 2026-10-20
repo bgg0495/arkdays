@@ -34,7 +34,7 @@ const seeCanon = (s, id) => { s.S.flags.canonSeen = (s.S.flags.canonSeen || 0) +
 function st(id, track, stage, a, w, gap, body, k = 'note', fx = null, f = null, extra = {}) {
   // 단계 태그가 이미 자리를 고르므로 나이 상한은 넉넉히(은퇴 전환·늦은 진입을 받는다)
   return { id, a: [a[0], Math.max(a[1], 80)], tags: ['track:' + track + ':' + stage], w, gap, ...extra,
-    run: (s) => { const t = typeof body === 'function' ? body(s) : body; const r = { t, k }; if (fx) r.fx = typeof fx === 'function' ? fx(s) : fx; if (f) r.f = f(s); return r; } };
+    run: (s) => { const t = typeof body === 'function' ? body(s) : body; const r = t && typeof t === 'object' ? { k, ...t } : { t, k }; if (fx) r.fx = typeof fx === 'function' ? fx(s) : fx; if (f) r.f = f(s); return r; } };   // W12: body 가 {t,f} 객체를 돌려주던 2건([object Object]) 흡수
 }
 /** 단계 전환 서사: 진로 하나에 하나, 현 단계 id 로 본문을 고른다 */
 function promoEv(id, track, a, byStage) {

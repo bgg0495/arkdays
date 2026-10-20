@@ -6,7 +6,7 @@
 // 톤(D25): 담백체, 각주는 세계관 안의 출처만. 봉기·학살·자살은 장면 없이 결과만.
 import { infect } from '../src/engine/oripathy.js';
 import { humanAge } from '../src/engine/lifetable.js';
-import { cul, org, F, orgF, lifeRoll, medX, poor, rich, nomadic, jobName } from './_util.js';
+import { cul, org, F, orgF, lifeRoll, medX, poor, rich, nomadic, jobName, factionOrg } from './_util.js';
 import { eul, iga, eun, wa, ro } from '../src/engine/text.js';
 
 const kid = (s) => s.S.age < 15;
@@ -146,9 +146,9 @@ export const big = [
   { id: 'volsinii_1099_heard', year: 1099, month: 11, a: [10, 999], c: heard('siracusa'),
     run: (s) => ({ t: '시라쿠사 볼시니에서 패밀리 간 소요가 있었다는 소식이 왔습니다. 와인 값은 그대로였습니다.', k: 'note', f: orgF(s, '해외 소식 게시, 1099년') }) },
   { id: 'newvolsinii_1100_live', nation: 'siracusa', year: 1100, month: 6, a: [3, 999],
-    run: (s) => ({ t: '뉴 볼시니에 신도시관리법과 경찰국이 생겼습니다. ' + (isJob(s, 'famiglia', 'cleaner') ? '일거리가 줄었고, 법이라는 것이 생겼습니다.' : '패밀리가 아닌 사람이 제복을 입고 다녔습니다. 처음 보는 광경이었습니다.') + ' 11월에는 카르니발레가 돌아왔습니다.', k: 'big', fx: isJob(s, 'famiglia', 'cleaner') ? { money: pct(s, 0.1), h: -2 } : { h: 2, so: 1 }, f: F('시청(패밀리 승인) 신도시관리법 공고, 1100년') }) },
+    run: (s) => ({ t: '뉴 볼시니에 신도시관리법과 경찰국이 생겼습니다. ' + (isJob(s, 'famiglia', 'cleaner') ? '일거리가 줄었고, 법이라는 것이 생겼습니다.' : '패밀리가 아닌 사람이 제복을 입고 다녔습니다. 처음 보는 광경이었습니다.') + ' 11월에는 카르네발레가 돌아왔습니다.', k: 'big', fx: isJob(s, 'famiglia', 'cleaner') ? { money: pct(s, 0.1), h: -2 } : { h: 2, so: 1 }, f: F('시청(패밀리 승인) 신도시관리법 공고, 1100년') }) },
   { id: 'newvolsinii_1100_heard', year: 1100, month: 12, a: [10, 999], c: heard('siracusa'),
-    run: (s) => ({ t: '시라쿠사에 경찰이 생겼다는 기사가 났습니다. 기사 옆에 카르니발레 사진이 실렸습니다.', k: 'note', fx: { h: 1 }, f: orgF(s, '해외 소식 게시, 1100년') }) },
+    run: (s) => ({ t: '시라쿠사에 경찰이 생겼다는 기사가 났습니다. 기사 옆에 카르네발레 사진이 실렸습니다.', k: 'note', fx: { h: 1 }, f: orgF(s, '해외 소식 게시, 1100년') }) },
 
   // 16. 라테라노 사변 1101.8~9
   { id: 'laterano_1101_live', nation: 'laterano', year: 1101, month: 8, a: [3, 999],
@@ -183,9 +183,9 @@ export const big = [
   { id: 'bolivar_1101_live', nation: 'bolivar', year: 1101, month: 5, a: [3, 999],
     run: (s) => { const r = s.rng.rnd(); const dos = s.S.urban && lifeRoll(s, 'dossoles', 0.2);
       if (dos && !kid(s) && r < 0.02) { s.die('dossoles_1101', '도솔레스 소요'); return; }
-      if (dos) return { t: '도솔레스에 살았습니다. 소요가 났고, 시장이 물러났고, 인공 바다 옆에서 사흘 동안 총성이 났습니다. 컬럼비아 군이 북쪽에서 내려왔습니다.', k: 'big', fx: { h: -5, hl: -2, money: pct(s, 0.2) }, f: F('등기소(가까운 정부 쪽) 도솔레스 소요 기록, 1101년') };
-      if (!kid(s) && r < 0.4) return { t: '대행진에 나갔습니다. 세 정부 어느 쪽도 아닌 깃발 아래였습니다. 걷는 동안은 모두 같은 나라 사람이었습니다.', k: 'big', fx: { h: 3, so: 3, hl: -1 }, f: F('등기소(가까운 정부 쪽) 집회 기록, 1101년 5월') };
-      return { t: '대행진이 있었습니다. ' + (kid(s) ? '학교가 쉬었고, 어른들이 걸어갔습니다.' : '집에 있었습니다. 세 정부가 처음으로 같은 공고를 냈습니다.') + ' 북쪽에서는 컬럼비아 군이 내려왔습니다.', k: 'big', fx: { h: 1, so: 1 }, f: F('등기소(가까운 정부 쪽) 집회 기록, 1101년 5월') }; } },
+      if (dos) return { t: '도솔레스에 살았습니다. 소요가 났고, 시장이 물러났고, 인공 바다 옆에서 사흘 동안 총성이 났습니다. 컬럼비아 군이 북쪽에서 내려왔습니다.', k: 'big', fx: { h: -5, hl: -2, money: pct(s, 0.2) }, f: F(factionOrg(s) + ' 도솔레스 소요 기록, 1101년') };
+      if (!kid(s) && r < 0.4) return { t: '대행진에 나갔습니다. 세 정부 어느 쪽도 아닌 깃발 아래였습니다. 걷는 동안은 모두 같은 나라 사람이었습니다.', k: 'big', fx: { h: 3, so: 3, hl: -1 }, f: F(factionOrg(s) + ' 집회 기록, 1101년 5월') };
+      return { t: '대행진이 있었습니다. ' + (kid(s) ? '학교가 쉬었고, 어른들이 걸어갔습니다.' : '집에 있었습니다. 세 정부가 처음으로 같은 공고를 냈습니다.') + ' 북쪽에서는 컬럼비아 군이 내려왔습니다.', k: 'big', fx: { h: 1, so: 1 }, f: F(factionOrg(s) + ' 집회 기록, 1101년 5월') }; } },
   { id: 'bolivar_1101_heard', year: 1101, month: 6, a: [10, 999], c: heard('bolivar'),
     run: (s) => ({ t: s.S.root === 'columbia' ? '볼리바르 북부에 군대가 들어갔습니다. 신문은 "질서 회복"이라고 썼고, 블랙 플로우 쪽은 지지 않았습니다.' : '볼리바르에서 대행진과 소요가 있었다는 소식이 왔습니다. 커피 값이 올랐습니다.', k: 'note', fx: { money: pct(s, 0.01) }, f: orgF(s, '해외 소식 게시, 1101년') }) },
 
@@ -261,7 +261,7 @@ export const events = [
 const EVAC_YEARS = {
   1096: { nation: 'ursus', body: '체르노보그 쪽 하늘이 이상합니다. 재앙 정보 전달자는 경로를 두 번 고쳤고, 봉기 소문은 세 번 돌았습니다.', res: (s) => lifeRoll(s, 'chernobogRes', 0.06), f: '재앙 정보 전달자 협회 경보, 1096년 12월' },
   1101: { nation: 'kjerag', body: '산 위 관측소가 처음 보는 경보를 냈습니다. 재앙은 이 땅에 온 적이 없습니다. 가주 어르신은 "산이 지켜 준다"고 했습니다.', res: () => true, f: '라인 랩 관측소 경보, 1101년 12월' },
-  1104: { nation: 'bolivar', body: '세 정부가 동시에 동원령을 냈습니다. 마을은 어느 쪽 길목에도 있습니다.', res: () => true, f: '등기소(가까운 정부 쪽) 동원령, 1104년' },
+  1104: { nation: 'bolivar', body: '세 정부가 동시에 동원령을 냈습니다. 마을은 어느 쪽 길목에도 있습니다.', res: () => true, f: '세 정부 동원령 공고, 1104년' },
   1115: { nation: 'iberia', body: '등대 둘이 같은 밤에 꺼졌습니다. 재판소는 아무 공고도 내지 않았습니다. 할머니들이 "고요함"이라는 말을 꺼냈습니다.', res: (s) => !s.S.urban, f: '재판소 해안 통행 기록, 1115년' },
 };
 
@@ -289,7 +289,7 @@ export const decisions = {
         : '월루몽드에서 감염자들이 일어서려 합니다. 궁정은 모른 척했고, 마을은 알고 있었습니다.';
       const f = s.year === 1101 ? '제국 내무성 불온 전단 수거 목록, 1101년' : s.S.cur === 'tara' ? '더블린 소집 통지(압수본), 1097년' : '궁정 기록국 변경 치안 보고, 1097년';
       return { title: '봉기', body, fact: F(f), choices: [
-        { k: 'join', label: '가담한다', sub: '사망 위험 큼, 연줄 +', auto: s.S.ori.known ? 1.5 : 0.6 },
+        { k: 'join', label: '가담한다', sub: '사망 위험 큼, 관계 +', auto: s.S.ori.known ? 1.5 : 0.6 },
         { k: 'flee', label: '떠난다', sub: '재산 −, 안전', auto: 1.2 },
         { k: 'hide', label: '숨죽인다', sub: '변화 없음', auto: 1.5 }] }; },
     apply: (s, k) => {

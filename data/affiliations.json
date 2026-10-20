@@ -3789,7 +3789,7 @@
   {
    "id": "SIR_ART_CARNEVALE",
    "track": "SIR_ART",
-   "name": "카르니발레",
+   "name": "카르네발레",
    "canon": true,
    "weight": 0.4,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },

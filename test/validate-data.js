@@ -239,6 +239,7 @@ for (const c of causes) for (const t of c.tags) {
   if (t.startsWith('nation:')) { if (!nationIds.has(t.slice(7))) err(`causes[${c.id}]: tag '${t}' 국가 없음`); }
   else if (t.startsWith('threat:')) { if (!allThreats.has(t.slice(7))) err(`causes[${c.id}]: tag '${t}' 가 어느 국가 threats 에도 없음`); }
   else if (t.startsWith('trait:')) { if (!traitKeys.has(t.slice(6))) err(`causes[${c.id}]: tag '${t}' trait 없음`); }
+  else if (t.startsWith('pos:')) { if (!/^pos:(A([1-9]|1[0-2])|noble|high)$/.test(t)) err(`causes[${c.id}]: tag '${t}' pos: 값 미정의(A1~A12·noble·high)`); }   // W12(D51-6)
   else if (!['infected', 'female', 'male'].includes(t)) err(`causes[${c.id}]: tag '${t}' 형식 미정의`);
 }
 // ethnicFlags
@@ -290,7 +291,7 @@ const W8 = { tracks: 0, affs: 0, figures: 0, relPairs: 0, marriageTypes: 0, hous
   const rhoDoc = load('rhodes.json');
 
   const EXIT_RE = /^(death(:[a-z_]+)?|prison:(jail|camp)|exile|demote|expel|injured|infected|disgrace|arena:[A-Z0-9_]+)$/;
-  const GATE_KEYS = new Set(['cap', 'born', 'min', 'max', 'weight', 'status', 'rel', 'race', 'only', 'sex', 'year', 'urban', 'infected', 'region', 'eth', 'newcomer', 'note']);
+  const GATE_KEYS = new Set(['cap', 'born', 'min', 'max', 'weight', 'status', 'rel', 'race', 'only', 'sex', 'year', 'urban', 'infected', 'region', 'eth', 'newcomer', 'papers', 'note']);
   const CAPS = ['skill', 'learn', 'arts', 'ties', 'looks'];
   const REL_RE = /^(<=|>=|<|>|=)?(exclude|institutional|cultural|subtle|neutral|favored)$/;
   const classSum = {};  // nation → q → sum
@@ -483,7 +484,7 @@ const W8 = { tracks: 0, affs: 0, figures: 0, relPairs: 0, marriageTypes: 0, hous
         if (t.req) {
           for (const tid of t.req.track || []) if (!trackIds.has(tid)) err(`${w}: req.track '${tid}' 없음`);
           if (t.req.eth && !(nationsDoc.ethnicFlags || {})[t.req.eth]) err(`${w}: req.eth 없음`);
-          for (const k of Object.keys(t.req)) if (!['track', 'urban', 'nomadic', 'status', 'infected', 'eth', 'region', 'income', 'money', 'q'].includes(k)) err(`${w}: req 키 '${k}' 미정의`);
+          for (const k of Object.keys(t.req)) if (!['track', 'urban', 'nomadic', 'status', 'infected', 'eth', 'migrant', 'region', 'income', 'money', 'q'].includes(k)) err(`${w}: req 키 '${k}' 미정의`);
         }
         if (t.region != null && !isStr(t.region)) err(`${w}: region 문자열`);
         if (t.since != null && !isNum(t.since)) err(`${w}: since`);

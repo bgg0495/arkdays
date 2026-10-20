@@ -58,6 +58,7 @@ export function causeWeights(sim) {
     if (c.id === 'camp') w *= S.prison === 'camp' ? 3 : 0.2;
     if (c.id === 'nomadic_accident') w *= S.home.type === 'nomadic' ? 1.5 : 0.1;
     if (c.id === 'mine_accident' && !(job && job.risk.mine_accident)) w *= 0.2;
+    if (c.id === 'assassination' && S.track) w *= 1 + Math.max(0, (S.track.standing - 50) / 50);   // W12(D51-6): 지위가 높을수록 노린다
     out.push([c.id, w]);
   }
   return out;

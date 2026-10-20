@@ -4,7 +4,7 @@
 import { infect } from '../src/engine/oripathy.js';
 import { takeJob } from '../src/engine/finance.js';
 import {
-  cul, org, fest, F, orgF, rhodesF, given, momName, dadName, dadHere, momHere, poor, rich, nomadic, upper, under,
+  cul, org, fest, F, orgF, rhodesF, given, momName, dadName, dadHere, momHere, poor, rich, nomadic, upper, under, learn100, factionOrg,
   artsTop, artsLow, once, medX, eul, iga, eun, wa, ro,
 } from './_util.js';
 
@@ -34,7 +34,7 @@ export const events = [
     run: (s) => ({ t: '호부 호적에 이름이 올랐습니다. 서기는 붓으로 획을 하나 잘못 썼고, 고치는 데 반년이 걸렸습니다.', k: 'note', f: F('호부 호적 등기 ' + s.year + '년분, 흠천감 교차 확인') }) },
   { id: 'yan_academy_exam', a: [12, 16], tags: ['yan', '!lungmen', 'school'], w: 40,
     run: (s) => {
-      const pass = s.rng.chance(0.2 + (s.S.st.sm - 60) / 200 + (s.S.q - 3) * 0.05);
+      const pass = s.rng.chance(0.2 + (learn100(s) - 60) / 200 + (s.S.q - 3) * 0.05);
       return { t: pass ? '학궁 예비 시험에 붙었습니다. 마을에서 ' + eul(cul(s).food) + ' 돌렸습니다.' : '학궁 예비 시험을 보았습니다. 방(榜)에 이름이 없었습니다. 어머니는 "다음 해"라고만 했습니다.', k: pass ? 'warm' : 'bad', fx: pass ? { h: 4, sm: 2 } : { h: -3 },
         f: F('예부 학정사 시험 공고') };
     } },
@@ -122,7 +122,7 @@ export const events = [
 
   // ── 시라쿠사 ──
   { id: 'sir_carnevale', a: [5, 18], tags: ['siracusa'], w: 40, gap: 5,
-    run: (s) => ({ t: '카르니발레였습니다. 가면을 쓴 어른들이 거리를 채웠습니다. 다음 날 아침 골목 하나에 흰 천이 깔려 있었고, 아무도 그 길로 가지 않았습니다.', k: 'ev', fx: { h: 2, so: 1 },
+    run: (s) => ({ t: '카르네발레였습니다. 가면을 쓴 어른들이 거리를 채웠습니다. 다음 날 아침 골목 하나에 흰 천이 깔려 있었고, 아무도 그 길로 가지 않았습니다.', k: 'ev', fx: { h: 2, so: 1 },
       f: F('시청(패밀리 승인) 축제 허가서') }) },
   { id: 'sir_tail_dye', a: [6, 14], tags: ['siracusa', 'lupo'], w: 40,
     run: (s) => ({ t: '꼬리 끝을 가문 색으로 염색했습니다. 어느 패밀리 구역에 사는지 한눈에 알게 되는 색이었습니다.', k: 'note', fx: { so: 2 },
@@ -186,10 +186,10 @@ export const events = [
   // ── 볼리바르 ──
   { id: 'bol_three_flags', a: [5, 14], tags: ['bolivar'], w: 45, gap: 4,
     run: (s) => ({ t: s.rng.pick(['학교 교과서가 세 종류였습니다. 올해는 어느 정부 것으로 배울지 교장이 정했습니다.', '독립기념일이 세 번 있었습니다. 세 번 다 쉬는 해는 좋은 해였습니다.', '집에서는 세 나라 말을 섞어 썼습니다. 글은 어느 것도 제대로 쓰지 못했습니다.']), k: 'note', fx: { sm: 1, so: 1 },
-      f: F('등기소(가까운 정부 쪽) 학제 공고') }) },
+      f: F(factionOrg(s) + ' 학제 공고') }) },
   { id: 'bol_recruiter', a: [14, 17], tags: ['bolivar'], w: 35, gap: 3,
     run: (s) => ({ t: '용병 모집관이 학교 앞에 차를 세웠습니다. 급여표가 교사 월급의 세 배였습니다. 반에서 ' + s.rng.ri(1, 4) + '명이 따라갔습니다.', k: 'note', fx: { h: -1, sm: 1 },
-      f: F('등기소(가까운 정부 쪽) 모집 허가증') }) },
+      f: F(factionOrg(s) + ' 모집 허가증') }) },
 
   // ── 극동 ──
   { id: 'hig_north_house', a: [4, 15], tags: ['higashi'], w: 45, gap: 4, c: (s) => s.S.sub.region === 'north',
@@ -294,7 +294,7 @@ export const decisions = {
       choices: [{ k: 'enter', label: '출품한다', sub: '지식 +, 운이 좋으면 인턴', auto: 1.5 }, { k: 'skip', label: '안 한다', sub: '변화 없음', auto: 1 }] }),
     apply: (s, k) => {
       if (k !== 'enter') return { t: '공고를 지나쳤습니다.', k: 'note', f: F('기록된 바 없음') };
-      const win = s.rng.chance(0.15 + (s.S.st.sm - 60) / 200);
+      const win = s.rng.chance(0.15 + (learn100(s) - 60) / 200);
       if (win) { s.S.flags.labIntern = true; return { t: '경진대회에서 상을 받았습니다. 연구소 명함과 함께 비밀 유지 서약서가 왔습니다.', k: 'big', fx: { sm: 4, h: 3 }, f: F('연구소 청소년 인턴 선발 통지') }; }
       return { t: '출품했습니다. 상은 받지 못했고, 참가 기념 볼펜을 받았습니다.', k: 'ev', fx: { sm: 2 }, f: F('보험협회 교육 후원 프로그램 참가자 명단') };
     },

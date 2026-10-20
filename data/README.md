@@ -80,7 +80,7 @@
 | `artsApt` | 아츠 적성 평균 보정(z) |
 | `stigma` | 공통 차별 강도 0~3 |
 | `traits` | `_meta.traitKeys`에 정의된 플래그 |
-| `home` | 중심 국가 id. 여기 없는 국가에서 태어나면 `eth:'outsider'` |
+| `home` | 중심 국가 id. (W12: 구 `eth:'outsider'` 자동 부여는 폐기 — 차별은 relations.json 등급만) |
 
 명세 §3.2 명시값: 살카즈 2.5/2.0·1.5/+0.7/3, 엘프 3.0/진행 10배/−0.5, 두린 1.3, 에기르 1.5/0.5/2, 용·드라코 2.0, 카프리니 +0.5, 오니·리프로바 stigma 1. 나머지는 추정(사브라 1.2, 아슬란·오니·페트람 1.1 등 소폭).
 
@@ -108,7 +108,7 @@
 | `kind` | `real` / `terra` |
 | `label` | 사망 기록 표시 명사구 |
 | `w` | 7밴드 `["<1","<5","<15","<30","<50","<70","70+"]` 기본 가중(상대값) |
-| `tags` | `nation:<id>`, `threat:<key>`, `trait:<key>`, `infected`, `female`. 비어 있으면 공통 |
+| `tags` | `nation:<id>`, `threat:<key>`, `trait:<key>`, `infected`, `female`, **`pos:<A원형|noble|high>`**(W12: 패밀리·관료 진로 / 작위 / 소속 지위 60+ — `assassination` 은 이 그룹 중 하나 필수). 같은 접두끼리 OR, 접두 그룹끼리 AND(D21). 비어 있으면 공통 |
 | `fact` | 비교 문장용 메모 |
 | `footnote` | 무거운 주제 처리 지침 |
 
@@ -144,13 +144,14 @@
 
 | 필드 | 설명 |
 |---|---|
-| `id`, `nation`, `region` | 카탈로그 id 그대로. `region` 은 하위 지역 태그(극동 `north/south`, 사르곤 `acahualla`, 볼리바르 `singas/coalition/liberated/dossoles`, 타라 `hillock`). 엔진 `S.sub.region` 과 gate `{region}` 이 맞춰 쓴다 |
+| `id`, `nation`, `region` | 카탈로그 id 그대로. `region` 은 하위 지역 태그(극동 `north/south`, 사르곤 `acahualla`, 볼리바르 `singas/coalition/liberated/dossoles`, 타라 `hillock`, **시라쿠사 `wild`**(W12: 농촌 출생 3% 롤, `balance.ruralRegions`)). 엔진 `S.sub.region` 과 gate `{region}` 이 맞춰 쓴다. gate `{region}` 에 `weight` 가 없으면 **하드 게이트**(SIR_WILD·SAR_TRIBE 는 출생 환경 전용, W12 D51-10) |
+| `focus` | **W12(D53a)** 선택. `[{id, name, fx:{cap:{skill…}, standing, hl, h, money(중위소득 배율)}, fall?(그 해 몰락 확률 배율)}]` 2~3개. 없으면 원형 기본(`src/engine/focus.js ARCH_FOCUS`). 키는 `tf:<진로 id>:<id>` 로 저장된다 |
 | `archetype` | §4 원형 A1~A12 (엔진 기본값 묶음) |
 | `canon` | false 면 진로 자체가 창작(SAM_RESORT·KJE_GUIDE·IBE_FARM·DUR_BREW) |
 | `itinerant`, `route` | §7.4 순회형. `route` 가 null 이면 `nation.mig`(로도스는 `rhodes.json.ports`) |
 | `entry.ages` | 진입 가능 나이 |
 | `entry.classes` | `{q1..q5: 가중}`. **카탈로그 "계층별 유입" 비율(0~1) × `_meta.classScale`**. 계층 안의 상대 비율은 카탈로그 그대로. 국가 안에서 계층별 합 = classScale ≤ 1, 진로 안에서 계층 합 ≤ 1(둘 다 만족시키려는 스케일. 엔진은 상대 가중만 쓴다). 비어 있으면 전환·이벤트 전용(`note` 에 명시) 또는 `forced` |
-| `entry.gates` | 전부 통과해야 후보. 키: `cap`+`min`(등급 경계 −0.8/0.5/1.4), `born`(`looks`)+`min`, `status`(`!slave`, `noble`, `slave`, `orphan`, `ninja_clan`, `prisoner` — `weight` 가 있으면 조건이 아니라 가중), `rel`(`<=cultural` 등 §9 등급 상한), `race`+`weight`(가중) 또는 `race`+`only:true`(제한), `infected`(true/false), `year:[y0,y1]`(테라력 입구 열림 구간), `region`, `urban`(+`weight`), `sex`(+`weight`), `eth`(`outsider`/`nomad`/`gaul` + `weight`) |
+| `entry.gates` | 전부 통과해야 후보. 키: `cap`+`min`(등급 경계 −0.8/0.5/1.4), `born`(`looks`)+`min`, `status`(`!slave`, `noble`, `slave`, `orphan`, `ninja_clan`, `prisoner` — `weight` 가 있으면 조건이 아니라 가중), `rel`(`<=cultural` 등 §9 등급 상한), `race`+`weight`(가중) 또는 `race`+`only:true`(제한), `infected`(true/false), `year:[y0,y1]`(테라력 입구 열림 구간), `region`, `urban`(+`weight`), `sex`(+`weight`), `eth`(`nomad`/`gaul` + `weight`; 구 `outsider` 폐기), `papers`(배열, `native` 아님 = 이주민 + `weight`) |
 | `entry.via` | 입구 서사 변주 id(콘텐츠용 문자열) |
 | `forced` | 강제 전환 전용 진로(`{infected:true, policy:[...]}`): 진입 롤 후보에서 빼고 감염 판정·정책으로만 들어간다(URS_MINE·LEI_QUAR·VIC_INFECTED·KAZ_INFECTED·COL_INSURANCE·LAT_FALLEN·RIM_INFECTED). 카탈로그 유입 비율에서 이들 몫을 빼고 재정규화했다(`_meta.note`) |
 | `stages[]` | `{id, name, title, minYears, promo:{cap,k,requires?}|null, fall:{base, causes[]}, canon?:false, forced?, oriMul?, capStage?, contract?}`. 마지막 단계는 `promo:null`. `k` 0.01~0.25, `base` 0.01~0.08(§13). `requires.aff` 는 affiliations tag, `requires.year` 는 테라력, `requires.race` 종족. `capStage:{q1:true}` 는 그 분위의 승급 상한(A4 평민 상한). `oriMul` 은 그 단계의 감염 배율(A5). `contract` 는 계약 단위 연수(A6) |
@@ -180,7 +181,7 @@
 
 ## marriage.json — 혼인 제도 (§8.1)
 
-최상위 키 = 국가 id(+`_meta`). `types[]:{id, name, w, age:[a,b], dowry(중위소득 배율), poly?, polyReq?:{income}, req?:{track[]|urban|infected|status|eth|region}, since?/until?, region?, canon, events?, note?}`. 국가당 일반 유형 2~4 + 감염자 전용(`req.infected`) 1(격리·박해 정책 국가). `_meta.forcedRule` 참고.
+최상위 키 = 국가 id(+`_meta`). `types[]:{id, name, w, age:[a,b], dowry(중위소득 배율), poly?, polyReq?:{income}, req?:{track[]|urban|infected|status|eth|migrant(타국 출생)|region}, since?/until?, region?, canon, events?, note?}`. 국가당 일반 유형 2~4 + 감염자 전용(`req.infected`) 1(격리·박해 정책 국가). `_meta.forcedRule` 참고.
 
 ## housing.json — 주거 형태 (§8.2)
 

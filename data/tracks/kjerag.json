@@ -21,7 +21,7 @@
     "ages": [14,40],
     "classes": { "q1": 0.5 },
     "gates": [
-     { "eth": "outsider", "weight": 3 }
+     { "papers": ["legal","refugee","illegal","contract","agreement"], "weight": 3 }
     ],
     "via": ["mixed_marriage","ruined_house"]
    },

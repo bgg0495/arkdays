@@ -4,7 +4,8 @@
 //   2) 소스 하드코딩: "+ '는 " 같은 변수 뒤 고정 조사 패턴
 //   3) 금지 문구(D25): 메타·현실·추정 표시
 //   4) 각주 비율(D31): 이벤트 기록 중 각주가 붙은 비율(목표 10~20%)
-// 조사 오류·하드코딩·금지 문구가 하나라도 있으면 exit 1.
+//   5) W12(D51): NaN·undefined, 대문자 진로·소속 id(YAN_SUI), 구 용어 '연줄'(D52) 이 사용자 문장에 나오면 실패
+// 조사 오류·하드코딩·금지 문구·W12 검사가 하나라도 있으면 exit 1.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -126,6 +127,7 @@ function main() {
   for (let i = 0; i < N; i++) {
     const hooks = {
       log: (e) => {
+        if (e.t != null && typeof e.t !== 'string') push('log-obj:' + e.k, '[object ' + JSON.stringify(e.t).slice(0, 60));   // W12: 문자열이 아닌 t 는 화면에 [object Object] 로 찍힌다
         push('log:' + e.k, e.t); if (e.f) push('log-f:' + e.k, e.f);
         if (e.k !== 'dec') { logStat.ev++; if (e.f) logStat.evF++; }
       },
@@ -177,11 +179,19 @@ function main() {
     const ex = forb.find((f) => f.h + ' @' + f.src === k);
     console.log('  ' + n + '× ' + k + '  예: ' + ex.t.slice(0, 90).replace(/\n/g, ' '));
   }
+  // 5) W12: NaN·id 노출·구 용어
+  const W12 = [['NaN', /NaN|undefined|Infinity|[[]object |null%/], ['대문자 id', /(^|[^A-Za-z0-9])[A-Z]{2,4}_[A-Z0-9_]{2,}($|[^A-Za-z0-9])/], ['연줄', /연줄/]];
+  const w12 = [];
+  for (const x of texts) for (const [name, re] of W12) if (re.test(x.t)) w12.push({ name, src: x.src, t: x.t });
+  const w12Key = {};
+  for (const h of w12) { const k = h.name + ' @' + h.src; w12Key[k] = (w12Key[k] || 0) + 1; }
+  console.log('W12 검사(NaN·id·연줄): ' + w12.length + '건' + (w12.length ? '' : ' ✓'));
+  for (const [k, n] of Object.entries(w12Key).sort((a, b) => b[1] - a[1]).slice(0, 20)) { const ex = w12.find((h) => h.name + ' @' + h.src === k); console.log('  ' + n + '× ' + k + '  예: ' + ex.t.slice(0, 100).split(String.fromCharCode(10)).join(' ')); }
   // 4) 각주 비율
   const evR = logStat.ev ? logStat.evF / logStat.ev : 0;
   const decR = logStat.dec ? logStat.decF / logStat.dec : 0;
   console.log('각주 비율(D31): 이벤트 기록 ' + (evR * 100).toFixed(1) + '% (' + logStat.evF + '/' + logStat.ev + ', 목표 10~20%) · 결정 모달 fact ' + (decR * 100).toFixed(1) + '% (' + logStat.decF + '/' + logStat.dec + ')');
-  const ok = !bad.length && !src.length && !forb.length && !errors;
+  const ok = !bad.length && !src.length && !forb.length && !errors && !w12.length;
   console.log(ok ? '통과' : '실패');
   if (!ok) process.exitCode = 1;
 }

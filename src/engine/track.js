@@ -5,8 +5,8 @@ import { clamp } from './rng.js';
 import { humanAge } from './lifetable.js';
 import { tracksFor } from './data.js';
 import { BALANCE as B } from './balance.js';
-import { FALL_CAUSE_TO_DEATH, FALL_CAUSE_LABEL } from './archetypes.js';
-import { addCap, fit, mulTies } from './caps.js';
+import { FALL_CAUSE_TO_DEATH, FALL_CAUSE_LABEL, ARCH_ADJ } from './archetypes.js';
+import { addCap, fit, mulTies, CAP_LABEL } from './caps.js';
 import { relOf, relMul, relGateOk } from './relations.js';
 import { evalWhen } from './data.js';
 import { ro, eul, iga, eun } from './text.js';
@@ -91,7 +91,27 @@ function gateMul(sim, g) {
   return 1;
 }
 
-/** 진입 후보와 가중(§5). forced 진로는 제외(강제 전환으로만 들어간다) */
+/** W12(D51-10): 가중 게이트가 맞았을 때 선택지 sub 에 적을 요인 이름 */
+function gateLabel(sim, g) {
+  if (g.status) return g.status === 'noble' ? '작위' : g.status === 'slave' ? '신분' : g.status === 'orphan' ? '고아' : g.status === 'prisoner' ? '수감' : '집안 내력';
+  if (g.region) { const n = sim.nation.culture && sim.nation.culture.factions && sim.nation.culture.factions[g.region]; return n ? '출신 진영(' + n + ')' : '출신 지역'; }
+  if (g.race) return '종족';
+  if (g.urban != null) return g.urban ? '도시 출신' : '농촌 출신';
+  if (g.flag) return '지난 일';
+  if (g.q) return '출신 계층';
+  if (g.year) return '시대';
+  if (g.edu != null) return '학력';
+  if (g.born) return CAP_LABEL[g.born] || '타고남';
+  if (g.sex) return g.sex === 'M' ? '남성' : '여성';
+  if (g.newcomer != null || g.papers) return '이주민';
+  if (g.infected != null) return g.infected ? '감염' : '비감염';
+  if (g.cap) return (CAP_LABEL[g.cap] || '역량') + ' 높음';
+  if (g.money != null) return '재산';
+  return '조건';
+}
+const whyOf = (F) => { let best = null; for (const f of F) if (!best || f[1] > best[1]) best = f; return best ? best[0] : null; };
+
+/** 진입 후보와 가중(§5). forced 진로는 제외(강제 전환으로만 들어간다). 각 후보에 why(가중의 최대 요인 한 줄, W12 D51-10) */
 export function entryCandidates(sim, opts = {}) {
   const { S, data } = sim;
   const out = [];
@@ -110,28 +130,30 @@ export function entryCandidates(sim, opts = {}) {
     if (settling && !(['A11', 'A5', 'A6'].includes(t.archetype) || t.entry.gates.some((g) => g.newcomer))) continue;
     if (t.dept && !S.rhodes) continue;                       // 로도스 내부 진로는 합류자만
     const classes = t.entry.classes || {};
+    const F = [];   // W12(D51-10): 가중 요인 [이름, 배율] — 선택지 sub 의 "왜 이 후보가 떴는지"
     let w = t.noClasses ? 1 : (classes['q' + S.q] ?? 0);
+    if (!t.noClasses && w > 0) { const maxC = Math.max(...Object.values(classes).map(Number), 0.0001); F.push(['출신 계층', 0.6 + 0.9 * (w / maxC)]); }
     // W11 (g): COM_* 공통 입구 entry.trigger = { nations?:[…], p?:가중, … } — 거주국이 목록에 있으면 그 가중으로 후보에 든다
-    if (t.noClasses && t.entry.trigger && !opts.includeNoClass) { const tg = t.entry.trigger; if (tg.nations && !tg.nations.includes(S.cur) && !tg.nations.includes(S.root)) continue; w = tg.p ?? tg.w ?? 0.05; }
+    if (t.noClasses && t.entry.trigger && !opts.includeNoClass) { const tg = t.entry.trigger; if (tg.nations && !tg.nations.includes(S.cur) && !tg.nations.includes(S.root)) continue; w = tg.p ?? tg.w ?? 0.05; F.push(['이 나라에 열린 자리', 1.1]); }
     if (!(w > 0)) continue;
     // W11 (b): 하위 지역 거주자에게 상위국 진로는 ×parentNationMul. (a) 소지역 표시 진로는 S.sub.region 이 다르면 ×regionOffMul(데이터에 region 게이트가 있으면 그쪽이 맡는다)
     if (t.nation !== S.cur && t.nation === S.root) w *= T().parentNationMul;
     if (t.region && !data.nationById[t.region] && t.region !== subRegion && !t.entry.gates.some((g) => g.region)) w *= T().regionOffMul;
     let ok = true;
-    for (const g of t.entry.gates) { const m = gateMul(sim, g); if (m === false) { ok = false; break; } w *= m; }
+    for (const g of t.entry.gates) { const m = gateMul(sim, g); if (m === false) { ok = false; break; } w *= m; if (m > 1) F.push([gateLabel(sim, g), m]); }
     if (!ok) continue;
     const rel = relOf(data, S.cur, S.race, sim.year, { track: t.id, eth: S.eth });
-    w *= relMul(rel, data);
+    { const rm = relMul(rel, data); w *= rm; if (rm > 1) F.push(['종족 우대', rm]); }
     const s0 = t.stages[0];
     const capKey = s0.promo ? s0.promo.cap : t.A.promoCap;
-    w *= fit(zOf(S, capKey), T().fitShift);
+    { const z = zOf(S, capKey), fv = fit(z, T().fitShift); w *= fv; F.push([(CAP_LABEL[capKey] || '역량') + (z >= 1.4 ? ' 뛰어남' : z >= 0.5 ? ' 높음' : z < -0.8 ? ' 낮음' : ' 보통'), fv + (z >= 0.5 ? 0.5 : 0)]); }
     const lw = t.A.flags.looksWeight;
-    if (lw) w *= clamp(1 + (lw - 1) * 0.5 * S.innate.looks, 0.3, 3);
-    if (t.special) w *= T().specialBoost;
+    if (lw) { const lm = clamp(1 + (lw - 1) * 0.5 * S.innate.looks, 0.3, 3); w *= lm; if (lm > 1) F.push(['외모', lm]); }
+    if (t.special) { w *= T().specialBoost; F.push(['이 나라의 길', 1.0]); }   // 까닭 순위에서는 다른 요인이 없을 때만
     if (settling) w *= T().settlingMul;
     if (S.flags.disgraceAt != null && S.age - S.flags.disgraceAt < 10) w *= T().disgraceMul;
     if (t.A.flags.exam && (S.flags['examFail_' + t.id] || 0) >= t.A.flags.examTries) continue;
-    if (w > 0) out.push({ id: t.id, w: +w.toFixed(4), special: t.special, name: t.name });
+    if (w > 0) out.push({ id: t.id, w: +w.toFixed(4), special: t.special, name: t.name, why: whyOf(F) });
   }
   return out;
 }
@@ -207,7 +229,7 @@ export function enterTrack(sim, id, opts = {}) {
   if (sc) S.track.flags.contractEnd = S.age + sc; else if (t.contract) S.track.flags.contractEnd = S.age + sim.rng.ri(t.contract[0], t.contract[1]);
   S.job = t.job || t.id; S.jobY = 0; S.school = null; S.retired = false;
   if (t.dept && S.rhodes && S.rhodes !== true) S.rhodes.dept = t.dept;   // W11: RHO_* 진로로 옮기면 부서도 따라간다
-  S.flags.everWorked = true; S.flags.joblessYears = 0; S.flags.trackCands = null;
+  S.flags.everWorked = true; S.flags.joblessYears = 0; S.flags.trackCands = null; S.flags.promoDue = null; S.flags.promoWaits = 0;
   if (S.age < 15 && S.flags.childLabor == null) { S.flags.childLabor = S.age; if (!opts.quiet) sim.log('아직 아이지만 일을 시작했습니다.', 'bad', '(' + (sim.nation.statOrg || '기록소') + ' 노동 대장에는 나이 칸이 없습니다)'); }
   if (!opts.quiet) {
     const where = a ? a.name : t.name;
@@ -227,7 +249,7 @@ export function leaveTrack(sim, how = 'expel', opts = {}) {
   const st = t ? t.stages[Math.min(tr.stage, t.stages.length - 1)] : null;
   S.trackHist.push({ id: tr.id, from: tr.stageSince, to: S.age, stage: st ? st.id : null, how, aff: tr.aff || null });
   S.flags.lastTrack = tr.id; S.flags.lastTrackStage = st ? st.id : null; S.flags.lastTrackLeftAt = S.age; S.flags.lastTrackHow = how;
-  S.track = null;
+  S.track = null; S.flags.promoDue = null;
   if (S.job !== 'homemaker') { S.job = null; S.income = 0; }
   S.jobY = 0;
   if (!opts.quiet && how === 'expel') sim.log((t ? eul(t.name) : '일을') + ' 그만두게 되었습니다.', 'loss');
@@ -266,6 +288,24 @@ function stageCap(sim, t) {
   return cap;
 }
 
+/** W12(D53b): 지금 단계의 승급 확률·기회 확률. eligible 이 false 면 올해는 승급 대상이 아니다 */
+export function promoChance(sim) {
+  const { S } = sim;
+  const t = trackOf(sim); if (!t || !S.track) return null;
+  const tr = S.track;
+  const st = t.stages[Math.min(tr.stage, t.stages.length - 1)];
+  if (!st.promo || tr.stage >= t.stages.length - 1) return { eligible: false, p: 0, opp: 0, succ: 0, next: null };
+  const a = affOf(sim);
+  const mods = a ? a.mods : { promo: 1 };
+  const eligible = S.age - tr.stageSince >= (st.minYears ?? 0) && tr.stage < stageCap(sim, t) && requiresOk(sim, st.promo.requires);
+  let p = st.promo.k * (1 + zOf(S, st.promo.cap)) * (0.5 + tr.standing / 100) * mods.promo;
+  if (t.A.flags.omenPromo && !S.flags.omen) p *= T().a7PromoMul;
+  p = clamp(p, 0, T().promoMax);
+  const opp = clamp(p * (T().promoOppMul ?? 1.6), T().promoOppMin ?? 0.15, T().promoOppMax ?? 0.8);
+  const succ = p > 0 ? clamp(p / opp, 0.05, 0.95) : 0;
+  return { eligible, p, opp, succ, next: t.stages[tr.stage + 1], cap: st.promo.cap };
+}
+
 /** 승급(콘텐츠 헬퍼로도 쓰인다). 성공 true */
 export function promote(sim, opts = {}) {
   const { S } = sim;
@@ -281,7 +321,7 @@ export function promote(sim, opts = {}) {
   tr.standing = clamp(tr.standing + T().promoStanding, 0, 100);
   if (!opts.quiet) {
     const a = affOf(sim);
-    sim.log((a ? a.name + '에서 ' : '') + (next.title ? iga(next.title) + ' 되었습니다.' : ro(next.name) + ' 올라섰습니다.'), 'big', null, { h: 4 });
+    sim.log((a ? a.name + '에서 ' : '') + (next.title ? iga(next.title) + ' 되었습니다.' : ro(next.name) + ' 올라섰습니다.'), 'big', null, { h: 4, standing: T().promoStanding });   // W12: 지위 ▲ 표시
     sim.eff({ h: 4 });
   }
   return true;
@@ -293,7 +333,7 @@ export function demote(sim, opts = {}) {
   if (tr.stage <= 0) { leaveTrack(sim, 'expel'); return true; }
   S.trackHist.push({ id: tr.id, from: tr.stageSince, to: S.age, stage: t.stages[tr.stage].id, how: 'demote' });
   tr.stage--; tr.stageSince = S.age; tr.standing = clamp(tr.standing - 15, 0, 100);
-  if (!opts.quiet) sim.log(ro(t.stages[tr.stage].title || t.stages[tr.stage].name) + ' 내려앉았습니다.', 'loss', null, { h: -5 });
+  if (!opts.quiet) sim.log(ro(t.stages[tr.stage].title || t.stages[tr.stage].name) + ' 내려앉았습니다.', 'loss', null, { h: -5, standing: -15 });
   sim.eff({ h: -5 });
   return true;
 }
@@ -438,17 +478,19 @@ export function trackYear(sim) {
   if (t.A.flags.fameStanding) dS += clamp(1.5 * S.innate.looks + rng.norm(0, 3), -8, 8); // A12 명성
   tr.standing = clamp(tr.standing + dS, 0, 100);
 
-  // 승급
-  if (st.promo && tr.stage < t.stages.length - 1 && S.age - tr.stageSince >= (st.minYears ?? 0) && tr.stage < stageCap(sim, t) && requiresOk(sim, st.promo.requires)) {
-    let p = st.promo.k * (1 + zOf(S, st.promo.cap)) * (0.5 + tr.standing / 100) * mods.promo;
-    if (t.A.flags.omenPromo && !S.flags.omen) p *= T().a7PromoMul;
-    p = clamp(p, 0, T().promoMax);
-    if (rng.chance(p)) { promote(sim); S.flags.omen = false; }
+  // 승급. W12(D53b): 즉시 롤하지 않고 '승급 기회'(opp 확률)를 S.flags.promoDue 에 두면 다음 해 planYear 의 내장 결정 track_promo 가 성공 확률을 보이고 묻는다.
+  // 강제 진로·강제 단계(A5 수용소 등)는 결정 없이 종전처럼 롤한다
+  {
+    const pr = promoChance(sim);
+    if (pr && pr.eligible && pr.p > 0) {
+      if (t.forced || st.forced) { if (rng.chance(pr.p)) { promote(sim); S.flags.omen = false; } }
+      else if (rng.chance(pr.opp)) S.flags.promoDue = { age: S.age, stage: tr.stage, succ: pr.succ, cap: pr.cap };
+    }
   }
   if (S.phase !== 'life' || !S.track) return;
   // 몰락
   {
-    let p = (st.fall.base ?? t.A.fallBase) * T().fallScale * mods.fall * (1 - T().luckFall * S.innate.luck) * fallMul(sim, t);
+    let p = (st.fall.base ?? t.A.fallBase) * T().fallScale * mods.fall * (1 - T().luckFall * S.innate.luck) * fallMul(sim, t) * (S.flags.tfFall || 1);   // W12(D53a): 진로 초점 몰락 배율
     if (t.A.flags.season && tr.standing < 10) p = Math.max(p, 0.5);
     if (st.fall.causes.length && rng.chance(clamp(p, 0, 0.9))) {
       const c = rng.pick(st.fall.causes);
@@ -492,9 +534,14 @@ export function trackIncomeMul(sim) {
   return (t.income.stage[Math.min(tr.stage, t.income.stage.length - 1)] ?? 1) * (a ? a.mods.income : 1) * (1 + T().skillIncome * zOf(S, 'skill'));
 }
 
-/** 전직 후보(exits.switch 중 지금 들어갈 수 있는 것) */
+/** 전직 후보. W12(D51-10): exits.switch 전부가 아니라 (a) 같은 원형 또는 ARCH_ADJ 인접 원형, (b) S.flags.switchOpen 이 진로 id(또는 배열)면 그 진로만(사건이 연 길) */
 export function switchCandidates(sim) {
   const t = trackOf(sim); if (!t) return [];
-  const all = entryCandidates(sim, { exclude: t.id });
-  return all.filter((c) => t.exits.switch.includes(c.id));
+  const open = sim.S.flags.switchOpen;
+  const only = typeof open === 'string' ? [open] : Array.isArray(open) ? open : null;
+  const all = entryCandidates(sim, { exclude: t.id, includeNoClass: !!only });
+  if (only) return all.filter((c) => only.includes(c.id)).map((c) => ({ ...c, why: '사건이 연 길' }));
+  const adj = ARCH_ADJ[t.archetype] || [];
+  return all.filter((c) => { if (!t.exits.switch.includes(c.id)) return false; const a = sim.data.trackById[c.id].archetype; return a === t.archetype || adj.includes(a); })
+    .map((c) => ({ ...c, why: sim.data.trackById[c.id].archetype === t.archetype ? '같은 길의 다른 자리' : c.why }));
 }

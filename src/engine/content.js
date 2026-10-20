@@ -68,6 +68,9 @@ export function tagsOf(sim, visit = null) {
   if (S.rel) t.add('rel:' + S.rel);
   if (S.rhodes && S.rhodes !== true) { t.add('rhodes:' + S.rhodes.dept); t.add('rhodes_' + S.rhodes.status); }
   if (S.status) { if (S.status.noble) t.add('noble'); if (S.status.slave) t.add('slave'); if (S.status.stigma) t.add('stigma:' + S.status.stigma); }
+  // W12(D51-6): 사인 게이트용 '자리' 그룹 pos:<A원형|noble|high> — 같은 접두끼리 OR 이므로 causes.json 이 "패밀리·관료·작위·지위 높음 중 하나"를 적을 수 있다. standing:high 는 콘텐츠용
+  if (S.track) { const tr = sim.data.trackById[S.track.id]; if (tr) t.add('pos:' + tr.archetype); if ((S.track.standing || 0) >= 60) { t.add('standing:high'); t.add('pos:high'); } }
+  if (S.status && S.status.noble) t.add('pos:noble');
   if (S.home.housing) t.add('home:' + S.home.housing);
   if (S.home.owned) t.add('homeowner');
   if (S.fam.marriage) t.add('marriage:' + S.fam.marriage.type);

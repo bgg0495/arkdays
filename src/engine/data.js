@@ -11,6 +11,7 @@
 // 엔진 내부 단위: u5·im·urb·gini 는 0~1 분수, lo/hi 는 0~1, 소득은 PPP$(표시는 LMD).
 
 import { ARCHETYPES, ARCHETYPE_IDS } from './archetypes.js';
+import { registerTrackFocus } from './focus.js';
 
 const NATION_DEFAULTS = {
   share: 0, model: [], statMul: {}, policy: 'ignore', policyVariants: [], oriExp: 2, catFreq: 2, conflict: 2,
@@ -216,6 +217,7 @@ export function normTrack(t, warnings, affById, fallDefaults = {}) {
   if (o.oriMul == null) o.oriMul = A.oriMul;
   // (W11) A5 원형이라도 데이터에 forced 가 없으면 자발 진입 가능(KJE_MINE·SAR_MINE·YAN_MINER). 강제 광산은 데이터가 forced 를 명시한다(URS_MINE)
   o.forcedEntry = !!o.forced || !!(o.stages[0] && o.stages[0].forced);   // 자발 진입 불가(강제 전환·이벤트로만)
+  if (Array.isArray(o.focus) && o.focus.length) registerTrackFocus(o.id, o.focus); else o.focus = null;   // W12(D53a): 진로 전용 초점(없으면 원형 기본)
   o.noClasses = !Object.keys(o.entry.classes || {}).length;             // classes 없음 = switch·이벤트·로도스 배치로만 진입
   if (o.archetype === 'A6' && !o.contract) o.contract = A.flags.contract;
   o.affiliations = (o.affiliations || []).filter((id) => { if (affById && !affById[id]) { warnings.push('track ' + o.id + ': affiliation ' + id + ' 없음'); return false; } return true; });

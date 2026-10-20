@@ -21,7 +21,9 @@ import { makeName, familyNames } from './names.js';
 import { wa, ro, eul, iga } from './text.js';
 // v1
 import { infect } from './oripathy.js';
-import { capYear, applyLegacyFx, grade, capProfile } from './caps.js';
+import { capYear, applyLegacyFx, grade, capProfile, CAP_LABEL, CAP_KEYS, addCap } from './caps.js';
+import { FOCUS, STAGE_FOCUS, focusDef, isTrackFocus, trackFocusKeys } from './focus.js';
+export { FOCUS, STAGE_FOCUS, focusDef, isTrackFocus };
 import { refreshRel } from './relations.js';
 import { trackYear, trackOf, affOf, trackName, trackTitle, enterTrack, leaveTrack, promote, fall, switchTrack, retireTrack, applyExit } from './track.js';
 import { migrateTo, resYear, fleeCheck, migrationSummary } from './migration.js';
@@ -31,28 +33,7 @@ import { installEngineDecisions } from './choices.js';
 import { healStats, migrateSave } from './save.js';
 export { healStats, migrateSave, grade, capProfile, operatorProfile, clinical, rhodesCard, trackName, migrationSummary };
 
-/** 올해의 초점: 연중 시간 비율(focusW)만큼 연말에 스탯 델타로 적용. 역량 효과는 caps.js B.cap.focus(§6.2) */
-export const FOCUS = {
-  study:   { label: '공부',     fx: { h: -1 } },
-  play:    { label: '놀기',     fx: { h: 3 } },
-  sport:   { label: '운동',     fx: { hl: 3, h: 1 } },
-  arts:    { label: '아츠 수련', fx: { h: 1, hl: -1 } },
-  work:    { label: '일',       fx: { hl: -2, h: -1 } },
-  balance: { label: '균형',     fx: { h: 1, hl: 1 } },
-  family:  { label: '가족',     fx: { h: 2 } },
-  health:  { label: '건강',     fx: { hl: 4, h: 1 } },
-  learn:   { label: '배움',     fx: { h: -1 } },
-  rest:    { label: '쉼',       fx: { hl: 2, h: 2 } },
-  survive: { label: '재앙 대비', fx: { hl: 1 } },
-};
-export const STAGE_FOCUS = {
-  baby: [],
-  school: ['study', 'play', 'sport', 'arts', 'rest'],
-  adult: ['work', 'balance', 'family', 'health', 'learn', 'arts', 'survive', 'rest'],
-  elder: ['rest', 'health', 'family', 'balance'],
-  service: ['survive', 'health', 'rest'],
-  camp: ['survive', 'rest'],
-};
+// 올해의 초점 표(FOCUS·STAGE_FOCUS·진로 전용 초점)는 focus.js(W12 D53a). 연중 시간 비율(focusW)만큼 연말에 적용. 공통 초점의 역량 효과는 caps.js B.cap.focus(§6.2)
 export const NOOP_HOOK = { log() {}, change() {}, decision() {}, death() {}, year() {} };
 
 /** D31: 각주는 문장에 숫자(통계처럼 보이는 내용)가 있을 때만 남긴다. 내용 없는 각주("기록된 바 없음")와 관할·메타 각주는 항상 버린다 */
@@ -71,7 +52,14 @@ export function stageOf(sim) {
   if (S.retired || humanAge(S.age, sim.race.lifeMul) >= 65) return 'elder';
   return 'adult';
 }
-export function focusOptions(sim) { return STAGE_FOCUS[stageOf(sim)]; }
+/** 올해 고를 수 있는 초점. W12(D53a): 진로가 있으면(성인·노년 단계) 진로 전용 초점 2~3개가 뒤에 붙는다 */
+export function focusOptions(sim) {
+  const stage = stageOf(sim);
+  const base = STAGE_FOCUS[stage];
+  if (!sim.S || !sim.S.track || (stage !== 'adult' && stage !== 'elder')) return base;
+  const extra = trackFocusKeys(trackOf(sim));
+  return extra.length ? base.concat(extra) : base;
+}
 
 /**
  * createSim({ data, seed?, rng?, hooks?, content?, auto? })
@@ -310,11 +298,22 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     S.focusW = {};
     if (tot > 0) for (const [k, v] of Object.entries(S.fT)) S.focusW[k] = v / tot;
     else if (S.focus) S.focusW[S.focus] = 1;
+    let tfFall = 1;
     for (const [k, w] of Object.entries(S.focusW)) {
-      const fx = FOCUS[k] && FOCUS[k].fx;
+      const def = focusDef(k);
+      const fx = def && def.fx;
       if (!fx) continue;
-      for (const [stat, v] of Object.entries(fx)) S.st[stat] = clamp(S.st[stat] + v * w, 0, 100);
+      for (const stat of ['hl', 'h']) if (fx[stat]) S.st[stat] = clamp(S.st[stat] + fx[stat] * w, 0, 100);
+      // W12(D53a): 진로 전용 초점 — 역량·지위·돈·몰락 배율
+      if (isTrackFocus(k) && S.track) {
+        for (const [ck, dz] of Object.entries(fx.cap || {})) addCap(S, ck, dz * w);
+        if (fx.standing) S.track.standing = clamp(S.track.standing + fx.standing * w, 0, 100);
+        if (fx.money) S.money = Math.round(S.money + sim.med * fx.money * w);
+        if (def.fall && def.fall !== 1) tfFall *= 1 + (def.fall - 1) * w;
+        if (w >= 0.5 && S.flags.lastTf !== k) { S.flags.lastTf = k; sim.log('올해는 ‘' + def.label + '’에 마음을 두었습니다.', 'note', null, fx); }
+      }
     }
+    S.flags.tfFall = tfFall;
     // 2. 학교·복무 → 진로 상태 기계(§3.3; 진입은 planYear 의 track_choose 결정이 한다)
     schoolYear(sim);
     serviceYear(sim);
@@ -333,6 +332,7 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     // 5. 역량 성장·스탯 수렴, 6. 가족·주거·거주·로도스
     capYear(sim);
     statYear(sim);
+    capGradeLog(sim);
     familyYear(sim); if (S.phase !== 'life') return;
     housingYear(sim);
     resYear(sim); if (S.phase !== 'life') return;
@@ -368,6 +368,21 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
 }
 
 // ── 연말 하위 처리 ───────────────────────────────────────
+
+/** W12(D51-1): 역량 등급이 바뀐 해에 기록 한 줄("기량이 보통에서 높음으로 올랐습니다"). 마지막으로 기록한 등급을 flags.capGrade 에 두어 경계에서 흔들려도 되풀이하지 않는다 */
+function capGradeLog(sim) {
+  const { S } = sim;
+  if (!S.cap) return;
+  const last = S.flags.capGrade || (S.flags.capGrade = {});
+  for (const k of CAP_KEYS) {
+    const g = grade(S.cap[k]);
+    if (last[k] == null) { last[k] = g; continue; }
+    if (g === last[k]) continue;
+    const up = B.cap.grades.findIndex(([, l]) => l === g) > B.cap.grades.findIndex(([, l]) => l === last[k]);
+    sim.log(iga(CAP_LABEL[k]) + ' ' + last[k] + '에서 ' + ro(g) + (up ? ' 올랐습니다.' : ' 내려갔습니다.'), up ? 'warm' : 'loss', null, { cap: { [k]: up ? 1 : -1 } });
+    last[k] = g;
+  }
+}
 
 function schoolYear(sim) {
   const { S, rng } = sim;
@@ -417,7 +432,7 @@ function statYear(sim) {
     + (fw.health || 0) * 6 - (fw.work || 0) * 2 + (S.money < 0 ? -3 : 0);
   S.st.hl = clamp(S.st.hl + (hlT - S.st.hl) * (S.age < 5 ? 0.4 : 0.25), 0, 100);
 
-  // 구 관계 막대 → 연줄(cap.ties): 가족이 곁에 있으면 천천히 오르고, 격리·수용소면 내려간다
+  // 구 관계 막대 → 관계(cap.ties): 가족이 곁에 있으면 천천히 오르고, 격리·수용소면 내려간다
   const kidsAlive = S.fam.kids.filter((k) => k.alive).length;
   const partner = S.fam.partner && S.fam.partner.alive;
   const tiesDelta = (partner ? 0.01 : 0) + Math.min(0.02, kidsAlive * 0.005) - (S.flags.quarantined ? 0.02 : 0) - (camp ? 0.04 : 0) + (S.rhodes ? 0.005 : 0) - 0.003 * race.stigma;

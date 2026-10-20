@@ -3,7 +3,8 @@
 // 콘텐츠가 같은 id 로 결정을 등록하면 그쪽이 우선(createSim 이 없는 것만 채운다). 문구는 전부 임시(담백체) — W9 가 덮어쓴다.
 // 선택지의 auto 가중은 자동 시뮬·자동 결정용. p 는 build 가 채우는 결정 인자.
 import { BALANCE as B } from './balance.js';
-import { entryCandidates, rollEntry, choiceSet, enterTrack, switchCandidates, switchTrack, leaveTrack, trackOf } from './track.js';
+import { entryCandidates, rollEntry, choiceSet, enterTrack, switchCandidates, switchTrack, leaveTrack, trackOf, affOf, promote } from './track.js';
+import { clamp } from './rng.js';
 import { looksChangeOpen, looksChangeApply } from './caps.js';
 import { migrateTo, naturalize, returnHome, destCandidates } from './migration.js';
 import { marry, makeProspect, familyOpposes, marriageTypes, polyOpen, rollMarriageType, marriageP } from './marriage.js';
@@ -12,6 +13,25 @@ import { rhodesTrigger, joinRhodes, VIA_LABEL, placeRhodes, DEPT_LABEL } from '.
 import { eul, ro, wa, iga } from './text.js';
 
 const adult = (s) => s.S.phase === 'life' && S_(s).age >= 15;
+
+// W12(D53b) 승급 기회 문구(원형별). 콘텐츠가 track_promo 를 덮어쓰면 그쪽이 우선
+const PROMO_TITLE = { A1: '윗선의 추천', A2: '토너먼트', A3: '승급 시험', A4: '진급 심사', A5: '작업반 승급', A6: '더 큰 계약', A7: '서임', A8: '서임', A9: '공석', A10: '공석', A11: '자리 넓히기', A12: '큰 무대' };
+const PROMO_GO = { A1: '추천을 받는다', A2: '출전한다', A3: '응시한다', A4: '심사에 나간다', A6: '계약을 받는다', A7: '서임을 받는다', A8: '서임을 받는다', A9: '손을 든다', A10: '손을 든다', A11: '벌인다', A12: '무대에 선다' };
+const PROMO_BODY = {
+  A1: (nm, where) => where + ' 윗선이 ' + ro(nm) + ' 올리자는 말을 꺼냈습니다. 추천이 들어가면 돌이킬 수 없고, 떨어지면 추천한 사람의 체면이 깎입니다.',
+  A2: (nm) => nm + ' 자격 토너먼트가 열립니다. 나가면 몸이 상할 수 있고, 지면 순위가 떨어집니다.',
+  A3: (nm) => nm + ' 등용 시험 공고가 붙었습니다. 떨어진 이름도 방에 붙습니다.',
+  A4: (nm) => nm + ' 진급 심사가 있습니다. 심사에서 밀리면 다음 심사까지 눈 밖에 납니다.',
+  A6: (nm) => nm + ' 급 계약이 들어왔습니다. 못 해내면 평판이 깎입니다.',
+  A7: (nm) => nm + ' 서임 이야기가 나왔습니다. 어른들 앞에 서야 합니다.',
+  A8: (nm) => nm + ' 서임 이야기가 나왔습니다. 어른들 앞에 서야 합니다.',
+  A9: (nm) => nm + ' 자리가 비었습니다. 손을 들면 심사가 있고, 떨어지면 한동안 말이 돕니다.',
+  A10: (nm) => nm + ' 자리가 비었습니다. 손을 들면 심사가 있고, 떨어지면 한동안 말이 돕니다.',
+  A11: (nm) => '일을 ' + nm + ' 규모로 키울 기회입니다. 잘못되면 밑천이 줄고 거래처 눈길이 식습니다.',
+  A12: (nm) => ro(nm) + ' 설 큰 무대 제안이 왔습니다. 무대에서 미끄러지면 다음 제안은 늦게 옵니다.',
+  default: (nm) => ro(nm) + ' 올라설 기회가 왔습니다. 나서면 성공할 수도, 체면을 잃을 수도 있습니다.',
+};
+const PROMO_FAIL = { A1: '추천은 묻혔습니다. 윗선이 당분간 얼굴을 보지 않았습니다.', A2: '토너먼트에서 졌습니다. 순위가 내려갔습니다.', A3: '시험에 떨어졌습니다. 방에 이름이 없었습니다.', A4: '심사에서 밀렸습니다. 다음 심사까지 눈 밖에 났습니다.', A6: '계약을 끝까지 해내지 못했습니다. 평판이 깎였습니다.', A7: '서임은 미뤄졌습니다.', A8: '서임은 미뤄졌습니다.', A9: '자리는 다른 사람에게 갔습니다.', A10: '자리는 다른 사람에게 갔습니다.', A11: '벌인 만큼 거두지 못했습니다. 밑천이 줄었습니다.', A12: '무대는 조용히 끝났습니다. 다음 제안은 오지 않았습니다.' };
 const S_ = (s) => s.S;
 const med = (s) => s.med;
 
@@ -35,7 +55,8 @@ export const ENGINE_DECISIONS = {
       if (!r || r.age !== s.S.age || !r.cands.length) return null;
       if (r.cands.length === 1) { if (enterTrack(s, r.cands[0].id, { via: 'auto' }) && s.requeueFeed) s.requeueFeed(); return null; }
       const set = choiceSet(s, r.cands);
-      const names = (c) => { const t = s.data.trackById[c.id]; const a = t.affiliations.length ? '소속 ' + t.affiliations.map((id) => s.data.affById[id] && s.data.affById[id].name).filter(Boolean).slice(0, 2).join('·') : ''; return { name: t.name, sub: (t.stages[0].title || t.stages[0].name) + (a ? ' · ' + a : '') + (t.special ? ' · 이 나라의 길' : '') }; };
+      // W12(D51-9·10): 소속 후보 나열("벨로네 패밀리·로사티 패밀리") 대신 첫 단계 칭호 + 이 후보가 뜬 까닭 한 줄
+      const names = (c) => { const t = s.data.trackById[c.id]; return { name: t.name, sub: (t.stages[0].title || t.stages[0].name) + (c.why ? ' · 까닭: ' + c.why : '') + (t.special && c.why !== '이 나라의 길' ? ' · 이 나라의 길' : '') }; };
       return { title: '길을 고를 때', body: '올해 들어갈 수 있는 자리가 몇 있습니다. 하나를 고르면 당분간은 그 길입니다.',
         choices: set.map((c) => { const n = names(c); return { k: c.id, label: n.name, sub: n.sub, auto: c.w }; }).concat([{ k: 'wait', label: '한 해 더 본다', sub: '소득 없음', auto: 0.15 }]) };
     },
@@ -49,9 +70,34 @@ export const ENGINE_DECISIONS = {
       if (!cands.length) { s.S.flags.switchOpen = false; return null; }
       const t = trackOf(s);
       return { title: '다른 길', body: eul(t.name) + ' 떠날 수 있는 때입니다.',
-        choices: cands.map((c) => ({ k: c.id, label: s.data.trackById[c.id].name, auto: c.w })).concat([{ k: 'stay', label: '남는다', auto: 1.5 }]) };
+        choices: cands.map((c) => ({ k: c.id, label: s.data.trackById[c.id].name, sub: c.why ? '까닭: ' + c.why : undefined, auto: c.w })).concat([{ k: 'stay', label: '남는다', auto: 1.5 }]) };
     },
     apply: (s, k) => { s.S.flags.switchOpen = false; if (k === 'stay') return '남기로 했습니다.'; return switchTrack(s, k) ? false : '옮기지 못했습니다.'; },
+  },
+  // ── 승급 기회(W12 D53b). trackYear 가 S.flags.promoDue 를 두면 다음 해에 연다. 원형별 제목·문구. 국가 콘텐츠가 같은 id 로 덮어쓸 수 있다(디스패처) ──
+  track_promo: {
+    once: false, at: 0.35,
+    ok: (s) => { const d = s.S.flags.promoDue; return !!(d && s.S.track && d.age === s.S.age - 1 && s.S.track.stage === d.stage && !s.S.prison); },
+    build: (s) => {
+      const d = s.S.flags.promoDue; const t = trackOf(s); if (!t || !d) return null;
+      const next = t.stages[s.S.track.stage + 1]; if (!next) return null;
+      const a = affOf(s); const nm = next.title || next.name; const A = t.archetype;
+      const where = a ? a.name : t.name;
+      const body = (PROMO_BODY[A] || PROMO_BODY.default)(nm, where);
+      const go = d.succ >= (B.track.promoAutoGo ?? 0.4);
+      return { title: PROMO_TITLE[A] || '승급 기회', body,
+        choices: [
+          { k: 'go', label: PROMO_GO[A] || '나선다', sub: '성공 확률 ' + Math.round(d.succ * 100) + '% · 성공: ' + nm + ', 지위 ▲ · 실패: 지위 ▼', auto: go ? 1 : 0.15 },
+          { k: 'wait', label: '다음 기회를 기다린다', sub: '지위 그대로. 기회는 다시 옵니다', auto: go ? 0.15 : 1 }] };
+    },
+    apply: (s, k) => {
+      const d = s.S.flags.promoDue; s.S.flags.promoDue = null; if (!d || !s.S.track) return false;
+      const t = trackOf(s);
+      if (k === 'wait') { s.S.flags.promoWaits = (s.S.flags.promoWaits || 0) + 1; return '이번에는 나서지 않았습니다.'; }
+      s.S.flags.promoWaits = 0;
+      if (s.rng.chance(d.succ)) { s.S.flags.omen = false; return promote(s) ? false : '자리는 열리지 않았습니다.'; }
+      return { t: (t && PROMO_FAIL[t.archetype]) || '기회를 잡지 못했습니다. 윗선의 눈길이 식었습니다.', k: 'bad', fx: { standing: -(B.track.promoFailStanding ?? 8), h: -3 } };
+    },
   },
   contract_end: {
     once: false, at: 0.4,
@@ -68,11 +114,12 @@ export const ENGINE_DECISIONS = {
   },
   // ── 외모 변경(§6.3) ──
   looks_change: {
-    once: false, gap: 3, at: 0.6,
-    ok: (s) => looksChangeOpen(s) && yearly(s, 'looks', () => s.rng.chance(0.05)),
-    build: (s) => ({ title: '얼굴을 바꾸는 일', body: '아츠 시술이 있습니다. 값은 ' + Math.round(med(s) * B.cap.looksChange.money).toLocaleString() + ' LMD. 잘되면 달라지고, 잘못되면 몸이 상합니다.',
-      choices: [{ k: 'go', label: '받는다', sub: '성공 70% / 실패 20% / 사고 10%', auto: 0.3 }, { k: 'no', label: '그만둔다', auto: 1 }] }),
-    apply: (s, k) => { if (k !== 'go') return '그대로 살기로 했습니다.'; const r = looksChangeApply(s); return r === 'ok' ? { t: '시술이 잘되었습니다. 거울이 조금 낯설어졌습니다.', k: 'ev' } : r === 'fail' ? { t: '시술은 실패했습니다. 몸만 상했습니다.', k: 'bad' } : { t: '시술 중 사고가 났습니다. 오래 앓았습니다.', k: 'bad' }; },
+    once: true, at: 0.6,
+    ok: (s) => looksChangeOpen(s) && yearly(s, 'looks', () => s.rng.chance(B.cap.looksChange.p ?? 0.5)),
+    build: (s) => { const c = B.cap.looksChange; const uses = s.track && (s.track.archetype === 'A2' || s.track.archetype === 'A12');
+      return { title: '얼굴을 바꾸는 일', body: (uses ? '이 일은 얼굴도 봅니다. ' : '') + '아츠 시술이 있습니다. 값은 ' + Math.round(med(s) * c.money).toLocaleString() + ' LMD. 잘되면 달라지고, 잘못되면 몸이 상합니다. 한 번뿐인 결심입니다.',
+        choices: [{ k: 'go', label: '받는다', sub: '성공 ' + Math.round(c.ok * 100) + '% / 실패 ' + Math.round(c.fail * 100) + '%(건강 −) / 사고 ' + Math.round((1 - c.ok - c.fail) * 100) + '%(건강 −−) · 돈 −', auto: 0.3 }, { k: 'no', label: '그만둔다', sub: '다시 묻지 않습니다', auto: 1 }] }; },
+    apply: (s, k) => { s.S.flags.looksAsked = s.S.age; if (k !== 'go') return '그대로 살기로 했습니다.'; const r = looksChangeApply(s); return r === 'ok' ? { t: '시술이 잘되었습니다. 거울이 조금 낯설어졌습니다.', k: 'ev' } : r === 'fail' ? { t: '시술은 실패했습니다. 몸만 상했습니다.', k: 'bad' } : { t: '시술 중 사고가 났습니다. 오래 앓았습니다.', k: 'bad' }; },
   },
   // ── 이주(§7) ──
   migrate_work: {
@@ -156,7 +203,7 @@ export function installEngineDecisions(registry, data) {
     ok: (s) => { const base = ENGINE_DECISIONS.marry.ok(s); return base && s.S.flags.y_marry && s.S.flags.y_marry.v && s.S.flags.y_marry.v.type.id === id; } };
   delete mine.marry;   // 공통 marry 는 유형 결정이 하나도 없을 때만
   if (!types.size) mine.marry = ENGINE_DECISIONS.marry;
-  const PRIORITY = ['rhodes_offer', 'track_choose', 'contract_end', 'migrate_study', 'naturalize', 'return_home', 'migrate_work', 'marry_second', 'track_switch', 'home_change', 'looks_change'];
+  const PRIORITY = ['rhodes_offer', 'track_choose', 'track_promo', 'contract_end', 'migrate_study', 'naturalize', 'return_home', 'migrate_work', 'marry_second', 'track_switch', 'home_change', 'looks_change'];
   const order = (id) => { const i = PRIORITY.indexOf(id); return i < 0 ? (id.startsWith('marry_') || id === 'marry' ? 2.5 : 99) : i; };
   const isBuiltin = (id) => id in mine || id.startsWith('marry_') || PRIORITY.includes(id);
   const front = {};

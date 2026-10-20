@@ -6,7 +6,7 @@ import { takeJob } from '../src/engine/finance.js';
 import { makeName, familyNames } from '../src/engine/names.js';
 import { clamp } from '../src/engine/rng.js';
 import {
-  cul, org, fest, F, orgF, rhodesF, given, momName, dadName, dadHere, momHere, poor, rich, nomadic, upper, under,
+  cul, org, fest, F, orgF, rhodesF, given, momName, dadName, dadHere, momHere, poor, rich, nomadic, upper, under, learn100, ties100, pctText,
   artsTop, artsLow, sibs, youngest, dadJob, momJob, once, lifeRoll, medX, eul, iga, eun, wa, ro, ieot, rago,
 } from './_util.js';
 
@@ -120,7 +120,7 @@ export const events = [
       f: F(org(s) + ' 교원 명부에 평범한 이름으로 적혀 있습니다') }) },
   { id: 'exam', a: [13, 17], tags: ['school'], w: 20, gap: 3,
     run: (s) => {
-      const good = s.rng.chance(clamp(0.3 + (s.S.st.sm - 50) / 100, 0.1, 0.9));
+      const good = s.rng.chance(clamp(0.3 + (learn100(s) - 50) / 100, 0.1, 0.9));
       return { t: good ? '시험을 잘 보았습니다. 성적표를 가족이 돌려 보았습니다.' : '시험을 망쳤습니다. 성적표는 책 사이에 끼워 두었습니다.', k: good ? 'warm' : 'bad', fx: good ? { h: 3, sm: 1 } : { h: -3 },
         f: F(org(s) + ' 학력 평가 기준표') };
     } },
@@ -138,7 +138,8 @@ export const events = [
     } },
 
   // ── 또래·사회 ──
-  { id: 'teased_outsider', a: [6, 16], tags: ['outsider'], w: 25, gap: 4,
+  // W12(D51-3): 구 'outsider'(소수 종족=외부인) 폐기. 종족 놀림은 D49 관계 등급이 문화적 멸시 이하일 때만
+  { id: 'teased_outsider', a: [6, 16], w: 25, gap: 4, c: (s) => s.S.rel === 'cultural' || s.S.rel === 'institutional',
     run: (s) => ({ t: rago(s.race.name) + ' 놀림을 받았습니다. ' + s.rng.pick(['처음에는 울었고, 나중에는 세었습니다.', '귀 모양을 두고 한 말이었습니다.', '선생님은 못 들은 척했습니다.']), k: 'bad', fx: { so: -3, h: -2 },
       f: orgF(s, '종족 분포표에서 ' + eun(s.race.name) + ' 기타 항목입니다') }) },
   { id: 'teased_sarkaz', a: [6, 18], tags: ['sarkaz', '!kazdel'], w: 30, gap: 3,
@@ -194,7 +195,7 @@ export const events = [
     run: (s) => ({ t: s.rng.pick(['키가 한 해에 손가락 길이만큼 자랐습니다. 옷이 전부 짧아졌습니다.', '목소리가 바뀌었습니다. 집에서 말을 줄였습니다.', '거울을 오래 보게 되었습니다.']), k: 'ev', fx: { hl: 1, h: -1 }, f: rhodesF('소책자 「성장기」') }) },
   { id: 'first_love', a: [14, 18], w: 12, c: (s) => lifeRoll(s, 'love', 0.65),
     run: (s) => ({ t: s.rng.pick(['처음으로 누군가를 좋아하게 되었습니다. 말은 하지 못했습니다.', '편지를 썼고, 보내지 않았습니다.', '같은 길로 돌아가는 사람이 생겼습니다.']), k: 'warm', fx: { h: 4, so: 2 }, f: F('기록된 바 없음') }) },
-  { id: 'friend_leaves', a: [10, 17], w: 15, c: (s) => s.S.st.so >= 45 && lifeRoll(s, 'fl', 0.5),
+  { id: 'friend_leaves', a: [10, 17], w: 15, c: (s) => ties100(s) >= 45 && lifeRoll(s, 'fl', 0.5),
     run: (s) => ({ t: s.rng.pick(['가장 가까운 친구가 이사를 갔습니다. 편지는 두 번 오고 끊겼습니다.', '친구 집이 ' + (nomadic(s) ? '다른 플레이트로' : '다른 도시로') + ' 떠났습니다. 주소를 적은 종이는 잃어버렸습니다.']), k: 'loss', fx: { so: -4, h: -3 }, f: orgF(s, '전출 신고 대장') }) },
   { id: 'part_time', a: [14, 17], tags: ['urban'], w: 20, gap: 3, c: (s) => s.S.q <= 3 && !s.S.job,
     run: (s) => ({ t: s.rng.pick(['방과 후 ' + cul(s).food.split('와')[0].split('과')[0] + ' 가게에서 일했습니다.', '새벽 배달을 했습니다. 거리를 외웠습니다.', '짐을 나르는 일을 했습니다. 손이 굵어졌습니다.']), k: 'ev', fx: { money: medX(s, 0.03), hl: -1, sm: 1 }, f: orgF(s, '소년 노동 신고서(제출되지 않음)') }) },
@@ -212,7 +213,7 @@ export const events = [
       if (y >= 1101 && s.S.cur !== 'kjerag') items.push('쉐라그에 첫 재앙이 왔다고 했습니다. 설산에도 재앙이 온다는 것을 그때 알았습니다.');
       const told = s.S.flags.newsTold || (s.S.flags.newsTold = []);
       const fresh = items.filter((t) => !told.includes(t));
-      if (!fresh.length) fresh.push(s.rng.pick(['먼 나라 소식이 신문에 났습니다. 이름을 발음할 수 없는 도시였습니다.', '신문 국제면에 이동도시 충돌 사고가 났습니다. 사망자 수는 두 신문이 달랐습니다.', '어느 나라 왕이 바뀌었다고 했습니다. 어른들은 거기 왕이 있었는지도 몰랐습니다.']));
+      if (!fresh.length) fresh.push(s.rng.pick(['먼 나라 소식이 신문에 났습니다. 이름을 발음할 수 없는 도시였습니다.', '신문 국제면에 먼 나라 이동도시 충돌 사고가 났습니다. 사망자 수는 두 신문이 달랐습니다.', '어느 나라 왕이 바뀌었다고 했습니다. 어른들은 거기 왕이 있었는지도 몰랐습니다.']));
       const pick = s.rng.pick(fresh); told.push(pick);
       return { t: pick, k: 'note', fx: { sm: 1 }, f: F(s.rng.pick(['용문 신문 국제면', '컬럼비아 통신사 전신', '카시미어 중계 자막', '행상인의 말'])) };
     } },
@@ -279,7 +280,7 @@ function specialsFor(s) {
 /** 12세 상급 학교 합격 확률: 국가 교육 수준(소득)·분위·지식 */
 function lsecP(s) {
   const st = s.nation.stats;
-  return clamp(0.3 + st.ppp / 6000 + (s.S.q - 3) * 0.1 + (s.S.st.sm - 60) / 200, 0.05, 0.95);
+  return clamp(0.3 + st.ppp / 6000 + (s.S.q - 3) * 0.1 + (learn100(s) - 60) / 200, 0.05, 0.95);
 }
 
 
@@ -290,7 +291,7 @@ export const decisions = {
       choices: [
         { k: 'cur', label: '호기심', sub: '학식 +, 손에 닿는 것은 다 열어 봅니다', auto: 1 },
         { k: 'act', label: '활달함', sub: '건강 +, 앉아 있는 날이 없습니다', auto: 1 },
-        { k: 'warm', label: '다정함', sub: '연줄 +, 우는 아이 옆에 가서 앉습니다', auto: 1 },
+        { k: 'warm', label: '다정함', sub: '관계 +, 우는 아이 옆에 가서 앉습니다', auto: 1 },
         { k: 'grit', label: '끈기', sub: '행복 +, 한 번 잡은 것은 놓지 않습니다', auto: 1 }] }),
     apply: (s, k) => { s.S.trait = k; const fx = { cur: { sm: 3 }, act: { hl: 3 }, warm: { so: 3 }, grit: { h: 3 } }[k]; return { t: '기질이 자리 잡았습니다.', fx, f: orgF(s, '발달 기록표 3항') }; },
   },
@@ -303,7 +304,7 @@ export const decisions = {
         { k: 'read', label: '책', sub: '학식 +', auto: s.S.school ? 1.2 : 0.5 },
         { k: 'craft', label: '손으로 만들기', sub: '학식 +, 가끔 돈', auto: 1 },
       ];
-      if (s.nation.id === 'leithanien' || s.rng.chance(0.4)) ch.push({ k: 'music', label: '노래', sub: '연줄 +', auto: 0.8 });
+      if (s.nation.id === 'leithanien' || s.rng.chance(0.4)) ch.push({ k: 'music', label: '노래', sub: '관계 +', auto: 0.8 });
       if (s.S.arts >= 0.3) ch.push({ k: 'arts', label: '아츠 연습', sub: '학식 +, 건강 −, 감염 위험 조금', auto: artsTop(s) ? 1.5 : 0.6 });
       return { title: '일곱 살', body: '혼자 있는 시간에 손이 가는 것이 생겼습니다.', fact: F('취미는 ' + org(s) + ' 신고 대상이 아닙니다'), choices: ch };
     },
@@ -312,16 +313,16 @@ export const decisions = {
   infected_friend: {
     ok: (s) => s.S.age >= 7 && s.S.age <= 12 && s.nation.oriExp >= 2 && !s.S.ori.known && s.rng.chance(0.25),
     build: (s) => ({ kind: 'small', title: '그 집 아이', body: '감염자라고 소문난 집 아이가 같이 놀자고 했습니다. 어른들은 가지 말라고 했습니다.', fact: rhodesF('소책자 「광석병은 함께 놀아서 옮지 않습니다」'), def: 'play',
-      choices: [{ k: 'play', label: '같이 놀기', sub: '연줄 +, 어른들 눈총', auto: 1 }, { k: 'avoid', label: '피하기', sub: '행복 −', auto: 1 }] }),
+      choices: [{ k: 'play', label: '같이 놀기', sub: '관계 +, 어른들 눈총', auto: 1 }, { k: 'avoid', label: '피하기', sub: '행복 −', auto: 1 }] }),
     apply: (s, k) => k === 'play' ? { t: '같이 놀았습니다. 아무 일도 일어나지 않았습니다. 어머니는 손을 세 번 씻게 했습니다.', k: 'warm', fx: { so: 3, h: 1 }, f: rhodesF('소책자 「광석병은 함께 놀아서 옮지 않습니다」') }
       : { t: '피했습니다. 그 아이는 그 뒤로 부르지 않았습니다.', k: 'note', fx: { h: -2 }, f: F('기록된 바 없음') },
   },
   bully: {
-    ok: (s) => s.S.age >= 8 && s.S.age <= 13 && s.S.school && s.rng.chance(0.3 + 0.15 * s.race.stigma + (s.S.eth === 'outsider' ? 0.15 : 0)),
+    ok: (s) => s.S.age >= 8 && s.S.age <= 13 && s.S.school && s.rng.chance(0.3 + 0.15 * s.race.stigma + (s.S.rel === 'cultural' || s.S.rel === 'institutional' ? 0.15 : s.S.rel === 'subtle' ? 0.07 : 0)),
     build: (s) => ({ title: '괴롭힘', body: '학교에서 괴롭히는 아이가 있었습니다. 이유는 ' + s.rng.pick(['종족', '옷', '말투', '없었습니다. 그냥 그랬습니다.']).replace(/\.$/, '') + '.', fact: F(org(s) + ' 학교 규율에 괴롭힘 항목은 없습니다'),
       choices: [
         { k: 'fight', label: '맞선다', sub: '건강 −, 행복 +', auto: 1 },
-        { k: 'avoid', label: '피한다', sub: '연줄 −', auto: 1 },
+        { k: 'avoid', label: '피한다', sub: '관계 −', auto: 1 },
         { k: 'tell', label: '선생님께 말한다', sub: '선생님에 따라 다릅니다', auto: 1 }] }),
     apply: (s, k) => {
       if (k === 'fight') return s.rng.chance(0.5) ? { t: '맞섰습니다. 코피가 났고, 그 뒤로 건드리지 않았습니다.', k: 'ev', fx: { hl: -2, h: 3, so: 1 }, f: F('양호실 기록') } : { t: '맞섰습니다. 졌습니다. 그래도 다음 날 학교에 갔습니다.', k: 'bad', fx: { hl: -3, h: 1 }, f: F('양호실 기록') };
@@ -331,9 +332,9 @@ export const decisions = {
   },
   terminal: {
     ok: (s) => s.S.age >= 10 && s.S.age <= 14 && upper(s) && !s.S.flags.terminal && s.S.q <= 3,
-    build: (s) => ({ kind: 'small', title: '단말기', body: '반 아이들은 거의 다 단말기를 가지고 있었습니다. 부모에게 사 달라고 할지 망설였습니다.', fact: F(s.nation.name + ' 이동도시 통신국 가입 약관'), def: 'ask',
-      choices: [{ k: 'ask', label: '조른다', sub: '돈 −, 연줄 +', auto: 1 }, { k: 'skip', label: '참는다', sub: '행복 −', auto: 1 }] }),
-    apply: (s, k) => { if (k === 'ask') { s.S.flags.terminal = s.S.age; return { t: '중고 단말기를 받았습니다. 화면에 금이 하나 있었습니다.', k: 'warm', fx: { so: 2, money: -medX(s, 0.08) }, f: F(s.nation.name + ' 이동도시 통신국 가입 약관') }; }
+    build: (s) => ({ kind: 'small', title: '단말기', body: '반 아이들은 거의 다 단말기를 가지고 있었습니다. 부모에게 사 달라고 할지 망설였습니다.', fact: F(s.nation.name + (nomadic(s) ? ' 이동도시 통신국' : ' 통신국') + ' 가입 약관'), def: 'ask',
+      choices: [{ k: 'ask', label: '조른다', sub: '돈 −, 관계 +', auto: 1 }, { k: 'skip', label: '참는다', sub: '행복 −', auto: 1 }] }),
+    apply: (s, k) => { if (k === 'ask') { s.S.flags.terminal = s.S.age; return { t: '중고 단말기를 받았습니다. 화면에 금이 하나 있었습니다.', k: 'warm', fx: { so: 2, money: -medX(s, 0.08) }, f: F(s.nation.name + (nomadic(s) ? ' 이동도시 통신국' : ' 통신국') + ' 가입 약관') }; }
       return { t: '사 달라고 하지 않았습니다. 친구 것을 가끔 빌려 썼습니다.', k: 'note', fx: { h: -1 }, f: F('기록된 바 없음') }; },
   },
   arts_test: {
@@ -350,7 +351,7 @@ export const decisions = {
     build: (s) => {
       const p = lsecP(s);
       const ch = [
-        { k: 'go', label: '상급 학교 시험', sub: '합격 가능성 약 ' + Math.round(p * 100) + '%', auto: 2 },
+        { k: 'go', label: '상급 학교 시험', sub: '합격 가능성 약 ' + pctText(p), auto: 2 },
         { k: 'work', label: '집안을 돕는다', sub: '학교 끝. 돈 +, 학식 −', auto: poor(s) ? 1.5 : 0.5 },
       ];
       if (rich(s)) ch.push({ k: 'private', label: '사립 학교', sub: '돈이 들지만 확실합니다', auto: 1.5 });
@@ -386,7 +387,7 @@ export const decisions = {
       if (!sp) { S.school = null; S.eduEnd = 15; return { t: '학교를 마쳤습니다.', f }; }
       if (sp.mode === 'job') { S.school = null; S.eduEnd = 15; S.flags[sp.k + 'Path'] = true; takeJob(s, sp.job, true); return { t: sp.label + '의 길로 들어섰습니다. ' + ro(s.data.jobById[sp.job].name) + ' 일을 시작했습니다.', k: 'big', f }; }
       if (sp.mode === 'exam') {
-        const pass = s.rng.chance(clamp(0.25 + (S.st.sm - 60) / 150 + (S.q - 3) * 0.08, 0.05, 0.9));
+        const pass = s.rng.chance(clamp(0.25 + (learn100(s) - 60) / 150 + (S.q - 3) * 0.08, 0.05, 0.9));
         if (pass) { S.school = 'usec'; S.eduEnd = 18; S.flags.uniPlanned = true; S.flags[sp.flag] = true; return { t: '학궁 시험에 붙었습니다. 관료의 길이 열렸습니다.', k: 'big', fx: { h: 4 }, f: orgF(s, '학궁 입학 방(榜)', s.year) }; }
         S.school = 'usec'; S.eduEnd = 18;
         return { t: '학궁 시험에 떨어졌습니다. 보통 상급 학교에 진학했습니다.', k: 'bad', fx: { h: -3 }, f: orgF(s, '학궁 입학 방에 이름이 없습니다') };

@@ -706,7 +706,7 @@
     },
     {
      "id": "pro",
-     "name": "카르니발레 프로",
+     "name": "카르네발레 프로",
      "title": null,
      "minYears": 5,
      "promo": { "cap": "arts", "k": 0.12 },
@@ -807,7 +807,7 @@
   {
    "id": "SIR_WILD",
    "nation": "siracusa",
-   "region": null,
+   "region": "wild",
    "name": "황야 늑대",
    "archetype": "A7",
    "canon": true,
@@ -817,7 +817,7 @@
     "classes": { "q1": 0.0476 },
     "gates": [
      { "race": ["lupo"], "weight": 10 },
-     { "urban": false, "weight": 5 }
+     { "region": "wild" }
     ],
     "via": ["born"]
    },

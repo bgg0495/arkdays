@@ -45,6 +45,11 @@ export const ARCHETYPES = {
     flags: { looksWeight: 2.0, fameStanding: true } },
 };
 export const ARCHETYPE_IDS = Object.keys(ARCHETYPES);
+/** W12(D51-10): 자발 전직(track_switch)이 허용되는 인접 원형. 같은 원형은 항상 허용. 데이터 exits.switch 와 AND */
+export const ARCH_ADJ = {
+  A1: ['A6', 'A11'], A2: ['A4', 'A6', 'A12'], A3: ['A9', 'A10', 'A8'], A4: ['A6', 'A2', 'A11'], A5: ['A11'], A6: ['A4', 'A1', 'A11'],
+  A7: ['A8', 'A11'], A8: ['A7', 'A3'], A9: ['A10', 'A3'], A10: ['A9', 'A11', 'A3'], A11: ['A10', 'A6', 'A12'], A12: ['A2', 'A11'],
+};
 
 /** 몰락 cause → causes.json 사인 id (§11.4). 없으면 cause 그대로(die 가 label 로 처리) */
 export const FALL_CAUSE_TO_DEATH = {

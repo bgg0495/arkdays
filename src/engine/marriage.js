@@ -33,6 +33,7 @@ function typeOk(sim, t) {
   if (req.urban != null && !!S.urban !== !!req.urban) return false;
   if (req.status) { const k = req.status; if (k === 'slave' ? !S.status.slave : k === 'noble' ? !S.status.noble : S.status.stigma !== k) return false; }
   if (req.eth && S.eth !== req.eth) return false;
+  if (req.migrant != null && (S.cur !== S.born) !== !!req.migrant) return false;   // W12: 외지인 혼인 = 타국 출생자(구 eth:outsider 대체)
   return true;
 }
 
@@ -113,7 +114,7 @@ export function polyOpen(sim) {
 export function marriageP(sim) {
   const { S, race } = sim;
   if (S.fam.partner || S.age < 18 || humanAge(S.age, race.lifeMul) > 45 || S.prison === 'camp' || S.serving) return 0;
-  let p = 0.12 * clamp(1 + 0.25 * (S.cap ? S.cap.ties : 0), 0.3, 1.5) * (1 - 0.15 * race.stigma) * (S.eth === 'outsider' ? 0.8 : 1);
+  let p = 0.12 * clamp(1 + 0.25 * (S.cap ? S.cap.ties : 0), 0.3, 1.5) * (1 - 0.15 * race.stigma);
   if (S.res && S.res.phase === 'settling') p *= 0.6;
   if (S.ori.known && !S.rhodes) p *= 0.3;
   if (S.flags.quarantined) p *= 0.3;

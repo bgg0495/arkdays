@@ -5,7 +5,7 @@ import { humanAge } from './lifetable.js';
 import { BALANCE as B } from './balance.js';
 
 export const CAP_KEYS = ['skill', 'learn', 'arts', 'ties'];
-export const CAP_LABEL = { skill: '기량', learn: '학식', arts: '아츠', ties: '연줄', looks: '외모', luck: '운' };
+export const CAP_LABEL = { skill: '기량', learn: '학식', arts: '아츠', ties: '관계', looks: '외모', luck: '운' };
 const Z_MIN = -3, Z_MAX = 3;
 export const zc = (z) => clamp(+z || 0, Z_MIN, Z_MAX);
 
@@ -93,23 +93,35 @@ export function healCaps(S) {
   if (!Number.isFinite(S.arts)) S.arts = S.cap.arts;
 }
 
-/** 신원 카드용: 역량 4종 등급 + 타고남 특성 줄(극단 외모·작위·낙인) */
-export function capProfile(S) {
-  const caps = CAP_KEYS.map((k) => ({ k, label: CAP_LABEL[k], z: S.cap ? S.cap[k] : 0, grade: grade(S.cap ? S.cap[k] : 0) }));
+/** 신원 카드용: 역량 4종 등급(+ delta: 지난 연말 스냅샷 대비 z 변화, W12 D51-1) + 타고남 특성 줄(극단 외모·작위·낙인).
+ *  arch = 현재 진로 원형(A2·A12 면 외모 줄을 늘 보인다, W12 D51-5) */
+export function capProfile(S, arch = null) {
+  const prev = S.years && S.years.length ? S.years[S.years.length - 1].cap : null;
+  const caps = CAP_KEYS.map((k) => ({ k, label: CAP_LABEL[k], z: S.cap ? S.cap[k] : 0, grade: grade(S.cap ? S.cap[k] : 0), delta: prev && S.cap && Number.isFinite(prev[k]) ? +(S.cap[k] - prev[k]).toFixed(3) : 0 }));
   const traits = [];
-  if (S.innate && S.innate.looks > 1.5) traits.push('눈에 띄는 외모');
-  if (S.innate && S.innate.looks < -1.5) traits.push('잊히기 쉬운 얼굴');
+  const looks = S.innate ? S.innate.looks : 0;
+  const lt = B.cap.looksTrait ?? 1.2;
+  const looksTrack = arch === 'A2' || arch === 'A12';
+  if (looks > lt) traits.push('눈에 띄는 외모');
+  else if (looks < -lt) traits.push('잊히기 쉬운 얼굴');
+  else if (looksTrack) traits.push(looks >= 0.5 ? '호감 가는 외모' : looks <= -0.5 ? '무대에 묻히는 외모' : '평범한 외모');
   if (S.status && S.status.noble) traits.push('작위: ' + S.status.noble);
   if (S.status && S.status.slave) traits.push('노예 신분');
   if (S.status && S.status.stigma) traits.push({ infected: '감염자 낙인', exile: '추방자', deserter: '탈영병', excommunicated: '파문', disgrace: '불명예' }[S.status.stigma] || S.status.stigma);
   return { caps, traits };
 }
 
-/** 외모 변경 결정(§6.3)이 열리는 조건 */
+/** 외모 변경 결정(§6.3)이 열리는 조건. W12(D51-5): 생애 1회(S.flags.looksAsked), 인간 척도 18~45세, 외모가 낮거나(lowLooks) A2/A12 진로일 때만 */
 export function looksChangeOpen(sim) {
   const { S } = sim;
   const c = B.cap.looksChange;
-  return S.age >= 18 && !S.prison && !S.serving && S.money >= sim.med * c.money && c.nations.includes(S.cur);
+  if (S.flags.looksAsked != null) return false;
+  const ha = humanAge(S.age, sim.race.lifeMul);
+  if (ha < 18 || ha > (c.ageMax ?? 45)) return false;
+  const t = S.track ? sim.data.trackById[S.track.id] : null;
+  const uses = t && (t.archetype === 'A2' || t.archetype === 'A12');
+  if (!(uses || S.innate.looks < (c.lowLooks ?? -1))) return false;
+  return !S.prison && !S.serving && S.money >= sim.med * c.money && c.nations.includes(S.cur);
 }
 /** 외모 변경 시술 결과 적용. 반환 'ok' | 'fail' | 'accident' */
 export function looksChangeApply(sim) {

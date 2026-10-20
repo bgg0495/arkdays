@@ -53,7 +53,18 @@ sim.js         createSim({data, seed, hooks, content}) ─ 조립점. planYear /
 | `promote(opts)`, `fall(cause?)`, `applyExit(value, cause)`, `switchTrack(id)`, `enterTrack(id, opts)`, `leaveTrack(how)`, `retireTrack(opts)` | **진로 헬퍼**. 콘텐츠가 승급·몰락·전직을 강제할 때 |
 | `joinRhodes(via, opts)`, `setHousing(typeId, opts)` | 로도스 합류·주거 전환 |
 | `newLife(opts)`, `start()`, `load(S)`, `heal()` | 출생 → 시작, 세이브 로드(`migrateSave` 포함, 실패 시 null), NaN 복구 |
-| `tick(dtSec)`, `choose(k, text?)`, `autoChoice()`, `setFocus(k)`, `focusOptions()`, `runYear()` | 유지 |
+| `tick(dtSec)`, `choose(k, text?)`, `autoChoice()`, `setFocus(k)`, `focusOptions()`, `runYear()` | 유지. **W12(D53a)**: `focusOptions(sim)` 은 진로가 있으면(성인·노년 단계) 진로 전용 초점 키 `tf:<원형|진로 id>:<id>` 를 뒤에 붙인다(`focus.js`) |
+| `promoChance(sim)`(track.js export) | **W12(D53b)** `{eligible, p, opp, succ, next, cap}` — 올해 승급 대상 여부, 승급 확률 p, 기회가 뜰 확률 opp, 기회에서의 성공 확률 succ |
+
+## 선택지 `sub`·기록 fx 표기 규약 (W12, D53c)
+
+- 모든 결정(엔진 내장·콘텐츠)의 선택지 `sub` 는 **그 선택이 바꾸는 것**을 적는다: 막대는 `건강 +/−`·`행복 +/−`, 돈은 `돈 +/−`, 역량·지위는 숫자 없이 방향만(`기량 ▲`·`관계 ▼`·`지위 ▲`), 성공 확률은 `성공 확률 n%`(`content/_util.js` 의 `pctText(p)` 로 — NaN 이면 `—`). 표시명은 `CAP_LABEL`(기량·학식·아츠·**관계**(D52, 내부 키 `ties`)·외모·운).
+- 결정 결과·이벤트 결과의 `fx` 는 `sim.logResult` 가 `sim.log(t, k, f, fx)` 로 넘기므로 기록 줄에 `fxText(fx)`(건강·행복·돈·역량 ▲▼·지위 ▲▼)가 붙는다. 역량 등급이 바뀐 해에는 엔진이 `"기량이 보통에서 높음으로 올랐습니다."` 한 줄을 더 남긴다(`capGradeLog`). 신원 카드 역량 칸에는 지난 연말 스냅샷 대비 ▲▼(`capProfile(S).caps[].delta`).
+- 승급은 **승급 기회 결정** `track_promo`(D53b): `trackYear` 가 `promoChance()` 의 `opp` 로 `S.flags.promoDue = {age, stage, succ, cap}` 를 두면 다음 해 planYear 가 연다. 선택지 `go`(성공 `succ` 롤 → `promote()`, 실패 시 지위 −`balance.track.promoFailStanding`) / `wait`. 자동 결정은 `succ ≥ promoAutoGo(0.4)` 면 나선다. 제목·본문·실패 문구는 원형별(`choices.js PROMO_*`). 국가 콘텐츠가 같은 id 를 `hoist()` 하면 그쪽이 우선(디스패처). 강제 진로·강제 단계(A5)는 결정 없이 종전처럼 롤한다.
+- 진로 전용 초점(D53a): `focus.js ARCH_FOCUS`(원형 기본) 또는 진로 JSON `focus:[{id,name,fx:{cap,standing,hl,h,money},fall}]`. 연말 1단계에서 연중 비율만큼 `cap` z·`standing`·`money`(중위소득 배율)·막대를 적용하고 `fall` 은 그 해 몰락 확률 배율(`S.flags.tfFall`). 비율 ≥ 0.5 이고 지난해와 다른 초점이면 기록 한 줄.
+- 진로 후보(`track_choose`·`track_switch`)의 `sub` 에는 `까닭: <가중 최대 요인>`(출신 계층·역량 등급·작위·출신 지역·종족·도시/농촌 출신·이 나라의 길·사건이 연 길…)이 붙는다(`entryCandidates()[].why`).
+- 전직 후보(`switchCandidates`, D51-10): `exits.switch` ∩ (같은 원형 또는 `archetypes.js ARCH_ADJ` 인접 원형). `S.flags.switchOpen` 에 진로 id(또는 배열)를 두면 그 진로만("사건이 연 길").
+- 외모 변경 `looks_change`(D51-5): 생애 1회(`S.flags.looksAsked`), 인간 척도 18~45세, 외모 z < −1 이거나 A2/A12 진로일 때만. 신원 카드 외모 특성 줄은 |looks| > `balance.cap.looksTrait`(1.2) 또는 A2/A12 진로일 때만(`capProfile(S, arch)`).
 
 ## 상태 객체 S (v1 §2 추가·치환분)
 
@@ -108,6 +119,8 @@ Node 에서는 `test/sim.js` 의 `loadData()` 가 `data/tracks/*.json` 을 glob 
 기존: 국가 id·상위 국가·`nation:<id>`·종족 id·`race:<id>`·`M/F`·`female/male`·`urban/rural`·`q1~q5`·`nomadic/settled`·`nomadic_under/upper`·`policy:<p>`·`ori1~3`·`cat1~3`·`conflict1~3`·`infected`·`known`·`ori_stage1~3`·`job:<id>`·`serving`·`prison:<k>`·`rhodes`·`retired`·`school`·`married`·`war`·`threat:<key>`·`trait:<key>`·`born_infected`·`miner_family`·`child_labor`·`working_child`·`parent:<job>`·`camp`·소수민족 플래그.
 
 **v1 추가**: `track:<ID>` · `track:<ID>:<stageId>` · `aff:<ID>` · `archetype:A10`(공통 직장 이벤트 전용) · `arch:<A>` · `itinerant` · `newcomer`(정착 중) · `papers:<k>` · `naturalized` · `migrant` · `rel:<grade>` · `rhodes:<dept>` · `rhodes_<status>` · `noble` · `slave` · `stigma:<k>` · `home:<housing id>` · `homeowner` · `marriage:<type>` · `cap:<k>:<low|mid|high|top>` · `looks:high|low` · `visit:<nation>`(순회형 피드에서만, 국가 태그도 방문국으로 바뀐다).
+
+**W12 추가**: `standing:high`(소속 지위 ≥ 60) · `pos:<A원형>`·`pos:noble`·`pos:high` — 사인 `causes.json` 의 "패밀리·관료·작위·지위 높음 중 하나" 같은 OR 게이트용(같은 접두 OR, D21). **구 `outsider` 태그·`S.eth='outsider'` 는 폐기**(D51-3): 종족 차별 표현은 `rel:<grade>` 로만.
 
 ## 테스트
 

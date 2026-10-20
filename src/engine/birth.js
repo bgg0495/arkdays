@@ -67,10 +67,9 @@ export function newLife(data, rng, opts = {}) {
   const sex = opts.sex ?? (rng.chance(MALE_P) ? 'M' : 'F');
   const race = opts.race ? data.raceById[opts.race] : drawRace(data, nation, rng);
 
-  // 소수민족 플래그: 종족 home 불일치 → outsider, 아니면 국가 eths 가중 롤(없으면 null)
+  // 소수민족 플래그: 국가 eths 가중 롤(없으면 null). W12(D51-3): 종족 home 불일치 → 'outsider' 자동 부여는 폐기 — 차별은 D49 관계 매트릭스(S.rel)만 본다
   let eth = null;
-  if (race.home.length && !race.home.includes(nation.id) && !race.home.includes(root)) eth = 'outsider';
-  else if (Object.keys(nation.eths || {}).length) {
+  if (Object.keys(nation.eths || {}).length) {
     const total = Object.values(nation.eths).reduce((s, v) => s + v, 0);
     if (rng.chance(total / 100)) eth = rng.wpick(nation.eths);
   }
@@ -82,6 +81,8 @@ export function newLife(data, rng, opts = {}) {
 
   const q = opts.q ?? rng.ri(1, 5);
   const urban = rng.chance(odds(clamp(st.urb, 0.02, 0.98), Math.exp(0.3 * (q - 3))));
+  // W12(D51-10): 농촌 출생 전용 소지역(시라쿠사 황야 등) — balance.ruralRegions. 진로 데이터의 {region} 하드 게이트가 읽는다
+  { const rr = B.ruralRegions && (B.ruralRegions[nation.id] || B.ruralRegions[root]); if (rr && !urban) for (const [k, p] of Object.entries(rr)) if (rng.chance(p)) { sub.region = k; break; } }
   let home;
   if (urban && rng.chance(nation.nomadic)) {
     home = { type: 'nomadic', deck: rng.chance(clamp(0.1 + (q - 1) * 0.2, 0.1, 0.9)) ? 'upper' : 'under' };

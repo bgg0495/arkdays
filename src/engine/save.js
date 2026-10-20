@@ -11,6 +11,7 @@ export function healStats(S) {
   S.st = S.st || {};
   for (const k of ['hl', 'h']) S.st[k] = Number.isFinite(S.st[k]) ? clamp(S.st[k], 0, 100) : 60;
   delete S.st.sm; delete S.st.so;
+  if (S.eth === 'outsider') S.eth = null;   // W12(D51-3): 구 outsider 플래그 폐기
   if (!Number.isFinite(S.money)) S.money = 0;
   if (!Number.isFinite(S.income)) S.income = 0;
   if (!Number.isFinite(S.pct)) S.pct = 0.5;

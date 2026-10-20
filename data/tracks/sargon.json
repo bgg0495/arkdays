@@ -192,7 +192,7 @@
     "ages": [10,40],
     "classes": { "q2": 0.1199 },
     "gates": [
-     { "region": "acahualla", "weight": 20 }
+     { "region": "acahualla" }
     ],
     "via": ["born"]
    },

@@ -638,7 +638,7 @@ export const decisions = {
     tags: [T('KAZ_INFECTED')], once: false, gap: 4, at: 0.5,
     ok: (s) => (s.S.track ? s.S.track.stage : -1) >= 1 && s.S.money >= s.med * 1.5,
     build: (s) => ({ title: '상금의 쓸모', body: '모은 상금이 ' + Math.round(s.S.money).toLocaleString() + ' LMD입니다. 감염자 기사의 상금은 바깥 기사의 열에 하나지만, 쓸 데는 정해져 있습니다. 치료비, 가족의 신분 서류, 다음 경기 장비.',
-      choices: [{ k: 'cure', label: '치료비', sub: '건강 +', auto: 1.2 }, { k: 'papers', label: '가족 신분 서류', sub: '행복 +, 연줄 +', auto: 1 }, { k: 'gear', label: '장비', sub: '기량 +, 순위 +', auto: 1 }] }),
+      choices: [{ k: 'cure', label: '치료비', sub: '건강 +', auto: 1.2 }, { k: 'papers', label: '가족 신분 서류', sub: '행복 +, 관계 +', auto: 1 }, { k: 'gear', label: '장비', sub: '기량 +, 순위 +', auto: 1 }] }),
     apply: (s, k) => { const c = medX(s, 1.2);
       if (k === 'cure') return { t: '치료비로 썼습니다. 결정의 진행이 조금 늦어졌다고 의사가 말했습니다. 조금이 얼마인지는 말하지 않았습니다.', k: 'ev', fx: { money: -c, hl: 6 } };
       if (k === 'papers') return { t: '가족의 신분 서류를 샀습니다. 바깥에서는 공짜인 종이였습니다. 어머니가 처음으로 구역 밖 시장에 갔습니다.', k: 'warm', fx: { money: -c, h: 6, cap: { ties: 0.04 } } };

@@ -24,7 +24,7 @@ function canonOk(s, id) {
 }
 const canonSee = (s) => { s.S.flags.canonSeen = (s.S.flags.canonSeen || 0) + 1; };
 const portName = (s) => { const n = s.S.res && s.S.res.itinerantAt && s.data.nationById[s.S.res.itinerantAt]; return n ? n.name : '기항지'; };
-const CAP_NAME = { skill: '기량', learn: '학식', arts: '아츠', ties: '연줄' };
+const CAP_NAME = { skill: '기량', learn: '학식', arts: '아츠', ties: '관계' };
 const topCap = (s) => Object.entries(s.S.cap || {}).sort((a, b) => b[1] - a[1])[0];
 /** 접점 종류(그해·전해 플래그) */
 function contactKind(s) {

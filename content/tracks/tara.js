@@ -409,7 +409,7 @@ export const decisions = {
     ok: (s) => !!s.S.flags.tengairOffer && s.S.age - s.S.flags.tengairOffer <= 1,
     build: (s) => { s.S.flags.tengairAsked = true;
       return { title: '텐게어', body: s.S.age < 15 ? '학교는 빅토리아어, 집은 텐게어입니다. 어느 쪽 말을 제 말로 할지 아이도 정해야 했습니다. 텐게어를 고르면 학교가 멀어지고, 빅토리아어를 고르면 할머니가 멀어집니다.' : '텐게어 모임에 가자는 말을 들었습니다. 가면 마을이 가까워지고 총독부가 멀어집니다. 안 가면 그 반대입니다. 독립이 오면 셈이 바뀐다고들 했지만, 독립은 아직 오지 않았습니다.',
-        choices: [{ k: 'tengair', label: '텐게어를 쓴다', sub: '연줄 +, 학식·일자리 −(독립 전)', auto: 1.2 }, { k: 'english', label: '빅토리아어로 간다', sub: '학식 +, 마을과 거리', auto: 1 }] }; },
+        choices: [{ k: 'tengair', label: '텐게어를 쓴다', sub: '관계 +, 학식·일자리 −(독립 전)', auto: 1.2 }, { k: 'english', label: '빅토리아어로 간다', sub: '학식 +, 마을과 거리', auto: 1 }] }; },
     apply: (s, k) => { if (k === 'tengair') { s.S.flags.tengair = true; return { t: '텐게어를 제 말로 했습니다. ' + (pre(s) ? '학교 성적표에 "언어 태도"라는 칸이 나빠졌고, 교회 뒤 모임에서 제 자리가 생겼습니다.' : '독립 뒤라 셈이 달랐습니다. 관청 서류가 텐게어로 바뀌기 시작했고, 제가 그것을 읽을 수 있었습니다.'), k: 'ev', fx: pre(s) ? { cap: { ties: 0.06, learn: -0.03 }, h: 2 } : { cap: { ties: 0.06, learn: 0.02 }, h: 2 } }; }
       s.S.flags.tengair = false; return { t: '빅토리아어로 갔습니다. 성적표가 좋아졌고, 할머니는 제 말을 절반만 알아들었습니다. 절반은 알아들었습니다.', k: 'note', fx: { cap: { learn: 0.05, ties: -0.02 }, h: -1 } }; },
   },

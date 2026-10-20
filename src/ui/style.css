@@ -319,6 +319,16 @@ input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 1px
 /* ── 결정 모달 ──────────────────────────────────────── */
 .modal-wrap { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; }
 .modal-back { position: absolute; inset: 0; background: rgba(8, 10, 14, 0.72); backdrop-filter: blur(3px); }
+/* W12(D51-4): 잠깐 숨기기 — .peek 면 모달·배경이 투명해지고 버튼만 남는다 */
+.peek-btn { position: absolute; top: 12px; right: 14px; z-index: 3; }
+.modal-wrap.peek { pointer-events: none; }
+.modal-wrap.peek .peek-btn { pointer-events: auto; background: var(--panel); border-color: var(--accent); color: var(--accent); }
+.modal-wrap.peek .modal, .modal-wrap.peek .modal-back { opacity: 0; transition: opacity 120ms; }
+.modal-wrap .modal, .modal-wrap .modal-back { transition: opacity 120ms; }
+/* W12(D51-1): 신원 카드 역량 최근 1년 변화 화살표 */
+.cap .cap-d { font-style: normal; font-size: 0.62rem; margin-left: 0.3em; }
+.cap .cap-d.up { color: var(--accent2); }
+.cap .cap-d.dn { color: var(--bad); }
 .modal { width: min(560px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; background: var(--panel); border: 1px solid var(--line-2); padding: 20px 24px 18px; --cut: 14px; --fc: var(--line-2); animation: modal-in 160ms ease-out; }
 @keyframes modal-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .modal-top { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; font-size: 0.74rem; color: var(--muted); }

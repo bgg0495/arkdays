@@ -204,7 +204,7 @@
       "nameLang": "it", "canon": true,
       "blurb": "법보다 패밀리가 가까운 나라. 도시에서는 아무도 감염자를 묻지 않고, 시골에서는 보호비가 묻습니다.",
       "statOrg": "시청(패밀리 승인)",
-      "culture": { "festivals": ["카르니발레", "늑대 어머니의 날"], "greet": "가족은 안녕하신가", "address": "시뇨르", "elder": "돈", "food": "파스타와 와인", "ruler": "패밀리 수장들", "rulerTitle": "돈", "drink": "와인" },
+      "culture": { "festivals": ["카르네발레", "늑대 어머니의 날"], "greet": "가족은 안녕하신가", "address": "시뇨르", "elder": "돈", "food": "파스타와 와인", "ruler": "패밀리 수장들", "rulerTitle": "돈", "drink": "와인" },
       "refugeeIn": false, "naturalize": "hard", "illegalRisk": 0.3, "expelsInfected": false,
       "mig": { "columbia": 0.4, "leithanien": 0.3, "laterano": 0.2, "victoria": 0.1 },
       "specialTracks": ["SIR_FAMIGLIA","SIR_GANG","SIR_LEGAL","SIR_PUBLIC","SIR_POLICE","SIR_MEDIC","SIR_ART","SIR_CLERGY","SIR_WILD"]
@@ -303,8 +303,8 @@
       "threats": ["three_way_civil_war", "hounds", "oligarch_assassination", "scorched_earth", "dossoles"],
       "nameLang": "es_latam", "canon": true,
       "blurb": "세 정부가 50년째 서로를 정부라 부르는 나라. 군인이 가장 벌이가 좋고, 남부에는 사냥개가 돕니다.",
-      "statOrg": "등기소(가까운 정부 쪽)",
-      "culture": { "festivals": ["독립기념일(세 번)", "성모 행렬"], "greet": "어느 쪽 사람이오", "address": "세뇨르", "elder": "돈", "food": "옥수수 빵과 커피", "ruler": "세 정부", "rulerTitle": "대통령(셋 중 하나)", "drink": "커피" },
+      "statOrg": "볼리바르 등기소",
+      "culture": { "festivals": ["독립기념일(세 번)", "성모 행렬"], "greet": "어느 쪽 사람이오", "address": "세뇨르", "elder": "돈", "food": "옥수수 빵과 커피", "ruler": "세 정부", "rulerTitle": "대통령(셋 중 하나)", "drink": "커피", "factions": { "singas": "싱가스 왕조", "coalition": "연립정부", "liberated": "진정한 볼리바르인", "dossoles": "도솔레스 시정" } },
       "refugeeIn": true, "naturalize": "open", "illegalRisk": 0.4, "expelsInfected": false,
       "mig": { "columbia": 0.6, "sargon": 0.2, "siracusa": 0.1, "leithanien": 0.1 },
       "specialTracks": ["BOL_SINGAS","BOL_COALITION","BOL_TRUE","BOL_PMC","BOL_STREET"]
@@ -361,7 +361,6 @@
   ],
   "ethnicFlags": {
     "gaul": { "nation": "victoria", "p": 0.06, "nameLang": "fr", "note": "가울 유민. 복고주의 감시 이벤트. 비중 추정" },
-    "nomad": { "nation": "tara", "p": 0.15, "note": "타라 유목민. 비중 추정" },
-    "outsider": { "note": "출생 종족의 home에 현재 국가가 없으면 자동 부여(§5.3)" }
+    "nomad": { "nation": "tara", "p": 0.15, "note": "타라 유목민. 비중 추정" }
   }
 }

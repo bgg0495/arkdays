@@ -48,6 +48,9 @@ export const BALANCE = {
     seekPJobless: 0.9,          // 이전에 진로가 있었던 실업자
     promoMax: 0.6,              // 승급 확률 상한
     promoStanding: 10,          // 승급 시 standing +
+    promoOppMul: 1.6, promoOppMin: 0.15, promoOppMax: 0.8,   // W12(D53b): 승급 기회가 뜰 확률 = clamp(p×mul, min, max). 성공 확률 = p/기회
+    promoFailStanding: 8,       // W12(D53b): 승급 기회에 나섰다 실패하면 standing −
+    promoAutoGo: 0.4,           // W12(D53b): 자동 결정은 성공 확률 ≥ 이 값이면 나선다
     kRange: [0.01, 0.25],       // 승급 k 허용 범위(validate)
     baseRange: [0, 0.08],       // 몰락 base 허용 범위(validate)
     warFallMul: 3,              // 전시(S.flags.war) 몰락 ×
@@ -88,6 +91,8 @@ export const BALANCE = {
   },
   // W11: 국가별 출생 연도 하한(BIRTH_YEARS[0] 대신). 카즈델 바벨기·내전기 진로, 에기르 헌터 제도(~1095)가 닿도록
   birthYearMin: { kazdel: 1070, aegir: 1070 },
+  // W12(D51-10): 농촌 출생에만 추가로 롤하는 소지역(출생 환경 전용 진로의 하드 게이트). 시라쿠사 황야 3%
+  ruralRegions: { siracusa: { wild: 0.03 } },
   cap: {
     sd: 0.6,                    // 출생 N(0, 0.6)
     qLearn: 0.25, qTies: 0.35,  // (q−3)× 보정
@@ -99,7 +104,8 @@ export const BALANCE = {
     prisonTies: 0.8,            // 투옥·추방 시 ties −80%
     looksTies: 0.01,            // |looks|>1 이면 ties 연 ±0.01
     decayAge: 60, decaySkill: 0.02, dementiaLearn: 0.05,
-    looksChange: { money: 3, ok: 0.7, fail: 0.2, hlFail: -15, hlAccident: -40, delta: 1.0, nations: ['leithanien', 'columbia', 'lungmen', 'higashi'] },
+    looksChange: { money: 3, ok: 0.7, fail: 0.2, hlFail: -15, hlAccident: -40, delta: 1.0, nations: ['leithanien', 'columbia', 'lungmen', 'higashi'], ageMax: 45, lowLooks: -1, p: 0.5 },   // W12(D51-5): 생애 1회·18~45세·외모 낮음 또는 A2/A12 진로
+    looksTrait: 1.2,            // W12(D51-5): 신원 카드 외모 특성 줄 |looks| 문턱(A2/A12 진로는 항상)
     grades: [[-0.8, '낮음'], [0.5, '보통'], [1.4, '높음'], [Infinity, '뛰어남']],
   },
   mig: {
@@ -143,8 +149,8 @@ export const BALANCE = {
     referralCap: 1.0,
     treatmentP: 0.015,          // 진단 후 치료 입구 연
     treatmentMoney: 1.0,        // 또는 돈 ≥ 중위 ×
-    referralP: 0.12,            // W11: 접점 플래그 + 역량 조건을 넘긴 해의 추천 제안 확률(데이터 p 와 max). 콘텐츠 접점 이벤트가 잦아 0.5 면 합류 6%+
-    treatmentScale: 4,          // W11: 치료 입구 p 추가 배율(구 콘텐츠 직접 합류를 지운 뒤 환자 유입이 너무 낮아짐)
+    referralP: 0.09,            // W12: 진로 초점의 역량 성장으로 추천 입구가 늘어 0.12 → 0.09(합류 3.7% → 목표 1~3%). W11: 접점 플래그 + 역량 조건을 넘긴 해의 추천 제안 확률(데이터 p 와 max). 콘텐츠 접점 이벤트가 잦아 0.5 면 합류 6%+
+    treatmentScale: 3.2,        // W12: 4 → 3.2(같은 이유). W11: 치료 입구 p 추가 배율(구 콘텐츠 직접 합류를 지운 뒤 환자 유입이 너무 낮아짐)
     agreementP: 0.04,
     flightP: 0.05,
     transferP: 0.01,

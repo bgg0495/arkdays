@@ -49,7 +49,7 @@
    { "id": "chapel", "name": "만주원 축복 혼인", "w": 0.55, "age": [19,27], "dowry": 0.3, "canon": "partial" },
    { "id": "fief", "name": "영지 혼인", "w": 0.3, "age": [18,26], "dowry": 0.5, "req": { "urban": false }, "canon": false },
    { "id": "clan_match", "name": "가문 혼약", "w": 0.1, "age": [18,26], "dowry": 4, "req": { "status": "noble" }, "canon": false },
-   { "id": "outsider", "name": "외지인 혼인", "w": 0.05, "age": [20,35], "dowry": 0, "req": { "eth": "outsider" }, "canon": "partial", "note": "외지인 혼인 자녀는 KJE_EXILE 가중(레토)" }
+   { "id": "outsider", "name": "외지인 혼인", "w": 0.05, "age": [20,35], "dowry": 0, "req": { "migrant": true }, "canon": "partial", "note": "외지인 혼인 = 타국 출생 배우자 본인(W12: 구 eth outsider 폐기). 자녀는 KJE_EXILE 가중(레토)" }
   ]
  },
  "leithanien": {

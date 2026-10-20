@@ -7,7 +7,7 @@
 // 결정: 탈영·소년병 거부·징집 면제·챔피언십 참가·공장 범죄 조직·난민 컬럼비아행·시청 뇌물·사냥개 계약 + marry_church/civil/garrison/camp(볼리바르 분기, 타국은 엔진 위임)·home_change·marry_second(sargon.js 공용).
 import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
 import { eul, iga, eun, wa, ro, ieot, rago } from '../../src/engine/text.js';
-import { cul, fest, F, orgF, rhodesF, given, poor, rich, lifeRoll, once, medX } from '../_util.js';
+import { cul, fest, F, orgF, rhodesF, given, poor, rich, lifeRoll, once, medX, faction } from '../_util.js';
 import { sharedDecisions, canonOpen, canonSeen } from './sargon.js';
 import { hoist } from '../_dispatch.js';
 
@@ -19,18 +19,10 @@ const stNew = (s) => !!s.S.track && s.S.track.stage > 0 && s.S.age - s.S.track.s
 const fell = (s, id, within = 2) => !s.S.track && s.S.flags.lastTrack === id && !!s.S.flags.lastFall && s.S.flags.lastFallAt != null && s.S.age - s.S.flags.lastFallAt <= within;
 const standing = (s) => (s.S.track ? s.S.track.standing : 0);
 const skillZ = (s) => (s.S.cap ? s.S.cap.skill : 0);
-/** 출생 진영: singas / coalition / liberated / dossoles. 엔진이 region 을 롤하지 않으면 여기서 한 번 정한다 */
-export function bolFaction(s) {
-  const S = s.S; S.sub = S.sub || {};
-  if (S.sub.region === undefined) {
-    const r = s.rng.rnd();
-    S.sub.region = S.urban ? (r < 0.45 ? 'dossoles' : r < 0.7 ? 'singas' : r < 0.9 ? 'coalition' : 'liberated') : (r < 0.4 ? 'singas' : r < 0.7 ? 'coalition' : r < 0.9 ? 'liberated' : 'dossoles');
-  }
-  return S.sub.region;
-}
-const FACTION_NAME = { singas: '싱가스', coalition: '연립정부', liberated: '해방구', dossoles: '도솔레스' };
-const fac = (s) => FACTION_NAME[bolFaction(s)] || '어느 쪽도 아닌 땅';
-const GOV = (s) => s.rng.pick(['싱가스 쪽', '연립정부 쪽', '해방구 쪽']);
+/** 출생 진영: singas / coalition / liberated / dossoles. 엔진(birth.js)이 balance.regions 로 롤하고, 이름은 nations.json culture.factions(W12 D51-7). 이주자는 _util.faction 이 한 번 정한다 */
+export function bolFaction(s) { faction(s); return s.S.sub.region; }
+const fac = (s) => faction(s) || '어느 쪽도 아닌 땅';
+const GOV = (s) => fac(s) + ' 쪽';
 
 // ── 핵심 1. BOL_SINGAS 싱가스 왕조군 (A4: school → soldier → career → officer → title) ──
 const singas = [
@@ -313,7 +305,7 @@ const marryBol = (id, body) => ({
 });
 
 export const decisions = {
-  marry_church: marryBol('church', (s, pr) => wa(pr.name) + ' 성당에서 혼인하자는 말이 나왔습니다. 신부가 어느 정부 쪽 성당인지 먼저 물었고, 가까운 쪽이라고 답했습니다.' + (pr.home ? ' 상대는 ' + s.data.nationById[pr.home].name + ' 사람입니다.' : '')),
+  marry_church: marryBol('church', (s, pr) => wa(pr.name) + ' 성당에서 혼인하자는 말이 나왔습니다. 신부가 어느 정부 쪽 성당인지 먼저 물었고, ' + fac(s) + ' 쪽이라고 답했습니다.' + (pr.home ? ' 상대는 ' + s.data.nationById[pr.home].name + ' 사람입니다.' : '')),
   marry_civil: marryBol('civil', (s, pr) => wa(pr.name) + ' 도솔레스 시청에 혼인을 올리자는 말이 나왔습니다. 서류 두 장, 도장 하나. 지참금은 없고, 시청 수수료는 있습니다.'),
   marry_garrison: marryBol('garrison', (s, pr) => wa(pr.name) + ' 부대 혼인입니다. 지휘관이 증인이고, 휴가는 이틀입니다. 전시에는 하루가 됩니다.'),
   marry_camp: marryBol('camp', (s, pr) => wa(pr.name) + ' 수용소 천막 사이에서 혼인하자는 말이 나왔습니다. 증인은 같은 천막 사람들이고, 잔치는 배급 두 몫입니다.'),

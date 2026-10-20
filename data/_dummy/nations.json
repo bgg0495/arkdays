@@ -35,6 +35,6 @@
     }
   ],
   "ethnicFlags": {
-    "outsider": { "note": "출생 종족의 home 에 현재 국가가 없으면 자동 부여(§5.3)" }
+    "_outsider_removed": { "note": "W12: 구 outsider 자동 플래그 폐기(D51-3)" }
   }
 }

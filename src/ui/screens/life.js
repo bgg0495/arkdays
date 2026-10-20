@@ -120,8 +120,9 @@ function renderId(app) {
   const [m1, m2] = MRZ(S, sim);
   const status = statusWord(sim);
   const st = standingOf(sim);
-  const prof = capProfile(S);
-  const traits = traitWords(S);
+  const arch = sim.track ? sim.track.archetype : null;
+  const prof = capProfile(S, arch);
+  const traits = traitWords(S, arch);
   const res = residenceLine(sim);
   const housing = housingName(sim);
   const f = (k, v, w) => `<div class="f${w ? ' w' : ''}"><dt>${k}</dt><dd>${v}</dd></div>`;
@@ -137,7 +138,7 @@ function renderId(app) {
       </div>
     </div>
     <div class="caps" aria-label="역량">
-      ${prof.caps.map((c) => `<span class="cap g-${GRADE_KEY[c.grade] || 'mid'}"><i>${esc(c.label)}</i><b>${esc(c.grade)}</b></span>`).join('')}
+      ${prof.caps.map((c) => `<span class="cap g-${GRADE_KEY[c.grade] || 'mid'}" title="${c.delta > 0.005 ? '올해 오름' : c.delta < -0.005 ? '올해 내림' : '변화 없음'}"><i>${esc(c.label)}</i><b>${esc(c.grade)}${c.delta > 0.005 ? '<em class="cap-d up">▲</em>' : c.delta < -0.005 ? '<em class="cap-d dn">▼</em>' : ''}</b></span>`).join('')}
     </div>
     ${traits.length ? `<div class="traits">${traits.map((t) => `<span class="trait">${esc(t)}</span>`).join('')}</div>` : ''}
     <dl class="id-kv">

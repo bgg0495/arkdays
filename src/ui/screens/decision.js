@@ -49,8 +49,10 @@ export function open(app, pd) {
   const v = pd.view;
   const kind = kindOf(pd);
   current = { pd, kind, app };
+  wrap.classList.remove('peek');
   setHtml(wrap, `
     <div class="modal-back"></div>
+    <button class="btn tiny ghost peek-btn" id="btn-peek" type="button" title="결정 창을 잠깐 숨기고 뒤 화면을 봅니다 (H 키)">뒤 화면 보기</button>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" data-id="${esc(pd.id || '')}">
       <div class="modal-top">
         <span class="tag tag-${kind}"><span class="tag-en">${KIND[kind].en}</span>${KIND[kind].ko}</span>
@@ -77,6 +79,7 @@ export function open(app, pd) {
     box.appendChild(b);
   });
   $('#btn-auto', wrap).addEventListener('click', () => { app.actions.toggleAuto(true); });
+  $('#btn-peek', wrap).addEventListener('click', () => togglePeek());
   wrap.hidden = false;
   window.addEventListener('keydown', onKey);
   if (kind === 'small') startCountdown(app, v);
@@ -86,9 +89,19 @@ export function open(app, pd) {
 function onKey(ev) {
   if (!current) return;
   if (ev.target && ev.target.matches('textarea, input')) return;
+  if (ev.key === 'h' || ev.key === 'H' || (ev.key === 'Escape' && $('#modal').classList.contains('peek'))) { ev.preventDefault(); togglePeek(); return; }
   const n = parseInt(ev.key, 10);
   if (n >= 1 && n <= current.pd.view.choices.length) { ev.preventDefault(); pick(current.app, current.pd.view.choices[n - 1].k); }
   else if (current.kind === 'small' && timer) { stopCountdown(); }
+}
+
+/** W12(D51-4): 잠깐 숨기기 — 모달·배경을 투명하게 해 뒤 화면(기록·신원 카드)을 본다. 작은 선택의 카운트다운은 멈춘다 */
+export function togglePeek(force) {
+  const wrap = $('#modal'); if (!wrap || !current) return;
+  const on = typeof force === 'boolean' ? force : !wrap.classList.contains('peek');
+  wrap.classList.toggle('peek', on);
+  const b = $('#btn-peek', wrap); if (b) b.textContent = on ? '결정으로 돌아가기' : '뒤 화면 보기';
+  if (on && timer) stopCountdown();
 }
 
 function pick(app, k) {
