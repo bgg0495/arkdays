@@ -50,13 +50,13 @@ export const events = [
       // 종족 간 결혼(살카즈·에기르 배우자) 소수 롤 — 카즈델·에기르 밖에서만 시선이 따라온다
       if (!p.race && s.rng.chance(0.12) && !['kazdel', 'aegir'].includes(s.S.root)) { p.race = s.rng.pick(['sarkaz', 'aegir', 'sarkaz']); s.S.flags.mixedMarriage = p.race; }
       return { t: wa(p.name) + '의 혼례. ' + wedText(s) + (p.race === 'sarkaz' ? ' 하객 몇이 신부 쪽 뿔을 오래 쳐다봤습니다.' : p.race === 'aegir' ? ' 배우자는 바다에서 온 사람이었습니다. 하객 몇은 그 말만 기억했습니다.' : ''),
-        k: 'warm', fx: { so: 3, h: 3, money: -medX(s, 0.15) }, f: orgF(s, '혼인 등기', s.year) }; } },
+        k: 'warm', fx: { h: 3, money: -medX(s, 0.15), cap: { ties: 0.03 } }, f: orgF(s, '혼인 등기', s.year) }; } },
   { id: 'fam_newlywed', a: [19, 60], w: 25, gap: 12, c: (s) => !!partner(s) && sinceWed(s) >= 1 && sinceWed(s) <= 3,
-    run: (s) => ({ t: s.rng.pick([partner(s).name + '의 코 고는 소리에 익숙해졌습니다.', '둘이 사는 집은 둘이 벌어도 좁았습니다.', eul(cul(s).food) + ' 어느 쪽 집 방식으로 할지 다퉜습니다. 반반으로 정했습니다.']), k: 'warm', fx: { so: 2, h: 2 },
+    run: (s) => ({ t: s.rng.pick([partner(s).name + '의 코 고는 소리에 익숙해졌습니다.', '둘이 사는 집은 둘이 벌어도 좁았습니다.', eul(cul(s).food) + ' 어느 쪽 집 방식으로 할지 다퉜습니다. 반반으로 정했습니다.']), k: 'warm', fx: { h: 2, cap: { ties: 0.02 } },
       f: orgF(s, '가구 조사표') }) },
   { id: 'fam_anniversary', a: [25, 64], w: 40, c: (s) => !!partner(s) && sinceWed(s) > 0 && sinceWed(s) % 10 === 0 && s.S.flags.anniv !== sinceWed(s),
-    run: (s) => { s.S.flags.anniv = sinceWed(s);
-      return { t: '결혼 ' + sinceWed(s) + '년이 되었습니다. ' + s.rng.pick([wa(partner(s).name) + ' 처음 갔던 ' + cul(s).drink + ' 집에 다시 갔습니다. 주인이 바뀌어 있었습니다.', '선물은 없었고, 둘 다 기억은 하고 있었습니다.', '아이들이 상을 차렸습니다. 소금이 많았습니다.']), k: 'warm', fx: { so: 2, h: 2 },
+    run: (s) => { s.S.flags.anniv = sinceWed(s); const hasKids = kids(s).length > 0;
+      return { t: '결혼 ' + sinceWed(s) + '년이 되었습니다. ' + s.rng.pick([wa(partner(s).name) + ' 처음 갔던 ' + cul(s).drink + ' 집에 다시 갔습니다. 주인이 바뀌어 있었습니다.', '선물은 없었고, 둘 다 기억은 하고 있었습니다.', (hasKids ? '아이들이 상을 차렸습니다. 소금이 많았습니다.' : '둘이 상을 차렸습니다. 소금은 알맞았습니다.')]), k: 'warm', fx: { h: 2, cap: { ties: 0.02 } },
         f: orgF(s, '혼인 등기 원본') }; } },
   { id: 'fam_single', a: [30, 48], w: 15, gap: 7, c: (s) => adult(s) && !partner(s) && !s.S.fam.widowed && !s.S.flags.divorced,
     run: (s) => ({ t: s.rng.pick(['친척들이 혼인 이야기를 꺼내는 횟수가 ' + fest(s) + '마다 늘었습니다.', '혼자 사는 집이 익숙해졌습니다. 조용했고, 대개는 괜찮았습니다.', '친구들 결혼식에 ' + s.rng.ri(3, 7) + '번 갔습니다. 축의금 장부는 길어졌습니다.']), k: 'note', fx: { h: s.rng.chance(0.5) ? 1 : -1 },
@@ -65,7 +65,7 @@ export const events = [
     run: (s) => { const f = s.S.fam; const name = f.partner.name;
       f.partner = null; f.married = false; s.S.flags.divorced = s.S.age;
       if (s.S.money > 0) s.S.money = Math.round(s.S.money * 0.85);
-      return { t: wa(name) + ' 헤어졌습니다. ' + s.rng.pick(['서류는 한 장이었습니다.', '집은 반으로 나눌 수 없어서 팔았습니다.', '아이들은 격주로 오갔습니다.']), k: 'loss', fx: { h: -6, so: -4 },
+      return { t: wa(name) + ' 헤어졌습니다. ' + s.rng.pick(['서류는 한 장이었습니다.', '집은 반으로 나눌 수 없어서 팔았습니다.', '아이들은 격주로 오갔습니다.']), k: 'loss', fx: { h: -6, cap: { ties: -0.04 } },
         f: orgF(s, '혼인 해소 신고', s.year) }; } },
   { id: 'fam_widow', a: [19, 64], w: 70, c: (s) => s.S.fam.widowed && !partner(s) && !s.S.flags.widowTold,
     run: (s) => { s.S.flags.widowTold = true;
@@ -75,14 +75,14 @@ export const events = [
     run: (s) => { const r = s.S.flags.mixedMarriage;
       return { t: r === 'sarkaz' ? s.rng.pick(['집주인이 계약을 갱신하지 않았습니다. 이유는 묻지 않았고, 배우자의 뿔을 보는 눈이 이유였습니다.', '아이 학교에서 "아버지 쪽 종족" 칸을 두 번 확인했습니다.', '시장에서 배우자 혼자 가면 값이 달랐습니다. 같이 가기 시작했습니다.'])
         : s.rng.pick(['이웃이 배우자가 물을 얼마나 마시는지 세었습니다.', '해안 소식이 들릴 때마다 사람들의 눈이 우리 집 쪽으로 왔습니다.', '배우자의 친정은 편지로만 왔습니다. 바다 밑에서 오는 편지였습니다.']),
-        k: 'bad', fx: { so: -2, h: -1 }, f: orgF(s, '혼인 등기 비고란 종족 기재') }; } },
+        k: 'bad', fx: { h: -1, cap: { ties: -0.02 } }, f: orgF(s, '혼인 등기 비고란 종족 기재') }; } },
 
   // ── 출산·자녀 ──
   { id: 'fam_newborn', a: [19, 55], w: 80, c: (s) => kids(s).some((k) => kidAge(s, k) === 1 && !s.S.flags['nb_' + k.bornAt]),
     run: (s) => { const k = kids(s).find((x) => kidAge(s, x) === 1 && !s.S.flags['nb_' + x.bornAt]); s.S.flags['nb_' + k.bornAt] = true;
       const who = s.rng.pick([momAlive(s) ? '어머니' : null, dadAlive(s) ? '아버지' : null, partner(s) ? partner(s).name : null, '할머니'].filter(Boolean));
       return { t: k.name + '의 이름은 ' + iga(who) + ' 지었습니다. ' + s.rng.pick(['첫해는 아무도 제대로 자지 못했습니다.', org(s) + ' 등록은 ' + s.rng.ri(1, 6) + '주 늦었습니다.', fest(s) + '에 처음 안고 나갔습니다.']) + (k.infected ? ' 의사가 아이 손을 오래 들여다봤습니다.' : ''),
-        k: 'warm', fx: { so: 2, h: 3, hl: -1 }, f: orgF(s, '출생 신고 ' + s.rng.ri(100, 9999) + '호', s.year - 1) }; } },
+        k: 'warm', fx: { h: 3, hl: -1, cap: { ties: 0.02 } }, f: orgF(s, '출생 신고 ' + s.rng.ri(100, 9999) + '호', s.year - 1) }; } },
   { id: 'fam_kid_school', a: [24, 60], w: 40, c: (s) => kids(s).some((k) => kidAge(s, k) === 7 && !s.S.flags['ks_' + k.bornAt]),
     run: (s) => { const k = kids(s).find((x) => kidAge(s, x) === 7 && !s.S.flags['ks_' + x.bornAt]); s.S.flags['ks_' + k.bornAt] = true;
       const go = !poor(s) || s.rng.chance(0.5);
@@ -90,40 +90,40 @@ export const events = [
         k: go ? 'warm' : 'bad', fx: go ? { h: 2, money: -medX(s, 0.05) } : { h: -3 }, f: orgF(s, go ? '학령 아동 등록 명부' : '학령 아동 명부 미등록') }; } },
   { id: 'fam_kid_teen', a: [32, 64], w: 30, c: (s) => kids(s).some((k) => kidAge(s, k) === 15 && !s.S.flags['kt_' + k.bornAt]),
     run: (s) => { const k = kids(s).find((x) => kidAge(s, x) === 15 && !s.S.flags['kt_' + x.bornAt]); s.S.flags['kt_' + k.bornAt] = true;
-      return { t: iga(k.name) + ' 열다섯이 되었습니다. ' + s.rng.pick(['저와 말을 안 하는 기간이 ' + s.rng.ri(2, 9) + '달 이어졌습니다.', '제 직업을 묻더니 다른 일을 하겠다고 했습니다. 맞는 말이었습니다.', '어느 날 저보다 키가 컸습니다. 날짜는 모릅니다.']), k: 'note', fx: { so: 1, h: s.rng.chance(0.5) ? 1 : -1 },
+      return { t: iga(k.name) + ' 열다섯이 되었습니다. ' + s.rng.pick(['저와 말을 안 하는 기간이 ' + s.rng.ri(2, 9) + '달 이어졌습니다.', '제 직업을 묻더니 다른 일을 하겠다고 했습니다. 맞는 말이었습니다.', '어느 날 저보다 키가 컸습니다. 날짜는 모릅니다.']), k: 'note', fx: { h: s.rng.chance(0.5) ? 1 : -1, cap: { ties: 0.01 } },
         f: orgF(s, '호적 대장 연령 기재') }; } },
   { id: 'fam_kid_leaves', a: [36, 64], w: 35, c: (s) => kids(s).some((k) => kidAge(s, k) === 19 && !s.S.flags['kl_' + k.bornAt]),
     run: (s) => { const k = kids(s).find((x) => kidAge(s, x) === 19 && !s.S.flags['kl_' + x.bornAt]); s.S.flags['kl_' + k.bornAt] = true;
-      return { t: iga(k.name) + ' 집을 떠났습니다. ' + s.rng.pick(['짐은 가방 하나였습니다. 제가 떠날 때와 같았습니다.', '다른 도시로 갔습니다. 편지는 처음 석 달은 자주 왔습니다.', '떠난 방은 그대로 두었습니다. 넉 달 뒤에 창고가 되었습니다.']), k: 'note', fx: { so: -2, h: 1 },
+      return { t: iga(k.name) + ' 집을 떠났습니다. ' + s.rng.pick(['짐은 가방 하나였습니다. 제가 떠날 때와 같았습니다.', '다른 도시로 갔습니다. 편지는 처음 석 달은 자주 왔습니다.', '떠난 방은 그대로 두었습니다. 넉 달 뒤에 창고가 되었습니다.']), k: 'note', fx: { h: 1, cap: { ties: -0.02 } },
         f: orgF(s, '전출 신고') }; } },
   { id: 'fam_kid_marries', a: [40, 64], w: 30, c: (s) => kids(s).some((k) => kidAge(s, k) >= 22 && kidAge(s, k) <= 32 && !s.S.flags['km_' + k.bornAt] && lifeRoll(s, 'km' + k.bornAt, 0.6)),
     run: (s) => { const k = kids(s).find((x) => kidAge(s, x) >= 22 && kidAge(s, x) <= 32 && !s.S.flags['km_' + x.bornAt] && s.S.flags['roll_km' + x.bornAt]); s.S.flags['km_' + k.bornAt] = true; s.S.flags.kidMarried = true;
-      return { t: iga(k.name) + ' 결혼했습니다. ' + s.rng.pick(['제 혼례 때 입은 옷을 꺼냈다가 다시 넣었습니다. 맞지 않았습니다.', '상대 집안은 ' + cul(s).address + ' 호칭을 썼습니다. 저는 아직 어색했습니다.', '잔치 비용은 반을 냈습니다. 반도 적지 않았습니다.']), k: 'warm', fx: { so: 3, h: 3, money: -medX(s, 0.15) },
+      return { t: iga(k.name) + ' 결혼했습니다. ' + s.rng.pick(['제 혼례 때 입은 옷을 꺼냈다가 다시 넣었습니다. 맞지 않았습니다.', '상대 집안은 ' + cul(s).address + ' 호칭을 썼습니다. 저는 아직 어색했습니다.', '잔치 비용은 반을 냈습니다. 반도 적지 않았습니다.']), k: 'warm', fx: { h: 3, money: -medX(s, 0.15), cap: { ties: 0.03 } },
         f: orgF(s, '혼인 등기(자녀분)', s.year) }; } },
   { id: 'fam_grandchild', a: [42, 64], w: 30, gap: 6, c: (s) => !!s.S.flags.kidMarried,
-    run: (s) => ({ t: '손주가 태어났습니다. ' + s.rng.pick(['이름 짓는 데는 끼지 못했습니다.', '제 아이가 아이를 안는 모습을 보았습니다. 서툴렀고, 저도 그랬습니다.', fest(s) + '에 처음 안아 보았습니다. 가벼웠습니다.']), k: 'warm', fx: { so: 3, h: 4 },
+    run: (s) => ({ t: '손주가 태어났습니다. ' + s.rng.pick(['이름 짓는 데는 끼지 못했습니다.', '제 아이가 아이를 안는 모습을 보았습니다. 서툴렀고, 저도 그랬습니다.', fest(s) + '에 처음 안아 보았습니다. 가벼웠습니다.']), k: 'warm', fx: { h: 4, cap: { ties: 0.03 } },
       f: orgF(s, '출생 신고(손주분)') }) },
   { id: 'fam_kid_infected_found', a: [20, 60], w: 70, c: (s) => kids(s).some((k) => k.infected && kidAge(s, k) >= 3 && kidAge(s, k) <= 14) && !s.S.flags.kidInfectedKnown,
     run: (s) => { const k = kids(s).find((x) => x.infected && kidAge(s, x) >= 3); s.S.flags.kidInfectedKnown = k.name; s.S.flags.kidInfectedAt = s.S.age;
-      return { t: k.name + '의 검진 결과가 왔습니다. 감염이었습니다. ' + s.rng.pick(['봉투는 식탁 위에 하루 동안 그대로 있었습니다.', '아이는 봉투보다 저녁 반찬에 관심이 있었습니다.', '의사는 숫자를 적고 저를 보지 않았습니다.']), k: 'bad', fx: { h: -8, so: -2 },
+      return { t: k.name + '의 검진 결과가 왔습니다. 감염이었습니다. ' + s.rng.pick(['봉투는 식탁 위에 하루 동안 그대로 있었습니다.', '아이는 봉투보다 저녁 반찬에 관심이 있었습니다.', '의사는 숫자를 적고 저를 보지 않았습니다.']), k: 'bad', fx: { h: -8, cap: { ties: -0.02 } },
         f: rhodesF('소아 광석병 진단 기준') }; } },
   { id: 'fam_kid_lost_after', a: [19, 64], w: 70, c: (s) => s.S.stats.kidsLost > (s.S.flags.kidsLostSeen || 0),
     run: (s) => { s.S.flags.kidsLostSeen = s.S.stats.kidsLost;
       return { t: s.rng.pick(['아이의 물건을 상자에 넣었습니다. 상자는 열지 않았습니다.', '이웃이 ' + eul(cul(s).food) + ' 가져왔습니다. 먹지 못했고, 버리지도 못했습니다.', '그 뒤로 한동안 ' + eul(fest(s)) + ' 지내지 않았습니다.']), k: 'loss', fx: { h: -3 },
         f: orgF(s, '사망 신고 접수증') }; } },
   { id: 'fam_childless', a: [26, 46], w: 15, gap: 9, c: (s) => !!partner(s) && !kids(s).length && sinceWed(s) >= 5,
-    run: (s) => ({ t: s.rng.pick(['아이 이야기는 서로 꺼내지 않게 되었습니다.', '친척이 아이를 묻는 횟수가 ' + fest(s) + '마다 늘었습니다.', '둘이서 사는 집은 조용했고, 조용함에 익숙해졌습니다.']), k: 'note', fx: { h: -1, so: 1 },
+    run: (s) => ({ t: s.rng.pick(['아이 이야기는 서로 꺼내지 않게 되었습니다.', '친척이 아이를 묻는 횟수가 ' + fest(s) + '마다 늘었습니다.', '둘이서 사는 집은 조용했고, 조용함에 익숙해졌습니다.']), k: 'note', fx: { h: -1, cap: { ties: 0.01 } },
       f: orgF(s, '가구 조사표') }) },
-  { id: 'fam_dinner', a: [20, 64], w: 15, gap: 4, c: (s) => !!partner(s) || kids(s).length > 0,
-    run: (s) => ({ t: fest(s) + '에 식구가 다 모였습니다. ' + s.rng.pick([iga(cul(s).food) + ' 상에 올랐습니다. 늘 같은 맛이었고, 그래서 좋았습니다.', '서로 "' + cul(s).greet + '" 하고 인사했습니다. 식구끼리 그러는 집이었습니다.', eul(cul(s).drink) + ' 한 잔씩 돌렸습니다. 아이들은 냄새만 맡았습니다.']), k: 'warm', fx: { so: 2, h: 3 },
+  { id: 'fam_dinner', a: [20, 64], w: 15, gap: 8, c: (s) => !!partner(s) || kids(s).length > 0,
+    run: (s) => ({ t: fest(s) + '에 식구가 다 모였습니다. ' + s.rng.pick([iga(cul(s).food) + ' 상에 올랐습니다. 늘 같은 맛이었고, 그래서 좋았습니다.', '서로 "' + cul(s).greet + '" 하고 인사했습니다. 식구끼리 그러는 집이었습니다.', eul(cul(s).drink) + ' 한 잔씩 돌렸습니다. 아이들은 냄새만 맡았습니다.']), k: 'warm', fx: { h: 3, cap: { ties: 0.02 } },
       f: orgF(s, '명절 공휴일 고시') }) },
 
   // ── 배우자 ──
-  { id: 'fam_partner_job', a: [20, 60], w: 15, gap: 6, c: (s) => !!partner(s),
+  { id: 'fam_partner_job', a: [20, 60], w: 15, gap: 8, c: (s) => !!partner(s),
     run: (s) => { const p = partner(s); const n = p.name;
       const i = p.works ? s.rng.pick([1, 2]) : 0;   // 0 일 시작 / 1 일터 폐업(실직) / 2 승진
       if (i === 0) p.works = true; else if (i === 1) { p.works = false; s.S.flags.partnerLostJob = s.S.age; } else p.pct = Math.min(0.98, (p.pct || 0.5) + 0.05);
-      return { t: [iga(n) + ' 일을 시작했습니다. 저녁 식탁에 모르는 이름들이 올라왔습니다.', n + '의 일터가 문을 닫았습니다. 한동안 한 사람 벌이로 살았습니다.', iga(n) + ' 승진했습니다. 그날은 ' + eul(cul(s).food) + ' 사 왔습니다.'][i], k: 'note', fx: { so: 1 },
+      return { t: [iga(n) + ' 일을 시작했습니다. 저녁 식탁에 모르는 이름들이 올라왔습니다.', n + '의 일터가 문을 닫았습니다. 한동안 한 사람 벌이로 살았습니다.', iga(n) + ' 승진했습니다. 그날은 ' + eul(cul(s).food) + ' 사 왔습니다.'][i], k: 'note', fx: { cap: { ties: 0.01 } },
         f: orgF(s, '가구 조사표 배우자 직업란') }; } },
   { id: 'fam_partner_sick', a: [22, 64], w: 20, gap: 8, c: (s) => !!partner(s) && lifeRoll(s, 'psick', 0.5),
     run: (s) => ({ t: iga(partner(s).name) + ' 오래 아팠습니다. ' + s.rng.pick(['의사 값이 두 달치였습니다.', '제가 일을 쉬고 간병했습니다.', '회복했습니다. 전처럼은 아니었습니다.']), k: 'bad', fx: { money: -medX(s, 0.15), h: -3, hl: -1 },
@@ -131,15 +131,15 @@ export const events = [
   { id: 'fam_partner_infected', a: [19, 64], w: 70, c: (s) => !!partner(s) && partner(s).infected && !s.S.flags.partnerInfTold,
     run: (s) => { s.S.flags.partnerInfTold = true;
       return { t: iga(partner(s).name) + ' 감염 판정을 받았습니다. ' + ({ persecute: '밤에 둘이서 서류를 태웠습니다.', quarantine: '격리구역 이주 명령이 함께 왔습니다. 가족 동반란이 있었습니다.', euthanasia: '서류 마지막 줄을 둘 다 읽지 않았습니다.', insurance: '보험료 청구서가 둘 몫이 되었습니다.', neglect: '보호비 걷는 사람이 한 명 더 왔습니다.', expel: '성문까지 같이 걸어갔습니다. 저는 돌아왔습니다.', treat: '치료소에 같이 다니기 시작했습니다.' }[s.policy] || '달라진 것은 식탁의 침묵이었습니다.'),
-        k: 'bad', fx: { h: -6, so: -2 }, f: orgF(s, '감염자 등록 대장(배우자분)') }; } },
+        k: 'bad', fx: { h: -6, cap: { ties: -0.02 } }, f: orgF(s, '감염자 등록 대장(배우자분)') }; } },
 
   // ── 부모 ──
   { id: 'fam_parent_old', a: [25, 64], w: 20, gap: 6, c: (s) => (momAlive(s) && s.S.fam.mom.age >= 65) || (dadAlive(s) && s.S.fam.dad.age >= 65),
     run: (s) => { const who = momAlive(s) && s.S.fam.mom.age >= 65 ? '어머니' : '아버지';
-      return { t: iga(who) + ' 눈에 띄게 늙었습니다. ' + s.rng.pick(['제 이름을 한 번 잘못 불렀습니다.', '같은 이야기를 두 번 했습니다. 두 번 들었습니다.', '계단에서 손을 내밀었습니다. 처음에는 거절했습니다.']), k: 'note', fx: { h: -1, so: 1 },
+      return { t: iga(who) + ' 눈에 띄게 늙었습니다. ' + s.rng.pick(['제 이름을 한 번 잘못 불렀습니다.', '같은 이야기를 두 번 했습니다. 두 번 들었습니다.', '계단에서 손을 내밀었습니다. 처음에는 거절했습니다.']), k: 'note', fx: { h: -1, cap: { ties: 0.01 } },
         f: orgF(s, '노령 부양 실태 조사') }; } },
   { id: 'fam_parent_visit', a: [20, 60], w: 12, gap: 6, c: (s) => (momAlive(s) || dadAlive(s)) && (!!s.S.mig || (nomadic(s) && yr(s, 'pvisit', 0.5))),
-    run: (s) => ({ t: '부모를 보러 먼 길을 갔습니다. ' + s.rng.pick(['집은 작아졌고 부모는 더 작아졌습니다.', eul(cul(s).food) + ' 해 주었습니다. 어릴 때 맛이었습니다.', '돌아오는 길에 한 번 뒤를 봤습니다.']), k: 'warm', fx: { so: 3, h: 2, money: -medX(s, 0.1) },
+    run: (s) => ({ t: '부모를 보러 먼 길을 갔습니다. ' + s.rng.pick(['집은 작아졌고 부모는 더 작아졌습니다.', eul(cul(s).food) + ' 해 주었습니다. 어릴 때 맛이었습니다.', '돌아오는 길에 한 번 뒤를 봤습니다.']), k: 'warm', fx: { h: 2, money: -medX(s, 0.1), cap: { ties: 0.03 } },
       f: orgF(s, '여행 통행 기록') }) },
   { id: 'fam_mom_belongings', a: [19, 64], w: 40, c: (s) => !momAlive(s) && !s.S.flags.momBelongings,
     run: (s) => { s.S.flags.momBelongings = true;
@@ -153,14 +153,14 @@ export const events = [
   // ── 형제 ──
   { id: 'fam_sib_feud', a: [22, 60], w: 20, c: (s) => sibCount(s) > 0 && !s.S.flags.sibFeud && lifeRoll(s, 'sibfeud', 0.4),
     run: (s) => { s.S.flags.sibFeud = s.S.age;
-      return { t: '형제와 틀어졌습니다. ' + s.rng.pick(['부모 집을 누가 갖느냐였습니다.', '돈 문제였습니다. 액수는 지금 생각하면 적었습니다.', '말 한마디였습니다. 어느 쪽이 먼저였는지는 서로 다르게 기억합니다.']), k: 'bad', fx: { so: -3, h: -2 },
+      return { t: '형제와 틀어졌습니다. ' + s.rng.pick(['부모 집을 누가 갖느냐였습니다.', '돈 문제였습니다. 액수는 지금 생각하면 적었습니다.', '말 한마디였습니다. 어느 쪽이 먼저였는지는 서로 다르게 기억합니다.']), k: 'bad', fx: { h: -2, cap: { ties: -0.03 } },
         f: F('기록된 바 없음') }; } },
   { id: 'fam_sib_reconcile', a: [24, 64], w: 25, c: (s) => !!s.S.flags.sibFeud && !s.S.flags.sibOk && s.S.age - s.S.flags.sibFeud >= 3,
     run: (s) => { s.S.flags.sibOk = true;
-      return { t: '형제와 다시 말을 했습니다. ' + s.rng.pick(['부모의 장례에서였습니다.', fest(s) + '에 먼저 연락이 왔습니다.', '아이들이 사촌끼리 먼저 친해졌습니다.']), k: 'warm', fx: { so: 4, h: 3 },
+      return { t: '형제와 다시 말을 했습니다. ' + s.rng.pick(['부모의 장례에서였습니다.', fest(s) + '에 먼저 연락이 왔습니다.', '아이들이 사촌끼리 먼저 친해졌습니다.']), k: 'warm', fx: { h: 3, cap: { ties: 0.04 } },
         f: F('기록된 바 없음') }; } },
-  { id: 'fam_sib_news', a: [20, 64], w: 15, gap: 6, c: (s) => sibCount(s) > 0,
-    run: (s) => ({ t: '형제 소식이 왔습니다. ' + s.rng.pick(['결혼했다고 했습니다. 잔치에는 가지 못했습니다.', '다른 나라로 떠났다고 했습니다. 주소는 없었습니다.', '검진에서 걸렸다고 했습니다. 편지는 그 뒤로 짧아졌습니다.', '아이가 둘이 되었다고 했습니다.']), k: 'note', fx: { so: 1 },
+  { id: 'fam_sib_news', a: [20, 64], w: 15, gap: 8, c: (s) => sibCount(s) > 0,
+    run: (s) => ({ t: '형제 소식이 왔습니다. ' + s.rng.pick(['결혼했다고 했습니다. 잔치에는 가지 못했습니다.', '다른 나라로 떠났다고 했습니다. 주소는 없었습니다.', '검진에서 걸렸다고 했습니다. 편지는 그 뒤로 짧아졌습니다.', '아이가 둘이 되었다고 했습니다.']), k: 'note', fx: { cap: { ties: 0.01 } },
       f: orgF(s, '우편 수신 대장') }) },
 ];
 
@@ -195,9 +195,9 @@ export const decisions = {
     },
     apply: (s, k) => {
       s.S.flags.kidsDecided = k;
-      if (k === 'want') return { t: '아이를 기다리기로 했습니다. 방 한쪽을 비웠습니다.', k: 'warm', fx: { so: 3, h: 1 }, f: F('기록된 바 없음') };
-      if (k === 'wait') return { t: '몇 해 미루기로 했습니다. 그동안은 둘이 벌어 둘이 쓰기로 했습니다.', k: 'note', fx: { money: medX(s, 0.2) }, f: F('기록된 바 없음') };
-      return { t: '갖지 않기로 했습니다. 서로에게 그 말을 다시 하지는 않았습니다.', k: 'note', fx: { h: s.rng.chance(0.5) ? 2 : -2 }, f: F('기록된 바 없음') };
+      if (k === 'want') return { t: '아이를 기다리기로 했습니다. 방 한쪽을 비웠습니다.', k: 'warm', fx: { h: 1, cap: { ties: 0.03 } }, f: F('기록된 바 없음') };
+      if (k === 'wait') return { t: '몇 해 미루기로 했습니다. 그동안은 둘이 벌어 둘이 쓰기로 했습니다.', k: 'note', fx: { money: medX(s, 0.2) } };
+      return { t: '갖지 않기로 했습니다. 서로에게 그 말을 다시 하지는 않았습니다.', k: 'note', fx: { h: s.rng.chance(0.5) ? 2 : -2 } };
     },
   },
   /** 가사 전담(D35). 결혼 1~3년차 또는 첫 아이 0~1세 중 먼저 오는 때 생애 한 번 묻는다. 기본 가중치 = 국가 homemakerP × 성별(남 ×0.1) */
@@ -227,13 +227,13 @@ export const decisions = {
       s.S.flags.hmAsked = s.S.age; s.S.flags.hmAskedWhy = firstKid ? 'kid' : 'wed';
       if (k !== 'home') return { t: s.S.job ? '일을 계속하기로 했습니다. 집안일은 둘이 나눴고, 대개는 한쪽으로 기울었습니다.' : '일을 찾기로 했습니다. 집안일은 저녁에 했습니다.', k: 'note', f: orgF(s, '가구 조사표 맞벌이란') };
       becomeHomemaker(s);
-      return { t: '가사를 맡았습니다. ' + s.rng.pick(['아침은 배우자보다 먼저, 저녁은 배우자보다 늦게 끝났습니다.', '장부는 제 손에 들어왔습니다. 돈은 들어오는 날보다 나가는 날이 많았습니다.', '이웃 아낙들의 이름을 한 달 만에 다 외웠습니다.']), k: 'ev', fx: { so: 2, h: 1 }, f: orgF(s, '가구 조사표 가사 전담란', s.year) };
+      return { t: '가사를 맡았습니다. ' + s.rng.pick(['아침은 배우자보다 먼저, 저녁은 배우자보다 늦게 끝났습니다.', '장부는 제 손에 들어왔습니다. 돈은 들어오는 날보다 나가는 날이 많았습니다.', '이웃 아낙들의 이름을 한 달 만에 다 외웠습니다.']), k: 'ev', fx: { h: 1, cap: { ties: 0.02 } }, f: orgF(s, '가구 조사표 가사 전담란', s.year) };
     },
   },
   /** 가사 전담 중 사별·이혼·배우자 실직 → 다시 일터로(D35) */
   adult_backtowork: {
     once: false, gap: 3,
-    ok: (s) => homemaker(s) && !s.S.prison && hum(s) < 62 && (!partner(s) || !partner(s).works),
+    ok: (s) => homemaker(s) && !s.S.prison && hum(s) < 58 && (!partner(s) || !partner(s).works),   // W14(QA B12): 60세 넘어 '첫 면접' 이 나오지 않게
     build: (s) => {
       const p = partner(s);
       const why = !p ? (s.S.fam.widowed ? '배우자가 세상을 떠났습니다.' : '혼자가 되었습니다.') : p.name + '의 벌이가 끊겼습니다.';
@@ -244,8 +244,8 @@ export const decisions = {
           { k: 'stay', label: '집을 지킨다', sub: kids(s).length ? '아이들 곁에. 돈 −' : '돈 −', auto: p ? 1 : 0.6 }] };
     },
     apply: (s, k) => {
-      if (k !== 'work') return { t: '집을 지키기로 했습니다. 살림은 줄였습니다.', k: 'note', fx: { h: -1 }, f: F('기록된 바 없음') };
-      s.S.job = null; s.S.income = 0; s.S.flags.backToWork = s.S.age; s.S.flags.joblessYears = 0;
+      if (k !== 'work') return { t: '집을 지키기로 했습니다. 살림은 줄였습니다.', k: 'note', fx: { h: -1 } };
+      if (s.S.track) s.leaveTrack('content', { quiet: true }); s.S.job = null; s.S.income = 0; s.S.flags.backToWork = s.S.age; s.S.flags.joblessYears = 0;
       return { t: '일을 찾기로 했습니다. ' + ((s.S.flags.homemakerYears || 0) >= 10 ? '첫 면접에서 햇수를 묻더니 더는 묻지 않았습니다.' : '옛 일터에 먼저 들렀습니다.'), k: 'ev', f: orgF(s, '구직 알선 대장', s.year) };
     },
   },
@@ -262,10 +262,10 @@ export const decisions = {
           { k: 'no', label: '맡지 않는다', sub: '관계 −, 행복 −', auto: sibCount(s) ? 1 : 0.4 }] };
     },
     apply: (s, k) => {
-      if (k === 'home') { s.S.flags.parentCare = 'home'; return { t: '모셨습니다. 방 하나가 부모 방이 되었고, 저녁 식탁에 옛날이야기가 돌아왔습니다.', k: 'warm', fx: { so: 3, h: 1, money: -medX(s, 0.25) }, f: orgF(s, '동거 가족 신고') }; }
-      if (k === 'send') { s.S.flags.parentCare = 'send'; return { t: '매달 돈을 보내기로 했습니다. 편지는 두 달에 한 번이었습니다.', k: 'note', fx: { money: -medX(s, 0.2) }, f: orgF(s, '송금 기록') }; }
+      if (k === 'home') { s.S.flags.parentCare = 'home'; return { t: '모셨습니다. 방 하나가 부모 방이 되었고, 저녁 식탁에 옛날이야기가 돌아왔습니다.', k: 'warm', fx: { h: 1, money: -medX(s, 0.25), cap: { ties: 0.03 } }, f: orgF(s, '동거 가족 신고') }; }
+      if (k === 'send') { s.S.flags.parentCare = 'send'; return { t: '매달 돈을 보내기로 했습니다. 편지는 두 달에 한 번이었습니다.', k: 'note', fx: { money: -medX(s, 0.2) } }; }
       s.S.flags.parentCare = 'no';
-      return { t: '맡지 않기로 했습니다. ' + (sibCount(s) ? '형제가 맡았고, 그 뒤로 형제와 말이 줄었습니다.' : '부모는 혼자 지냈습니다.'), k: 'bad', fx: { so: -3, h: -3 }, f: F('기록된 바 없음') };
+      return { t: '맡지 않기로 했습니다. ' + (sibCount(s) ? '형제가 맡았고, 그 뒤로 형제와 말이 줄었습니다.' : '부모는 혼자 지냈습니다.'), k: 'bad', fx: { h: -3, cap: { ties: -0.03 } }, f: F('기록된 바 없음') };
     },
   },
   /** 자녀 감염 판정 뒤 */
@@ -286,10 +286,10 @@ export const decisions = {
       if (k === 'hide') { S.flags.kidHidden = true; return { t: '판정서를 태웠습니다. ' + name + '의 옷은 전부 긴 소매가 되었습니다.', k: 'note', fx: { h: -2 }, f: F('기록된 바 없음') }; }
       if (k === 'rhodes') {
         if (s.rng.chance(0.5)) { S.flags.kidRhodes = true; return { t: '로도스 아일랜드와 연락이 닿았습니다. ' + eun(name) + ' 몇 달에 한 번 검진을 받고 약을 가져옵니다.', k: 'warm', fx: { h: 4 }, f: rhodesF('소아 환자 등록증') }; }
-        return { t: '로도스 아일랜드에 편지를 보냈습니다. 답은 오지 않았고, 아이는 그대로 자랐습니다.', k: 'note', fx: { h: -2 }, f: rhodesF('수신 우편 대장 미도달 표시') };
+        return { t: '로도스 아일랜드에 편지를 보냈습니다. 답은 오지 않았고, 아이는 그대로 자랐습니다.', k: 'note', fx: { h: -2 } };
       }
       const out = { persecute: eun(name) + ' 이송 명단에 올랐습니다. 면회는 분기에 한 번이었습니다.', quarantine: eun(name) + ' 격리구역으로 갔습니다. 가족 동반을 신청했고, 반년 뒤 허가가 났습니다.', euthanasia: eun(name) + ' 격리구역에 등록되었습니다. 서류 마지막 줄은 읽지 않았습니다.', insurance: '보험료 청구서에 ' + name + ' 몫이 더해졌습니다.', neglect: '보호비 걷는 사람이 아이 이름을 외워 갔습니다.', expel: eun(name) + ' 보호자 한 명과 함께 성문 밖으로 나가게 되었습니다. ' + (partner(s) ? iga(partner(s).name) + ' 따라갔습니다.' : '제가 따라갔고, 돌아왔습니다.'), treat: eun(name) + ' 공공 치료소에 등록되었습니다. 진행을 늦추는 약이 나옵니다.' }[p] || eun(name) + ' 등록되었습니다. 달라진 것은 없었습니다.';
-      const fx = { persecute: { h: -10, so: -4 }, quarantine: { h: -6, money: -medX(s, 0.3) }, euthanasia: { h: -8 }, insurance: { money: -medX(s, 0.4) }, neglect: { money: -medX(s, 0.2) }, expel: { h: -8, so: -3 }, treat: { h: 2 } }[p] || { h: -1 };
+      const fx = { persecute: { h: -10, cap: { ties: -0.04 } }, quarantine: { h: -6, money: -medX(s, 0.3) }, euthanasia: { h: -8 }, insurance: { money: -medX(s, 0.4) }, neglect: { money: -medX(s, 0.2) }, expel: { h: -8, cap: { ties: -0.03 } }, treat: { h: 2 } }[p] || { h: -1 };
       return { t: '신고했습니다. ' + out, k: p === 'treat' ? 'note' : 'bad', fx, f: orgF(s, '감염자 등록 대장(미성년자분)', s.year) };
     },
   },

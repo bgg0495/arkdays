@@ -74,7 +74,8 @@
     "ages": [14,40],
     "classes": { "q1": 0.3, "q2": 0.3 },
     "gates": [
-     { "urban": false, "weight": 1.5 }
+     { "urban": false, "weight": 1.5 },
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["village"]
    },
@@ -413,7 +414,7 @@
    "id": "KJE_KT",
    "nation": "kjerag",
    "region": null,
-   "name": "카란 무역 집행원",
+   "name": "무역회사 집행원",
    "archetype": "A10",
    "canon": true,
    "itinerant": false,

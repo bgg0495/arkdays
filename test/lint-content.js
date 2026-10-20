@@ -58,7 +58,7 @@ const ENV_WORDS = {
   '사제': 'sami|kjerag|laterano', '수도원': 'laterano|kjerag', '신관': 'minos', '신탁': 'minos', '올림': 'minos', '해안': 'coast', '항구': 'coast', '어선': 'coast', '설원': 'sami|kjerag|ursus', '제국 내무성': 'ursus', '황제': 'ursus|leithanien',
 };
 const NATION_TAGS = new Set(data.nations.map((n) => n.id).concat(['common']));
-const ENV_TAG_RE = /^(nation:|track:|aff:|arch:|archetype:|policy:|visit:|rhodes|threat:|home:|nomadic|settled|cat\d|conflict\d|ori\d|camp|prison:|serving|infected|known|ori_stage|born_infected|miner_family|child_labor|working_child|parent:|job:|rel:|race:|papers:|newcomer|migrant|naturalized|itinerant|noble|slave|stigma:|marriage:|homeowner|urban|rural|q\d|school|retired|married|war|trait:|looks:|cap:|M$|F$|female|male|standing:|pos:)/;
+const ENV_TAG_RE = /^(nation:|born:|track:|aff:|arch:|archetype:|policy:|visit:|rhodes|threat:|home:|nomadic|settled|cat\d|conflict\d|ori\d|camp|prison:|serving|infected|known|ori_stage|born_infected|miner_family|child_labor|working_child|parent:|job:|rel:|race:|papers:|newcomer|migrant|naturalized|itinerant|noble|slave|stigma:|marriage:|homeowner|urban|rural|q\d|school|retired|married|war|trait:|looks:|cap:|M$|F$|female|male|standing:|pos:)/;
 const RACE_IDS = new Set(data.races.map((r) => r.id));
 const KNOWN_PLAIN = new Set(['infected', 'known', 'camp', 'serving', 'rhodes', 'retired', 'school', 'married', 'war', 'nomadic', 'settled', 'urban', 'rural', 'M', 'F', 'female', 'male', 'born_infected', 'miner_family', 'child_labor', 'working_child', 'itinerant', 'newcomer', 'naturalized', 'migrant', 'noble', 'slave', 'homeowner', 'nomadic_under', 'nomadic_upper', 'settled_ground', 'q1', 'q2', 'q3', 'q4', 'q5', 'ori1', 'ori2', 'ori3', 'cat1', 'cat2', 'cat3', 'conflict1', 'conflict2', 'conflict3', 'ori_stage1', 'ori_stage2', 'ori_stage3', 'rhodes_operator', 'rhodes_contractor', 'rhodes_patient', 'standing:high', ...Object.keys(data.ethnicFlags || {}), ...new Set(data.races.map((r) => r.group).filter(Boolean))]);
 const THREATS = new Set(data.nations.flatMap((n) => n.threats || []));
@@ -90,7 +90,7 @@ function checkTag(tag, id, kind) {
   switch (pre) {
     case 'track': { const [tid, stage] = val.split(':'); const tr = data.trackById[tid]; if (!tr) { push('L2', id, kind + ' 없는 진로 ' + tag); return; } if (stage && !tr.stages.some((s) => s.id === stage)) push('L2', id, kind + ' 없는 단계 ' + tag + ' (단계: ' + tr.stages.map((s) => s.id).join('/') + ')'); return; }
     case 'aff': if (!data.affById[val]) push('L2', id, kind + ' 없는 소속 ' + tag); return;
-    case 'nation': case 'visit': if (!NATION_TAGS.has(val) && val !== 'rhodes') push('L2', id, kind + ' 없는 국가 ' + tag); return;
+    case 'nation': case 'visit': case 'born': if (!NATION_TAGS.has(val) && val !== 'rhodes') push('L2', id, kind + ' 없는 국가 ' + tag); return;
     case 'race': if (!RACE_IDS.has(val)) push('L2', id, kind + ' 없는 종족 ' + tag); return;
     case 'arch': if (!ARCHETYPES[val]) push('L2', id, kind + ' 없는 원형 ' + tag); return;
     case 'archetype': if (val !== 'A10') push('L2', id, kind + ' archetype: 는 A10 만 ' + tag); return;
@@ -118,9 +118,9 @@ for (const { kind, o } of all) {
   for (const tg of tags) checkTag(tg, id, kind);
   // L1: 환경 태그 없음 + 고유어
   const hasEnv = tags.some((t) => ENV_TAG_RE.test(t.replace(/^!/, '')) || NATION_TAGS.has(t.replace(/^!/, '')) || RACE_IDS.has(t.replace(/^!/, ''))) || (kind === 'big' && o.nation);
-  const gated = /s\.S\.cur|S\.root|\.nation\.|nomadic\(|under\(|upper\(|home\.type|\.policy|pol\(s\)|conscript|seaborn|collapsal|catFreq|\.rel\b|S\.race|S\.eth|track\b|S\.job|job\.|fellFrom|afterFall|lastTrack|S\.flags\.|flags\[|catHits|insuranceLand|canSwitch|enterCom|S\.prison|quarantined|S\.rhodes|S\.ori\./.test(src);
+  const gated = /s\.S\.cur|S\.root|\.nation\.|nomadic\(|under\(|upper\(|home\.type|\.policy|pol\(s\)|conscript|seaborn|collapsal|catFreq|\.rel\b|S\.race|S\.eth|track\b|S\.job|job\.|fellFrom|afterFall|fell\(|lastTrack|S\.flags\.|flags\[|catHits|insuranceLand|canSwitch|enterCom|S\.prison|quarantined|S\.rhodes|S\.ori\./.test(src);   // W14: fell(진로) 후일담도 게이트
   if (!hasEnv && !gated && kind !== 'big') { const hits = Object.keys(ENV_WORDS).filter((w) => ko.includes(w)); if (hits.length) push('L1', id, kind + ' 태그 없음 · 고유어 ' + hits.map((h) => h + '(' + ENV_WORDS[h] + ')').join(', ')); }
-  else if (!hasEnv && gated && kind !== 'big') { const hits = Object.keys(ENV_WORDS).filter((w) => ko.includes(w) && ['이동도시', '플레이트', '격리구역', '수용소', '징집', '시테러', '붕괴체'].includes(w)); if (hits.length && !/nomadic\(|under\(|upper\(|home\.type|\.policy|pol\(s\)|conscript|seaborn|collapsal/.test(src)) push('L1', id, kind + ' 태그 없음(코드 분기만) · 고유어 ' + hits.join(', ') + ' — 분기가 그 낱말을 가리는지 확인'); }
+  else if (!hasEnv && gated && kind !== 'big') { const hits = Object.keys(ENV_WORDS).filter((w) => ko.includes(w) && ['이동도시', '플레이트', '격리구역', '수용소', '징집', '시테러', '붕괴체'].includes(w) && !new RegExp('(먼 나라|다른 나라|옛|지난) [^\'.]{0,12}' + w).test(ko)); if (hits.length && !/nomadic\(|under\(|upper\(|home\.type|\.policy|pol\(s\)|conscript|seaborn|collapsal|quarantined|oriOutcome|oriPolicy|hidden\(|infCamp|prison/.test(src)) push('L1', id, kind + ' 태그 없음(코드 분기만) · 고유어 ' + hits.join(', ') + ' — 분기가 그 낱말을 가리는지 확인'); }   // W14: 격리·수용소 플래그 분기(quarantined/oriOutcome/oriPolicy)와 '먼 나라 이동도시' 류는 새는 것이 아니다
   // L3: track: 태그 vs 파일 나라
   const fn = NATION_OF_FILE(fileOf(id));
   if (fn && fn !== 'common' && fn !== 'rhodes') for (const tg of tags) { const m = /^track:([A-Z0-9_]+)/.exec(tg); if (m && data.trackById[m[1]]) { const tn = data.trackById[m[1]].nation; const ok = tn === fn || data.nationById[tn] && data.nationById[tn].parent === fn || (fn === 'lungmen' && tn === 'yan') || (fn === 'tara' && tn === 'victoria') || tn === 'common'; if (!ok) push('L3', id, kind + ' ' + tg + ' 진로 나라 ' + tn + ' ≠ 파일 ' + fn); } }
@@ -128,7 +128,7 @@ for (const { kind, o } of all) {
   if (/\bst\.sm\b|\bst\.so\b/.test(src)) push('L4', id, kind + ' st.sm/st.so 참조');
   if (/eth\s*===?\s*'outsider'|'outsider'/.test(src) && !/marry_outsider|outsider_/.test(src)) push('L4', id, kind + " eth 'outsider' 참조");
   if (/S\.rhodes\s*=\s*true/.test(src)) push('L4', id, kind + ' S.rhodes = true 직접 합류');
-  if (/\bS\.job\s*=\s*(?!null)/.test(src)) push('L4', id, kind + ' S.job 직접 대입(진로 상태 기계 우회)');
+  if (/\bS\.job\s*=(?![=\s]*null)(?!=)/.test(src)) push('L4', id, kind + ' S.job 직접 대입(진로 상태 기계 우회)');   // W14: `= null` 은 아래 규칙이 본다
   if (/\bS\.job\s*=\s*null/.test(src) && !/leaveTrack|S\.track/.test(src)) push('L4', id, kind + ' S.job = null (진로는 다음 연말에 how:content 로 끝남 — 이탈 서사·trackHist 누락)');
   const fxKeys = [...src.matchAll(/fx:\s*\{([^}]*)\}/g)].map((m) => m[1]).join(',');
   if (/\b(sm|so)\s*:/.test(fxKeys)) push('L4', id, kind + ' fx 에 구 sm/so 키(1점=0.01z 로만 흡수, 로그에 표시 안 됨)');

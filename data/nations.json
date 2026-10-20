@@ -5,6 +5,8 @@
     "note": "share는 D9 확정표(합 99.8, 로도스 0.05 제외분은 비중에 넣지 않음). policy·oriExp·catFreq·conflict·nomadic·races 가중치는 전부 추정(보고서 C절 정성 등급을 숫자로 옮긴 것). 분할 정책(용문 시기 전환, 극동 남북, 시라쿠사 도시/시골, 사르곤 아미르별)은 enum 하나로 못 적어 policyVariants 로 보조한다. canon:false 는 캐논에 없는 설정을 우리가 지어낸 국가.",
     "policyEnum": ["persecute", "quarantine", "euthanasia", "neglect", "insurance", "expel", "ignore", "treat"],
     "conscriptEnum": ["none", "draft", "volunteer", "mandatory"],
+    "conscriptUntil": "W14(D54): 있으면 그 해까지만 conscript 가 유효, 이후 none (엔진 sim.conscript)",
+    "catFreq0": "W14(D54): 0 = 엔진 재앙 롤 없음(balance.catBase[0]=0). 재앙은 대사건으로만",
     "conscriptSexEnum": ["M", "all"],
     "homemakerPNote": "기혼 여성이 가사 전담을 택할 기본 확률(D35). 남성은 ×0.1",
     "w8Fields": { "refugeeIn": "난민 수용 여부(§7.1 flee 목적지)", "naturalize": "open/hard/never(§7.2 귀화)", "illegalRisk": "불법 체류 발각 가중 0~1(연 8% × 값, §7.2)", "expelsInfected": "감염 판정 시 추방(§7.1 exile, 라테라노)", "mig": "이주 목적지 가중(§7.1, 합 1). W1 에 없던 필드라 W8 이 추가", "specialTracks": "국가 특수 진로 id(canon:true && 원형≠A10/A11 && 유입 있음 && 강제 전환 아님). 진로 결정 후보에 최소 1개 노출(D26). 전부 창작" },
@@ -98,8 +100,9 @@
     {
       "id": "kjerag", "name": "쉐라그", "share": 1, "model": ["CHE"],
       "statMul": { "le": 0.95, "u5": 1.3, "ppp": 0.45, "gini": 1.1, "urb": 0.6 },
-      "policy": "ignore", "oriExp": 1, "catFreq": 1, "conflict": 1, "nomadic": 0.0,
+      "policy": "ignore", "oriExp": 1, "catFreq": 0, "conflict": 1, "nomadic": 0.0,
       "seaborn": false, "collapsal": false, "conscript": "none", "conscriptSex": "M", "homemakerP": 0.7,
+      "catNote": "W14(D54): catFreq 0 = 엔진 재앙 없음. 1101.12 첫 재앙은 대사건이 담당",
       "races": { "feline": 35, "ursus": 25, "zalak": 20, "caprinae": 8, "anaty": 5, "elafia": 3, "liberi": 2, "sarkaz": 1.5 },
       "jobs": ["karlan_trader", "mountain_guide", "railway", "caster"],
       "threats": ["avalanche", "first_catastrophe_1101", "victoria_invasion_1101", "three_clans"],
@@ -147,7 +150,8 @@
       "id": "tara", "name": "타라", "parent": "victoria", "share": 1.5, "model": ["IRL"],
       "statMul": { "le": 0.95, "u5": 1.2, "ppp": 0.8, "gini": 1.1, "urb": 0.8 },
       "policy": "persecute", "oriExp": 2, "catFreq": 2, "conflict": 3, "nomadic": 0.2,
-      "seaborn": false, "collapsal": false, "conscript": "none", "conscriptSex": "M", "homemakerP": 0.75,
+      "seaborn": false, "collapsal": false, "conscript": "draft", "conscriptUntil": 1098, "conscriptSex": "M", "homemakerP": 0.75,
+      "conscriptNote": "W14(D54): 1098 독립 전까지 빅토리아 징집이 미친다(conscriptUntil 뒤로는 none)",
       "races": { "feline": 50, "vouivre": 10, "liberi": 10, "perro": 8, "lupo": 7, "kuranta": 5, "cautus": 4, "sarkaz": 3, "draco": 0.1, "aslan": 0.1 },
       "jobs": ["nomad_courier", "defence_militia", "farmer", "caster"],
       "threats": ["hillock_disaster", "independence_war_1098", "food_shortage", "dublinn", "redsteel_guard"],
@@ -189,7 +193,7 @@
       "culture": { "festivals": ["건국 기념일", "흑요석 축제"], "greet": "좋은 하루 되세요", "address": "미스터", "elder": "씨", "food": "스테이크와 맥주", "ruler": "대통령", "rulerTitle": "대통령", "drink": "커피" },
       "refugeeIn": true, "naturalize": "open", "illegalRisk": 0.5, "expelsInfected": false,
       "mig": { "victoria": 0.25, "kazimierz": 0.15, "siracusa": 0.15, "bolivar": 0.15, "lungmen": 0.15, "sargon": 0.1, "laterano": 0.05 },
-      "specialTracks": ["COL_SLUM","COL_PMC","COL_BSW","COL_UNIV","COL_GOV","COL_MEDIA","COL_RHINE"]
+      "specialTracks": ["COL_SLUM","COL_PMC","COL_UNIV","COL_GOV","COL_MEDIA","COL_RESEARCH"]
     },
     {
       "id": "siracusa", "name": "시라쿠사", "share": 4, "model": ["ITA"],
@@ -212,7 +216,7 @@
     {
       "id": "laterano", "name": "라테라노", "share": 0.5, "model": ["ITA"],
       "statMul": { "le": 1.1, "u5": 0.5, "ppp": 1.6, "gini": 0.7, "urb": 1.6 },
-      "policy": "expel", "oriExp": 1, "catFreq": 1, "conflict": 1, "nomadic": 1.0,
+      "policy": "expel", "oriExp": 1, "catFreq": 0, "conflict": 1, "nomadic": 1.0,
       "seaborn": false, "collapsal": false, "conscript": "none", "conscriptSex": "M", "homemakerP": 0.7,
       "races": { "sankta": 70, "liberi": 22, "feline": 4, "vulpo": 2, "perro": 1.5, "lupo": 0.5 },
       "jobs": ["notary", "gunsmith", "gun_knight", "caster"],

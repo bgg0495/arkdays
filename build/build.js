@@ -112,8 +112,9 @@ async function main() {
   const scriptRe = /^[ \t]*<script type="module" src="\.\/main\.js"><\/script>\s*$/m;
   if (!linkRe.test(html) || !scriptRe.test(html)) throw new Error('src/index.html 템플릿 모양이 바뀌었습니다(link/script 태그를 못 찾음)');
   html = html.replace(/<!--[\s\S]*?-->\n?/, '');   // 개발용 주석 제거
-  html = html.replace(linkRe, '<style>\n' + safeStyle(css) + '\n</style>');
-  html = html.replace(scriptRe,
+  // W14: 치환 문자열이 아니라 함수로 넣는다 — 번들 안의 `$&`(esbuild 가 변수명을 `$` 로 줄이면 `if($&&…` 이 생긴다)·`$'` 가 String.replace 치환 패턴으로 해석되어 원본 <script src> 가 되살아나던 것
+  html = html.replace(linkRe, () => '<style>\n' + safeStyle(css) + '\n</style>');
+  html = html.replace(scriptRe, () =>
     '<script>' + safeScript(dataJs) + '</script>\n' +
     '<script>' + safeScript(js) + '</script>');
   const stamp = new Date().toISOString().slice(0, 10);

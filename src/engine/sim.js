@@ -20,18 +20,19 @@ import { BALANCE as B } from './balance.js';
 import { makeName, familyNames } from './names.js';
 import { wa, ro, eul, iga } from './text.js';
 // v1
-import { infect } from './oripathy.js';
+import { infect, diagnose } from './oripathy.js';
 import { capYear, applyLegacyFx, grade, capProfile, CAP_LABEL, CAP_KEYS, addCap } from './caps.js';
 import { FOCUS, STAGE_FOCUS, focusDef, isTrackFocus, trackFocusKeys } from './focus.js';
 export { FOCUS, STAGE_FOCUS, focusDef, isTrackFocus };
 import { refreshRel } from './relations.js';
-import { trackYear, trackOf, affOf, trackName, trackTitle, enterTrack, leaveTrack, promote, fall, switchTrack, retireTrack, applyExit } from './track.js';
+import { trackYear, trackOf, affOf, trackName, trackTitle, enterTrack, leaveTrack, promote, fall, switchTrack, retireTrack, applyExit, dreamYear } from './track.js';
 import { migrateTo, resYear, fleeCheck, migrationSummary } from './migration.js';
 import { initHousing, housingYear, setHousing } from './housing.js';
 import { normalizeRhodes, joinRhodes, rhodesYear, rhodesCard, operatorProfile, clinical } from './rhodes.js';
-import { installEngineDecisions } from './choices.js';
+import { installEngineDecisions, fillSubs } from './choices.js';
 import { healStats, migrateSave } from './save.js';
 export { healStats, migrateSave, grade, capProfile, operatorProfile, clinical, rhodesCard, trackName, migrationSummary };
+export { dreamStatus, gateHint, koAge } from './track.js';   // W16(D56): 신원 카드 꿈 줄
 
 // 올해의 초점 표(FOCUS·STAGE_FOCUS·진로 전용 초점)는 focus.js(W12 D53a). 연중 시간 비율(focusW)만큼 연말에 적용. 공통 초점의 역량 효과는 caps.js B.cap.focus(§6.2)
 export const NOOP_HOOK = { log() {}, change() {}, decision() {}, death() {}, year() {} };
@@ -87,6 +88,8 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
       return { id: S.job, name: trackName(sim) || t.name, sector: t.archetype === 'A11' ? 'ser' : 'ser', edu: 0, urban: 0, oriMul: (st && st.oriMul != null ? st.oriMul : t.oriMul) ?? 1, risk: {}, req: [], special: !!t.special, lo: 0.2, hi: 0.8, only: null, age: t.entry.ages, track: t.id, stage: st ? st.id : null };
     },
     get policy() { const t = trackOf(sim); return (t && t.oriPolicyOverride) || resolvePolicy(sim.nation, sim.S); },
+    // W14(D54): 징집 제도. nations.json conscriptUntil 이 있으면 그 해까지만(타라는 1098 독립 전까지 빅토리아 징집)
+    get conscript() { const n = sim.nation; return n.conscriptUntil != null && sim.year > n.conscriptUntil ? 'none' : n.conscript; },
     get lt() { return lifeTable(sim.nation.stats, sim.S.sex, sim.race.lifeMul); },
     get year() { return sim.S.by + sim.S.age; },
     get med() { return medianLMD(sim); },
@@ -126,6 +129,7 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
   };
   sim.die = (causeId, label) => die(sim, causeId, label);
   sim.infect = (how) => infect(sim, how);
+  sim.diagnose = (how) => diagnose(sim, how);   // W14: 진로 몰락 사유 infected 가 판정까지 낸다(B8)
 
   /** 이주 상태 기계(§7): migrate(reason, to?). reason = work|study|marriage|flee|asylum|exile|contract|caravan|rhodes|return|deport (구 expel·insurance_default·voluntary 도 받음) */
   sim.migrate = (reason, to, opts) => migrateTo(sim, reason === 'expel' || reason === 'insurance_default' ? reason : reason, to, opts);
@@ -175,7 +179,7 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     S.queue = []; S.fT = {};
     normalizeRhodes(sim);
     sim.ensureFocus();
-    for (const b of dueBigEvents(sim)) S.queue.push({ at: ((b.month || 6) - 0.5) / 12, type: 'big', id: b.id });
+    for (const b of dueBigEvents(sim)) S.queue.push({ at: ((b.month || 6) - 0.5) / 12, type: 'big', id: b.id, visit: b.nation && b.nation !== S.cur && b.nation !== S.root ? b.nation : undefined });   // W14: 방문국(순회형·기항지) 대사건은 visit 표시
     // 결정은 한 해 앞 2개. 엔진 내장 결정(installEngineDecisions 가 앞에 둔 것)은 순서대로 먼저, 나머지 콘텐츠 결정은 섞어서 고른다
     // (W11: 레지스트리 등록 순서가 곧 우선순위라 뒤에 등록된 국가 결정이 영영 밀리던 것을 막는다, W9f-6·W9g-5)
     const all = scheduledDecisions(sim);
@@ -219,6 +223,7 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
       if (ev.c && !ev.c(sim)) return;
       sim.logResult(ev.run(sim), 'ev');
       S.flags['ev_' + ev.id] = S.age;
+      S.flags['evn_' + ev.id] = (S.flags['evn_' + ev.id] || 0) + 1;   // W14(A11): 생애 발화 횟수
       S.recent.push(ev.id);
       if (S.recent.length > 14) S.recent.shift();
     } else if (e.type === 'dec') {
@@ -259,6 +264,7 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     const view = d.build(sim, p);
     if (!view || !view.choices || !view.choices.length) return false;
     if (view.fact && !keepFootnote(view.body || '', view.fact)) delete view.fact;
+    fillSubs(sim, id, view);   // W14(QA A9·D53c): sub 없는 선택지에 효과 한 줄(돈·역량·지위·위험)을 채운다
     S.pending = { id, p, view };
     S.stats.decisions++;
     sim.HOOK.decision(S.pending, sim);
@@ -273,7 +279,7 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     S.done[pd.id] = (S.done[pd.id] || 0) + 1;
     S.flags['last_' + pd.id] = S.age;
     if (auto) S.stats.auto++;
-    const ch = pd.view.choices.find((c) => c.k === k) || pd.view.choices[0];
+    const ch = pd.view.choices.find((c) => c.k === k && !c.disabled) || pd.view.choices.find((c) => !c.disabled) || pd.view.choices[0];   // W16: 닫힌 문(disabled)은 고를 수 없다
     sim.log('결정: ' + ch.label, 'dec');
     sim.logResult(d.apply(sim, ch.k, pd.p, text), 'ev');
     sim.ensureFocus();
@@ -284,7 +290,7 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
   sim.autoChoice = () => {
     const pd = sim.S.pending;
     if (!pd) return false;
-    const k = sim.rng.wpick(pd.view.choices.map((c) => [c.k, c.auto ?? 1]));
+    const k = sim.rng.wpick(pd.view.choices.map((c) => [c.k, c.disabled ? 0 : (c.auto ?? 1)]));
     return sim.choose(k, '', true);
   };
 
@@ -332,12 +338,13 @@ export function createSim({ data, seed, rng, hooks, content, auto = false, terra
     // 5. 역량 성장·스탯 수렴, 6. 가족·주거·거주·로도스
     capYear(sim);
     statYear(sim);
-    capGradeLog(sim);
     familyYear(sim); if (S.phase !== 'life') return;
     housingYear(sim);
     resYear(sim); if (S.phase !== 'life') return;
     refreshRel(sim);   // W11: 관계 등급은 연도 조건(since 1098 류)이 있어 매년 다시 본다(W9d-7)
     rhodesYear(sim); if (S.phase !== 'life') return;
+    dreamYear(sim);     // W16(D56): 인간 척도 35세까지 꿈 진로에 못 들어갔으면 접는다
+    capGradeLog(sim);   // W14(QA B17): 이주·투옥의 mulTies 가 끝난 뒤(스냅샷 직전)에 등급 변화를 적는다
     // 7. 연간 스냅샷
     S.years.push({ a: S.age, y: sim.year, hl: Math.round(S.st.hl), h: Math.round(S.st.h),
       cap: { skill: +S.cap.skill.toFixed(2), learn: +S.cap.learn.toFixed(2), arts: +S.cap.arts.toFixed(2), ties: +S.cap.ties.toFixed(2) },
@@ -415,7 +422,7 @@ function serviceYear(sim) {
     if (S.serving === 0) sim.log('복무를 마쳤습니다.', 'ev');
     return;
   }
-  if (n.conscript === 'mandatory' && S.age === 18 && !S.served && !S.prison && (n.conscriptSex === 'all' || S.sex === 'M')) {   // D33: 기본 남성만
+  if (sim.conscript === 'mandatory' && S.age === 18 && !S.served && !S.prison && (n.conscriptSex === 'all' || S.sex === 'M')) {   // D33: 기본 남성만. W14: conscriptUntil
     const t = trackOf(sim);
     if (t && t.archetype === 'A4') { S.served = 3; return; }   // W11: 이미 군단·징집 진로(BOL_SINGAS 류)에 있으면 그것이 복무다
     S.serving = 3; S.job = null; S.school = null;

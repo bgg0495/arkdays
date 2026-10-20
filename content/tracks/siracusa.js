@@ -84,11 +84,11 @@ export const events = [
   // ══════════════════════════════════════════════════════════════════════════
   // SIR_FAMIGLIA 패밀리 조직원(A1, 핵심) — errand / soldato / capo / consigliere / don
   // ══════════════════════════════════════════════════════════════════════════
-  entry('sir_fam_entry', 'SIR_FAMIGLIA', (s) => ({ t: pick(s, [ro(affName(s, '패밀리')) + ' 들어간 첫 해였습니다. 꼬리 끝을 그 색으로 염색했고, 어머니는 그 색을 보고 아무 말도 하지 않았습니다.', ro(affName(s, '패밀리')) + ' 들어간 첫 해였습니다. 세차장 직원으로 서류를 썼고, 세차는 한 번도 하지 않았습니다.']), k: 'ev' })),
+  entry('sir_fam_entry', 'SIR_FAMIGLIA', (s) => ({ t: pick(s, [ro(affName(s, '패밀리')) + ' 들어간 첫 해였습니다. 꼬리 끝을 그 색으로 염색했고, ' + (s.S.fam.mom.alive ? '어머니는' : '집에서는') + ' 그 색을 보고 아무 말도 하지 않았습니다.', ro(affName(s, '패밀리')) + ' 들어간 첫 해였습니다. 세차장 직원으로 서류를 썼고, 세차는 한 번도 하지 않았습니다.']), k: 'ev' })),
   ev('sir_fam_errand_envelope', 'SIR_FAMIGLIA', 'errand', [14, 30], 35, 1, (s) => ({ t: '봉투를 건넸습니다. 받는 사람은 이름을 묻지 않았고, 저도 묻지 않았습니다.', k: 'ev', fx: { standing: 3, money: medX(s, 0.02) } })),
   ev('sir_fam_errand_wait', 'SIR_FAMIGLIA', 'errand', [14, 30], 30, 2, (s) => ({ t: '차 옆에서 4시간을 기다렸습니다. 기다리는 것도 일이라고 했습니다. 일당은 기다린 시간만큼 나왔습니다.', k: 'note', f: F('시청(패밀리 승인) 소년 고용 지침, 일당 기준 시간당') })),
   ev('sir_fam_errand_signs', 'SIR_FAMIGLIA', 'errand', [14, 30], 25, 2, (s) => ({ t: '수신호를 배웠습니다. 솔다토는 말을 하지 않는다고 했습니다. 손가락 셋이 "기다려", 둘이 "가"였습니다.', k: 'ev', fx: { cap: { skill: 0.03 } } })),
-  ev('sir_fam_errand_mother', 'SIR_FAMIGLIA', 'errand', [14, 30], 20, 3, (s) => ({ t: '어머니가 어디서 돈을 받아 오느냐고 물었습니다. 세차장이라고 했습니다. 어머니는 더 묻지 않았습니다.', k: 'note', fx: { h: -1 } })),
+  ev('sir_fam_errand_mother', 'SIR_FAMIGLIA', 'errand', [14, 30], 20, 3, (s) => ({ t: '어머니가 어디서 돈을 받아 오느냐고 물었습니다. 세차장이라고 했습니다. 어머니는 더 묻지 않았습니다.', k: 'note', fx: { h: -1 } }), { c: (s) => s.S.fam.mom.alive }),
   ev('sir_fam_sold_night', 'SIR_FAMIGLIA', 'soldato', [16, 55], 35, 2, (s) => ({ t: '밤에 불려 나갔습니다. 돌아와서는 아무 말도 하지 않았고, 아침에 옷을 태웠습니다.', k: 'bad', fx: { h: -3, standing: 3 } })),
   ev('sir_fam_sold_protection', 'SIR_FAMIGLIA', 'soldato', [16, 55], 30, 2, (s) => ({ t: '구역의 가게 40곳을 돌았습니다. 봉투를 받았고, 봉투가 가벼운 가게 앞에서는 조금 오래 서 있었습니다.', k: 'ev', fx: { money: medX(s, 0.08), standing: 2 }, f: F('시청(패밀리 승인) 지역 보호 분담금 안내, 구역당 40~60곳') })),
   ev('sir_fam_sold_rural_infected', 'SIR_FAMIGLIA', 'soldato', [16, 55], 20, 3, (s) => ({ t: '시골 감염자 집에 "의료보험" 봉투를 받으러 갔습니다. 보험이라는 말을 쓰라고 했습니다. 집 사람은 그 말을 믿지 않았고, 봉투는 주었습니다.', k: 'bad', fx: { h: -2, money: medX(s, 0.05) } })),
@@ -517,7 +517,7 @@ export const events = [
     run: (s) => ({ t: '식당에서 자리를 받았습니다. 창가 자리는 꼬리 있는 손님 차례였고, 저희는 안쪽이었습니다. 음식은 같았습니다.', k: 'note', fx: { h: -1 } }) },
   { id: 'sir_rel_subtle_greeting', a: [10, 85], tags: ['siracusa', 'rel:subtle'], w: 25, gap: 3,
     run: (s) => ({ t: '"가족은 안녕하신가"라는 인사를 받았습니다. 대답은 외웠습니다. 그 뒤에 오는 침묵이 한 박자 길다는 것도 외웠습니다.', k: 'note' }) },
-  { id: 'sir_rel_subtle_hire', a: [15, 60], tags: ['siracusa', 'rel:subtle'], w: 20, gap: 4,
+  { id: 'sir_rel_subtle_hire', a: [15, 57], tags: ['siracusa', 'rel:subtle'], w: 20, gap: 4,
     run: (s) => ({ t: '일자리 면접이었습니다. 질문은 셋, 첫 질문이 어느 패밀리 구역에 사느냐였습니다. 종족은 묻지 않았고, 묻지 않아도 보였습니다.', k: 'note', fx: { h: -1 } }) },
   { id: 'sir_newvolsinii_move', a: [16, 60], tags: ['siracusa'], w: 12, gap: 6, c: (s) => s.year >= 1100 && s.S.urban && !tr(s) && (s.S.flags.joblessYears || 0) >= 1,
     run: (s) => ({ t: '뉴 볼시니로 옮길까 생각했습니다. 패밀리가 없는 도시라고 했습니다. 패밀리가 없으면 누가 지켜 주느냐는 말도 있었습니다.', k: 'note' }) },

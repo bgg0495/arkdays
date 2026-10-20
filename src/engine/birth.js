@@ -151,6 +151,7 @@ export function newLife(data, rng, opts = {}) {
     // v1 §2
     cap, innate, status,
     track: null, trackHist: [],
+    dream: null,   // W16(D56): 장래 희망 { id, at } (dream_choose)
     res: { nation: nation.id, papers: 'native', since: 0, phase: 'settled', itinerantAt: null },
     rel: relOf(data, nation.id, race.id, by),
     money: Math.round(toLMD(incomeAt(st.ppp, st.gini, clamp((q - 0.5) / 5, 0.05, 0.95)) * [0, 0.1, 0.5, 1.5, 4, 10][q])),

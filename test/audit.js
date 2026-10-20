@@ -62,12 +62,12 @@ function buildSourceIndex(ids) {
 // 사전
 // ────────────────────────────────────────────────────────────────────────────
 // (b) 국가 데이터 모순: 낱말 → 국가 조건(참이면 모순)
-const LANDLOCKED = new Set(['sami', 'kjerag', 'leithanien', 'kazimierz', 'laterano', 'kazdel', 'durin', 'rim', 'ursus', 'lungmen', 'tara']);   // 추정(캐논 지도): 바다 묘사가 이상한 나라
+const LANDLOCKED = new Set(['sami', 'kjerag', 'leithanien', 'kazimierz', 'laterano', 'kazdel', 'durin', 'rim', 'ursus']);   // 추정(캐논 지도): 바다 묘사가 이상한 나라. W14: 타라(섬)·용문(항구)은 뺀다
 const NATION_RULES = [
   { key: 'nomadic0', label: 'nomadic 0 국가에서 이동도시·플레이트·데크', re: /이동도시|플레이트|지하 데크|상층 데크|하층 데크|도시가 (멈|이동)|이동 도시/, bad: (n, S, policy, t) => n.nomadic === 0 && !/먼 나라|다른 나라|소식|기사|신문|이야기가 반/.test(t) },
-  { key: 'settledHome', label: '정주 가정(home.type settled)인데 이동도시·플레이트·데크', re: /이동도시|플레이트|지하 데크|상층 데크|하층 데크/, bad: (n, S, policy, t) => S.home !== 'nomadic' && n.nomadic > 0 && !/먼 나라|다른 나라|소식|기사|신문|이야기가 반|이동도시 (사람|쪽|이야기)/.test(t) },
+  { key: 'settledHome', label: '정주 가정(home.type settled)인데 이동도시·플레이트·데크', re: /이동도시|플레이트|지하 데크|상층 데크|하층 데크/, bad: (n, S, policy, t) => S.home !== 'nomadic' && n.nomadic > 0 && !/먼 나라|다른 나라|소식|기사|신문|이야기가 반|이동도시 (사람|쪽|이야기)|이동도시 민간 고용|이동도시로 (가|올라|떠)/.test(t) },   // W14: 진로명·'이동도시로 간다'(정주민이 도시로 가는 문장)는 모순이 아니다
   { key: 'catFreq1', label: 'catFreq 1 국가에서 재앙 대피·피격(엔진 재앙 롤 catBase[1]=0.004 는 제외)', re: /재앙 대피|재앙 피격|재앙이 (덮|지나|휩)|재앙 경보|재앙 피폭|재앙의 잔류/, bad: (n, S, policy, t, e) => n.catFreq === 1 && !/없었습니다|다른 나라|먼 나라|소식|기사/.test(t) && !!e.src },
-  { key: 'policyNoCamp', label: 'policy ignore/treat/favored 국가에서 격리구역·수용소·감염자 노동법', re: /격리구역|감염자 수용소|감염자 노동법|수용소/, bad: (n, S, policy, t, e) => ['ignore', 'treat', 'favored'].includes(policy) && !/폐지|없었습니다|없다|다른 나라|먼 나라|소식|기사/.test(t) && !(e.src && e.src.kind === 'big') },
+  { key: 'policyNoCamp', label: 'policy ignore/treat/favored 국가에서 격리구역·수용소·감염자 노동법', re: /격리구역|감염자 수용소|감염자 노동법|수용소/, bad: (n, S, policy, t, e) => ['ignore', 'treat', 'favored'].includes(policy) && !/폐지|없었습니다|없다|다른 나라|먼 나라|소식|기사|정박|지나쳤|방문|들렀|다녀/.test(t) && !(e.src && e.src.kind === 'big') },   // W14: 기항·방문 문장(로도스 기항지·순회 방문)은 거주국 정책과 무관
   { key: 'conscriptNone', label: 'conscript none 국가에서 징집·입대 통지·의무 복무', re: /징집|입대 통지|의무 복무|입영|병무 조례/, bad: (n) => n.conscript === 'none' },
   { key: 'seabornFalse', label: 'seaborn false 국가에서 시테러', re: /시테러/, bad: (n) => !n.seaborn },
   { key: 'collapsalFalse', label: 'collapsal false 국가에서 붕괴체', re: /붕괴체/, bad: (n) => !n.collapsal },
@@ -78,10 +78,10 @@ const DISCRIM_RE = /종족 때문에|흔치 않은 종족|흔하지 않은 종�
 const OLD_RE = /성형|시술|구직|입학|첫사랑|첫 월급|면접|입사|신입/;
 const SPOUSE_RE = /배우자|아내|남편/;
 const KIDS_RE = /자녀|자식|제 아이|우리 아이|아이들이 상을|아들(이|을|은|과|의|에게) |딸(이|을|은|과|의|에게) |손주/;
-const MOM_MEMORY_RE = /떠난|돌아가|무덤|기일|생전|기억|유품|장례|제사|사진|묘|세상을 떠|잃었|남긴|물려|이름을 지어/;
+const MOM_MEMORY_RE = /떠난|돌아가|무덤|기일|생전|기억|유품|장례|제사|사진|묘|세상을 떠|잃었|남긴|물려|이름을 지어|늑대 어머니|어머니의 품|간판|이름이|이름을|제 배|자리였습니다|대원 하나가|아이 어머니|돈의 어머니/;   // W14: '늑대 어머니'(시라쿠사 신앙)·물려받은 간판/배/자리·남의 부모 문장은 회상·타인
 const WORK_RE = /직장|상사|동료가|승진|월급|해고|일터에서|회식|출근|퇴근/;
 const PRISON_TRAVEL_RE = /여행|여정|출장|국경을 넘|항구에서|방문했|구경/;
-const INFECTED_SELF_RE = /감염자 신분|감염자 등록|감염자증|감염자 수첩|감염자라는 이유|감염자로 등록|감염자 명부에 (제|저|당신)|격리구역에서 (살|지)|감염자 특약|감염자 노동/;
+const INFECTED_SELF_RE = /감염자 신분|감염자 등록|감염자증|감염자 수첩|감염자라는 이유|감염자로 등록|감염자 명부에 (제|저|당신)|격리구역에서 (살|지)|감염자 특약|감염자 노동(?!법)/;   // W14: '감염자 노동법' 은 법 이름
 // (a) 텍스트
 const TEXT_RULES = [
   { key: 'NaN', re: /\bNaN\b/ }, { key: 'undefined', re: /\bundefined\b/ }, { key: 'null', re: /\bnull\b/ }, { key: 'object', re: /\[object/ },
@@ -176,8 +176,9 @@ function analyzeLife(L, ctx) {
     // (b) 출생국 태그 누수: tagsOf 가 S.born 을 태그에 넣어 <nation> 태그 이벤트가 이주 뒤에도 평생 따라온다
     if (e.src && (e.src.kind === 'ev' || e.src.kind === 'dec') && !e.src.visit) {
       const def = e.src.kind === 'ev' ? ctx.registry.evById[e.src.id] : ctx.registry.decisions[e.src.id];
-      const nt = def ? (def.tags || []).filter((x) => ctx.nationIds.has(x) || x.startsWith('nation:')).map((x) => x.replace('nation:', '')) : [];
-      if (nt.length && !nt.includes(st.cur) && !nt.includes(st.root)) T.hit('b', 'bornTagLeak', src, t, { pair: nt.join('/') + '→' + st.cur });
+      const nt = def ? (def.tags || []).filter((x) => (ctx.nationIds.has(x) && x !== 'rhodes') || x.startsWith('nation:')).map((x) => x.replace('nation:', '')) : [];   // W14: 'rhodes' 는 상태 태그
+      const c0 = e.src.curAt || st.cur, r0 = e.src.rootAt || st.root;   // W14: 발화 시점 거주국(이벤트 자신이 이주시키는 경우)
+      if (nt.length && !nt.includes(st.cur) && !nt.includes(st.root) && !nt.includes(c0) && !nt.includes(r0)) T.hit('b', 'bornTagLeak', src, t, { pair: nt.join('/') + '→' + st.cur });
     }
     // (b) 국가 데이터 모순
     if (nation && e.k !== 'dec') {
@@ -187,14 +188,14 @@ function analyzeLife(L, ctx) {
     // (c) 나이·상태
     if (e.k !== 'dec') {
       if (st.ha >= 60 && OLD_RE.test(t) && !/자녀|아이|손주|아들|딸/.test(t)) T.hit('c', 'old60', src, t);
-      if (!st.married && !st.widowed && SPOUSE_RE.test(t) && !/어머니|아버지|이웃|누구의|남편과 아내|부부/.test(t)) T.hit('c', 'spouseUnmarried', src, t);
-      if (st.kids === 0 && st.age >= 15 && KIDS_RE.test(t) && !/이웃|남의|누구의|어머니|아버지|형제|동생|조카|사장|가주/.test(t)) T.hit('c', 'kidsNone', src, t);
-      if (!st.momAlive && /어머니/.test(tf) && !MOM_MEMORY_RE.test(tf) && !/옆집|이웃|남의|친구|아이가|시켰다고|아내|며느리/.test(tf)) T.hit('c', 'deadMom', src, t);
-      if (!st.dadAlive && !st.dadAbsent && /아버지/.test(tf) && !MOM_MEMORY_RE.test(tf) && !/없는|안 계|계시지/.test(tf)) T.hit('c', 'deadDad', src, t);
+      if (!st.married && !st.widowed && SPOUSE_RE.test(t) && !/어머니|아버지|이웃|누구의|남편과 아내|부부|쫓아내|사람의 아내|의 아내|의 남편/.test(t)) T.hit('c', 'spouseUnmarried', src, t);   // W14: '쫓아내는'·남의 배우자
+      if (st.kids === 0 && st.age >= 15 && KIDS_RE.test(t) && !/이웃|남의|누구의|어머니|아버지|형제|동생|조카|사장|가주|손주 또래|귀족 자녀|평민|고아|후원자 딸|가문 자제|자제가/.test(t)) T.hit('c', 'kidsNone', src, t);   // W14: 남의 자녀·또래 문장
+      if (!st.momAlive && /(?<!할)어머니/.test(tf) && !MOM_MEMORY_RE.test(tf) && !/옆집|이웃|남의|친구|아이가|시켰다고|아내|며느리/.test(tf)) T.hit('c', 'deadMom', src, t);   // W14: '할머니/할아버지' 는 제외
+      if (!st.dadAlive && !st.dadAbsent && /(?<!할)아버지/.test(tf) && !MOM_MEMORY_RE.test(tf) && !/없는|안 계|계시지|또래/.test(tf)) T.hit('c', 'deadDad', src, t);
       if (!st.track && !st.job && st.age >= 18 && st.ha < 60 && !st.retired && WORK_RE.test(t) && !(st.partnerName && t.includes(st.partnerName)) && !/배우자|이웃|친구|동생|형이|누나|언니|아들|딸/.test(t)) T.hit('c', 'workNoTrack', src, t);
       if (st.retired && /승진|승급|되었습니다\. 월급/.test(t) && !(st.partnerName && t.includes(st.partnerName))) T.hit('c', 'promoRetired', src, t);
       if (st.prison && PRISON_TRAVEL_RE.test(t) && !/감옥|수용소|석방|출소/.test(t)) T.hit('c', 'prisonTravel', src, t);
-      if (st.cur === 'rhodes' && e.src && e.src.kind === 'ev' && (ctx.nationWords.some((w) => t.includes(w)) || /마을|관청|이웃집|동네/.test(t))) T.hit('c', 'rhodesResidentEvent', src, t);
+      if (st.cur === 'rhodes' && e.src && e.src.kind === 'ev' && !e.src.visit && !/정박|기항/.test(t) && (ctx.nationWords.some((w) => t.includes(w)) || /마을|관청|이웃집|동네/.test(t))) T.hit('c', 'rhodesResidentEvent', src, t);   // W14: 기항지 방문 피드(§7.4)는 의도
       if (!st.known && INFECTED_SELF_RE.test(t)) T.hit('c', 'infectedUnknown', src, t);
       // 진로 단계와 맞지 않는 칭호: 현재 진로의 상위 단계 칭호가 문장에 들어감
       if (st.track && data.trackById[st.track]) {
@@ -259,15 +260,15 @@ function analyzeLife(L, ctx) {
   const years = S.years;
   for (let i = 1; i < years.length; i++) {
     const a = years[i - 1], b = years[i];
-    if (a.track && b.track === a.track && b.stage < a.stage && !hist.some((h) => h.id === a.track && h.how === 'demote' && h.to === b.a)) T.hit('e', 'stageRegress', 'track:' + a.track, a.track + ' ' + a.stage + '→' + b.stage + ' @' + b.a);
+    if (a.track && b.track === a.track && b.stage < a.stage && !hist.some((h) => h.id === a.track && (h.how === 'demote' || h.to === b.a))) T.hit('e', 'stageRegress', 'track:' + a.track, a.track + ' ' + a.stage + '→' + b.stage + ' @' + b.a);   // W14: 그 해 떠났다 다시 들어온 것(COM_CC 재진입)은 역행이 아니다
     // (f) 역량 등급 변화인데 로그 없음
     if (b.standing != null && (b.standing < 0 || b.standing > 100)) T.hit('f', 'standingRange', 'track:' + b.track, String(b.standing));
     if (b.hl < 0 || b.hl > 100 || b.h < 0 || b.h > 100) T.hit('f', 'barRange', 'engine', 'hl ' + b.hl + ' h ' + b.h);
     if (!Number.isFinite(b.money)) T.hit('f', 'moneyNaN', 'engine', String(b.money));
   }
   for (let i = 1; i < L.grades.length; i++) { const a = L.grades[i - 1], b = L.grades[i]; for (const k of ['skill', 'learn', 'arts', 'ties']) if (a.g[k] !== b.g[k]) { const logged = L.logs.some((e) => e.age === b.age && /에서 .+(올랐|내려갔)습니다/.test(e.t) && e.t.includes({ skill: '기량', learn: '학식', arts: '아츠', ties: '관계' }[k])); if (!logged) T.hit('f', 'capGradeNoLog', k, k + ' ' + a.g[k] + '→' + b.g[k] + ' @' + b.age); } }
-  const minMoney = Math.min(...years.map((y) => y.money));
-  if (minMoney < -L.med * 20) T.hit('f', 'moneyNegative', S.cur, Math.round(minMoney).toLocaleString() + ' LMD (중위 ' + Math.round(L.med) + ')');
+  { let worst = null; for (const y of years) { const m = L.medOf(y.cur) || L.med; if (y.money < -m * 20 && (!worst || y.money / m < worst.r)) worst = { r: y.money / m, y, m }; }   // W14: 그 해 거주국 중위 기준
+    if (worst) T.hit('f', 'moneyNegative', worst.y.cur, Math.round(worst.y.money).toLocaleString() + ' LMD (중위 ' + Math.round(worst.m) + ', ' + worst.y.cur + ' @' + worst.y.a + ')'); }
   if (humanAge(S.deathAt.age, S.lifeMul) > 122) T.hit('f', 'ageOver122', S.race, S.deathAt.age + '세(인간 척도 ' + humanAge(S.deathAt.age, S.lifeMul).toFixed(0) + ')');
   // 몰락 사유 vs 원형(연말 기록)
   for (const f of L.falls) {
@@ -336,11 +337,12 @@ function runLife(ctx, seed, nationId) {
   };
   const sim = createSim({ data, seed, content: registry, auto: true, hooks });
   // 원인 추적: fire/choose 를 감싼다. log 는 각주 탈락(D31 역방향)도 본다
-  const fire0 = sim.fire; sim.fire = (e) => { cur = e.type === 'dec' ? null : { kind: e.type, id: e.id, visit: e.visit || null }; try { fire0(e); } finally { cur = null; } };
-  const choose0 = sim.choose; sim.choose = (k, text, auto) => { const pd = sim.S.pending; if (pd && lastDec && lastDec.id === pd.id) { lastDec.chosen = pd.view.choices.find((c) => c.k === k) || pd.view.choices[0]; } cur = pd ? { kind: 'dec', id: pd.id } : null; try { return choose0(k, text, auto); } finally { cur = null; } };
+  const fire0 = sim.fire; sim.fire = (e) => { cur = e.type === 'dec' ? null : { kind: e.type, id: e.id, visit: e.visit || null, curAt: sim.S.cur, rootAt: sim.S.root }; try { fire0(e); } finally { cur = null; } };
+  const choose0 = sim.choose; sim.choose = (k, text, auto) => { const pd = sim.S.pending; if (pd && lastDec && lastDec.id === pd.id) { lastDec.chosen = pd.view.choices.find((c) => c.k === k) || pd.view.choices[0]; } cur = pd ? { kind: 'dec', id: pd.id, curAt: sim.S.cur, rootAt: sim.S.root } : null; try { return choose0(k, text, auto); } finally { cur = null; } };
   const log0 = sim.log; sim.log = (text, kind, f, fx) => { const e = log0(text, kind, f, fx); if (f && !keepFootnote(text, f) && e) { e._fDropped = f; L.logs[L.logs.length - 1].fDropped = f; } return e; };
   const S = sim.newLife(nationId ? { nation: nationId } : {});
   L.S = S; L.med = sim.med;
+  L.medOf = (cur) => { const n = data.nationById[cur]; if (!n || !n.stats) return sim.med; const save = S.cur; S.cur = cur; const m = sim.med; S.cur = save; return m; };
   sim.start();
   let guard = 0;
   while (S.phase === 'life') {
@@ -366,7 +368,8 @@ function main() {
   const srcOf = buildSourceIndex(ids);
   const givenPool = new Set(); for (const pool of Object.values(data.names || {})) if (pool && typeof pool === 'object') for (const key of ['m', 'f', 's']) for (const w of pool[key] || []) givenPool.add(w);
   const inData = (n) => data.affiliations.some((a) => a.name.includes(n)) || data.tracks.some((t) => t.name.includes(n) || t.stages.some((s) => (s.title || '').includes(n) || s.name.includes(n)));
-  const canonNames = (data.canonFigures || []).map((f) => f.name).filter((n) => n && n !== '오로라' && !givenPool.has(n) && !inData(n) && (n.length >= 3 || ['켈시', '시즈', '니어', '소라', '굴로', '체르니', '텍사스'].includes(n)));   // 이름 풀·소속명과 겹치는 인물명은 제외
+  const poolHas = (n) => givenPool.has(n) || [...givenPool].some((g) => g.length > n.length && g.startsWith(n));   // W14: 이름 풀 이름의 앞부분(시즈⊂시즈쿠)도 제외
+  const canonNames = (data.canonFigures || []).map((f) => f.name).filter((n) => n && n !== '오로라' && !poolHas(n) && !inData(n) && (n.length >= 3 || ['켈시', '시즈', '니어', '소라', '굴로', '체르니', '텍사스'].includes(n)));   // 이름 풀·소속명과 겹치는 인물명은 제외
   const affNames = [...new Set(data.affiliations.map((a) => a.name).filter((n) => n && n.length >= 3))];
   const affByName = Object.fromEntries(data.affiliations.map((a) => [a.name, a]));
   const josa = buildJosaChecker(buildVocab(data));

@@ -10,7 +10,7 @@ export function mount(app) {
   const f = S.fam;
   const sub = (t) => ' <span class="rec-sub">' + t + '</span>';
   const parent = (p, who) => p.absent ? who + ' 부재' : who + ' ' + p.age + '세' + (p.job ? ' · ' + esc(jobName(sim, p.job)) : '') + (p.infected ? ' · 감염자' : '');
-  const GK = { '낮음': 'low', '보통': 'mid', '높음': 'high', '뛰어남': 'top' };
+  const GK = { '아주 낮음': 'low', '낮음': 'low', '보통': 'mid', '높음': 'high', '뛰어남': 'top', '탁월': 'top' };   // W16: 6등급
   const caps = capProfile(S).caps.map((c) => '<span class="cap g-' + (GK[c.grade] || 'mid') + '"><i>' + esc(c.label) + '</i><b>' + esc(c.grade) + '</b></span>').join('');
   const traits = traitWords(S);
   const rel = relationLine(race.name, S.rel);

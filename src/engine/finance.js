@@ -4,7 +4,7 @@ import { clamp, invNorm } from './rng.js';
 import { rootOf } from './data.js';
 import { BALANCE as B } from './balance.js';
 import { ro } from './text.js';
-import { trackIncomeMul, retireTrack, leaveTrack } from './track.js';
+import { trackIncomeMul, retireTrack, leaveTrack, trackOf, demote } from './track.js';
 import { relIncomeMul } from './relations.js';
 
 export const LMD_PER_PPP = 10;                 // D15: LMD = PPP$ × 10 (창작 환율)
@@ -212,7 +212,21 @@ export function financeYear(sim) {
   if (S.ori.on && S.ori.known && !S.ori.treated && !S.rhodes && S.money > med * 2) {
     net -= med * 0.4; S.flags.suppressant = true;
   }
-  if (S.money < 0) net -= -S.money * 0.06;
+  // W14(QA A14): 이자는 원금 상한(중위 ×debtCap)까지만. 상한을 넘긴 빚이 2년 이어지면 채무 정리 — 재산 압류·불명예(stigma)·관계 손실로 끝내고 −1×중위로 돌아간다(복리 폭주 방지)
+  const cap = med * (B.debtCap ?? 3);
+  if (S.money < 0) net -= Math.min(-S.money, cap) * 0.06;
   S.money = Math.round(S.money + net);
   S.flags.debtYears = S.money < 0 ? (S.flags.debtYears || 0) + 1 : 0;
+  if (S.money < -cap) {
+    S.flags.debtOver = (S.flags.debtOver || 0) + 1;
+    if (S.flags.debtOver >= 2) {
+      S.flags.debtOver = 0; S.flags.debtCrisisAt = S.age; S.stats.debtCrises = (S.stats.debtCrises || 0) + 1;
+      S.money = -Math.round(med);
+      S.home.owned = false; S.flags.homeOwner = false;
+      if (!S.status.stigma) S.status.stigma = 'disgrace';
+      if (S.track && !trackOf(sim).forced) { const t = trackOf(sim); if (t.A.flags.homeLink && S.track.stage > 0) demote(sim, { quiet: true }); }
+      sim.log('빚이 갚을 수 있는 선을 넘었습니다. 집기와 집이 채권자에게 넘어갔고, 이름에 금이 갔습니다. 남은 빚은 ' + Math.round(med).toLocaleString() + ' LMD.', 'bad', '(' + (sim.nation.statOrg || '기록소') + ' 채무 정리 등기, ' + sim.year + '년)', { h: -6, money: 0 });
+      sim.eff({ h: -6 });
+    }
+  } else S.flags.debtOver = 0;
 }

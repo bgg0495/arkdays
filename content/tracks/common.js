@@ -22,51 +22,48 @@ const bswF = (doc) => F('블랙스틸 월드와이드 ' + doc);
 
 export const events = [
   // ════════════════════════════════════════════════════════════════════
-  // COM_PENGUIN 펭귄 로지스틱스 (용문 본부, 사장 직접 심사, 보수 자율)
+  // W15(D55): 펭귄 로지스틱스는 용문 LGM_MESSENGER 의 희귀 소속(aff:LGM_MSG_PENGUIN). 아래는 그 소속 이벤트(단계는 메신저 진로 단계)
   // ════════════════════════════════════════════════════════════════════
-  { id: 'com_pen_scr_interview', a: [16, 45], tags: ['track:COM_PENGUIN:screened'], w: 60,
+  { id: 'com_pen_scr_interview', a: [16, 45], tags: ['aff:LGM_MSG_PENGUIN', 'track:LGM_MESSENGER:messenger'], w: 60, c: (s) => !!s.S.track && s.S.age - s.S.track.since <= 1,
     run: (s) => ({ t: '펭귄 로지스틱스 면접을 보았습니다. 사장이 직접 했습니다. ' + s.rng.pick(['질문은 하나도 없었고 커피 취향만 물었습니다.', '사장은 음악을 틀어 놓고 끝까지 듣게 했습니다. 그것이 면접이었습니다.', '사장이 "우리 회사 좋아하나"라고 물었습니다. 좋아한다고 했습니다. 사장은 "진심이군" 했고, 그 말이 합격이었습니다.']), k: 'ev', fx: { standing: 3 } }) },
-  { id: 'com_pen_scr_move', a: [16, 45], tags: ['track:COM_PENGUIN:screened'], w: 50, c: (s) => !['lungmen', 'siracusa'].includes(s.S.cur) && s.S.cur !== 'rhodes',
-    run: (s) => { if (!s.migrate('work', 'lungmen', { keepTrack: true, quiet: true })) return { t: '본부는 용문이라고 했습니다. 옮기지 못했습니다.', k: 'note' };
-      return { t: '본부는 용문이라고 했습니다. 용문으로 옮겼습니다. 사장은 "집은 회사 근처가 좋다"고만 했고, 집세는 묻지 않았습니다.', k: 'ev', fx: { h: 1 } }; } },
-  { id: 'com_pen_scr_trial', a: [16, 45], tags: ['track:COM_PENGUIN:screened'], w: 35, gap: 2,
+  { id: 'com_pen_scr_trial', a: [16, 45], tags: ['aff:LGM_MSG_PENGUIN', 'track:LGM_MESSENGER:messenger'], w: 35, gap: 2,
     run: (s) => ({ t: '심사 기간이었습니다. ' + s.rng.pick(['첫 배송은 봉투 하나였습니다. 봉투를 받은 사람이 봉투보다 저를 오래 보았습니다.', '동료가 오토바이 뒤에 태워 주었습니다. 골목을 열 개 지났고, 열 개 다 기억하라고 했습니다.', '회사에 직급이 없다는 것을 알았습니다. 사장과 직원. 직원끼리는 전부 같았습니다.']), k: 'note', fx: { standing: 2, cap: { ties: 0.02 } } }) },
-  { id: 'com_pen_staff_job', a: [17, 55], tags: ['track:COM_PENGUIN:staff'], w: 40, gap: 2,
+  { id: 'com_pen_staff_job', a: [17, 55], tags: ['aff:LGM_MSG_PENGUIN', 'track:LGM_MESSENGER:escort'], w: 40, gap: 2,
     run: (s) => ({ t: '통상 업무였습니다. ' + s.rng.pick(['통상 업무가 예상 밖이었습니다. 배송지에 받을 사람이 없었고, 대신 다른 사람들이 있었습니다. 짐은 전달했습니다.', '호위 일이었습니다. 호위 대상이 누군지는 끝까지 몰랐고, 무사히 내려 주었습니다.', '근위국 차가 옆을 지나갔습니다. 보지 않았습니다. 저쪽도 보지 않았습니다. 그것이 용문에서 회사가 굴러가는 방식이었습니다.']), k: 'ev', fx: { money: medX(s, 0.3), hl: -1, standing: 2 } }) },
-  { id: 'com_pen_staff_pay', a: [17, 55], tags: ['track:COM_PENGUIN:staff'], w: 30, gap: 3,
+  { id: 'com_pen_staff_pay', a: [17, 55], tags: ['aff:LGM_MSG_PENGUIN', 'track:LGM_MESSENGER:escort'], w: 30, gap: 3,
     run: (s) => ({ t: '월급날이었습니다. ' + s.rng.pick(['"원하는 만큼"이 회사 원칙이었습니다. 적어 냈고, 적어 낸 대로 왔습니다. 다음 달에는 조금 더 적어 냈습니다.', '동료는 돈 대신 오토바이 부품을 받았습니다. 그것도 되는 회사였습니다.']), k: 'note', fx: { money: medX(s, 0.2) } }) },
-  { id: 'com_pen_staff_siracusa', a: [17, 55], tags: ['aff:COM_PEN_SIRACUSA'], w: 30, gap: 3,
+  { id: 'com_pen_staff_siracusa', a: [17, 55], tags: ['aff:LGM_MSG_PENGUIN', 'visit:siracusa'], w: 30, gap: 3,
     run: (s) => ({ t: '시라쿠사 지사 일이었습니다. 배송지에서 누구도 이름을 크게 부르지 않았습니다. 짐을 건네고 이름도 말하지 않고 다음 골목으로 갔습니다.', k: 'note', fx: { standing: 2 } }) },
-  { id: 'com_pen_staff_emperor', a: [17, 55], tags: ['track:COM_PENGUIN'], w: 10, c: (s) => !!s.S.track && canonOk(s, 'emperor') && s.S.track.stage >= 1,
+  { id: 'com_pen_staff_emperor', a: [17, 55], tags: ['aff:LGM_MSG_PENGUIN'], w: 10, c: (s) => !!s.S.track && canonOk(s, 'emperor') && s.S.track.stage >= 1,
     run: (s) => { canonSee(s); return { t: '사장이 사무실에서 음반을 틀어 놓고 아무 말 없이 서류에 서명하는 것을 보았습니다. 서명한 서류가 제 월급이었고, 금액은 제가 적은 것이었습니다.', k: 'note', fx: { h: 1 } }; } },
-  { id: 'com_pen_staff_texas', a: [17, 55], tags: ['track:COM_PENGUIN'], w: 8, c: (s) => canonOk(s, 'texas'),
+  { id: 'com_pen_staff_texas', a: [17, 55], tags: ['aff:LGM_MSG_PENGUIN'], w: 8, c: (s) => canonOk(s, 'texas'),
     run: (s) => { canonSee(s); return { t: '오토바이에 기댄 배달원이 짐을 건네고는 이름도 말하지 않은 채 다음 골목으로 사라지는 것을 보았습니다. 같은 회사 사람이었습니다.', k: 'note' }; } },
-  { id: 'com_pen_role_split', a: [18, 60], tags: ['track:COM_PENGUIN:role'], w: 40, gap: 2,
+  { id: 'com_pen_role_split', a: [18, 60], tags: ['aff:LGM_MSG_PENGUIN', 'track:LGM_MESSENGER:lead'], w: 40, gap: 2,
     run: (s) => ({ t: '역할이 정해졌습니다. ' + s.rng.pick(['배송과 호위. 둘 다였습니다. 회사가 작아서 둘 다였습니다.', '기술 쪽이었습니다. 오토바이와 단말기. 둘 다 저보다 비쌌습니다.', '정보 쪽이었습니다. 무엇을 아는지보다 누가 아는지를 아는 일이었습니다.']), k: 'ev', fx: { standing: 3, money: medX(s, 0.3) } }) },
-  { id: 'com_pen_role_danger', a: [18, 60], tags: ['track:COM_PENGUIN:role'], w: 25, gap: 3,
+  { id: 'com_pen_role_danger', a: [18, 60], tags: ['aff:LGM_MSG_PENGUIN', 'track:LGM_MESSENGER:lead'], w: 25, gap: 3,
     run: (s) => ({ t: '쥐왕 쪽 사람들과 부딪혔습니다. 결과만 적습니다. 짐은 전달했고, 오토바이는 수리에 들어갔습니다.', k: 'bad', fx: { hl: -4, standing: 3 } }) },
-  { id: 'com_pen_role_honorary', a: [18, 60], tags: ['aff:COM_PEN_HONORARY'], w: 25, gap: 3,
-    run: (s) => ({ t: '명예 직원이었습니다. 출근은 자유였고, 월급은 "원하는 만큼"이었고, 원하는 만큼을 적는 것이 제일 어려웠습니다.', k: 'note', fx: { h: 1 } }) },
-  { id: 'com_pen_role_kazdel', a: [18, 60], tags: ['track:COM_PENGUIN:role', 'visit:kazdel'], w: 30, gap: 3,
+  { id: 'com_pen_role_kazdel', a: [18, 60], tags: ['aff:LGM_MSG_PENGUIN', 'visit:kazdel'], w: 30, gap: 3,
     run: (s) => ({ t: '카즈델 배송이었습니다. 외부 행상이 거의 없는 땅이라 회사 짐이 도시 하나의 한 달치였습니다. 값은 파편으로 받았고, 사장은 그것도 받았습니다.', k: 'note', fx: { money: medX(s, 0.2) } }) },
-  { id: 'com_pen_after', a: [16, 70], w: 50, c: (s) => afterFall(s, 'COM_PENGUIN', 'expel'),
-    run: (s) => ({ t: '회사를 나왔습니다. 사장이 마지막 월급 칸을 비워 두었습니다. 적어 넣지 않고 나왔습니다.', k: 'note', fx: { h: -2 } }) },
 
-  // ── COM_PENGUIN_IDOL 펭귄 보호 아이돌 ──
-  { id: 'com_pid_con_sign', a: [14, 30], tags: ['track:COM_PENGUIN_IDOL:contract'], w: 50, gap: 2,
+  // ── W15(D55): 몬스터 사이렌 레코드(aff:COM_SIREN) — 각국 음악가·공연 진로의 희귀 소속 이벤트 ──
+  { id: 'com_siren_sign', a: [12, 40], tags: ['aff:COM_SIREN'], w: 60, c: (s) => !!s.S.track && s.S.age - s.S.track.since <= 1,
     run: (s) => ({ t: '계약서에 "보호"라는 말이 세 번 들어 있었습니다. 공연보다 보호가 먼저라고 했습니다.', k: 'ev', fx: { standing: 2 } }) },
-  { id: 'com_pid_pro_stage', a: [15, 35], tags: ['track:COM_PENGUIN_IDOL:protected'], w: 50, gap: 2,
+  { id: 'com_siren_stage', a: [13, 45], tags: ['aff:COM_SIREN'], w: 35, gap: 3,
     run: (s) => ({ t: s.rng.pick(['공연장 뒷문으로 나왔습니다. 경호가 셋이었고, 팬 한 명에게만 손을 흔들 수 있었습니다.', '무대에 섰습니다. 객석에 배달 회사 사람들이 앉아 있었습니다. 그 사람들이 가장 크게 손뼉을 쳤습니다.']), k: 'ev', fx: { standing: 3, money: medX(s, 0.5) } }) },
-  { id: 'com_pid_pro_sora', a: [15, 35], tags: ['track:COM_PENGUIN_IDOL'], w: 8, c: (s) => canonOk(s, 'sora'),
+  { id: 'com_siren_sora', a: [13, 45], tags: ['aff:COM_SIREN'], w: 8, c: (s) => canonOk(s, 'sora'),
     run: (s) => { canonSee(s); return { t: '같은 소속의 가수가 경호원 셋에 둘러싸여 팬 한 명에게만 손을 흔드는 것을 보았습니다. 그 한 명이 되는 것이 소속의 규칙이었습니다.', k: 'note' }; } },
-  { id: 'com_pid_rec_album', a: [16, 40], tags: ['track:COM_PENGUIN_IDOL:record'], w: 50, gap: 2,
+  { id: 'com_siren_album', a: [14, 50], tags: ['aff:COM_SIREN'], w: 30, gap: 4, c: (s) => !!s.S.track && s.S.track.stage >= 1,
     run: (s) => ({ t: '음반이 나왔습니다. 제작자 이름이 배달 회사 사장과 같았습니다. 같은 사람이었습니다.', k: 'big', fx: { standing: 4, money: medX(s, 1) } }) },
+  { id: 'com_siren_tour', a: [14, 50], tags: ['aff:COM_SIREN'], w: 30, gap: 3,
+    run: (s) => ({ t: s.rng.pick(['순회 공연이었습니다. 도시 넷, 무대 넷, 호텔은 전부 같은 체인이었습니다. 창밖만 달랐습니다.', '음반사 로고가 찍힌 차를 탔습니다. 차는 조용했고, 운전사는 더 조용했습니다. 묻지 않는 것이 계약이었습니다.', '라디오에서 제 노래가 나왔습니다. 가게 주인은 누구 노래인지 몰랐고, 저는 말하지 않았습니다.']), k: 'ev', fx: { standing: 2, money: medX(s, 0.3), hl: -1 } }) },
+  { id: 'com_siren_drop', a: [14, 50], tags: ['aff:COM_SIREN'], w: 15, gap: 5, c: (s) => !!s.S.track && s.S.track.standing < 30,
+    run: (s) => ({ t: '음반사가 다음 음반 이야기를 꺼내지 않았습니다. 계약서는 그대로였고, 전화만 줄었습니다.', k: 'bad', fx: { h: -2 } }) },
 
   // ════════════════════════════════════════════════════════════════════
   // COM_MESSENGER 재앙 정보 전달자 (itinerant, 국가 공인, 예보 실패 비난)
   // ════════════════════════════════════════════════════════════════════
   { id: 'com_msg_app_notebook', a: [16, 35], tags: ['track:COM_MESSENGER:apprentice'], w: 50, gap: 2,
-    run: (s) => ({ t: '수습 전달자가 되었습니다. ' + s.rng.pick(['관측 노트를 받았습니다. 두꺼웠고, 첫 장은 선배 글씨였습니다.', '보호복과 통신기와 관측 장비. 배낭이 몸보다 무거웠습니다.', '첫 관측은 황야였습니다. 이동도시 밖에서 밤을 새운 것이 처음이었습니다.']), k: 'ev', fx: { cap: { arts: 0.03, learn: 0.02 } } }) },
+    run: (s) => ({ t: '수습 전달자가 되었습니다. ' + s.rng.pick(['관측 노트를 받았습니다. 두꺼웠고, 첫 장은 선배 글씨였습니다.', '보호복과 통신기와 관측 장비. 배낭이 몸보다 무거웠습니다.', '첫 관측은 황야였습니다. 도시 밖에서 밤을 새운 것이 처음이었습니다.']), k: 'ev', fx: { cap: { arts: 0.03, learn: 0.02 } } }) },
   { id: 'com_msg_app_cost', a: [16, 35], tags: ['track:COM_MESSENGER:apprentice'], w: 30, gap: 3,
     run: (s) => ({ t: '장비 값이 사비였습니다. 보호복 수선비로 한 달 수입의 ' + s.rng.ri(30, 70) + '할이 나갔습니다. 선배는 "원래 그렇다"고 했습니다.', k: 'bad', fx: { money: -medX(s, 0.2) }, f: msgF('수습 장비 지침') }) },
   { id: 'com_msg_app_arts', a: [16, 35], tags: ['track:COM_MESSENGER:apprentice'], w: 25, gap: 3,
@@ -74,7 +71,7 @@ export const events = [
   { id: 'com_msg_cer_license', a: [18, 45], tags: ['track:COM_MESSENGER:certified'], w: 50, gap: 2,
     run: (s) => ({ t: '공인 전달자가 되었습니다. ' + s.rng.pick(['신분증과 제한구역 통행증이 나왔습니다. 통행증이 신분증보다 두꺼웠습니다.', '첫 경보를 냈습니다. 마을 하나가 하루 비웠습니다. 재앙은 왔고, 마을은 비어 있었습니다.', '예보가 맞았습니다. 아무도 고맙다고 하지 않았습니다. 맞으면 당연하고 틀리면 전달자 탓이었습니다.']), k: 'ev', fx: { standing: 3 } }) },
   { id: 'com_msg_cer_miss', a: [18, 45], tags: ['track:COM_MESSENGER:certified'], w: 30, gap: 3,
-    run: (s) => ({ t: '예보가 빗나갔습니다. ' + s.rng.pick(['재앙이 예보보다 하루 일찍 왔습니다. 마을 사람들이 전달자 이름을 외웠습니다. 제 이름이었습니다.', '경보를 냈는데 재앙이 오지 않았습니다. 하루 비운 값을 물어내라는 사람이 있었습니다.', '입성을 거부당했습니다. 이동도시 문 앞에서 "감염자 전달자"라는 말을 들었고, 밖에서 재앙을 재었습니다.']), k: 'bad', fx: { standing: -5, h: -3 } }) },
+    run: (s) => ({ t: '예보가 빗나갔습니다. ' + s.rng.pick(['재앙이 예보보다 하루 일찍 왔습니다. 마을 사람들이 전달자 이름을 외웠습니다. 제 이름이었습니다.', '경보를 냈는데 재앙이 오지 않았습니다. 하루 비운 값을 물어내라는 사람이 있었습니다.', '입성을 거부당했습니다. 도시 문 앞에서 "감염자 전달자"라는 말을 들었고, 밖에서 재앙을 재었습니다.']), k: 'bad', fx: { standing: -5, h: -3 } }) },
   { id: 'com_msg_cer_wild', a: [18, 45], tags: ['track:COM_MESSENGER:certified'], w: 30, gap: 2,
     run: (s) => { const v = visitName(s); return { t: (v ? v + ' 쪽 황야에서 ' : '황야에서 ') + s.rng.pick(['사흘을 보냈습니다. 물이 이틀치였습니다.', '관측했습니다. 잔류 오리지늄 농도가 높았고, 보호복이 낡았습니다.', '재앙 꼬리를 쫓았습니다. 꼬리가 방향을 두 번 바꿨고, 노트에 두 번 적었습니다.']), k: 'note', fx: { hl: -2, cap: { arts: 0.02 } } }; } },
   { id: 'com_msg_cer_yan', a: [18, 60], tags: ['aff:COM_MSG_YAN'], w: 30, gap: 3,
@@ -115,37 +112,38 @@ export const events = [
     run: (s) => ({ t: '조정 역할을 맡았습니다. 의뢰를 거르는 자리였습니다. 거른 의뢰가 다른 조정자를 거쳐 올라오는 것을 보았고, 그 조정자 이름을 적어 두었습니다.', k: 'big', fx: { standing: 4 } }) },
 
   // ════════════════════════════════════════════════════════════════════
-  // COM_BLACKSTEEL 블랙스틸 월드와이드 + COM_BLACKSTEEL_EXCHANGE 교환 프로그램
+  // W15(D55): 블랙스틸 월드와이드는 컬럼비아 COL_PMC 의 소속(aff:COL_PMC_BLACKSTEEL). 아래는 소속 이벤트 + 교환 프로그램(플래그 S.flags.bsx)
   // ════════════════════════════════════════════════════════════════════
-  { id: 'com_bsw_tra_center', a: [16, 35], tags: ['track:COM_BLACKSTEEL:trainee'], w: 50, gap: 2,
+  { id: 'com_bsw_tra_center', a: [16, 35], tags: ['aff:COL_PMC_BLACKSTEEL', 'track:COL_PMC:trainee'], w: 50, gap: 2,
     run: (s) => ({ t: s.rng.pick(['훈련생으로 들어갔습니다. 전투 경험이 없는 사람 중심이라고 했고, 저도 없었습니다.', '2년 훈련 중 첫해였습니다. 같은 기수 넷 중 셋이 떨어진다는 말을 첫날 들었습니다.']), k: 'ev', fx: { cap: { skill: 0.04 } } }) },
-  { id: 'com_bsw_op_dispatch', a: [18, 50], tags: ['track:COM_BLACKSTEEL:operator'], w: 50, gap: 2,
+  { id: 'com_bsw_op_dispatch', a: [18, 50], tags: ['aff:COL_PMC_BLACKSTEEL', 'track:COL_PMC:operator'], w: 50, gap: 2,
     run: (s) => { const v = visitName(s); return { t: (v ? v + ' 파견이 ' : '파견이 ') + s.rng.pick(['넉 달이었습니다. 돌아오니 계절이 바뀌어 있었습니다.', '위탁 계약이었습니다. 회사가 중개했고, 실패하면 "비상 계획"이 있다고 했습니다. 비상 계획이 무엇인지는 성공해서 몰랐습니다.']), k: 'ev', fx: { standing: 2, money: medX(s, 0.4) } }; } },
-  { id: 'com_bsw_op_rules', a: [18, 50], tags: ['track:COM_BLACKSTEEL:operator', 'infected'], w: 30, gap: 3,
+  { id: 'com_bsw_op_rules', a: [18, 50], tags: ['aff:COL_PMC_BLACKSTEEL', 'track:COL_PMC:operator', 'infected'], w: 30, gap: 3,
     run: (s) => ({ t: '감염자 규칙 다섯 조항을 다시 읽었습니다. 경증은 팀 작전 제한, 중증은 계약 해지. 제 수치가 어느 조항인지 알고 있었습니다.', k: 'bad', fx: { h: -3 } }) },
-  { id: 'com_bsw_op_liskarm', a: [18, 50], tags: ['track:COM_BLACKSTEEL'], w: 8, c: (s) => canonOk(s, 'liskarm'),
+  { id: 'com_bsw_op_liskarm', a: [18, 50], tags: ['aff:COL_PMC_BLACKSTEEL'], w: 8, c: (s) => canonOk(s, 'liskarm'),
     run: (s) => { canonSee(s); return { t: '파견지에서 한 오퍼레이터가 동료 둘의 짐까지 들고 먼저 차에 오르는 것을 보았습니다. 같은 회사였고, 이름은 묻지 않았습니다.', k: 'note', fx: { cap: { skill: 0.01 } } }; } },
-  { id: 'com_bsw_lead_team', a: [22, 50], tags: ['track:COM_BLACKSTEEL:lead'], w: 50, gap: 2,
+  { id: 'com_bsw_lead_team', a: [22, 50], tags: ['aff:COL_PMC_BLACKSTEEL', 'track:COL_PMC:elite'], w: 50, gap: 2,
     run: (s) => ({ t: '팀장이 되었습니다. 파견 명단을 짰습니다. 명단에서 빠진 사람이 회계 부서로 갔고, 회계 부서는 "어카운턴트"라고 불렸습니다.', k: 'ev', fx: { standing: 3 } }) },
-  { id: 'com_bsw_cadre_desk', a: [28, 55], tags: ['track:COM_BLACKSTEEL:cadre'], w: 50, gap: 2,
+  { id: 'com_bsw_cadre_desk', a: [28, 55], tags: ['aff:COL_PMC_BLACKSTEEL', 'track:COL_PMC:exec'], w: 50, gap: 2,
     run: (s) => ({ t: '부서 간부가 되었습니다. 고객이 감염자 오퍼레이터를 기피한다는 보고서가 올라왔습니다. 계약이 줄었고, 보고서는 두꺼워졌습니다.', k: 'big', fx: { standing: 4 } }) },
   // ── 교환 프로그램 ──
-  { id: 'com_bsx_sig_papers', a: [18, 50], tags: ['track:COM_BLACKSTEEL_EXCHANGE:signed'], w: 50, gap: 2,
+  { id: 'com_bsx_sig_papers', a: [18, 50], tags: ['aff:COL_PMC_BLACKSTEEL'], c: (s) => !!s.S.flags.bsx && s.S.age - s.S.flags.bsx.at <= 1, w: 50, gap: 2,
     run: (s) => ({ t: '협력 합의서와 치료 동의서에 서명했습니다. ' + s.rng.pick(['두 서류의 서명란이 같은 줄에 있었습니다.', '인사부에서 함께 가겠다는 동료와 다퉜습니다. 결국 같이 갔습니다.', '회사 쪽 서명과 로도스 쪽 서명이 같은 날 찍혔습니다. 도장이 달랐고, 날짜는 같았습니다.']), k: 'ev', fx: { standing: 2 }, f: bswF('교환 프로그램 합의서') }) },
-  { id: 'com_bsx_sig_aim', a: [18, 50], tags: ['track:COM_BLACKSTEEL_EXCHANGE:signed'], w: 30, gap: 3,
+  { id: 'com_bsx_sig_aim', a: [18, 50], tags: ['aff:COL_PMC_BLACKSTEEL'], c: (s) => !!s.S.flags.bsx && s.S.age - s.S.flags.bsx.at <= 1, w: 30, gap: 3,
     run: (s) => ({ t: '프로그램의 조건은 보안·호위 서비스와 치료의 교환이었습니다. 어느 쪽이 더 큰지는 계산하지 않기로 두 회사가 합의했다고 했습니다.', k: 'note' }) },
-  { id: 'com_bsx_dis_ship', a: [18, 55], tags: ['track:COM_BLACKSTEEL_EXCHANGE:dispatched'], w: 50, gap: 2,
+  { id: 'com_bsx_dis_ship', a: [18, 55], tags: ['aff:COL_PMC_BLACKSTEEL'], c: (s) => !!s.S.flags.bsx && s.S.age - s.S.flags.bsx.at >= 1, w: 50, gap: 2,
     run: (s) => ({ t: '로도스 파견이었습니다. ' + s.rng.pick(['협력 계약 카드를 받았습니다. 회사 신분증과 같이 목에 걸었고, 둘이 부딪히는 소리가 났습니다.', '호위 임무에 나갔습니다. 저쪽 팀과 같은 차였고, 무전은 따로였습니다.', '회사 보고서를 썼습니다. 로도스 쪽은 보고서를 요구하지 않았고, 그것이 더 쓰기 어려웠습니다.']), k: 'ev', fx: { standing: 2, hl: -1 } }) },
-  { id: 'com_bsx_dis_treat', a: [18, 55], tags: ['track:COM_BLACKSTEEL_EXCHANGE:dispatched', 'infected'], w: 35, gap: 2,
+  { id: 'com_bsx_dis_treat', a: [18, 55], tags: ['aff:COL_PMC_BLACKSTEEL', 'infected'], c: (s) => !!s.S.flags.bsx && s.S.age - s.S.flags.bsx.at >= 1, w: 35, gap: 2,
     run: (s) => ({ t: '치료를 받았습니다. 회사 규칙 다섯 조항이 여기서는 적용되지 않았습니다. 밴드가 수치를 읽어 주었고, 읽어 주는 것이 처음이었습니다.', k: 'warm', fx: { h: 3 } }) },
-  { id: 'com_bsx_dis_info', a: [18, 55], tags: ['aff:COM_BSX_INFO'], w: 25, gap: 4,
+  { id: 'com_bsx_dis_info', a: [18, 55], tags: ['aff:COL_PMC_BLACKSTEEL'], c: (s) => !!s.S.flags.bsx && s.S.age - s.S.flags.bsx.at >= 1 && s.S.cap.ties >= 0.3, w: 25, gap: 4,
     run: (s) => ({ t: '정보 교환이 제 몫이었습니다. 회사가 아는 것과 로도스가 아는 것을 서로 넘겼습니다. 넘기지 않은 것도 있었고, 양쪽 다 그것을 알고 있었습니다.', k: 'note', fx: { cap: { ties: 0.02 } } }) },
-  { id: 'com_bsx_dis_tech', a: [18, 55], tags: ['aff:COM_BSX_TECH'], w: 25, gap: 4,
+  { id: 'com_bsx_dis_tech', a: [18, 55], tags: ['aff:COL_PMC_BLACKSTEEL'], c: (s) => !!s.S.flags.bsx && s.S.age - s.S.flags.bsx.at >= 1 && s.S.cap.learn >= 0.3, w: 25, gap: 4,
     run: (s) => ({ t: '기술 고문으로 파견되었습니다. 엔지니어링부가 회사 장비를 뜯어 보았고, 뜯은 것을 더 잘 조립해 돌려주었습니다.', k: 'note', fx: { cap: { learn: 0.03 } } }) },
-  { id: 'com_bsx_end_done', a: [18, 60], tags: ['track:COM_BLACKSTEEL_EXCHANGE:ended'], w: 50, gap: 2,
-    run: (s) => ({ t: s.rng.pick(['치료가 끝났습니다. 밴드를 풀었고, 회사로 돌아갈 날짜가 통지되었습니다.', '계약이 만료되었습니다. 협력 계약 카드를 반납했습니다. 회사 신분증만 남았고, 목이 가벼웠습니다.']), k: 'note', fx: { h: 1 } }) },
-  { id: 'com_bsx_end_refused', a: [18, 60], tags: ['track:COM_BLACKSTEEL_EXCHANGE:ended'], w: 25, gap: 4,
-    run: (s) => ({ t: '퇴사 신청이 회사에서 승인되지 않았습니다. 형식상 회사 소속으로 남았고, 형식상 로도스에 있었습니다. 둘 다 월급을 주지는 않았습니다.', k: 'note', fx: { h: -1 } }) },
+  { id: 'com_bsx_end_done', a: [18, 60], tags: [], w: 500, c: (s) => !!s.S.flags.bsx && s.S.age - s.S.flags.bsx.at >= 3,   // 소속·진로를 잃어도 파견은 3년 뒤 끝난다
+    run: (s) => { const back = s.S.flags.bsx.from || 'columbia'; s.S.flags.bsx = null; s.S.flags.bsxDone = s.S.age;
+      if (s.S.rhodes && s.S.rhodes.status === 'contractor') { s.S.rhodes = false; s.S.flags.rhodesLeftAt = s.S.age; }
+      if (s.S.cur === 'rhodes' && s.data.nationById[back]) s.migrate('work', back, { keepTrack: true, papers: 'legal', quiet: true });
+      return { t: s.rng.pick(['치료가 끝났습니다. 밴드를 풀었고, 회사로 돌아갈 날짜가 통지되었습니다.', '계약이 만료되었습니다. 협력 계약 카드를 반납했습니다. 회사 신분증만 남았고, 목이 가벼웠습니다.']), k: 'note', fx: { h: 1 } }; } },
 
   // ════════════════════════════════════════════════════════════════════
   // 용병 시장 — COM_MERC_TEAM 소규모 용병 팀 (핵심) + PMC·세력 고용·현상금
@@ -210,22 +208,16 @@ function enterCom(s, id, via) {
 }
 const canSwitch = (s) => !s.S.school && !s.S.serving && !s.S.prison && !s.S.retired && !s.S.rhodes && (!s.S.track || ['A10', 'A11'].includes(s.track.archetype));
 export const entryEvents = [
-  { id: 'com_entry_penguin', a: [16, 40], w: 3, gap: 6, c: (s) => s.year >= 1093 && ['lungmen', 'siracusa'].includes(s.S.cur) && canSwitch(s) && s.S.cap.ties >= -0.8 && s.rng.chance(0.3),
-    run: (s) => { if (!enterCom(s, 'COM_PENGUIN', 'emperor_interview')) return { t: '배달 회사 모집 전단을 보았습니다. 사장 면접이라고 했습니다. 가지 않았습니다.', k: 'note' }; return { t: '배달 회사 모집 전단을 보고 찾아갔습니다. 사장이 직접 면접을 보았고, 질문은 커피 취향 하나였습니다. 합격이었습니다.', k: 'big', fx: { h: 2 } }; } },
   { id: 'com_entry_messenger', a: [16, 30], w: 3, gap: 6, c: (s) => canSwitch(s) && s.S.cap.arts >= 0.5 && s.S.cap.learn >= -0.8 && s.rng.chance(0.3),
     run: (s) => { if (!enterCom(s, 'COM_MESSENGER', 'certified')) return { t: '재앙 정보 전달자 양성 과정 공고를 보았습니다. 지원하지 않았습니다.', k: 'note' }; return { t: '재앙 정보 전달자 양성 과정에 들어갔습니다. 아츠 적성 검사를 통과했고, 관측 노트를 받았습니다.', k: 'big', fx: { h: 2 } }; } },
-  { id: 'com_entry_blacksteel', a: [16, 30], w: 3, gap: 6, c: (s) => ['columbia', 'kazimierz', 'bolivar', 'sargon', 'leithanien'].includes(s.S.cur) && canSwitch(s) && s.S.cap.skill >= -0.8 && s.rng.chance(0.3),
-    run: (s) => { if (!enterCom(s, 'COM_BLACKSTEEL', 'trainee')) return { t: '블랙스틸 모집센터 앞을 지났습니다. 전투 경험 없는 사람을 받는다고 했습니다. 들어가지 않았습니다.', k: 'note' }; return { t: '블랙스틸 모집센터에 들어갔습니다. 전투 경험이 없어도 된다고 했고, 2년 훈련이라고 했습니다.', k: 'big', fx: { h: 1 } }; } },
   { id: 'com_entry_merc_team', a: [12, 35], w: 3, gap: 6, c: (s) => ['kazdel', 'victoria', 'leithanien', 'columbia', 'sargon'].includes(s.S.cur) && canSwitch(s) && s.S.cap.skill >= -0.8 && s.S.q <= 2 && s.rng.chance(0.3),
     run: (s) => { if (!enterCom(s, 'COM_MERC_TEAM', 'joined')) return { t: '소규모 용병 팀이 사람을 구했습니다. 가지 않았습니다.', k: 'note' }; return { t: '소규모 용병 팀에 들어갔습니다. 계약 단위로 움직이는 팀이었고, 첫 계약은 다음 주였습니다.', k: 'big', fx: { h: -1 } }; } },
   { id: 'com_entry_bounty', a: [16, 40], w: 2, gap: 8, c: (s) => ['bolivar', 'kazimierz', 'columbia', 'siracusa'].includes(s.S.cur) && canSwitch(s) && s.S.cap.skill >= 0.5 && s.rng.chance(0.3),
     run: (s) => { if (!enterCom(s, 'COM_BOUNTY', 'independent')) return { t: '현상금 전단을 보았습니다. 보기만 했습니다.', k: 'note' }; return { t: '현상금 전단을 떼어 왔습니다. 첫 표적은 금액이 제일 작은 사람이었습니다.', k: 'big', fx: { h: -1 } }; } },
   { id: 'com_entry_merc_state', a: [16, 40], w: 4, gap: 6, tags: ['war'], c: (s) => canSwitch(s) && s.S.cap.skill >= -0.8 && s.rng.chance(0.3),
     run: (s) => { if (!enterCom(s, 'COM_MERC_STATE', 'faction_event')) return { t: '세력이 용병을 모았습니다. 줄에 서지 않았습니다.', k: 'note' }; return { t: '세력이 용병을 모았습니다. 줄에 섰고, 저녁에 제복이 나왔습니다.', k: 'big', fx: { h: -1 } }; } },
-  { id: 'com_entry_cc', a: [18, 50], w: 2, gap: 8, c: (s) => !!s.S.track && !s.S.rhodes && !!s.S.track && ['A6', 'A9'].includes(s.track.archetype) && s.S.cap.ties >= -0.8 && s.rng.chance(0.2),
+  { id: 'com_entry_cc', a: [18, 50], w: 2, gap: 8, c: (s) => !!s.S.track && !s.S.rhodes && !s.S.retired && s.S.track.id !== 'COM_CC' && ['A6', 'A9'].includes(s.track.archetype) && s.S.cap.ties >= -0.8 && s.rng.chance(0.2),
     run: (s) => { if (!s.switchTrack('COM_CC')) return { t: '긴급 계약 플랫폼 등록 안내를 받았습니다. 등록하지 않았습니다.', k: 'note' }; return { t: '긴급 계약 플랫폼에 등록했습니다. 전달자들이 세운 통신망이었고, 첫 의뢰가 그날 밤 올라왔습니다.', k: 'big' }; } },
-  { id: 'com_entry_idol', a: [14, 28], w: 2, gap: 8, c: (s) => s.year >= 1093 && ['lungmen', 'higashi'].includes(s.S.cur) && canSwitch(s) && s.S.cap.arts >= -0.8 && s.S.innate && s.S.innate.looks >= 0.8 && s.rng.chance(0.3),
-    run: (s) => { if (!enterCom(s, 'COM_PENGUIN_IDOL', 'contract')) return { t: '음반사 사람이 명함을 주었습니다. 연락하지 않았습니다.', k: 'note' }; return { t: '음반사 사람이 명함을 주었습니다. 배달 회사 사장이 운영하는 음반사였고, 계약서에 보호라는 말이 세 번 있었습니다.', k: 'big', fx: { h: 2 } }; } },
   { id: 'com_entry_pmc', a: [16, 35], w: 2, gap: 8, c: (s) => ['columbia', 'sargon', 'bolivar'].includes(s.S.cur) && canSwitch(s) && s.S.cap.skill >= -0.8 && s.S.q <= 3 && s.rng.chance(0.3),
     run: (s) => { if (!enterCom(s, 'COM_MERC_PMC', 'trainee')) return { t: '기업 PMC 연습생 모집 공고를 보았습니다. 지원하지 않았습니다.', k: 'note' }; return { t: '기업 PMC 연습생으로 들어갔습니다. 회사 이름은 길었고, 훈련장 이름은 번호였습니다.', k: 'big' }; } },
 ];
@@ -237,7 +229,7 @@ events.push(...entryEvents);
 export const decisions = {
   /** 펭귄 — 보수 자율 */
   com_penguin_pay: {
-    tags: ['track:COM_PENGUIN'], gap: 4, once: false, at: 0.5,
+    tags: ['aff:LGM_MSG_PENGUIN'], gap: 4, once: false, at: 0.5,
     ok: (s) => !!s.S.track && s.S.track.stage >= 1 && s.rng.chance(0.3),
     build: (s) => ({ title: '원하는 만큼', body: '월급 칸이 비어 있었습니다. "원하는 만큼 적어라"가 회사 원칙이었습니다. 사장은 적힌 숫자를 보지 않고 서명한다고 했고, 본다는 말도 있었습니다.',
       choices: [
@@ -269,15 +261,15 @@ export const decisions = {
   },
   /** 블랙스틸 — 교환 프로그램 서명 */
   com_bsx_sign: {
-    tags: ['track:COM_BLACKSTEEL'], once: true, at: 0.5,
+    tags: ['aff:COL_PMC_BLACKSTEEL'], once: true, at: 0.5,
     ok: (s) => !!s.S.track && s.year >= 1095 && s.S.track.stage >= 1 && !s.S.rhodes && (s.S.ori.known || s.rng.chance(0.3)) && s.rng.chance(0.4),
     build: (s) => ({ title: '교환 프로그램', body: '회사가 로도스 아일랜드와 교환 프로그램을 시작했습니다. 보안·호위 서비스를 보내고 치료를 받는 조건이었습니다. 파견자 명단에 빈 줄이 있었습니다.' + (s.S.ori.known ? ' 제 수치는 회사 규칙 몇 조항에 걸려 있었습니다.' : ''),
       choices: [
-        { k: 'sign', label: '서명한다', sub: '로도스 파견, 소속 유지, 치료', auto: s.S.ori.known ? 2 : 0.8 },
-        { k: 'no', label: '회사에 남는다', auto: 1 }] }),
+        { k: 'sign', label: '서명한다', sub: '로도스 파견 3년 · 소속 유지 · 치료', auto: s.S.ori.known ? 2 : 0.8 },
+        { k: 'no', label: '회사에 남는다', sub: '지금 자리 그대로', auto: 1 }] }),
     apply: (s, k) => {
       if (k !== 'sign') return { t: '명단에 이름을 적지 않았습니다. 적은 사람은 다음 달 함선에 올랐습니다.', k: 'note' };
-      if (!s.switchTrack('COM_BLACKSTEEL_EXCHANGE')) return { t: '서명했지만 이번 기수 정원이 찼습니다.', k: 'note' };
+      s.S.flags.bsx = { at: s.S.age, from: s.S.cur };
       s.joinRhodes('agreement', { quiet: true });
       if (s.data.nationById.rhodes && s.S.cur !== 'rhodes') s.migrate('rhodes', 'rhodes', { papers: 'agreement', keepTrack: true, quiet: true });
       if (s.S.phase !== 'life') return false;

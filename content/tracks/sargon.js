@@ -176,7 +176,7 @@ const army = [
 // ── SAR_FARM 농민 (A11: family → own → notable → clan) + 생업 계절 이벤트 ──
 const farm = [
   E('sar_far_f_dates', [12, 50], [T('SAR_FARM', 'family')], 45, 2, (s) => ({ t: '대추야자 수확에 온 가족이 나무에 올랐습니다. 떨어진 것은 아이들 몫이었습니다.', k: 'warm', fx: { h: 2, hl: -1 } })),
-  E('sar_far_f_well', [12, 50], [T('SAR_FARM', 'family')], 35, 3, (s) => ({ t: '우물이 낮아졌습니다. 아버지가 밤에 물을 길었고, 낮에는 길지 않았습니다. 이웃이 보기 때문이었습니다.', k: 'note', fx: { hl: -1 } })),
+  E('sar_far_f_well', [12, 50], [T('SAR_FARM', 'family')], 35, 3, (s) => ({ t: '우물이 낮아졌습니다. ' + (s.S.fam.dad.alive && !s.S.fam.dad.absent ? '아버지가' : '제가') + ' 밤에 물을 길었고, 낮에는 길지 않았습니다. 이웃이 보기 때문이었습니다.', k: 'note', fx: { hl: -1 } })),
   E('sar_far_o_lease', [16, 60], [T('SAR_FARM', 'own')], 45, 2, (s) => ({ t: '소작 계약을 새로 썼습니다. 수확의 셋 중 하나가 지주 몫이었습니다. 지난해는 넷 중 하나였습니다.', k: 'bad', fx: { money: -medX(s, 0.08) }, f: F('아미르령 소작 계약 사본, ' + s.year + '년') })),
   E('sar_far_o_collector', [16, 60], [T('SAR_FARM', 'own')], 40, 2, (s) => ({ t: '세리가 왔습니다. 장부와 창고를 번갈아 보았고, 장부보다 창고를 믿었습니다.', k: 'bad', fx: { money: -medX(s, 0.1), h: -1 } })),
   E('sar_far_n_dispute', [24, 70], [T('SAR_FARM', 'notable')], 45, 2, (s) => ({ t: '마을 물꼬 다툼을 맡았습니다. 양쪽 집 모두 저녁상에 불렀습니다. 상을 두 번 받았고, 결정은 한 번 했습니다.', k: 'ev', fx: { standing: 3, cap: { ties: 0.03 } } })),
@@ -191,7 +191,7 @@ const farm = [
   E('sar_liv_fair', [5, 90], [T('SAR_FARM')], 35, 2, (s) => ({ t: fest(s, 1) + '이었습니다. 이웃 오아시스 사람들까지 왔고, ' + cul(s).greet + '. 인사가 하루 백 번이었습니다.', k: 'warm', fx: { h: 3, cap: { ties: 0.02 } } })),
   E('sar_liv_mahuiz', [5, 90], [T('SAR_FARM')], 25, 3, (s) => ({ t: '정글 쪽에서 ' + iga(fest(s, 0)) + ' 열린다는 소문이 왔습니다. 마을 젊은이 둘이 구경 갔다가 한 명만 멀쩡히 돌아왔습니다.', k: 'note', fx: { h: 1 } })),
   E('sar_liv_jungle_rain', [5, 90], [T('SAR_FARM')], 35, 2, (s) => ({ t: '우기였습니다. 정글 길이 끊겼고, 열병이 돌았습니다. 집집마다 문 앞에 연기를 피웠습니다.', k: 'bad', fx: { hl: -3 } }), { c: jungle }),
-  E('sar_liv_jungle_fever', [5, 90], ['sargon'], 30, 3, (s) => ({ t: '정글 풍토병이 집에 들어왔습니다. 두 주를 앓았고, 어머니가 밤마다 잎을 달였습니다.', k: 'bad', fx: { hl: -5, h: -2 } }), { c: (s) => jungle(s) && (trk(s, 'SAR_FARM') || trk(s, 'SAR_TRIBE')) }),
+  E('sar_liv_jungle_fever', [5, 90], ['sargon'], 30, 3, (s) => ({ t: '정글 풍토병이 집에 들어왔습니다. 두 주를 앓았고, ' + (s.S.fam.mom.alive ? '어머니가' : s.S.fam.dad.alive && !s.S.fam.dad.absent ? '아버지가' : '이웃이') + ' 밤마다 잎을 달였습니다.', k: 'bad', fx: { hl: -5, h: -2 } }), { c: (s) => jungle(s) && (trk(s, 'SAR_FARM') || trk(s, 'SAR_TRIBE')) }),
   E('sar_liv_checkpoint', [5, 90], [T('SAR_FARM')], 30, 3, (s) => ({ t: '아미르끼리 다투는 해였습니다. 마을 길목에 검문소가 생겼고, 장에 가는 데 하루가 더 들었습니다.', k: 'bad', fx: { money: -medX(s, 0.03), h: -1 } })),
   E('sar_liv_wedding', [5, 90], [T('SAR_FARM')], 25, 4, (s) => ({ t: '이웃집 혼례였습니다. 지참금 이야기가 음식보다 많았습니다. 신랑 집이 낙타 두 마리 값을 냈다고 했습니다.', k: 'warm', fx: { h: 2 } })),
   E('sar_far_shift', [12, 95], [T('SAR_FARM')], 400, 2, (s) => { const id = stageId(s); return { t: id === 'own' ? '제 이름으로 땅을 부치기 시작했습니다. 소작이었지만 장부에 제 이름이 있었습니다.' : id === 'notable' ? '마을에서 어른 대접을 받기 시작했습니다. 물꼬 다툼이 제 집 앞으로 왔습니다.' : '씨족장 곁에 앉게 되었습니다. ' + cul(s).elder + '의 오른쪽이었습니다.', k: 'big', fx: { h: 3 } }; }, { c: stNew }),

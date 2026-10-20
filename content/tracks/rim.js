@@ -60,7 +60,7 @@ const company = [
   E('rim_com_mg_budget', [26, 60], [T('RIM_COMPANY', 'manager')], 45, 2, (s) => ({ t: '관리자로서 안전 예산을 짰습니다. 예산은 사고 수에 비례해 책정되었습니다. 사고가 줄면 예산도 줄었습니다.', k: 'bad', fx: { standing: 3, h: -2 } })),
   E('rim_com_mg_escort', [26, 60], [T('RIM_COMPANY', 'manager')], 35, 3, (s) => ({ t: '광산촌 방문에 보안 요원이 붙었습니다. 요원은 광부 출신이었고, 광부들은 요원을 알았고, 저는 둘 다 몰랐습니다.', k: 'note', fx: { h: -1 } })),
   E('rim_com_mg_raid', [26, 60], [T('RIM_COMPANY', 'manager')], 30, 4, (s) => ({ t: '수송대가 도적단에 털렸습니다. 보험 서류를 썼습니다. 보험은 화물에만 있었고, 기사에게는 없었습니다.', k: 'bad', fx: { h: -3 } })),
-  E('rim_com_mg_catastrophe', [26, 60], [T('RIM_COMPANY', 'manager')], 30, 3, (s) => ({ t: '재앙 예보가 왔습니다. 플레이트 이동 일정과 채굴 일정이 겹쳤습니다. 채굴을 이틀 줄였고, 그 이틀이 분기 보고에 남았습니다.', k: 'note', fx: { standing: -2, h: 1, f: orgF(s, '분기 채굴 보고', s.year) } })),
+  E('rim_com_mg_catastrophe', [26, 60], [T('RIM_COMPANY', 'manager')], 30, 3, (s) => ({ t: '재앙 예보가 왔습니다. ' + (s.S.home.type === 'nomadic' ? '플레이트 이동 일정과' : '대피 일정과') + ' 채굴 일정이 겹쳤습니다. 채굴을 이틀 줄였고, 그 이틀이 분기 보고에 남았습니다.', k: 'note', fx: { standing: -2, h: 1, f: orgF(s, '분기 채굴 보고', s.year) } })),
   E('rim_com_e_board', [32, 70], [T('RIM_COMPANY', 'exec')], 45, 2, (s) => ({ t: '임원 회의였습니다. 광업연합 이사 하나가 배석했습니다. 채굴량 이야기만 했고, 사람 수는 말하지 않았습니다.', k: 'big', fx: { standing: 4, money: medX(s, 1) } })),
   E('rim_com_e_guard', [32, 70], [T('RIM_COMPANY', 'exec')], 40, 2, (s) => ({ t: '경호가 붙었습니다. 둘. 광산촌에서 임원은 환영받는 사람이 아니었습니다. 경호원도 그것을 알았습니다.', k: 'note', fx: { h: -2 } })),
   E('rim_com_e_rhodes_contract', [32, 70], [T('RIM_COMPANY', 'exec')], 30, 4, (s) => { s.S.flags.rhodes_legal = s.S.age; return { t: '로도스 아일랜드와 의료 계약 서류를 주고받았습니다. 광산 감염자 처우 조항이 있었습니다. 상대 쪽 사람이 제 이름을 적어 갔습니다.', k: 'note', fx: { standing: 2 } }; }),
@@ -129,7 +129,7 @@ const builder = [
 // ── 핵심 5. RIM_INFECTED 감염 광부·자발 추방 (A5 forced: diagnosed → expendable → zone). 진입은 판정 이벤트 ──
 const infected = [
   E('rim_inf_enter', [0, 90], ['rim', 'known', '!track:RIM_INFECTED', '!rhodes'], 300, 1, (s) => { const was = s.track ? s.track.name : null; s.enterTrack('RIM_INFECTED', { how: 'forced', via: 'diagnosed', quiet: true }); return { t: '판정서가 회사에 먼저 갔습니다. ' + (was ? eun(was) + ' 그날로 끝났고, ' : '') + '소모성 노동 명부에 이름이 올랐습니다. 박해는 없다고 했습니다. 명부가 있을 뿐이었습니다.', k: 'loss', fx: { h: -5 } }; }, { c: (s) => !s.S.prison && s.rng.chance(0.7) }),
-  E('rim_inf_d_paper', [0, 90], [T('RIM_INFECTED', 'diagnosed')], 50, 1, (s) => ({ t: '판정서를 가족에게 보였습니다. 아버지가 먼저 읽었고, 다 읽기 전에 접었습니다.', k: 'loss', fx: { h: -4 } })),
+  E('rim_inf_d_paper', [0, 90], [T('RIM_INFECTED', 'diagnosed')], 50, 1, (s) => ({ t: '판정서를 가족에게 보였습니다. ' + (s.S.fam.dad.alive && !s.S.fam.dad.absent ? '아버지가' : s.S.fam.mom.alive ? '어머니가' : '형제가') + ' 먼저 읽었고, 다 읽기 전에 접었습니다.', k: 'loss', fx: { h: -4 } })),
   E('rim_inf_d_company', [0, 90], [T('RIM_INFECTED', 'diagnosed')], 45, 1, (s) => ({ t: '회사가 새 계약서를 내밀었습니다. 급여는 반, 배치는 가장 깊은 갱도. 서명하지 않으면 계약이 없었습니다.', k: 'bad', fx: { money: -medX(s, 0.05), h: -2, f: orgF(s, '감염자 재계약 조항', s.year) } })),
   E('rim_inf_d_neighbors', [0, 90], [T('RIM_INFECTED', 'diagnosed')], 40, 1, (s) => ({ t: '이웃은 피하지 않았습니다. 광산촌에 감염자는 흔했습니다. 피하지 않는 것과 가까이 오는 것은 달랐습니다.', k: 'note', fx: { h: -1 } })),
   E('rim_inf_d_children', [0, 90], [T('RIM_INFECTED', 'diagnosed')], 35, 1, (s) => ({ t: '옆집 아이가 부모에게 쫓겨나는 것을 보았습니다. 판정 다음 날이었습니다. 부모는 문을 닫았고, 아이는 광산촌 길을 혼자 걸었습니다.', k: 'bad', fx: { h: -4 } })),
@@ -221,7 +221,7 @@ const factory = [
   E('rim_liv_cake', [5, 90], [T('RIM_FACTORY')], 40, 2, (s) => ({ t: fest(s, 1) + '였습니다. ' + eul(cul(s).food.split('와 ')[0]) + ' 광장에서 나눴습니다. 회사가 냈다고 회사가 말했습니다.', k: 'warm', fx: { h: 3 } })),
   E('rim_liv_bandits', [5, 90], [T('RIM_FACTORY')], 35, 3, (s) => ({ t: '도적단이 마을 가장자리까지 왔습니다. 보안 요원이 왔고, 도적단은 떠났고, 요원도 떠났습니다. 밤에 문을 두 번 잠갔습니다.', k: 'bad', fx: { h: -2 } })),
   E('rim_liv_platform', [5, 90], [T('RIM_FACTORY')], 35, 2, (s) => ({ t: '마을 옆에 새 플랫폼이 올라갔습니다. 반년. 용접 불빛이 밤마다 창에 비쳤습니다. 다 올라가자 마을이 조금 옮겨졌습니다.', k: 'note', fx: { h: 1 } })),
-  E('rim_liv_catastrophe', [5, 90], [T('RIM_FACTORY')], 40, 2, (s) => ({ t: '재앙 예보였습니다. 플레이트가 분리되었고, 마을이 이틀 동안 둘이었습니다. 다시 붙는 데 열 시간이 걸렸습니다.', k: 'bad', fx: { hl: -1, h: -1 } })),
+  E('rim_liv_catastrophe', [5, 90], [T('RIM_FACTORY')], 40, 2, (s) => ({ t: s.S.home.type === 'nomadic' ? '재앙 예보였습니다. 플레이트가 분리되었고, 마을이 이틀 동안 둘이었습니다. 다시 붙는 데 열 시간이 걸렸습니다.' : '재앙 예보였습니다. 마을이 이틀 동안 대피소에 있었고, 돌아오는 데 열 시간이 걸렸습니다.', k: 'bad', fx: { hl: -1, h: -1 } })),
   E('rim_liv_greet', [5, 90], [T('RIM_FACTORY')], 30, 3, (s) => ({ t: '이웃이 ' + cul(s).greet + '고 인사했습니다. 갱도에 안 들어가는 사람에게도 그렇게 인사했습니다. 그것이 이 마을 인사였습니다.', k: 'warm', fx: { cap: { ties: 0.02 } } })),
   E('rim_liv_siren', [5, 90], [T('RIM_FACTORY')], 30, 3, (s) => ({ t: '사이렌이 울렸습니다. 갱도 쪽. 마을 사람들이 입구로 뛰어갔고, 공장 사람들도 뛰어갔습니다. 라인은 혼자 돌았습니다.', k: 'bad', fx: { h: -3 } })),
   E('rim_fac_shift', [14, 70], [T('RIM_FACTORY')], 400, 2, (s) => { const id = stageId(s); return { t: id === 'skilled' ? '숙련공이 되었습니다. 기계 하나가 제 이름으로 배정되었습니다.' : id === 'foreman' ? '반장이 되었습니다. 사고 보고서 양식을 받았습니다.' : '생산팀장이 되었습니다. 분기 계획표가 제 책상에 왔습니다.', k: 'big', fx: { h: 3 } }; }, { c: stNew }),

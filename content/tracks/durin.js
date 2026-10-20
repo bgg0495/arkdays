@@ -40,7 +40,7 @@ export const events = [
 
   // ── DUR_INDUSTRY 공업·자동기계 ──
   { id: 'dur_ind_app_gear', a: [14, 35], tags: ['track:DUR_INDUSTRY:apprentice'], w: 50, gap: 2,
-    run: (s) => ({ t: s.rng.pick(['공업 견습이 되었습니다. 첫해는 톱니를 닦았습니다. 톱니가 저보다 컸습니다.', '자동기계 하나가 견습실을 돌아다녔습니다. 이름은 없었고, 다들 이름으로 불렀습니다.', '기름 냄새가 몸에 뱄습니다. 어머니가 식탁에서 코를 막았고, 아버지는 웃었습니다.']), k: 'note', fx: { cap: { skill: 0.04 } } }) },
+    run: (s) => ({ t: s.rng.pick(['공업 견습이 되었습니다. 첫해는 톱니를 닦았습니다. 톱니가 저보다 컸습니다.', '자동기계 하나가 견습실을 돌아다녔습니다. 이름은 없었고, 다들 이름으로 불렀습니다.', '기름 냄새가 몸에 뱄습니다. ' + (s.S.fam.mom.alive ? '어머니가' : '동생이') + ' 식탁에서 코를 막았고, ' + (s.S.fam.dad.alive && !s.S.fam.dad.absent ? '아버지는' : '이웃은') + ' 웃었습니다.']), k: 'note', fx: { cap: { skill: 0.04 } } }) },
   { id: 'dur_ind_app_small', a: [14, 35], tags: ['track:DUR_INDUSTRY:apprentice'], w: 25, gap: 3,
     run: (s) => ({ t: '지상에서 들여온 부품이 두린 손에 맞지 않았습니다. 다시 깎았습니다. 지상 물건은 늘 조금 컸습니다.', k: 'note', fx: { cap: { skill: 0.02 } } }) },
   { id: 'dur_ind_mec_fix', a: [17, 70], tags: ['track:DUR_INDUSTRY:mechanic'], w: 50, gap: 2,
@@ -149,17 +149,17 @@ export const events = [
     run: (s) => ({ t: '치료해 주는 배가 있다는 말을 들었습니다. 다소 불만스러웠습니다. 배보다 돔이 나았으니까요. 그래도 들어 두었습니다.', k: 'note', fx: { h: 1 } }) },
 
   // ── 돔 일상·축일·대표단 (진로 무관) ──
-  { id: 'dur_life_festival_expand', a: [5, 95], tags: ['durin'], w: 25, gap: 3,
+  { id: 'dur_life_festival_expand', a: [5, 95], tags: ['durin'], w: 25, gap: 8,
     run: (s) => ({ t: ieot(fest(s, 0)) + '습니다. ' + s.rng.pick(['새 구획 벽을 트는 날이었고, 도시 전부가 망치 소리를 들으러 왔습니다.', '통을 열었습니다. 열린 통 수로 그해 형편을 알았습니다.', '아이들이 새 구획을 처음 뛰어다녔습니다. 어른들은 천장을 올려다보았습니다. 버텼습니다.']), k: 'warm', fx: { h: 3 } }) },
-  { id: 'dur_life_farewell', a: [5, 95], tags: ['durin'], w: 20, gap: 4,
+  { id: 'dur_life_farewell', a: [5, 95], tags: ['durin'], w: 20, gap: 8,
     run: (s) => ({ t: iga(fest(s, 1)) + ' 있었습니다. 지상으로 올라가는 이웃을 보내는 자리였습니다. ' + s.rng.pick(['돌아오겠다고 했습니다. 다들 고개를 끄덕였고, 아무도 믿지 않았습니다.', '술을 한 통 들려 보냈습니다. 지상 술은 못 마실 거라고 했습니다.']), k: 'note', fx: { h: -1, cap: { ties: 0.01 } } }) },
-  { id: 'dur_life_tavern', a: [16, 95], tags: ['durin'], w: 30, gap: 2,
+  { id: 'dur_life_tavern', a: [16, 95], tags: ['durin'], w: 30, gap: 8,
     run: (s) => ({ t: s.rng.pick(['술집에서 저녁을 보냈습니다. "' + cul(s).greet + '"가 인사였고, 대답은 잔을 드는 것이었습니다.', '새 벌꿀주 통이 열렸습니다. 돔 사람 절반이 그 자리에 있었습니다.', '술 취향으로 자리가 갈렸습니다. 같은 취향끼리 앉았고, 취향이 바뀌면 자리를 옮겼습니다.']), k: 'warm', fx: { h: 2, cap: { ties: 0.01 } } }) },
   { id: 'dur_life_vote', a: [16, 95], tags: ['durin'], w: 25, gap: 3,
     run: (s) => { const pct = s.rng.ri(52, 78); return { t: '주민 투표가 있었습니다. ' + s.rng.pick(['안건은 승강기 운행 시간이었습니다. 한 시간 늦추는 쪽이 ' + pct + '할로 이겼습니다.', '안건은 지상 동맹이었습니다. 투표율이 ' + (pct - 20) + '할이었고, 축제 안건보다 낮았습니다.', '안건은 리조트 철거였습니다. 지루해졌다는 이유로 철거가 ' + pct + '할로 이겼습니다.']), k: 'note', fx: { h: 1 }, f: domeF('주민 투표 결과', s.year) }; } },
-  { id: 'dur_life_ceiling', a: [5, 95], tags: ['durin'], w: 15, gap: 5,
+  { id: 'dur_life_ceiling', a: [5, 95], tags: ['durin'], w: 15, gap: 8,
     run: (s) => ({ t: '천장에서 물이 떨어졌습니다. 설계 대표가 와서 보고 "괜찮다"고 했습니다. 괜찮았습니다. 그래도 그 자리는 피해 다녔습니다.', k: 'note', fx: { h: -1 } }) },
-  { id: 'dur_life_surface_news', a: [10, 95], tags: ['durin'], w: 15, gap: 4,
+  { id: 'dur_life_surface_news', a: [10, 95], tags: ['durin'], w: 15, gap: 8,
     run: (s) => ({ t: '지상에서 전쟁이 났다는 말이 승강기를 타고 내려왔습니다. ' + s.rng.pick(['어느 나라인지 아무도 묻지 않았습니다.', '잡지 다음 호가 늦어질 거라는 이야기가 더 길었습니다.']), k: 'note' }) },
   { id: 'dur_life_small', a: [10, 95], tags: ['durin'], w: 10, gap: 6,
     run: (s) => ({ t: '지상 사람이 돔에 내려와 문마다 머리를 부딪혔습니다. 아이들이 세었습니다. ' + s.rng.ri(4, 11) + '번이었습니다.', k: 'warm', fx: { h: 2 }, f: domeF('방문자 일지', s.year) }) },

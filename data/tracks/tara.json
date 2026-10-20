@@ -136,7 +136,9 @@
    "entry": {
     "ages": [14,40],
     "classes": { "q1": 0.15, "q2": 0.15 },
-    "gates": [],
+    "gates": [
+     { "region": "hillock" }
+    ],
     "via": ["hire"]
    },
    "stages": [
@@ -190,7 +192,7 @@
     "ages": [12,40],
     "classes": { "q2": 0.5 },
     "gates": [
-     { "urban": false, "weight": 2 }
+     { "urban": false }
     ],
     "via": ["family"]
    },
@@ -244,6 +246,7 @@
     "ages": [8,20],
     "classes": { "q1": 0.1, "q2": 0.1 },
     "gates": [
+     { "urban": false },
      { "eth": "nomad", "weight": 20 }
     ],
     "via": ["born"]
@@ -298,7 +301,7 @@
     "classes": { "q2": 0.1, "q3": 0.15 },
     "gates": [
      { "year": [1098,9999] },
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["enlist","ex_dublinn"]
    },
@@ -353,7 +356,7 @@
     "ages": [14,30],
     "classes": { "q2": 0.05, "q3": 0.3 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["apprentice"]
    },
@@ -417,7 +420,7 @@
      "title": null,
      "minYears": 3,
      "promo": { "cap": "learn", "k": 0.22 },
-     "fall": { "base": 0.035, "causes": ["fade","kia","arrest"] }
+     "fall": { "base": 0.035, "causes": ["fade","scandal","arrest"] }
     },
     {
      "id": "poet",
@@ -425,7 +428,7 @@
      "title": "시인",
      "minYears": 8,
      "promo": { "cap": "learn", "k": 0.12 },
-     "fall": { "base": 0.035, "causes": ["fade","kia","arrest"] }
+     "fall": { "base": 0.035, "causes": ["fade","scandal","arrest"] }
     },
     {
      "id": "writer",
@@ -433,7 +436,7 @@
      "title": "작가",
      "minYears": 0,
      "promo": null,
-     "fall": { "base": 0.035, "causes": ["fade","kia","arrest"] }
+     "fall": { "base": 0.035, "causes": ["fade","scandal","arrest"] }
     }
    ],
    "income": { "stage": [0.2,0.8,2], "job": "artist" },
@@ -441,7 +444,7 @@
    "affiliations": ["TAR_POET_NATIONAL","TAR_POET_WYVERN"],
    "exits": {
     "retire": { "age": 60, "to": "TAR_FARM" },
-    "fall": { "fade": "expel", "kia": "death:violence", "arrest": "prison:jail" },
+    "fall": { "fade": "expel", "scandal": "disgrace", "arrest": "prison:jail" },
     "switch": ["TAR_RATION"]
    },
    "oriPolicyOverride": null,

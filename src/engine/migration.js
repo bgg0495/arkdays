@@ -7,6 +7,8 @@ import { mulTies } from './caps.js';
 import { relOf, refreshRel } from './relations.js';
 import { trackOf, leaveTrack } from './track.js';
 import { applyPolicy } from './oripathy.js';
+import { initHousing } from './housing.js';
+import { clamp } from './rng.js';
 import { ro, eul } from './text.js';
 
 const M = () => B.mig;
@@ -80,6 +82,16 @@ export function migrateTo(sim, reason, to, opts = {}) {
   if (S.job && !S.track && !keepTrack) { S.job = null; S.income = 0; }
   if (S.school && !['study'].includes(reason)) S.school = null;
   refreshRel(sim);
+  // W14(QA A3): 목적지의 도시화·이동도시 비율로 주거 환경을 다시 롤한다(사미·에기르 등 nomadic 0 국가에 이동도시 출생자가 '플레이트' 문장을 끌고 가던 것). 로도스 본함은 rhodesYear/forced 주거가 맡는다
+  if (id !== 'rhodes' && !n.virtual) {
+    const st = n.stats || {};
+    const urbanP = clamp((st.urb ?? 0.3) * Math.exp(0.3 * (S.q - 3)), 0.02, 0.98);
+    S.urban = sim.rng.chance(urbanP);
+    if (S.urban && sim.rng.chance(n.nomadic ?? 0)) { S.home.type = 'nomadic'; S.home.deck = sim.rng.chance(clamp(0.1 + (S.q - 1) * 0.2, 0.1, 0.9)) ? 'upper' : 'under'; }
+    else { S.home.type = 'settled'; S.home.deck = 'ground'; }
+    S.home.housing = null; S.home.owned = false; S.home.forced = false; S.flags.homeOwner = false;
+    initHousing(sim);
+  }
   S.flags.migHist = S.flags.migHist || [];
   S.flags.migHist.push({ at: S.age, to: id, reason, papers: S.res.papers });
   if (!opts.quiet) {

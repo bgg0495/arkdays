@@ -183,13 +183,13 @@ export const events = [
   // KAZ_LABOR 상업 도시 저임금 노동 — 일용 → 공장 → 반장
   // ════════════════════════════════════════════════════════════════════
   { id: 'kz_lab_day_market', a: [14, 50], tags: [T('KAZ_LABOR', 'daylabor')], w: 50, gap: 1, rep: true,
-    run: (s) => ({ t: '새벽 인력 시장에 섰습니다. ' + s.rng.pick(['경기장 관중석 청소였습니다. 떨어진 스폰서 전단이 한 자루였습니다.', '플레이트 접합부 녹 제거였습니다. 안전띠는 둘에 하나였습니다.', '아무도 부르지 않았습니다. 점심은 걸렀습니다.']), k: s.rng.chance(0.3) ? 'bad' : 'note', fx: { money: medX(s, 0.03), hl: -1 } }) },
+    run: (s) => ({ t: '새벽 인력 시장에 섰습니다. ' + s.rng.pick(['경기장 관중석 청소였습니다. 떨어진 스폰서 전단이 한 자루였습니다.', (s.S.home.type === 'nomadic' ? '플레이트 접합부' : '철교 이음새') + ' 녹 제거였습니다. 안전띠는 둘에 하나였습니다.', '아무도 부르지 않았습니다. 점심은 걸렀습니다.']), k: s.rng.chance(0.3) ? 'bad' : 'note', fx: { money: medX(s, 0.03), hl: -1 } }) },
   { id: 'kz_lab_day_major', a: [14, 50], tags: [T('KAZ_LABOR', 'daylabor')], w: 50, c: (s) => majorYear(s) && s.S.flags.labMajor !== s.year,
     run: (s) => { s.S.flags.labMajor = s.year; return { t: '메이저 기간이었습니다. 일거리가 세 배였습니다. 관중석 아래에서 다섯 달을 일했고, 경기는 한 번도 보지 못했습니다. 소리로만 알았습니다.', k: 'ev', fx: { money: medX(s, 0.3), hl: -2 } }; } },
   { id: 'kz_lab_day_points', a: [14, 30], tags: [T('KAZ_LABOR', 'daylabor')], w: 40, c: (s) => s.S.cap.skill >= 0.3 && !s.S.flags.labPitAsked,
     run: (s) => { s.S.flags.labPitOffer = s.S.age; return { t: '같이 일하던 사람이 지하 투기장 이야기를 했습니다. 포인트를 모으면 등록소가 받아 준다고 했습니다. 그 사람 손등에 흉터가 셋이었습니다.', k: 'note' }; } },
   { id: 'kz_lab_day_rent', a: [14, 50], tags: [T('KAZ_LABOR', 'daylabor')], w: 35, gap: 3,
-    run: (s) => ({ t: '플레이트 임대료가 올랐습니다. 집주인은 메이저 때문이라고 했습니다. 메이저가 끝나도 내려가지 않았습니다.', k: 'bad', fx: { money: -medX(s, 0.1), h: -2 } }) },
+    run: (s) => ({ t: (s.S.home.type === 'nomadic' ? '플레이트 임대료가' : '집세가') + ' 올랐습니다. 집주인은 메이저 때문이라고 했습니다. 메이저가 끝나도 내려가지 않았습니다.', k: 'bad', fx: { money: -medX(s, 0.1), h: -2 } }) },
   { id: 'kz_lab_fac_trn', a: [16, 55], tags: [T('KAZ_LABOR', 'factory')], w: 300, c: (s) => fresh(s, 'KAZ_LABOR_factory'),
     run: (s) => ({ t: (affIs(s, 'KAZ_LAB_ZBONEK') ? '즈보넉 공장' : '공장') + ' 정규 명부에 올랐습니다. 날품 대신 주급이 되었습니다. 교대표에 제 이름이 인쇄되어 나온 것이 처음이었습니다.', k: 'big', fx: { h: 3 } }) },
   { id: 'kz_lab_fac_line', a: [16, 60], tags: [T('KAZ_LABOR', 'factory')], w: 50, gap: 1, rep: true,
@@ -350,7 +350,7 @@ export const events = [
   { id: 'kz_off_exec_trn', a: [28, 65], tags: [T('KAZ_OFFICE', 'exec')], w: 300, c: (s) => fresh(s, 'KAZ_OFFICE_exec'),
     run: (s) => ({ t: '임원이 되었습니다. 상업연합회 총회에 회사 대표로 앉았습니다. 뒷줄이었고, 뒷줄도 총회였습니다.', k: 'big', fx: { h: 3 } }) },
   { id: 'kz_off_exec_speak', a: [28, 65], tags: [T('KAZ_OFFICE', 'exec')], w: 45, gap: 2,
-    run: (s) => ({ t: '회사 대변인으로 기자 앞에 섰습니다. ' + s.rng.pick(['질문은 기사 부상에 관한 것이었고, 답은 광고 일정에 관한 것이었습니다.', '준비한 문장을 읽었습니다. 제가 쓴 문장은 하나도 없었습니다.', '중계 화면에 제 얼굴이 3초 나왔습니다. 어머니가 전화를 했습니다.']), k: 'note', fx: { standing: 2 } }) },
+    run: (s) => ({ t: '회사 대변인으로 기자 앞에 섰습니다. ' + s.rng.pick(['질문은 기사 부상에 관한 것이었고, 답은 광고 일정에 관한 것이었습니다.', '준비한 문장을 읽었습니다. 제가 쓴 문장은 하나도 없었습니다.', '중계 화면에 제 얼굴이 3초 나왔습니다. ' + (momHere(s) ? '어머니가' : '옛 친구가') + ' 전화를 했습니다.']), k: 'note', fx: { standing: 2 } }) },
   { id: 'kz_off_exec_politics', a: [28, 65], tags: [T('KAZ_OFFICE', 'exec')], w: 30, gap: 4,
     run: (s) => ({ t: '국민원 의원 후원 만찬에 회사 몫으로 갔습니다. 접시 값이 사원 월급이었습니다. 접시를 비우지 못했습니다.', k: 'note', fx: { cap: { ties: 0.03 }, h: -1 } }) },
   { id: 'kz_off_fall', a: [18, 65], tags: [K], w: 300, c: (s) => left(s, 'KAZ_OFFICE', null) && s.S.flags.lastTrackHow !== 'retire',
@@ -459,14 +459,14 @@ export const events = [
   { id: 'kz_life_pierogi', a: [10, 90], tags: [K], w: 30, gap: 3,
     run: (s) => s.rng.chance(0.22) ? ({ t: '피에로기 속 고기 값이 ' + s.rng.ri(10, 30) + '% 올랐습니다. 양배추로 채웠습니다. 아이는 몰랐고, 저는 알았습니다.', k: 'note', fx: { h: 1 }, f: F('상업 도시 시장 물가표, ' + s.year + '년') }) : ((s) => ({ t: (momHere(s) || s.S.fam.married ? '집에서 ' : '혼자 ') + cul(s).food + ' 중 피에로기를 빚었습니다. ' + s.rng.pick(['속은 양배추였습니다. 고기는 메이저 때나 넣었습니다.', '빚은 것의 절반은 이웃에게 갔습니다. 이웃 것의 절반이 돌아왔습니다.', '모양이 기사 투구를 닮았다고 아이가 말했습니다. 그렇게 보였습니다.']), k: 'warm', fx: { h: 2 } }))(s) },
   { id: 'kz_life_winter', a: [10, 90], tags: [K], w: 30, gap: 3,
-    run: (s) => s.rng.chance(0.22) ? ({ t: '겨울 난방비가 작년보다 ' + s.rng.ri(10, 40) + '% 올랐습니다. 플레이트 관리소 공고였습니다. 공고 옆에 메이저 중계권 광고가 붙어 있었습니다.', k: 'bad', fx: { h: -1, money: -medX(s, 0.03) }, f: F('플레이트 관리소 난방 요금 고시, ' + s.year + '년') }) : ((s) => ({ t: '겨울이 길었습니다. ' + s.rng.pick(['플레이트 난방이 끊긴 밤에 ' + cul(s).drink + ' 한 잔으로 버텼습니다.', '눈이 경기장 지붕에 쌓였습니다. 치우는 사람은 동네에서 뽑았습니다.', '남부에서 호밀 값이 올랐다는 소식이 왔습니다. 빵은 작아졌고 값은 그대로였습니다.']), k: 'note', fx: { h: -1, hl: -1 } }))(s) },
-  { id: 'kz_life_guild_fair', a: [10, 90], tags: [K], w: 25, gap: 4,
+    run: (s) => s.rng.chance(0.22) ? ({ t: '겨울 난방비가 작년보다 ' + s.rng.ri(10, 40) + '% 올랐습니다. ' + (s.S.home.type === 'nomadic' ? '플레이트 관리소' : '시 관리소') + ' 공고였습니다. 공고 옆에 메이저 중계권 광고가 붙어 있었습니다.', k: 'bad', fx: { h: -1, money: -medX(s, 0.03) }, f: F((s.S.home.type === 'nomadic' ? '플레이트 관리소' : '시 관리소') + ' 난방 요금 고시, ' + s.year + '년') }) : ((s) => ({ t: '겨울이 길었습니다. ' + s.rng.pick([(s.S.home.type === 'nomadic' ? '플레이트' : '구역') + ' 난방이 끊긴 밤에 ' + cul(s).drink + ' 한 잔으로 버텼습니다.', '눈이 경기장 지붕에 쌓였습니다. 치우는 사람은 동네에서 뽑았습니다.', '남부에서 호밀 값이 올랐다는 소식이 왔습니다. 빵은 작아졌고 값은 그대로였습니다.']), k: 'note', fx: { h: -1, hl: -1 } }))(s) },
+  { id: 'kz_life_guild_fair', a: [10, 90], tags: [K], w: 25, gap: 8,
     run: (s) => s.rng.chance(0.22) ? ({ t: '장인 길드 장터에서 냄비를 ' + s.rng.ri(30, 90) + ' LMD에 샀습니다. 기계 공장 것은 그 절반이었습니다. 길드 것은 손잡이가 안 빠졌습니다.', k: 'warm', fx: { h: 2, money: -medX(s, 0.03) }, f: F('카시미어 장인 길드 장터 가격표') }) : ((s) => ({ t: '장인 길드 장터가 섰습니다. 창과 갑옷 옆에 냄비와 문고리가 있었습니다. 같은 손이 만든 것이었습니다. 냄비를 샀습니다.', k: 'warm', fx: { h: 2, money: -medX(s, 0.03) } }))(s) },
-  { id: 'kz_life_knight_neighbor', a: [10, 90], tags: [K, 'urban'], w: 25, gap: 4,
+  { id: 'kz_life_knight_neighbor', a: [10, 90], tags: [K, 'urban'], w: 25, gap: 8,
     run: (s) => ({ t: '옆집 아이가 기사단 연습생이 되었습니다. 동네가 축하했고, 1년 뒤 그 아이는 돌아왔습니다. 동네는 그것도 축하했습니다. 돌아온 것을.', k: 'note', fx: { h: 1 } }) },
-  { id: 'kz_life_vodka', a: [18, 90], tags: [K], w: 25, gap: 3,
+  { id: 'kz_life_vodka', a: [18, 90], tags: [K], w: 25, gap: 8,
     run: (s) => ({ t: '술집에서 ' + cul(s).drink + ' 잔을 기울였습니다. ' + s.rng.pick(['옆자리 노인이 열한 번째 메이저 이야기를 했습니다. 아무도 끊지 않았습니다.', '텔레비전 화면에서 기사가 쓰러졌고, 술집이 조용해졌다가 다시 시끄러워졌습니다.', '주인이 옛 기사였습니다. 손이 느렸고, 잔은 정확했습니다.']), k: 'note', fx: { h: 1 } }) },
-  { id: 'kz_life_greet', a: [10, 90], tags: [K], w: 20, gap: 5,
+  { id: 'kz_life_greet', a: [10, 90], tags: [K], w: 20, gap: 8,
     run: (s) => ({ t: '동네 사람들은 인사 대신 "' + cul(s).greet + '"라고 했습니다. 경기가 없는 날에도. 이기지 않아도 되는 날에도.', k: 'note', fx: { h: 1 } }) },
 
   // ════════════════════════════════════════════════════════════════════
@@ -491,7 +491,7 @@ export const events = [
   { id: 'kz_newcomer_major', a: [10, 60], tags: [K, 'newcomer'], w: 30, gap: 3,
     run: (s) => ({ t: '온 동네가 메이저 이야기를 했습니다. 저는 기사 이름을 하나도 몰랐습니다. 이름 셋을 외우자 동네가 말을 걸기 시작했습니다.', k: 'warm', fx: { h: 2, cap: { ties: 0.02 } } }) },
   { id: 'kz_newcomer_rent', a: [15, 60], tags: [K, 'newcomer', 'urban'], w: 30, gap: 3,
-    run: (s) => ({ t: '플레이트 임대 계약을 했습니다. 외국인 보증금이 두 배였습니다. 집주인은 미안해하지 않았고, 저는 두 배를 냈습니다.', k: 'bad', fx: { money: -medX(s, 0.2) } }) },
+    run: (s) => ({ t: (s.S.home.type === 'nomadic' ? '플레이트 임대 계약을' : '셋집 계약을') + ' 했습니다. 외국인 보증금이 두 배였습니다. 집주인은 미안해하지 않았고, 저는 두 배를 냈습니다.', k: 'bad', fx: { money: -medX(s, 0.2) } }) },
   { id: 'kz_visit_arena', a: [15, 70], tags: ['visit:kazimierz'], w: 30, gap: 3,
     run: (s) => ({ t: '카시미어에 머무는 동안 경기장 옆을 지났습니다. 입장권은 못 샀고, 함성은 공짜였습니다.', k: 'note', fx: { h: 1 } }) },
   { id: 'kz_visit_sponsor', a: [15, 70], tags: ['visit:kazimierz'], w: 25, gap: 3,
@@ -641,7 +641,7 @@ export const decisions = {
       choices: [{ k: 'cure', label: '치료비', sub: '건강 +', auto: 1.2 }, { k: 'papers', label: '가족 신분 서류', sub: '행복 +, 관계 +', auto: 1 }, { k: 'gear', label: '장비', sub: '기량 +, 순위 +', auto: 1 }] }),
     apply: (s, k) => { const c = medX(s, 1.2);
       if (k === 'cure') return { t: '치료비로 썼습니다. 결정의 진행이 조금 늦어졌다고 의사가 말했습니다. 조금이 얼마인지는 말하지 않았습니다.', k: 'ev', fx: { money: -c, hl: 6 } };
-      if (k === 'papers') return { t: '가족의 신분 서류를 샀습니다. 바깥에서는 공짜인 종이였습니다. 어머니가 처음으로 구역 밖 시장에 갔습니다.', k: 'warm', fx: { money: -c, h: 6, cap: { ties: 0.04 } } };
+      if (k === 'papers') return { t: '가족의 신분 서류를 샀습니다. 바깥에서는 공짜인 종이였습니다. ' + (s.S.fam.mom.alive ? '어머니가' : '가족이') + ' 처음으로 구역 밖 시장에 갔습니다.', k: 'warm', fx: { money: -c, h: 6, cap: { ties: 0.04 } } };
       return { t: '장비를 샀습니다. 상표 없는 갑옷이었습니다. 상표 없는 것이 더 비쌌습니다.', k: 'ev', fx: { money: -c, cap: { skill: 0.05 }, standing: 5 } }; },
   },
   marry_civil: marryWrap('civil', (s, pr, t) => wa(pr.name) + ' 시청 혼인 신고를 이야기했습니다. 서류 두 장, 증인 둘, 도장 하나. ' + (pr.home ? '상대는 ' + nat(s, pr.home) + ' 사람입니다. 시청 직원이 서류를 한 장 더 꺼냈습니다.' : '시청 복도에는 메이저 포스터가 붙어 있었고, 신고 창구는 그 아래였습니다.'), ['신고한다', '미룬다', '하지 않는다']),

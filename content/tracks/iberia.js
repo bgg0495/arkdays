@@ -185,7 +185,7 @@ export const events = [
 
   // ══════════ IBE_FARM 내륙 농민·상인 (핵심, 생업) ══════════
   E('ibe_far_fam_field', [12, 30], [T('IBE_FARM', 'family')], 30, 2, () => ({ t: '가족 밭에서 일했습니다. 바다에서 먼 땅이라 소금기가 없었고, 그것이 자랑이었습니다.', k: 'ev' })),
-  E('ibe_far_fam_tax', [12, 30], [T('IBE_FARM', 'family')], 25, 3, () => ({ t: '재판소 사람이 세곡을 받으러 왔습니다. 양을 재는 동안 아버지는 말이 없었습니다.', k: 'note', fx: { money: -1 } })),
+  E('ibe_far_fam_tax', [12, 30], [T('IBE_FARM', 'family')], 25, 3, (s) => ({ t: '재판소 사람이 세곡을 받으러 왔습니다. 양을 재는 동안 ' + (s.S.fam.dad.alive && !s.S.fam.dad.absent ? '아버지는' : '식구들은') + ' 말이 없었습니다.', k: 'note', fx: { money: -1 } })),
   E('ibe_far_fam_refugee', [12, 30], [T('IBE_FARM', 'family')], 25, 3, () => ({ t: '해안에서 온 사람들이 마을을 지나갔습니다. 밥을 주었고, 이름은 묻지 않았습니다.', k: 'warm', fx: { h: 1 } })),
   E('ibe_far_fam_dry', [12, 30], [T('IBE_FARM', 'family')], 25, 3, () => ({ t: '가물었습니다. 우물이 얕아졌고 기도가 길어졌습니다.', k: 'bad', fx: { hl: -1 } })),
   E('ibe_far_own_land', [18, 65], [T('IBE_FARM', 'own')], 30, 2, () => ({ t: '자영 농지. 수확의 3할이 재판소 장부에 먼저 적히고 나머지가 창고에 들어갔습니다.', k: 'ev', f: F('재판소 세곡 대장') })),

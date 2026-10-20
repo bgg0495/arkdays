@@ -7,7 +7,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ARCHETYPE_IDS } from '../src/engine/archetypes.js';
+import { ARCHETYPE_IDS, ARCHETYPES } from '../src/engine/archetypes.js';
+// W14: 원형과 어울리지 않는 몰락 사유(test/audit.js ODD_FALL 과 같은 표)·환경 전용 진로 판정
+const ODD_FALL = {
+  A11: ['vendetta', 'kia', 'purge', 'coup', 'impeach', 'heresy', 'courtmartial', 'desert', 'scandal', 'elimination', 'mutiny'],
+  A10: ['vendetta', 'kia', 'purge', 'coup', 'heresy', 'courtmartial', 'desert', 'execution'],
+  A9: ['vendetta', 'kia', 'desert', 'courtmartial', 'elimination'], A3: ['kia', 'desert', 'elimination', 'injury', 'contract_end'],
+  A8: ['kia', 'desert', 'elimination', 'layoff', 'bankrupt'], A2: ['purge', 'impeach', 'heresy', 'layoff', 'courtmartial'],
+  A12: ['kia', 'purge', 'impeach', 'courtmartial', 'desert'], A7: ['layoff', 'bankrupt', 'courtmartial', 'impeach'], A5: ['layoff', 'scandal', 'impeach', 'fade'],
+};
+const ENV_TRACK_RE = /황야|지하|배정|수용소|피트싱커|빈민|슬럼|격리|노예|고아|유목|부족|광산촌|개척|해안|어촌|산지|숲|사막|지하 도시|돔 밖|북조|남조|힐록|아카후알라|농민|농장|농촌/;
+const HARD_GATE_KEYS = ['region', 'urban', 'status', 'flag', 'infected', 'known', 'prisoner', 'rhodes', 'q', 'eth', 'papers', 'newcomer', 'race', 'sex'];
 import { BALANCE as B } from '../src/engine/balance.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -47,7 +57,7 @@ const trackIds = new Set();
 
 // ── 진로 ──
 const EXIT_RE = /^(death(:[a-z_]+)?|prison:(jail|camp)|exile|demote|expel|injured|infected|disgrace|arena:[A-Z0-9_]+|switch:[A-Z0-9_]+)$/;
-const GATE_KEYS = new Set(['cap', 'born', 'min', 'max', 'weight', 'status', 'rel', 'race', 'only', 'edu', 'sex', 'year', 'urban', 'infected', 'known', 'rhodes', 'q', 'flag', 'region', 'money', 'papers', 'newcomer', 'eth', 'note']);
+const GATE_KEYS = new Set(['cap', 'born', 'min', 'max', 'weight', 'status', 'rel', 'race', 'only', 'edu', 'sex', 'year', 'urban', 'infected', 'known', 'rhodes', 'q', 'flag', 'region', 'money', 'papers', 'newcomer', 'eth', 'any', 'note']);   // W16: any = 하위 게이트 중 하나
 for (const t of tracks) {
   const w = t._file + ' ' + (t.id || '?');
   if (!t.id || typeof t.id !== 'string') { err(w + ': id 없음'); continue; }
@@ -73,6 +83,10 @@ for (const t of tracks) {
       if (!Array.isArray(s.fall.causes)) err(w + ':' + s.id + ' fall.causes 배열 아님');
     }
     if (s.minYears != null && (typeof s.minYears !== 'number' || s.minYears < 0)) err(w + ':' + s.id + ' minYears');
+    // W14(QA A10): 신원 카드 "소속 · 칭호" 규칙 — 단계 title/name 에 '·' 금지, 진로명과 같은 title 금지(겹말)
+    const ttl = s.title || s.name;
+    if (ttl && ttl.includes('·')) warn(w + ':' + s.id + " 단계 칭호에 '·' (" + ttl + ') — 신원 카드에서 소속 구분자와 겹침');
+    if (s.title && s.title === t.name) warn(w + ':' + s.id + ' 단계 title 이 진로명과 같음(신원 카드 겹말 → trackName 이 생략)');
   });
   const e = t.entry || {};
   if (!Array.isArray(e.ages) || e.ages.length !== 2 || e.ages[0] > e.ages[1]) err(w + ': entry.ages');
@@ -82,6 +96,7 @@ for (const t of tracks) {
   if (sum > 1 + 1e-9) err(w + ': classes 합 ' + sum.toFixed(2) + ' > 1');
   for (const g of e.gates || []) {
     for (const k of Object.keys(g)) if (!GATE_KEYS.has(k)) warn(w + ': gate 키 ' + k + ' (엔진이 모름)');
+    if (g.any) for (const sub of g.any) for (const k of Object.keys(sub)) if (!GATE_KEYS.has(k) || k === 'any') warn(w + ': any 하위 gate 키 ' + k);
     if (g.race) for (const r of (Array.isArray(g.race) ? g.race : [g.race])) if (!raceIds.has(r)) err(w + ': gate race ' + r + ' 없음');
   }
   const inc = t.income && t.income.stage;
@@ -97,6 +112,14 @@ for (const t of tracks) {
     else if (v === 'death' && fallDeathCause[c] && !causeIds.has(fallDeathCause[c])) warn(w + ': cause ' + c + ' → ' + fallDeathCause[c] + ' causes.json 에 없음');
   }
   const causes = new Set(st.flatMap((s) => (s.fall && s.fall.causes) || []));
+  // W14(QA B7): 원형 기본 사유 밖의 몰락 사유는 경고(데이터 손질 후보)
+  { const A = ARCHETYPES[t.archetype]; const odd = ODD_FALL[t.archetype] || []; for (const c of causes) if (A && odd.includes(c)) warn(w + ': 원형 ' + t.archetype + '(' + A.name + ')에 어울리지 않는 몰락 사유 ' + c); }
+  // W14(QA A13·D1): 출생 환경 전용 진로(이름·region)인데 하드 게이트 없음
+  if (!t.forced && !(st[0] && st[0].forced) && Object.keys(cls).length) {
+    const hard = (e.gates || []).filter((g) => g.weight == null && HARD_GATE_KEYS.some((k) => g[k] != null));
+    if (ENV_TRACK_RE.test(t.name) && !hard.length) warn(w + ': 환경 전용 이름(' + t.name + ')인데 하드 게이트 없음 — 출생 롤에서 가중만으로 열림');
+    if (t.region && !(e.gates || []).some((g) => g.region && g.weight == null)) warn(w + ': region=' + t.region + ' 인데 region 하드 게이트 없음');
+  }
   for (const c of causes) if (!(ex.fall || {})[c] && !fallDeathCause.__default) warn(w + ': cause ' + c + ' 의 exits.fall 값 없음(원형 기본값·_meta.fallDefaultOutcome 사용)');
   if (!Array.isArray(t.stages)) continue;
 }
@@ -114,8 +137,9 @@ const affWeight = {};
 for (const a of affs) {
   const w = 'affiliations ' + a.id;
   const ts = Array.isArray(a.track) ? a.track : [a.track];
-  for (const tid of ts) { if (!trackIds.has(tid)) err(w + ': track ' + tid + ' 없음'); affWeight[tid] = (affWeight[tid] || 0) + (a.weight ?? 1); }
+  for (const tid of ts) { if (!trackIds.has(tid)) err(w + ': track ' + tid + ' 없음'); if (!(a.gates && a.gates.length)) affWeight[tid] = (affWeight[tid] || 0) + (a.weight ?? 1); }   // W15: 게이트 소속은 합에서 제외
   if (a.mods) for (const k of ['promo', 'fall', 'income']) if (a.mods[k] != null && (a.mods[k] < 0.3 || a.mods[k] > 3)) warn(w + ': mods.' + k + ' ' + a.mods[k]);
+  for (const g of a.gates || []) for (const k of Object.keys(g)) if (!GATE_KEYS.has(k)) warn(w + ': gate 키 ' + k + ' (엔진이 모름)');   // W15: 소속 gates
 }
 for (const [tid, s] of Object.entries(affWeight)) if (Math.abs(s - 1) > 0.05 && s !== 0) warn('affiliations: track ' + tid + ' weight 합 ' + s.toFixed(2) + ' (1 권장)');
 // ── 혼인·주거·관계·로도스 ──

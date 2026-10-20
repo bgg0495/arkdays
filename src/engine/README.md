@@ -58,6 +58,8 @@ sim.js         createSim({data, seed, hooks, content}) ─ 조립점. planYear /
 
 ## 선택지 `sub`·기록 fx 표기 규약 (W12, D53c)
 
+- **W14(QA A9)**: `sim.openDecision` 이 `build()` 결과의 `sub` 없는 선택지를 `fillSubs()` 로 채운다 — 순서는 `content/_subs.js` 표(결정 id → `{k: sub}`, apply 효과에서 생성·손질) → 혼인 결정(`marry_*`)은 유형 지참금·관계 → label 낱말 규칙(`fallbackSub`). 콘텐츠가 직접 쓴 `sub` 가 항상 우선. 승급 기회 `track_promo` 는 `gap 2`·같은 단계 최대 `balance.track.promoPerStage`(기본 3)회, 실패·대기 문구 3종 순환(`promoStyle` 로 데이터가 문구 원형을 고를 수 있다). 진로 선택 대기 문구 3종 순환.
+
 - 모든 결정(엔진 내장·콘텐츠)의 선택지 `sub` 는 **그 선택이 바꾸는 것**을 적는다: 막대는 `건강 +/−`·`행복 +/−`, 돈은 `돈 +/−`, 역량·지위는 숫자 없이 방향만(`기량 ▲`·`관계 ▼`·`지위 ▲`), 성공 확률은 `성공 확률 n%`(`content/_util.js` 의 `pctText(p)` 로 — NaN 이면 `—`). 표시명은 `CAP_LABEL`(기량·학식·아츠·**관계**(D52, 내부 키 `ties`)·외모·운).
 - 결정 결과·이벤트 결과의 `fx` 는 `sim.logResult` 가 `sim.log(t, k, f, fx)` 로 넘기므로 기록 줄에 `fxText(fx)`(건강·행복·돈·역량 ▲▼·지위 ▲▼)가 붙는다. 역량 등급이 바뀐 해에는 엔진이 `"기량이 보통에서 높음으로 올랐습니다."` 한 줄을 더 남긴다(`capGradeLog`). 신원 카드 역량 칸에는 지난 연말 스냅샷 대비 ▲▼(`capProfile(S).caps[].delta`).
 - 승급은 **승급 기회 결정** `track_promo`(D53b): `trackYear` 가 `promoChance()` 의 `opp` 로 `S.flags.promoDue = {age, stage, succ, cap}` 를 두면 다음 해 planYear 가 연다. 선택지 `go`(성공 `succ` 롤 → `promote()`, 실패 시 지위 −`balance.track.promoFailStanding`) / `wait`. 자동 결정은 `succ ≥ promoAutoGo(0.4)` 면 나선다. 제목·본문·실패 문구는 원형별(`choices.js PROMO_*`). 국가 콘텐츠가 같은 id 를 `hoist()` 하면 그쪽이 우선(디스패처). 강제 진로·강제 단계(A5)는 결정 없이 종전처럼 롤한다.
@@ -71,7 +73,8 @@ sim.js         createSim({data, seed, hooks, content}) ─ 조립점. planYear /
 | 필드 | 설명 |
 |---|---|
 | `st.hl`, `st.h` | 건강·행복 막대. **`st.sm`·`st.so` 삭제**(저장 호환: 로드 시 learn/ties 로 변환) |
-| `cap` | `{skill, learn, arts, ties}` 역량 z(−3~+3). 표시는 `grade(z)` 4등급(낮음/보통/높음/뛰어남) |
+| `cap` | `{skill, learn, arts, ties}` 역량 z(−3~+3). 표시는 `grade(z)` 6등급(W16: 아주 낮음/낮음/보통/높음/뛰어남/탁월, `balance.cap.grades`) + 등급 안 진행 점 `gradeDots(z)` 0~3 |
+| `dream` | W16(D56) 장래 희망 `{id, at}` 또는 null(`dream_choose`, 8~11세 1회). '모르겠다'는 `flags.dreamNone`. 달성 `flags.dreamDone`(나이), 접음 `flags.dreamGiven`(인간 척도 나이; 매년 해저드 롤 `dreamGiveUpP`, `balance.dream.giveUp`). 진입 후보 가중 ×`balance.dream.mul`, `track_choose` 의 닫힌 문(`closedDoors`)·신원 카드 조건 n/m(`dreamStatus`)·사망 요약 문장 |
 | `innate` | `{looks, luck, trait}` 타고남. (명세의 `born` — 기존 `S.born` 이 출생 국가라 이름을 바꿨다) |
 | `status` | `{noble: 'noble'|null, slave: bool, stigma: 'infected'|'exile'|'disgrace'|…}` |
 | `track` | `{id, stage, since, stageSince, years, standing(0~100), aff, flags{via, contractEnd, contractDue…}}` 또는 null |
@@ -122,11 +125,13 @@ Node 에서는 `test/sim.js` 의 `loadData()` 가 `data/tracks/*.json` 을 glob 
 
 **W12 추가**: `standing:high`(소속 지위 ≥ 60) · `pos:<A원형>`·`pos:noble`·`pos:high` — 사인 `causes.json` 의 "패밀리·관료·작위·지위 높음 중 하나" 같은 OR 게이트용(같은 접두 OR, D21). **구 `outsider` 태그·`S.eth='outsider'` 는 폐기**(D51-3): 종족 차별 표현은 `rel:<grade>` 로만.
 
+**W14 변경(QA A1·B5)**: (1) **출생국은 태그 집합에 들어가지 않는다.** 국가 맨 태그(`ursus`)·`nation:<id>` 는 **거주국·상위국**만 뜻하고, 출신을 보려면 `born:<id>`(예: 라테라노 추방 공민 `['born:laterano', 'migrant']`). 이주한 사람에게 고향 명절·고향 신참 이벤트가 평생 따라오던 누수의 원인이었다. (2) **종족 맨 태그는 국가 id 와 같은 종족(`ursus`·`durin`·`aegir`)에는 붙지 않는다** — 그 종족은 `race:ursus` 처럼 접두로만. (3) 사인 게이트용 `pos:` 그룹 추가: `pos:mine`(광부·피트싱커 직업 / MINE·MINER·PIT 진로) · `pos:caster`(아츠 역량 high/top 또는 캐스터 경로) · `pos:war`(분쟁 2등급 이상·전시·복무) · `pos:prison` · `pos:infected`. `causes.json` 의 `mine_accident/arts_backlash/war/execution/nomadic_accident` 가 이 태그로 사인을 신분·상태에 묶는다.
+
 ## 테스트
 
 ```bash
 node test/validate-tracks.js        # 진로·소속·혼인·주거·관계·로도스 데이터 검증(§3.1 규칙). --dummy 로 더미
-node test/sim.js 1000               # 기본 (data/ 우선). 끝에 [v1] 집계: 진로 분포·계층별 유입 ±10%p, 이탈·몰락 사유, 로도스 합류율(전체/감염자), 이주 경험률·사유, 결혼 유형, 관계 등급별 소득, 주거
+node test/sim.js 1000               # 기본 (data/ 우선). 끝에 [v1] 집계: 진로 분포·계층별 유입 ±10%p, 이탈·몰락 사유, 로도스 합류율(전체/감염자), 이주 경험률, W16 장래 희망(설정·달성·접음)·닫힌 문/모달·등급 변화 기록/생·사유, 결혼 유형, 관계 등급별 소득, 주거
 DATA=dummy node test/sim.js 1000    # 더미 데이터만(시라쿠사·우르수스·컬럼비아 진로 + 나머지 국가는 합성 생업)
 NO_DUMMY_TRACKS=1 node test/sim.js  # content/_dummy_tracks.js 를 빼고
 node test/calibrate.js 600          # 시뮬 기대수명 캐시 재생성(엔진·데이터 밸런스를 바꿨으면 다시)

@@ -83,7 +83,7 @@ export const events = [
   // ════════════════════════════════════════════════════════════════════════
   E('lgm_corp_first', ['track:LGM_CORP'], [20, 40], 90, 4, (s) => ({ t: s.S.track.flags.via === 'graduate' ? '졸업장을 들고 입사했습니다. 사원증 사진은 긴장한 얼굴이었고, 그 얼굴로 몇 해를 다녔습니다.' : '경력 채용으로 들어갔습니다. 첫날 자리에 명패가 없었고, 명패는 한 달 뒤에 왔습니다.', k: 'ev', fx: { cap: { learn: 0.02 } } }), { c: (s) => firstYear(s, 'LGM_CORP') }),
   // staff
-  E('lgm_corp_st_commute', [tk('LGM_CORP', 'staff')], [20, 60], 35, 2, (s) => ({ t: '아침 출근길에 플레이트 연결부가 흔들렸습니다. 모두가 손잡이를 잡았고, 아무도 고개를 들지 않았습니다.', k: 'note' })),
+  E('lgm_corp_st_commute', [tk('LGM_CORP', 'staff'), 'nomadic'], [20, 60], 35, 2, (s) => ({ t: '아침 출근길에 플레이트 연결부가 흔들렸습니다. 모두가 손잡이를 잡았고, 아무도 고개를 들지 않았습니다.', k: 'note' })),
   E('lgm_corp_st_report', [tk('LGM_CORP', 'staff')], [20, 60], 35, 2, (s) => ({ t: '보고서를 썼습니다. 대리가 고쳤고, 부장이 다시 고쳤고, 임원은 제목만 읽었습니다.', k: 'ev', fx: { cap: { learn: 0.02 } } })),
   E('lgm_corp_st_rent', [tk('LGM_CORP', 'staff')], [20, 60], 30, 3, (s) => { const n = s.rng.ri(1, 3); return { t: '고층 임대 아파트 집세가 ' + n + '할 올랐습니다. 월급도 올랐고, 집세가 더 올랐습니다.', k: 'bad', fx: { money: -medX(s, 0.08), h: -1 }, f: orgF(s, '주거 임대료 통계', s.year) }; }),
   E('lgm_corp_st_canteen', [tk('LGM_CORP', 'staff')], [20, 60], 30, 3, (s) => ({ t: '점심에 동기들과 ' + eul(cul(s).food) + ' 먹었습니다. 이야기는 상사 이야기였고, 상사도 어디선가 같은 이야기를 하고 있을 것이었습니다.', k: 'warm', fx: { cap: { ties: 0.02 } } })),
@@ -191,6 +191,14 @@ export const events = [
     layoff: '해고되고 한 해가 지났습니다. 거리에서 옛 동료의 오토바이 소리를 먼저 알아들었습니다.',
     _: '배달 일을 그만두고 한 해가 지났습니다. 주소를 보면 아직 길이 떠올랐습니다.',
   }),
+  // ── LGM_ART 가수·거리 공연자 (W15, A12 소규모): busker → club → star ──
+  E('lgm_art_bus_corner', [tk('LGM_ART', 'busker')], [12, 40], 40, 2, (s) => ({ t: s.rng.pick(['야시장 모퉁이에서 노래했습니다. 동전 통에 동전보다 국수 값 쿠폰이 많았습니다.', '근위국 경관이 자리를 옮기라고 했습니다. 옮겼고, 거기서도 옮기라고 했습니다.', '플레이트 이음새 위에서 노래하면 소리가 두 배로 울렸습니다. 거기가 제 무대였습니다.']), k: 'note', fx: { cap: { arts: 0.03 }, money: medX(s, 0.02) } })),
+  E('lgm_art_bus_scout', [tk('LGM_ART', 'busker')], [12, 40], 20, 4, (s) => ({ t: '명함을 받았습니다. 클럽 이름이 적혀 있었고, 뒷면에는 "밤 10시"뿐이었습니다.', k: 'ev', fx: { standing: 3 } })),
+  E('lgm_art_clu_set', [tk('LGM_ART', 'club')], [14, 50], 35, 2, (s) => ({ t: s.rng.pick(['클럽 무대였습니다. 손님은 술을 마시러 왔고, 노래는 술 사이에 있었습니다.', '세트 리스트 셋 중 둘은 남의 노래였습니다. 제 노래는 마지막 곡이었고, 그때쯤 손님은 반이었습니다.', '삼합회 사람들이 앞자리에 앉은 밤이었습니다. 박수는 그 사람들이 쳐야 쳤습니다.']), k: 'note', fx: { money: medX(s, 0.05), hl: -1 } })),
+  E('lgm_art_clu_record', [tk('LGM_ART', 'club')], [14, 50], 20, 5, (s) => ({ t: '작은 음반사에서 한 곡을 녹음했습니다. 음반은 백 장이었고, 서른 장은 제가 샀습니다.', k: 'ev', fx: { standing: 4, money: -medX(s, 0.1) } })),
+  E('lgm_art_sta_poster', [tk('LGM_ART', 'star')], [16, 60], 35, 3, (s) => ({ t: s.rng.pick(['상업단지 전광판에 제 얼굴이 떴습니다. 3초였고, 그 3초를 보려고 한 시간을 서 있었습니다.', '간판에 이름이 올랐습니다. 간판 값은 제가 냈고, 간판은 클럽 것이었습니다.']), k: 'warm', fx: { standing: 3, h: 2, money: medX(s, 0.2) } })),
+  TRANS('LGM_ART', { club: '클럽 무대에 섰습니다. 동전 통 대신 출연료 봉투가 왔고, 봉투는 얇았습니다.', star: '간판 가수가 되었습니다. 포스터에 제 이름이 가장 크게 적혔습니다. 그 아래 클럽 이름이 더 컸습니다.' }),
+  E('lgm_art_after', [], [12, 80], 300, 1, (s) => ({ t: '무대를 떠난 뒤의 일입니다. 노래는 가끔 야시장에서 들렸고, 부르는 사람은 다른 사람이었습니다.', k: 'loss', fx: { h: -2 } }), { c: (s) => !s.S.track && s.S.flags.lastTrack === 'LGM_ART' && s.S.flags.lastFallAt != null && s.S.age - s.S.flags.lastFallAt <= 1 }),
   E('lgm_aff_msg_penguin', ['aff:LGM_MSG_PENGUIN'], [16, 70], 25, 4, (s) => ({ t: '펭귄 로지스틱스의 배달은 묻지 않는 것이 규칙이었습니다. 짐이 무엇인지, 받는 사람이 누구인지, 왜 밤인지.', k: 'note', fx: { standing: 1 } })),
   E('lgm_aff_msg_mountaindash', ['aff:LGM_MSG_MOUNTAINDASH'], [16, 70], 25, 4, (s) => ({ t: '마운틴대쉬의 배차 단말기가 다음 목적지를 찍었습니다. 사람이 정하는 것은 길뿐이었고, 길도 곧 단말기가 정했습니다.', k: 'note', fx: { cap: { skill: 0.02 } } })),
   E('lgm_aff_msg_startup', ['aff:LGM_MSG_STARTUP'], [16, 70], 25, 4, (s) => ({ t: '회사가 이번 달 급료를 다음 달에 주겠다고 했습니다. 다음 달이 두 번 왔습니다.', k: 'bad', fx: { money: -medX(s, 0.05), h: -2 } })),
@@ -357,11 +365,11 @@ export const events = [
   // ════════════════════════════════════════════════════════════════════════
   // 생활 — 이동도시 플레이트·야시장·빈민가 (빈민가 노점·점원·사용인)
   // ════════════════════════════════════════════════════════════════════════
-  E('lgm_life_newyear', LGM, [10, 90], 30, 3, (s) => ({ t: fest(s, 0) + ' 전날 밤 야시장이 새벽까지 열렸습니다. 폭죽 소리가 플레이트 사이에서 울렸고, 근위국은 그날만 눈을 감았습니다.', k: 'warm', fx: { h: 2 } }), { c: living }),
+  E('lgm_life_newyear', [...LGM, 'nomadic'], [10, 90], 30, 3, (s) => ({ t: fest(s, 0) + ' 전날 밤 야시장이 새벽까지 열렸습니다. 폭죽 소리가 플레이트 사이에서 울렸고, 근위국은 그날만 눈을 감았습니다.', k: 'warm', fx: { h: 2 } }), { c: living }),
   E('lgm_life_midautumn', LGM, [10, 90], 30, 3, (s) => ({ t: fest(s, 1) + '에 등을 들고 거리로 나갔습니다. 고층에서 내려다본 등불과 빈민가에서 올려다본 등불이 같은 등불이었습니다.', k: 'warm', fx: { h: 2 } }), { c: living }),
-  E('lgm_life_plate_move', LGM, [10, 90], 30, 3, (s) => { const n = s.rng.ri(1, 3); return { t: '이동도시가 항로를 바꿨습니다. 창밖 지평선이 하루 사이에 달라졌고, 야시장 생선 값이 ' + n + '할 올랐습니다.', k: 'note', fx: { money: -medX(s, 0.02) }, f: orgF(s, '물가 월보', s.year) }; }, { c: living }),
+  E('lgm_life_plate_move', [...LGM, 'nomadic'], [10, 90], 30, 3, (s) => { const n = s.rng.ri(1, 3); return { t: '이동도시가 항로를 바꿨습니다. 창밖 지평선이 하루 사이에 달라졌고, 야시장 생선 값이 ' + n + '할 올랐습니다.', k: 'note', fx: { money: -medX(s, 0.02) }, f: orgF(s, '물가 월보', s.year) }; }, { c: living }),
   E('lgm_life_nightmarket', LGM, [10, 90], 30, 2, (s) => { const n = medX(s, 0.004) + 2; return { t: '야시장에서 ' + n + ' LMD짜리 ' + eul(cul(s).food) + ' 먹었습니다. 옆자리는 근위국 경관이었고, 그 옆자리는 삼합회 사람이었고, 국물 맛은 같았습니다.', k: 'warm', fx: { h: 1 } }; }, { c: living }),
-  E('lgm_life_typhoon', LGM, [10, 90], 25, 4, (s) => { const n = s.rng.ri(6, 30); return { t: '재앙 경보로 이동도시가 ' + n + '시간 멈췄습니다. 플레이트가 고정되는 소리가 밤새 났고, 아침에 바람이 지나갔습니다.', k: 'note', fx: { h: -1 }, f: orgF(s, '재앙 경보 기록', s.year) }; }, { c: living }),
+  E('lgm_life_typhoon', [...LGM, 'nomadic'], [10, 90], 25, 4, (s) => { const n = s.rng.ri(6, 30); return { t: '재앙 경보로 이동도시가 ' + n + '시간 멈췄습니다. 플레이트가 고정되는 소리가 밤새 났고, 아침에 바람이 지나갔습니다.', k: 'note', fx: { h: -1 }, f: orgF(s, '재앙 경보 기록', s.year) }; }, { c: living }),
   E('lgm_life_slum_water', ['lungmen', 'nomadic_under'], [10, 90], 30, 3, (s) => ({ t: '빈민가 급수가 끊겼습니다. 위층에서 호스를 내려 준 집이 있었고, 그 집 이름을 골목이 기억했습니다.', k: 'bad', fx: { hl: -1, cap: { ties: 0.02 } } })),
   E('lgm_life_slum_raid', ['lungmen', 'nomadic_under'], [10, 90], 30, 3, (s) => { const n = s.rng.ri(3, 12); return { t: '근위국 단속이 골목을 쓸고 갔습니다. 노점 ' + n + '개가 사라졌고, 다음 주에 ' + (n + 1) + '개가 생겼습니다.', k: 'note', fx: { h: -1 }, f: F('용문 근위국 치안 백서 빈민가 편, ' + s.year + '년') }; }),
   E('lgm_life_upper_view', ['lungmen', 'nomadic_upper'], [10, 90], 25, 4, (s) => ({ t: '고층 창에서 빈민가를 내려다보았습니다. 불빛은 아래가 더 많았고, 그 이유는 생각하지 않기로 했습니다.', k: 'note' })),
@@ -376,8 +384,8 @@ export const events = [
   E('lgm_1097_upper_after', ['lungmen', 'nomadic_upper'], [10, 90], 60, 9, (s) => ({ t: '사변이 끝났다고 뉴스가 말했습니다. 고층 아파트 집세가 올랐고, 빈민가 쪽 창에는 블라인드를 쳤습니다.', k: 'note', fx: { money: -medX(s, 0.03) } }), { c: (s) => yr(s, 1097) }),
   E('lgm_1098_nian_adult', LGM, [18, 90], 60, 9, (s) => ({ t: fest(s, 0) + ' 밤에 도시가 흔들렸습니다. 근위국과 시민이 같은 거리에서 무언가와 싸웠고, 아침에는 아무도 그것을 제대로 설명하지 못했습니다.', k: 'big', fx: { h: -2 } }), { c: (s) => yr(s, 1098) }),
   E('lgm_1097_redevelop', LGM, [10, 90], 40, 9, (s) => ({ t: '빈민가 재개발 공고가 붙었습니다. ' + (under(s) ? '제 골목이 도면에 없었습니다.' : '뉴스는 통합이라고 불렀고, 빈민가 사람들은 다른 말로 불렀습니다.'), k: 'note', fx: { h: under(s) ? -3 : -1 } }), { c: (s) => yr(s, 1098, 1101) }),
-  E('lgm_region_inspector', ['lungmen', 'nation:yan'], [15, 90], 25, 5, (s) => ({ t: '염국 본토에서 감찰사가 왔습니다. 거리에 붉은 도포가 보였고, 그 주 동안 근위국 순찰이 두 배였습니다.', k: 'note' })),
-  E('lgm_region_currency', ['lungmen', 'nation:yan'], [15, 90], 25, 5, (s) => ({ t: '염국 본토 친척이 왔습니다. 용문폐와 본토 돈을 바꾸며 환전소 앞에서 한참 셈을 했고, 셈이 끝나자 ' + eul(cul(s).food) + ' 사 주었습니다.', k: 'warm', fx: { h: 1 } })),
+  E('lgm_region_inspector', ['lungmen', 'nation:yan'], [15, 90], 25, 8, (s) => ({ t: '염국 본토에서 감찰사가 왔습니다. 거리에 붉은 도포가 보였고, 그 주 동안 근위국 순찰이 두 배였습니다.', k: 'note' })),
+  E('lgm_region_currency', ['lungmen', 'nation:yan'], [15, 90], 25, 8, (s) => ({ t: '염국 본토 친척이 왔습니다. 용문폐와 본토 돈을 바꾸며 환전소 앞에서 한참 셈을 했고, 셈이 끝나자 ' + eul(cul(s).food) + ' 사 주었습니다.', k: 'warm', fx: { h: 1 } })),
   E('lgm_region_1102', ['lungmen', 'nation:yan'], [15, 90], 50, 9, (s) => ({ t: '백조에서 큰 혼란이 있었다는 소식이 왔습니다. 본토 송금이 며칠 끊겼고, 용문 거리는 평소보다 조용했습니다.', k: 'note', fx: { h: -1 } }), { c: (s) => yr(s, 1102) }),
 
   // ════════════════════════════════════════════════════════════════════════

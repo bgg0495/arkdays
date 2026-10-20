@@ -1,6 +1,6 @@
 // W9b 극동 진로 콘텐츠. 계약: docs/설계_명세_v1.md §11 + "W7 메모 — 스키마 고정".
 // 남조/북조는 S.sub.region('north' | 그 외) 로 가른다(nations.json policyVariants). 북조 = 격리 + 수치 문화(가족이 숨김), 남조 = 보험·기업형(D13 창작 정책).
-// 핵심 진로 5: HIG_NORTH_ARMY(북조 무가) · HIG_RURAL(북조 광산촌) · HIG_OFFICE(남조 회사원, A10) · HIG_YAKUZA(킨세키가이) · HIG_ENT(아이돌·연예).
+// 핵심 진로 5: HIG_NORTH_ARMY(북조 무가) · HIG_RURAL(북조 광산촌) · HIG_OFFICE(남조 회사원, A10) · HIG_YAKUZA(야쿠자; W15: 킨세키가이는 소속 0.6) · HIG_ENT(아이돌·연예).
 // 나머지 8 진로는 단계마다 2개 + 전환 + 몰락 후일담. 생업(arch:A11) 설날·마츠리·온천, 소속(aff:) 변주(8대 가문·킨세키가이), 캐논 인물 1회성(D43),
 // 감염자 정책 분기(남조 보험 청구 · 북조 은폐), 신참·관계(rel:cultural = 오니)·visit:higashi, 국가 전용 결정(막부 충성·야근·밀고·계약·탈주·marry_*·home_change).
 import { F, orgF, medX, eul, iga, eun, ro, wa, lifeRoll } from '../_util.js';
@@ -31,7 +31,7 @@ const seeCanon = (s, id) => { s.S.flags.canonSeen = (s.S.flags.canonSeen || 0) +
 function st(id, track, stage, a, w, gap, body, k = 'note', fx = null, f = null, extra = {}) {
   // 단계 태그가 이미 자리를 고르므로 나이 상한은 넉넉히(은퇴 전환·늦은 진입을 받는다)
   return { id, a: [a[0], Math.max(a[1], 80)], tags: ['track:' + track + ':' + stage], w, gap, ...extra,
-    run: (s) => { const t = typeof body === 'function' ? body(s) : body; const r = { t, k }; if (fx) r.fx = typeof fx === 'function' ? fx(s) : fx; if (f) r.f = f(s); return r; } };
+    run: (s) => { const b = typeof body === 'function' ? body(s) : body; const r = b && typeof b === 'object' ? { ...b, k } : { t: b, k }; if (fx) r.fx = typeof fx === 'function' ? fx(s) : fx; if (f) r.f = f(s); return r; } };   // W14(QA A5): {t, f} 객체 body 도 받는다
 }
 function promoEv(id, track, a, byStage) {
   return { id, a, tags: ['track:' + track], w: 220, gap: 1, c: (s) => justPromoted(s, track) && !!byStage[s.stage.id],
@@ -155,7 +155,7 @@ export const events = [
   st('hig_yak_ca_police', 'HIG_YAKUZA', 'cadre', [20, 50], 26, 3, '형사 하나가 사무소에 차를 마시러 왔습니다. 차는 마셨고 서류는 안 가져갔습니다. 다음 달 봉투가 하나 더 나갔습니다.', 'note', { money: -1 }),
   st('hig_yak_ca_mask', 'HIG_YAKUZA', 'cadre', [20, 50], 20, 4, (s) => affIs(s, 'HIG_YAK_KYOKAKU') ? '협객이라는 말을 쓰는 형님을 따라 나왔습니다. 돈은 줄었고 잠은 늘었습니다. 등 뒤는 더 추웠습니다.' : '한냐 가면 계승식을 멀리서 보았습니다. 가면을 쓴 사람이 누구인지 모두 알았고 아무도 말하지 않았습니다.', 'note', { standing: 1 }),
   st('hig_yak_wa_territory', 'HIG_YAKUZA', 'wakagashira', [26, 60], 32, 2, (s) => pick(s, ['구역 하나가 제 책임이 되었습니다. 상점가 서른 집. 서른 집 주인 얼굴을 다 알았고, 그들도 제 얼굴을 알았습니다.', '다른 조직과 경계를 다시 그렸습니다. 지도 위 선 하나에 사람 둘이 들어갔습니다.']), 'bad', { standing: 3, h: -1 }),
-  st('hig_yak_wa_tv', 'HIG_YAKUZA', 'wakagashira', [26, 60], 26, 3, (s) => affIs(s, 'HIG_YAK_GROUP') ? '킨세키 채널에서 "실종자를 찾습니다" 방송이 나갔습니다. 현상금이 붙었고, 찾는 쪽은 저희였습니다.' : '텔레비전이 사무소 앞을 찍어 갔습니다. 방송에는 제 뒷모습이 나왔습니다. 어머니가 알아보았습니다.', 'note', { h: -1 }),
+  st('hig_yak_wa_tv', 'HIG_YAKUZA', 'wakagashira', [26, 60], 26, 3, (s) => affIs(s, 'HIG_YAK_GROUP') ? '킨세키 채널에서 "실종자를 찾습니다" 방송이 나갔습니다. 현상금이 붙었고, 찾는 쪽은 저희였습니다.' : '텔레비전이 사무소 앞을 찍어 갔습니다. 방송에는 제 뒷모습이 나왔습니다. ' + (s.S.fam.mom.alive ? '어머니가' : '옛 이웃이') + ' 알아보았습니다.', 'note', { h: -1 }),
   st('hig_yak_wa_duel', 'HIG_YAKUZA', 'wakagashira', [26, 60], 24, 3, '옆 조직 부두목과 결투 이야기가 나왔습니다. 결투는 없었고, 그 사람은 다음 달 없었습니다.', 'bad', { h: -2 }),
   st('hig_yak_wa_legal', 'HIG_YAKUZA', 'wakagashira', [26, 60], 22, 4, '대장간 하나가 부품 공장이 되었습니다. 공장 등기에 제 이름이 올랐습니다. 합법이라는 글자가 처음 붙은 종이였습니다.', 'note', (s) => ({ money: medX(s, 0.2), standing: 2 })),
   st('hig_yak_vi_group', 'HIG_YAKUZA', 'vice', [32, 65], 32, 2, (s) => pick(s, ['부회장실 창으로 킨세키 그룹 사옥이 보였습니다. 같은 회장의 두 건물이었습니다.', '국회의원 하나가 저녁을 청했습니다. 의원이 먼저 고개를 숙였습니다. 익숙해지는 것이 무서웠습니다.']), 'ev', { standing: 3 }),
@@ -179,6 +179,10 @@ export const events = [
   }),
   { id: 'hig_yak_aff_kinsekikai', a: [15, 75], tags: ['aff:HIG_YAK_KINSEKIKAI'], w: 22, gap: 3,
     run: (s) => ({ t: pick(s, ['킨세키가이 신년회에 전 조직원이 모였습니다. 상 위 생선 수와 사람 수가 같았습니다. 누가 세었습니다.', '회장이 상점가 노인에게 고개를 숙였습니다. 노인은 받지 않았습니다. 다음 날 그 집 셔터에 낙서는 없었습니다. 회장이 그렇게 했습니다.']), k: 'note', fx: { standing: 1 } }) },
+  { id: 'hig_yak_aff_shiranui', a: [15, 75], tags: ['aff:HIG_YAK_SHIRANUI'], w: 22, gap: 3,
+    run: (s) => ({ t: pick(s, ['시라누이구미는 작았습니다. 사무소 하나, 간판 없음, 회장은 직접 전화를 받았습니다.', '큰 조직과 구역 경계를 두고 다퉜습니다. 경계는 골목 하나였고, 그 골목이 한 달 동안 비어 있었습니다.']), k: 'note', fx: { standing: 1 } }) },
+  { id: 'hig_yak_aff_harbor', a: [15, 75], tags: ['aff:HIG_YAK_HARBOR'], w: 22, gap: 3,
+    run: (s) => ({ t: pick(s, ['항만 연합회 일은 부두에서 시작해 부두에서 끝났습니다. 컨테이너 번호를 외웠고, 안은 묻지 않았습니다.', '하역 인부들의 임금을 걷어 반을 돌려주었습니다. 나머지 반이 연합회였습니다.']), k: 'note', fx: { money: medX(s, 0.04) } }) },
   { id: 'hig_yak_aff_group', a: [15, 75], tags: ['aff:HIG_YAK_GROUP'], w: 22, gap: 3,
     run: (s) => ({ t: '킨세키 그룹 사원증을 받았습니다. 사무소 출입증과 같은 지갑에 넣었습니다. 어느 쪽을 꺼내는지는 문이 정했습니다.', k: 'note', fx: { money: medX(s, 0.05) } }) },
 
@@ -234,7 +238,7 @@ export const events = [
   st('hig_str_ow_redevelop', 'HIG_STREET', 'owner', [20, 65], 26, 3, '상점가에 재개발 종이가 붙었습니다. 종이에 회사 이름이 있었고, 그 회사 이름을 아는 사람은 다 조용했습니다.', 'bad', { h: -2 }),
   st('hig_str_ch_meeting', 'HIG_STREET', 'chair', [35, 75], 32, 2, (s) => pick(s, ['상점가 회장으로 회의를 열었습니다. 여름 불꽃놀이 축제 노점 자리를 정했습니다. 자리 하나에 말이 열이었습니다.', '시청에 상점가 대표로 갔습니다. 담당자가 바뀌어 있었습니다. 처음부터 다시 설명했습니다.']), 'note', { standing: 3 }),
   st('hig_str_ch_oden', 'HIG_STREET', 'chair', [35, 75], 24, 4, '오뎅 포장마차 주인이 상점가 소식을 다 알았습니다. 회장인 저보다 먼저. 그 사람에게 물으러 가는 것이 회장 일이었습니다.', 'note', { cap: { ties: 0.03 } }),
-  promoEv('hig_str_promo', 'HIG_STREET', [14, 75], { owner: '주인이 가게 열쇠를 주었습니다. 포렴에 제 이름이 올라갔습니다.', chair: '상점가 회장으로 뽑혔습니다. 가게보다 상점가를 먼저 생각하는 자리라고 했습니다. 가게는 아내가 봤습니다.' }),
+  promoEv('hig_str_promo', 'HIG_STREET', [14, 75], { owner: '주인이 가게 열쇠를 주었습니다. 포렴에 제 이름이 올라갔습니다.', chair: '상점가 회장으로 뽑혔습니다. 가게보다 상점가를 먼저 생각하는 자리라고 했습니다. 가게는 집안 사람이 봤습니다.' }),
   fallEv('hig_str_fall', 'HIG_STREET', { ruin: '손님이 끊겼습니다. 재개발 공사 가림막이 가게 앞을 막은 뒤였습니다. 포렴을 내렸습니다.', bankrupt: '빚이 가게를 가져갔습니다. 마지막 날 단골 셋이 왔고, 외상은 받지 않았습니다.' }),
   { id: 'hig_str_aff_nita', a: [14, 75], tags: ['aff:HIG_STREET_NITA'], w: 20, gap: 3,
     run: (s) => ({ t: '니타 거리 여름 축제에 상점가 전체가 등을 걸었습니다. 등 하나에 가게 하나. 꺼진 등이 둘 있었습니다.', k: 'note', fx: { h: 1 } }) },
@@ -347,11 +351,11 @@ export const events = [
   { id: 'hig_ins_lapse', a: [15, 80], tags: [N, 'known'], w: 20, gap: 4, c: (s) => here(s) && south(s) && (s.S.flags.premiumMissed || 0) > 0,
     run: (s) => ({ t: '보험료를 내지 못한 달이 있었습니다. 약 배송이 끊겼고, 끊긴 달에 자국이 하나 늘었습니다.', k: 'bad', fx: { hl: -2 } }) },
   { id: 'hig_north_family_hide', a: [10, 80], tags: [N, 'known'], w: 30, gap: 3, c: (s) => here(s) && north(s),
-    run: (s) => ({ t: pick(s, ['가족이 감염을 숨겼습니다. 이웃도 알았고, 이웃도 숨겼습니다. 북조의 예의였습니다.', '검진 통지가 오면 어머니가 먼저 태웠습니다. 재는 아침에 치웠습니다.', '설날 참배에서 가문 자리 맨 끝에 섰습니다. 아무도 말하지 않았고, 자리는 정해져 있었습니다.']), k: 'bad', fx: { h: -2, cap: { ties: -0.02 } } }) },
+    run: (s) => ({ t: pick(s, ['가족이 감염을 숨겼습니다. 이웃도 알았고, 이웃도 숨겼습니다. 북조의 예의였습니다.', '검진 통지가 오면 ' + (s.S.fam.mom.alive ? '어머니가' : '집에서') + ' 먼저 태웠습니다. 재는 아침에 치웠습니다.', '설날 참배에서 가문 자리 맨 끝에 섰습니다. 아무도 말하지 않았고, 자리는 정해져 있었습니다.']), k: 'bad', fx: { h: -2, cap: { ties: -0.02 } } }) },
   { id: 'hig_north_quarantine', a: [10, 80], tags: [N, 'known'], w: 24, gap: 3, c: (s) => here(s) && north(s) && s.S.flags.quarantined,
     run: (s) => ({ t: pick(s, ['격리 구역 담 안에서 눈을 치웠습니다. 담 밖에서도 치우는 소리가 났습니다. 같은 눈이었습니다.', '격리 구역에 가족이 왔습니다. 담 너머로 도시락을 넘겼습니다. 얼굴은 보이지 않았고, 손만 보였습니다.']), k: 'bad', fx: { h: -2 } }) },
   { id: 'hig_north_doctor', a: [10, 80], tags: [N, 'known'], w: 14, gap: 5, c: (s) => here(s) && north(s),
-    run: (s) => { if (s.rng.chance(0.3)) s.S.flags.rhodes_medical_pact = s.S.age; return { t: '산 너머 의사가 밤에 왔습니다. 외국 약을 두고 갔고, 이름은 묻지 말라고 했습니다. 어머니가 생선을 싸 주었습니다.', k: 'note', fx: { hl: 1 } }; } },
+    run: (s) => { if (s.rng.chance(0.3)) s.S.flags.rhodes_medical_pact = s.S.age; return { t: '산 너머 의사가 밤에 왔습니다. 외국 약을 두고 갔고, 이름은 묻지 말라고 했습니다. ' + (s.S.fam.mom.alive ? '어머니가' : '집에서') + ' 생선을 싸 주었습니다.', k: 'note', fx: { hl: 1 } }; } },
   { id: 'hig_oni_rage', a: [12, 70], tags: [N, 'race:oni'], w: 12, gap: 6, c: here,
     run: (s) => ({ t: '화가 치밀어 손이 먼저 나갈 뻔했습니다. 멈췄습니다. 멈춘 것을 본 사람은 "역시 오니"라고 했습니다. 멈췄는데도.', k: 'bad', fx: { h: -3 } }) },
 
@@ -362,7 +366,7 @@ export const events = [
     run: (s) => ({ t: pick(s, ['인사 각도를 틀렸습니다. 아무도 고쳐 주지 않았고, 다음 날 모두 저와 다른 각도로 인사했습니다.', '동네 쓰레기 배출 요일표를 받았습니다. 일곱 가지였습니다. 틀린 날 봉투가 집 앞에 돌아와 있었습니다.']), k: 'note', fx: { h: -1 } }) },
   { id: 'hig_newcomer_papers', a: [10, 80], tags: [N, 'newcomer'], w: 24, gap: 3, c: here,
     run: (s) => ({ t: '호적대장소 창구에서 서류를 세 번 돌려받았습니다. 도장 자리가 틀렸다고 했습니다. 네 번째에 받아 주었습니다.', k: 'bad', fx: { h: -1 } }) },
-  { id: 'hig_rel_cul_job', a: [15, 65], tags: [N, 'rel:cultural'], w: 28, gap: 3, c: here,
+  { id: 'hig_rel_cul_job', a: [15, 58], tags: [N, 'rel:cultural'], w: 28, gap: 3, c: here,
     run: (s) => ({ t: pick(s, ['면접에서 뿔을 보고 질문이 바뀌었습니다. "성격은 어떤 편입니까." 대답했고, 합격 통지는 오지 않았습니다.', '거래처가 다른 담당자를 보내 달라고 했습니다. 이유는 쓰지 않았습니다. 쓰지 않아도 알았습니다.']), k: 'bad', fx: { h: -2 } }) },
   { id: 'hig_rel_cul_online', a: [12, 60], tags: [N, 'rel:cultural'], w: 22, gap: 4, c: here,
     run: (s) => ({ t: '인터넷 게시판에 제 종족 이야기가 올라왔습니다. "분수를 알라"는 말이 있었습니다. 화면을 닫았습니다. 말은 남았습니다.', k: 'bad', fx: { h: -2 } }) },
@@ -553,7 +557,7 @@ export const decisions = {
     '맞선 세 번째 만남에서 혼인을 정했습니다. 식은 신사에서 올렸고, 사진사가 가장 많이 말했습니다.'),
   marry_love: marryOverride('love', south,
     (s, pr) => wa(pr.name) + ' 사귄 지 두 해가 되었습니다. 둘이 먼저 정하고 양가에 알리는 혼인입니다. 지참금은 없습니다.',
-    '둘이 정하고 양가에 알렸습니다. 어머니는 맞선이 아니라서 한 번 울었고, 식에서 또 한 번 울었습니다.'),
+    '둘이 정하고 양가에 알렸습니다. 집에서는 맞선이 아니라서 한 번 울었고, 식에서 또 한 번 울었습니다.'),
   marry_house: marryOverride('house', north,
     (s, pr) => '가문끼리 혼약이 오갔습니다. 상대는 ' + pr.name + '. 두 가문 검술 유파가 먼저였고, 사람은 나중이었습니다. 지참금은 중위소득의 두 배입니다.',
     '무가 혼약을 올렸습니다. 두 가문 문장이 한 병풍에 걸렸습니다. 신랑 신부는 식이 끝나고 처음으로 서로 말했습니다.'),

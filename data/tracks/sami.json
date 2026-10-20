@@ -71,7 +71,9 @@
    "entry": {
     "ages": [10,50],
     "classes": { "q1": 0.1469, "q2": 0.2057 },
-    "gates": [],
+    "gates": [
+     { "urban": false }
+    ],
     "via": ["born"]
    },
    "stages": [
@@ -230,7 +232,7 @@
     "ages": [16,30],
     "classes": { "q2": 0.0588, "q3": 0.0588 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["volunteer"]
    },
@@ -398,7 +400,7 @@
     "ages": [14,35],
     "classes": { "q2": 0.0294 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["porter","contact"]
    },

@@ -8,6 +8,15 @@ import { ENGINE_DECISIONS } from '../../src/engine/choices.js';
 import { eul, iga, eun, wa, ro, ieot, rago } from '../../src/engine/text.js';
 import { cul, org, fest, F, orgF, given, poor, rich, medX, lifeRoll, once } from '../_util.js';
 import { hoist } from '../_dispatch.js';
+import { setHousing } from '../../src/engine/housing.js';
+/** W14(QA A2): 이동도시 민간 고용(YAN_OFFICE) 진입·재직 중이면 주거를 이동도시 플레이트로(정주 출생이 '이동도시로 올라온' 서사) */
+function toPlate(s) {
+  const S = s.S; if (S.home.type === 'nomadic' || S.cur === 'rhodes') return;
+  S.urban = true; S.home.type = 'nomadic'; S.home.deck = S.q >= 4 ? 'upper' : 'under'; S.flags.homeOwner = false;
+  const types = (s.data.housing[S.cur] || s.data.housing._default || { types: [] }).types;
+  const h = types.find((t) => t.id === 'plate_rent' && !t.forced) || types.find((t) => t.nomadic && !t.forced);
+  if (h) setHousing(s, h, { quiet: true });
+}
 
 // ── 도우미 ──────────────────────────────────────────────────────────────
 const tk = (id, st) => 'track:' + id + ':' + st;
@@ -57,9 +66,9 @@ export const events = [
   E('yan_farm_ten_water', [tk('YAN_FARM', 'tenant')], [14, 60], 30, 3, (s) => ({ t: '봄 가뭄에 물길 순서를 두고 윗마을과 다퉜습니다. 촌장이 중재했고, 아랫마을이 졌습니다.', k: 'bad', fx: { h: -2 } })),
   // own
   E('yan_farm_own_deed', [tk('YAN_FARM', 'own')], [18, 65], 35, 4, (s) => ({ t: '제 이름이 적힌 밭문서를 받았습니다. 흙은 어제와 같았습니다.', k: 'warm', fx: { h: 3 } })),
-  E('yan_farm_own_recruiter', [tk('YAN_FARM', 'own')], [18, 65], 35, 4, (s) => { const n = s.rng.ri(4, 11); return { t: '이동도시 공장 모집인이 마을에 왔습니다. 젊은이 ' + n + '명이 계약서에 서명했고, 그 뒤로 마을이 조용해졌습니다.', k: 'note', fx: { h: -1 }, f: orgF(s, '농촌 노동 이동 집계', s.year) }; }),
+  E('yan_farm_own_recruiter', [tk('YAN_FARM', 'own')], [18, 65], 35, 4, (s) => { const n = s.rng.ri(4, 11); return { t: '도시 공장의 모집인이 마을에 왔습니다. 젊은이 ' + n + '명이 계약서에 서명했고, 그 뒤로 마을이 조용해졌습니다.', k: 'note', fx: { h: -1 }, f: orgF(s, '농촌 노동 이동 집계', s.year) }; }),
   E('yan_farm_own_haggle', [tk('YAN_FARM', 'own')], [18, 65], 35, 2, (s) => { const good = s.rng.chance(0.5); return { t: (s.aff && s.aff.id === 'YAN_FARM_TEA' ? '첫물 차를 ' : '햇곡을 ') + '객잔 상인에게 넘겼습니다. ' + (good ? '값을 한 번 더 불렀고, 상인이 받아들였습니다.' : '값을 한 번 더 불렀고, 상인이 수레를 돌렸습니다.'), k: good ? 'warm' : 'bad', fx: good ? { money: medX(s, 0.1) } : { money: -medX(s, 0.05), h: -1 } }; }),
-  E('yan_farm_own_child_city', [tk('YAN_FARM', 'own')], [30, 65], 30, 5, (s) => ({ t: '아이 하나가 이동도시로 가겠다고 했습니다. 말리지 않았고, 떠나는 날 아침 국수를 끓였습니다.', k: 'note', fx: { h: -2 } }), { c: (s) => kids(s).some((k) => s.S.age - k.bornAt >= 15) }),
+  E('yan_farm_own_child_city', [tk('YAN_FARM', 'own')], [30, 65], 30, 5, (s) => ({ t: '아이 하나가 도시로 가겠다고 했습니다. 말리지 않았고, 떠나는 날 아침 국수를 끓였습니다.', k: 'note', fx: { h: -2 } }), { c: (s) => kids(s).some((k) => s.S.age - k.bornAt >= 15) }),
   // chief
   E('yan_farm_chief_corvee', [tk('YAN_FARM', 'chief')], [30, 80], 35, 2, (s) => { const n = s.rng.ri(4, 15); return { t: '현청에서 부역 ' + n + '명 할당이 내려왔습니다. 누구를 보낼지 이름을 고르는 일이 제 일이 되었습니다.', k: 'ev', fx: { standing: 2, h: -1 }, f: orgF(s, '부역 할당 공문', s.year) }; }),
   E('yan_farm_chief_relocate', [tk('YAN_FARM', 'chief')], [30, 80], 30, 6, (s) => ({ t: '마을을 옮기라는 공문이 왔습니다. 치다오가 지나갈 자리였습니다. 공문에는 보상 액수가 없었습니다.', k: 'bad', fx: { h: -3, standing: -3 } })),
@@ -153,7 +162,7 @@ export const events = [
   E('yan_army_sg_squad', [tk('YAN_ARMY', 'sergeant')], [19, 50], 35, 2, (s) => ({ t: '열 명을 맡았습니다. 이름을 다 외운 날, 한 명이 바뀌었습니다.', k: 'ev', fx: { standing: 2 } })),
   E('yan_army_sg_desert', [tk('YAN_ARMY', 'sergeant')], [19, 50], 30, 3, (s) => ({ t: '부하 하나가 탈영했습니다. 추적조에 제 이름이 올랐고, 잡지 못한 것이 다행인지 오래 생각했습니다.', k: 'bad', fx: { h: -3, standing: -2 } })),
   E('yan_army_sg_patrol', [tk('YAN_ARMY', 'sergeant')], [19, 50], 35, 2, (s) => ({ t: '국경 순찰을 돌았습니다. 상단 하나를 세웠고, 짐 속에서 나온 것은 소금뿐이었습니다.', k: 'note' })),
-  E('yan_army_sg_collapsal', [tk('YAN_ARMY', 'sergeant')], [19, 50], 30, 4, (s) => ({ t: '북방에서 붕괴체가 넘어왔다는 전령이 왔습니다. 부대가 사흘을 걸어갔고, 도착했을 때는 끝나 있었습니다.', k: 'bad', fx: { hl: -2, h: -2 } })),
+  E('yan_army_sg_collapsal', [tk('YAN_ARMY', 'sergeant')], [19, 50], 30, 4, (s) => ({ t: '북방에서 붕괴체가 넘어왔다는 전령이 왔습니다. 부대가 사흘을 걸어갔고, 도착했을 때는 끝나 있었습니다.', k: 'bad', fx: { hl: -2, h: -2 } }), { c: (s) => !!s.nation.collapsal }),
   // officer
   E('yan_army_of_map', [tk('YAN_ARMY', 'officer')], [22, 55], 35, 2, (s) => ({ t: '옥문 성벽 위에서 서쪽 황야를 지도와 맞춰 보았습니다. 지도에 없는 길이 하나 있었습니다.', k: 'ev', fx: { cap: { learn: 0.02 } } })),
   E('yan_army_of_tianshi', [tk('YAN_ARMY', 'officer')], [22, 55], 30, 3, (s) => ({ t: '군사 천사가 부대에 배속되었습니다. 명령 체계가 둘이 되었고, 병사들은 천사 쪽을 먼저 보았습니다.', k: 'note', fx: { h: -1 } })),
@@ -192,13 +201,14 @@ export const events = [
   // ════════════════════════════════════════════════════════════════════════
   E('yan_office_first', ['track:YAN_OFFICE'], [16, 45], 90, 4, (s) => {
     const v = s.S.track.flags.via;
+    toPlate(s);   // W14(QA A2): 이동도시 민간 고용은 이동도시에 산다
     const t = v === 'contract' ? '모집 계약서에 서명하고 이동도시로 올라왔습니다. 계약서의 글자는 작았고, 기숙사의 창은 더 작았습니다.'
       : v === 'referral' ? '아는 사람의 소개로 자리를 얻었습니다. 첫 달 급료의 일부가 소개비로 나갔습니다.'
       : '이동도시에서 일자리를 얻었습니다. 아침마다 플레이트가 흔들렸고, 한 달이 지나자 흔들림을 잊었습니다.';
     return { t, k: 'ev', fx: v === 'referral' ? { money: -medX(s, 0.05) } : {} };
   }, { c: (s) => firstYear(s, 'YAN_OFFICE') }),
   // staff
-  E('yan_off_st_plate', [tk('YAN_OFFICE', 'staff')], [16, 60], 35, 2, (s) => ({ t: '이동도시가 이동하는 날이었습니다. 일터는 쉬지 않았고, 창밖 풍경만 바뀌었습니다.', k: 'note' })),
+  E('yan_off_st_plate', [tk('YAN_OFFICE', 'staff')], [16, 60], 35, 2, (s) => { toPlate(s); return { t: '이동도시가 이동하는 날이었습니다. 일터는 쉬지 않았고, 창밖 풍경만 바뀌었습니다.', k: 'note' }; }),
   E('yan_off_st_dorm', [tk('YAN_OFFICE', 'staff')], [16, 60], 30, 3, (s) => { const n = s.rng.ri(4, 8); return { t: '회사 기숙사 한 방에 ' + n + '명이 잤습니다. 고향이 다 달랐고, 코 고는 소리는 같았습니다.', k: 'ev', fx: { cap: { ties: 0.02 } }, f: orgF(s, '이동도시 노동자 숙사 명부', s.year) }; }),
   E('yan_off_st_remit', [tk('YAN_OFFICE', 'staff')], [16, 60], 35, 2, (s) => { const amt = medX(s, 0.1); return { t: '급료에서 ' + amt.toLocaleString() + ' LMD를 고향에 부쳤습니다. 전달자가 영수증 대신 고향 소식을 한 줄 가져왔습니다.', k: 'warm', fx: { money: -amt, h: 2 }, f: orgF(s, '송금 대장', s.year) }; }),
   E('yan_off_st_check', [tk('YAN_OFFICE', 'staff')], [16, 60], 30, 3, (s) => ({ t: '호부 관리가 회사에 와서 외지 노동자 명부를 맞춰 보았습니다. 제 이름 옆에 고향 현 이름이 적혔습니다.', k: 'note', fx: { h: -1 } })),
@@ -211,7 +221,7 @@ export const events = [
   E('yan_off_mg_books', [tk('YAN_OFFICE', 'manager')], [25, 65], 35, 2, (s) => ({ t: '장부를 제 이름으로 닫았습니다. 이익은 적었고, 적은 이익이 제 몫이었습니다.', k: 'ev', fx: { money: medX(s, 0.1) } })),
   E('yan_off_mg_official', [tk('YAN_OFFICE', 'manager')], [25, 65], 30, 3, (s) => ({ t: '관청 허가를 갱신하러 갔습니다. 서류는 넉 장이었고, 봉투는 한 장이었습니다.', k: 'note', fx: { money: -medX(s, 0.08) } })),
   E('yan_off_mg_hire', [tk('YAN_OFFICE', 'manager')], [25, 65], 30, 3, (s) => ({ t: '고향 마을에서 사람을 뽑아 올렸습니다. 모집인이 제가 되었다는 것을 마을 어귀에서 알았습니다.', k: 'note', fx: { standing: 1, h: -1 } })),
-  E('yan_off_mg_move', [tk('YAN_OFFICE', 'manager')], [25, 65], 30, 4, (s) => ({ t: '이동도시가 항로를 바꿨습니다. 단골 거래처가 다른 도시에 남았고, 새 거래처는 아직 없었습니다.', k: 'bad', fx: { money: -medX(s, 0.1), h: -2 } })),
+  E('yan_off_mg_move', [tk('YAN_OFFICE', 'manager')], [25, 65], 30, 4, (s) => { toPlate(s); return { t: '이동도시가 항로를 바꿨습니다. 단골 거래처가 다른 도시에 남았고, 새 거래처는 아직 없었습니다.', k: 'bad', fx: { money: -medX(s, 0.1), h: -2 } }; }),
   TRANS('YAN_OFFICE', {
     lead: '팀장이 되었습니다. 기숙사 방이 둘이 쓰는 방으로 바뀌었습니다.',
     manager: '점장이 되었습니다. 장부와 열쇠와 밤늦은 걱정이 함께 왔습니다.',

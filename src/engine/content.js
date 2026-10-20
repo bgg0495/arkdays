@@ -52,11 +52,13 @@ export function tagsOf(sim, visit = null) {
   const { S, race } = sim;
   const nation = visit ? sim.data.nationById[visit] : sim.nation;
   const cur = visit || S.cur, root = visit ? (sim.data.nationById[visit].parent || visit) : S.root;
-  const t = new Set([cur, root, S.born, 'nation:' + cur, 'nation:' + root, S.race, 'race:' + S.race, S.sex, S.sex === 'F' ? 'female' : 'male',
+  // W14(QA A1): 출생국은 태그 집합에 넣지 않는다(이주 뒤 고향 이벤트가 평생 따라오던 누수). 출신을 보려면 born:<id>
+  const t = new Set([cur, root, 'born:' + S.born, 'nation:' + cur, 'nation:' + root, 'race:' + S.race, S.sex, S.sex === 'F' ? 'female' : 'male',
     S.urban ? 'urban' : 'rural', 'q' + S.q,
     S.home.type, S.home.type + '_' + S.home.deck, 'policy:' + sim.policy,
     'ori' + nation.oriExp, 'cat' + nation.catFreq, 'conflict' + nation.conflict]);
   if (visit) t.add('visit:' + visit);
+  if (!sim.data.nationById[S.race]) t.add(S.race);   // W14(QA A1): 종족 맨 태그 — 국가 id 와 같은 종족(ursus·durin·aegir)은 race:<id> 로만(국가 태그 이벤트가 그 종족에게 평생 따라오던 누수)
   // v1
   if (S.track) {
     const tr = sim.data.trackById[S.track.id];
@@ -71,6 +73,13 @@ export function tagsOf(sim, visit = null) {
   // W12(D51-6): 사인 게이트용 '자리' 그룹 pos:<A원형|noble|high> — 같은 접두끼리 OR 이므로 causes.json 이 "패밀리·관료·작위·지위 높음 중 하나"를 적을 수 있다. standing:high 는 콘텐츠용
   if (S.track) { const tr = sim.data.trackById[S.track.id]; if (tr) t.add('pos:' + tr.archetype); if ((S.track.standing || 0) >= 60) { t.add('standing:high'); t.add('pos:high'); } }
   if (S.status && S.status.noble) t.add('pos:noble');
+  // W14(QA B5): 사인 게이트용 '자리' 그룹 추가 — 광부 자리·아츠 쓰는 자리·전쟁이 닿는 자리·수감·감염
+  { const j = S.job && sim.data.jobById[S.job]; const tid = S.track ? S.track.id : (S.flags.lastTrack || '');
+    if ((j && j.risk && j.risk.mine_accident) || /MINE|MINER|PIT/.test(tid)) t.add('pos:mine');
+    if ((S.cap && S.cap.arts >= 0.5) || S.flags.casterRoute) t.add('pos:caster');
+    if (nation.conflict >= 2 || S.flags.war || S.serving) t.add('pos:war');
+    if (S.prison) t.add('pos:prison');
+    if (S.ori.on) t.add('pos:infected'); }
   if (S.home.housing) t.add('home:' + S.home.housing);
   if (S.home.owned) t.add('homeowner');
   if (S.fam.marriage) t.add('marriage:' + S.fam.marriage.type);
@@ -138,6 +147,8 @@ export function chooseFeed(sim, used, visit = null) {
     if (e.c && !e.c(sim)) continue;
     let w = typeof e.w === 'function' ? e.w(sim) : (e.w ?? 1);
     if (S.recent.includes(e.id)) w *= e.rep ? 0.5 : 0.08;
+    // W14(QA A11): 같은 이벤트가 생애 2회 이상 나왔으면 ×0.1(rep 이벤트는 ×0.4) — fire 가 S.flags['evn_<id>'] 를 센다
+    { const n = S.flags['evn_' + e.id] || 0; if (n >= 2) w *= e.rep ? 0.4 : 0.1; }
     if (w > 0) cands.push([e.id, w]);
   }
   if (!cands.length) return null;

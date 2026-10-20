@@ -53,7 +53,7 @@ export function causeWeights(sim) {
     if (job && job.risk[c.id]) w *= job.risk[c.id];
     if (c.id === 'oldage' && ha >= 85) w *= 3;
     if (c.id === 'oripathy') w *= { 0: 0, 1: 0.5, 2: 2, 3: 5 }[S.ori.stage] || 0;
-    if (c.id === 'catastrophe') w *= { 1: 0.5, 2: 1, 3: 2 }[sim.nation.catFreq] * (S.home.type === 'nomadic' ? 0.5 : 1.3);
+    if (c.id === 'catastrophe') w *= ({ 0: 0, 1: 0.5, 2: 1, 3: 2 }[sim.nation.catFreq] ?? 1) * (S.home.type === 'nomadic' ? 0.5 : 1.3);   // W14: catFreq 0
     if (c.id === 'war') w *= { 1: 0.5, 2: 1, 3: 2.5 }[sim.nation.conflict] * (S.flags.war ? 4 : 1) * (S.serving ? 5 : 1);
     if (c.id === 'camp') w *= S.prison === 'camp' ? 3 : 0.2;
     if (c.id === 'nomadic_accident') w *= S.home.type === 'nomadic' ? 1.5 : 0.1;

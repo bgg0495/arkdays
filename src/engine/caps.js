@@ -1,5 +1,5 @@
 // 역량(cap: skill·learn·arts·ties)·타고남(innate: looks·luck·trait) — §6. (명세 §2 의 `born` 은 기존 S.born(출생 국가)과 겹쳐 `innate` 로 둔다)
-// 전부 숨은 z값(평균 0, 표준편차 1, −3~+3). 표시는 grade(z) 4등급.
+// 전부 숨은 z값(평균 0, 표준편차 1, −3~+3). 표시는 grade(z) 6등급(W16: 아주 낮음/낮음/보통/높음/뛰어남/탁월).
 import { clamp } from './rng.js';
 import { humanAge } from './lifetable.js';
 import { BALANCE as B } from './balance.js';
@@ -9,13 +9,22 @@ export const CAP_LABEL = { skill: '기량', learn: '학식', arts: '아츠', tie
 const Z_MIN = -3, Z_MAX = 3;
 export const zc = (z) => clamp(+z || 0, Z_MIN, Z_MAX);
 
-/** z → 4등급 라벨(§2): <−0.8 낮음 / <0.5 보통 / <1.4 높음 / 뛰어남 */
+/** z → 등급 라벨(§2, W16 6등급): <−1.4 아주 낮음 / <−0.5 낮음 / <0.5 보통 / <1.2 높음 / <1.9 뛰어남 / 탁월 */
 export function grade(z) {
   z = +z || 0;
   for (const [cut, label] of B.cap.grades) if (z < cut) return label;
   return B.cap.grades[B.cap.grades.length - 1][1];
 }
-export function gradeKey(z) { return ['low', 'mid', 'high', 'top'][B.cap.grades.findIndex(([cut]) => (+z || 0) < cut)] || 'top'; }
+export function gradeKey(z) { return GRADE_KEYS[B.cap.grades.findIndex(([cut]) => (+z || 0) < cut)] || 'top'; }
+const GRADE_KEYS = ['low', 'low', 'mid', 'high', 'top', 'top'];   // 6등급 → 표시 색 4종
+/** W16: 등급 라벨 → 표시 키(low/mid/high/top). UI 가 등급명을 색으로 바꿀 때 */
+export function gradeKeyOf(label) { const i = B.cap.grades.findIndex(([, l]) => l === label); return i < 0 ? 'mid' : (GRADE_KEYS[i] || 'top'); }
+/** W16: 지금 등급 안에서 얼마나 올라왔는지 0~3 점(신원 카드 ●●○). 등급 구간 [lo, hi) 안의 위치 */
+export function gradeDots(z) {
+  z = +z || 0; let lo = Z_MIN;
+  for (const [cut] of B.cap.grades) { const hi = Math.min(cut, Z_MAX); if (z < cut) return clamp(Math.floor((z - lo) / Math.max(0.01, hi - lo) * 3), 0, 3); lo = cut; }
+  return 3;
+}
 
 /** 로지스틱 적합도(§5): logistic(z − shift), 0.2~1.0 로 눌러 쓴다 */
 export function fit(z, shift = B.cap.fitShift ?? B.track.fitShift) {
@@ -69,10 +78,12 @@ export function capYear(sim) {
   if (!S.cap) return;
   applyTrait(S);
   const fw = S.focusW || {};
+  const childMul = S.age <= (B.cap.childAge ?? 18) ? (B.cap.childFocus ?? 1) : 1;   // W16(D56): 어릴 때 공부·운동·아츠 초점은 더 잘 자란다
   for (const [f, w] of Object.entries(fw)) {
     const fx = B.cap.focus[f];
     if (!fx || !w) continue;
-    for (const [k, dz] of Object.entries(fx)) addCap(S, k, dz * w);
+    const m = f === 'study' || f === 'sport' || f === 'arts' ? childMul : 1;
+    for (const [k, dz] of Object.entries(fx)) addCap(S, k, dz * w * m);
   }
   if (S.school) addCap(S, 'learn', B.cap.schoolLearn);
   if (Math.abs(S.innate.looks) > 1) addCap(S, 'ties', Math.sign(S.innate.looks) * B.cap.looksTies);
@@ -97,7 +108,7 @@ export function healCaps(S) {
  *  arch = 현재 진로 원형(A2·A12 면 외모 줄을 늘 보인다, W12 D51-5) */
 export function capProfile(S, arch = null) {
   const prev = S.years && S.years.length ? S.years[S.years.length - 1].cap : null;
-  const caps = CAP_KEYS.map((k) => ({ k, label: CAP_LABEL[k], z: S.cap ? S.cap[k] : 0, grade: grade(S.cap ? S.cap[k] : 0), delta: prev && S.cap && Number.isFinite(prev[k]) ? +(S.cap[k] - prev[k]).toFixed(3) : 0 }));
+  const caps = CAP_KEYS.map((k) => ({ k, label: CAP_LABEL[k], z: S.cap ? S.cap[k] : 0, grade: grade(S.cap ? S.cap[k] : 0), key: gradeKey(S.cap ? S.cap[k] : 0), dots: gradeDots(S.cap ? S.cap[k] : 0), delta: prev && S.cap && Number.isFinite(prev[k]) ? +(S.cap[k] - prev[k]).toFixed(3) : 0 }));
   const traits = [];
   const looks = S.innate ? S.innate.looks : 0;
   const lt = B.cap.looksTrait ?? 1.2;

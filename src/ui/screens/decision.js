@@ -8,7 +8,7 @@ import { $, el, esc, setHtml, iga } from '../dom.js';
 export function choiceHint(app, pd, c) {
   const id = pd.id || '';
   const data = app.sim && app.sim.data;
-  const t = data && data.trackById && data.trackById[c.k];
+  const t = data && data.trackById && (data.trackById[c.k] || data.trackById[String(c.k).replace(/^closed:/, '')]);   // W16: 닫힌 문 k = closed:<id>
   const parts = c.sub ? [c.sub] : [];
   const add = (x) => { if (x && !parts.includes(x)) parts.push(x); };
   if ((id === 'track_choose' || id === 'track_switch') && t) {
@@ -65,17 +65,18 @@ export function open(app, pd) {
       ${kind === 'small' ? `<div class="countdown"><div class="countdown-track"><div class="countdown-bar" id="cd-bar"></div></div><div class="countdown-text" id="cd-text"></div></div>` : ''}
       <div class="modal-foot">
         <button class="btn ghost small" id="btn-auto">이제부터 자동으로 맡기기</button>
-        <span class="key-hint mono">1–${v.choices.length} 숫자 키</span>
+        <span class="key-hint mono">1–${v.choices.filter((c) => !c.disabled).length} 숫자 키</span>
       </div>
     </div>`);
   const box = $('#modal-choices', wrap);
-  v.choices.forEach((c, i) => {
+  const active = v.choices.filter((c) => !c.disabled);   // W16(D56): 닫힌 문(disabled)은 번호 없이 회색, 누를 수 없다
+  v.choices.forEach((c) => {
     const sub = choiceHint(app, pd, c);
-    const b = el('button.choice', { type: 'button', dataset: { k: c.k } },
-      el('span.choice-n.mono', {}, String(i + 1)),
+    const b = el('button.choice' + (c.disabled ? '.closed' : ''), { type: 'button', dataset: { k: c.k }, disabled: !!c.disabled, 'aria-disabled': c.disabled ? 'true' : null, title: c.disabled ? '아직 닫힌 문입니다' : null },
+      el('span.choice-n.mono', {}, c.disabled ? '×' : String(active.indexOf(c) + 1)),
       el('span.choice-label', {}, c.label),
       sub ? el('span.choice-sub', {}, sub) : null);
-    b.addEventListener('click', () => pick(app, c.k));
+    if (!c.disabled) b.addEventListener('click', () => pick(app, c.k));
     box.appendChild(b);
   });
   $('#btn-auto', wrap).addEventListener('click', () => { app.actions.toggleAuto(true); });
@@ -83,7 +84,7 @@ export function open(app, pd) {
   wrap.hidden = false;
   window.addEventListener('keydown', onKey);
   if (kind === 'small') startCountdown(app, v);
-  else { const first = box.querySelector('button'); if (first) first.focus(); }
+  else { const first = box.querySelector('button:not([disabled])'); if (first) first.focus(); }
 }
 
 function onKey(ev) {
@@ -91,7 +92,8 @@ function onKey(ev) {
   if (ev.target && ev.target.matches('textarea, input')) return;
   if (ev.key === 'h' || ev.key === 'H' || (ev.key === 'Escape' && $('#modal').classList.contains('peek'))) { ev.preventDefault(); togglePeek(); return; }
   const n = parseInt(ev.key, 10);
-  if (n >= 1 && n <= current.pd.view.choices.length) { ev.preventDefault(); pick(current.app, current.pd.view.choices[n - 1].k); }
+  const active = current.pd.view.choices.filter((c) => !c.disabled);
+  if (n >= 1 && n <= active.length) { ev.preventDefault(); pick(current.app, active[n - 1].k); }
   else if (current.kind === 'small' && timer) { stopCountdown(); }
 }
 

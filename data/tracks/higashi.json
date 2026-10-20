@@ -20,8 +20,8 @@
     "ages": [12,40],
     "classes": { "q2": 0.3 },
     "gates": [
-     { "region": "north", "weight": 3 },
-     { "urban": false, "weight": 2 }
+     { "region": "north" },
+     { "urban": false }
     ],
     "via": ["family","hunt"]
    },
@@ -181,7 +181,7 @@
     "ages": [15,30],
     "classes": { "q1": 0.25 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["wander","disowned"]
    },
@@ -287,7 +287,7 @@
     "classes": { "q2": 0.05, "q3": 0.4, "q4": 0.1 },
     "gates": [
      { "cap": "learn", "min": -0.8 },
-     { "region": "south", "weight": 2 }
+     { "region": "south" }
     ],
     "via": ["hire","graduate"]
    },
@@ -358,7 +358,7 @@
     "classes": { "q3": 0.25 },
     "gates": [
      { "cap": "learn", "min": -0.8 },
-     { "region": "south", "weight": 2 }
+     { "region": "south" }
     ],
     "via": ["school"]
    },
@@ -419,7 +419,8 @@
     "ages": [18,30],
     "classes": { "q3": 0.1 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 },
+     { "region": "south" }
     ],
     "via": ["exam"]
    },
@@ -524,7 +525,7 @@
    "exits": {
     "retire": { "age": 35, "to": "HIG_OFFICE" },
     "fall": { "scandal": "disgrace", "fade": "expel", "overwork": "death" },
-    "switch": ["COM_PENGUIN_IDOL","HIG_OFFICE"]
+    "switch": ["HIG_OFFICE"]
    },
    "oriPolicyOverride": null,
    "canonFigures": []
@@ -542,7 +543,8 @@
     "classes": { "q3": 0.05, "q4": 0.2, "q5": 0.3 },
     "gates": [
      { "cap": "learn", "min": 0.5 },
-     { "cap": "ties", "min": 0.5 }
+     { "cap": "ties", "min": 0.5 },
+     { "region": "south" }
     ],
     "via": ["secretary","scholar","heir"]
    },
@@ -595,7 +597,7 @@
    "id": "HIG_YAKUZA",
    "nation": "higashi",
    "region": null,
-   "name": "킨세키가이",
+   "name": "야쿠자",
    "archetype": "A1",
    "canon": true,
    "itinerant": false,
@@ -735,8 +737,8 @@
     "ages": [15,25],
     "classes": { "q4": 0.3, "q5": 0.4 },
     "gates": [
-     { "region": "north", "weight": 4 },
-     { "cap": "skill", "min": -0.8 }
+     { "region": "north" },
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["heir","bastard","retainer"]
    },

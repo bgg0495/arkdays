@@ -11,6 +11,7 @@
 //   adult_infected.js 감염 생활 (W4b) — 로도스 직접 합류 경로는 W11 에서 제거(엔진 rhodes_offer 만)
 //   elder.js          노년 이벤트·결정 (W4c)
 //   bigevents.js      캐논 대사건 + 1102년 이후 연장 대사건 + 전시 이벤트 (W4c)
+//   _subs.js          sub 를 적지 않은 결정 선택지의 효과 한 줄 표 (W14 QA A9) — 콘텐츠가 sub 를 직접 쓰면 그쪽이 우선
 // 폐기(W11): adult_work.js·adult_nations.js(국가 진로 콘텐츠가 대체). dummy.js·_dummy_tracks.js 는 테스트 전용(test/sim.js 가 선택 등록).
 // 사망 텍스트(death_texts.js)는 UI 가 직접 import 한다.
 import childhood from './childhood.js';
@@ -44,6 +45,7 @@ import adultMoney from './adult_money.js';
 import adultInfected from './adult_infected.js';
 import elder from './elder.js';
 import bigevents from './bigevents.js';
+import { SUBS } from './_subs.js';   // W14(QA A9): sub 없는 선택지의 효과 한 줄 표(결정 id → {k: sub})
 
 export const nationPacks = { yan, lungmen, higashi, ursus, sami, kjerag, leithanien, victoria, tara, kazimierz, columbia, siracusa, laterano, iberia, aegir, minos, sargon, bolivar, rim, kazdel, durin };
 export const packs = [childhood, school, ...Object.values(nationPacks), rhodes, common, dispatchPack(), adultFamily, adultMoney, adultInfected, elder, bigevents];
@@ -51,6 +53,7 @@ export const packs = [childhood, school, ...Object.values(nationPacks), rhodes, 
 /** createRegistry().use(...) 에 차례로 넣는다 */
 export function install(registry) {
   for (const p of packs) registry.use(p);
+  registry.subs = SUBS;   // sim.openDecision → fillSubs 가 본다
   return registry;
 }
 

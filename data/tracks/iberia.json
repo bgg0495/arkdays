@@ -34,7 +34,7 @@
      "title": "병사",
      "minYears": 2,
      "promo": { "cap": "learn", "k": 0.22 },
-     "fall": { "base": 0.04, "causes": ["kia","seaborn","heresy","assassination"] }
+     "fall": { "base": 0.04, "causes": ["poison","seaborn","heresy","assassination"] }
     },
     {
      "id": "candidate",
@@ -42,7 +42,7 @@
      "title": "자격자",
      "minYears": 4,
      "promo": { "cap": "learn", "k": 0.12 },
-     "fall": { "base": 0.04, "causes": ["kia","seaborn","heresy","assassination"] }
+     "fall": { "base": 0.04, "causes": ["poison","seaborn","heresy","assassination"] }
     },
     {
      "id": "inquisitor",
@@ -50,7 +50,7 @@
      "title": "재판관",
      "minYears": 8,
      "promo": { "cap": "learn", "k": 0.05 },
-     "fall": { "base": 0.04, "causes": ["kia","seaborn","heresy","assassination"] }
+     "fall": { "base": 0.04, "causes": ["poison","seaborn","heresy","assassination"] }
     },
     {
      "id": "grand",
@@ -58,7 +58,7 @@
      "title": "대재판관",
      "minYears": 10,
      "promo": { "cap": "learn", "k": 0.02 },
-     "fall": { "base": 0.04, "causes": ["kia","seaborn","heresy","assassination"] }
+     "fall": { "base": 0.04, "causes": ["poison","seaborn","heresy","assassination"] }
     },
     {
      "id": "saint",
@@ -66,7 +66,7 @@
      "title": "성도",
      "minYears": 0,
      "promo": null,
-     "fall": { "base": 0.04, "causes": ["kia","seaborn","heresy","assassination"] }
+     "fall": { "base": 0.04, "causes": ["poison","seaborn","heresy","assassination"] }
     }
    ],
    "income": { "stage": [0.8,1.5,3,6,10], "job": "inquisitor" },
@@ -74,7 +74,7 @@
    "affiliations": ["IBE_INQ_CARMEN","IBE_INQ_GRANFARO","IBE_INQ_RHODES"],
    "exits": {
     "retire": { "age": 65, "to": "IBE_CLERK" },
-    "fall": { "kia": "death", "seaborn": "death", "heresy": "death", "assassination": "death" },
+    "fall": { "poison": "death", "seaborn": "death", "heresy": "death", "assassination": "death" },
     "switch": []
    },
    "oriPolicyOverride": null,
@@ -334,7 +334,7 @@
     "classes": { "q1": 0.0929, "q2": 0.0465 },
     "gates": [
      { "year": [1035,9999] },
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["crew","runaway"]
    },
@@ -406,7 +406,7 @@
      "title": null,
      "minYears": 5,
      "promo": { "cap": "skill", "k": 0.2 },
-     "fall": { "base": 0.035, "causes": ["seaborn","kia","ruin"] }
+     "fall": { "base": 0.035, "causes": ["seaborn","raid","ruin"] }
     },
     {
      "id": "keeper",
@@ -414,7 +414,7 @@
      "title": "등대지기",
      "minYears": 15,
      "promo": { "cap": "skill", "k": 0.1 },
-     "fall": { "base": 0.035, "causes": ["seaborn","kia","ruin"] }
+     "fall": { "base": 0.035, "causes": ["seaborn","raid","ruin"] }
     },
     {
      "id": "naming",
@@ -422,7 +422,7 @@
      "title": null,
      "minYears": 0,
      "promo": null,
-     "fall": { "base": 0.035, "causes": ["seaborn","kia","ruin"] }
+     "fall": { "base": 0.035, "causes": ["seaborn","raid","ruin"] }
     }
    ],
    "income": { "stage": [0.4,0.8,0.9], "job": "lighthouse_keeper" },
@@ -430,7 +430,7 @@
    "affiliations": ["IBE_LIG_GRANFARO","IBE_LIG_ROCKY"],
    "exits": {
     "retire": { "age": 75, "to": "IBE_FARM" },
-    "fall": { "seaborn": "death", "kia": "death", "ruin": "demote" },
+    "fall": { "seaborn": "death", "raid": "death", "ruin": "demote" },
     "switch": []
    },
    "oriPolicyOverride": null,
@@ -563,7 +563,7 @@
     "ages": [12,40],
     "classes": { "q2": 0.1626 },
     "gates": [
-     { "urban": false, "weight": 2 }
+     { "urban": false }
     ],
     "via": ["family"]
    },

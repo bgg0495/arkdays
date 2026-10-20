@@ -2,7 +2,7 @@
 import { normCdf } from '../engine/rng.js';
 import { humanAge } from '../engine/lifetable.js';
 import { toLMD } from '../engine/finance.js';
-import { FOCUS, focusDef, isTrackFocus, trackName, migrationSummary, capProfile } from '../engine/sim.js';
+import { FOCUS, focusDef, isTrackFocus, trackName, migrationSummary, capProfile, dreamStatus, koAge } from '../engine/sim.js';
 import { num, lmd } from './dom.js';
 import { eun, iga, eul, wa, ro, euro } from '../engine/text.js';
 import { deathTexts } from '../../content/death_texts.js';
@@ -246,6 +246,8 @@ export function deathSummary(sim) {
   if (S.flags.bornInfected) s.push('태어날 때부터 감염자였습니다.');
   if (d.age >= 6) s.push(S.flags.noSchool ? '학교는 다니지 못했습니다.' : S.flags.casterRoute ? '아츠 수련 과정을 마쳤습니다.' : S.edu >= 4 ? '대학까지 다녔습니다.' : S.edu >= 3 ? '상급 학교까지 다녔습니다.' : S.edu >= 2 ? '중학교까지 다녔습니다.' : S.edu >= 1 ? '초등학교까지 다녔습니다.' : '');
   if (S.flags.childLabor != null) s.push(S.flags.childLabor + '세부터 일했습니다.');
+  // W16(D56): 어릴 적 꿈
+  if (S.dream && S.dream.id) { const dt = sim.data.trackById[S.dream.id]; if (dt) s.push(S.flags.dreamDone != null ? '어릴 적 꿈대로 ' + ro(dt.name) + ' 살았습니다.' : S.flags.dreamGiven > 1 ? koAge(S.flags.dreamGiven) + '에 ' + dt.name + '의 꿈을 접었습니다.' : '어릴 적에는 ' + iga(dt.name) + ' 되고 싶었으나 되지 못했습니다.'); }
   const th = trackHistSentences(sim);   // v1: 진로 이력 1~2문장
   const lastJob = S.job || lastJobOf(S);
   if (th.length) s.push(...th);
@@ -265,6 +267,12 @@ export function deathSummary(sim) {
   if (mig) s.push(mig); else if (S.mig) s.push(ro(nationName(sim, S.mig)) + ' 옮겨 가 살았습니다.');
   s.push(deathTexts(sim).line);  // W4c: 사인별 문장(content/death_texts.js)
   return s.filter(Boolean).join(' ').replace(/\s+/g, ' ');
+}
+/** W16(D56): 신원 카드 '꿈' 줄 — "○○ — 조건 n/m" / 이룸 / 접음. title 에 조건 힌트 */
+export function dreamLine(sim) {
+  const d = dreamStatus(sim); if (!d) return null;
+  const text = d.done ? d.name + ' · 이룸' : d.given ? d.name + ' · 접음' : d.m ? d.name + ' — 조건 ' + d.n + '/' + d.m : d.name;
+  return { text, title: d.gates.map((g) => (g.ok ? '○ ' : '× ') + g.hint).join('\n'), done: d.done, given: d.given };
 }
 export function lastJobOf(S, skip = []) {
   for (let i = S.years.length - 1; i >= 0; i--) if (S.years[i].job && !skip.includes(S.years[i].job)) return S.years[i].job;

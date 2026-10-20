@@ -253,7 +253,7 @@
     "ages": [12,40],
     "classes": { "q1": 0.1598, "q2": 0.4396 },
     "gates": [
-     { "urban": false, "weight": 2 }
+     { "urban": false }
     ],
     "via": ["family"]
    },
@@ -385,7 +385,8 @@
     "ages": [14,45],
     "classes": { "q1": 0.0959, "q2": 0.1199 },
     "gates": [
-     { "urban": false, "weight": 2 }
+     { "urban": false, "weight": 2 },
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["village","diagnosed"]
    },
@@ -569,7 +570,7 @@
     "ages": [14,30],
     "classes": { "q1": 0.2637 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["tribal","pmc","deserter"]
    },

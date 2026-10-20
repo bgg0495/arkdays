@@ -243,8 +243,8 @@ export const events = [
   E('lat_mon_aff_ambrosius', [8, 100], ['aff:LAT_MON_AMBROSIUS'], 30, 2, (s) => ({ t: s.year < 1099 ? '암브로시우스 이동 수도원이 또 국경 하나를 넘었습니다. 창밖 풍경이 매주 바뀌었습니다.' : '암브로시우스 수도원이 라테라노에 돌아온 뒤였습니다. 바퀴는 멈췄고 기도 시간은 같았습니다.', k: 'note' })),
   E('lat_mon_aff_nursery', [8, 100], ['aff:LAT_MON_NURSERY'], 30, 3, () => ({ t: '양육 신전에서 아기들을 받았습니다. 탄생 의식에서 리베리 아기에게도 같은 말로 축복했습니다.', k: 'warm', fx: { h: 1 } })),
 
-  // ══════════ LAT_GUARD 랜든 경비대 궁수 ══════════
-  E('lat_gua_bel_register', [16, 40], [T('LAT_GUARD', 'believer')], 30, 2, () => ({ t: '랜든 수도원 신도로 등록했습니다. 라테라노 사람이 아니어도 활은 쥘 수 있었습니다.', k: 'ev' })),
+  // ══════════ LAT_GUARD 수도원 경비대(W15: 랜든·알스터·암브로시우스 소속) ══════════
+  E('lat_gua_bel_register', [16, 40], [T('LAT_GUARD', 'believer')], 30, 2, () => ({ t: '수도원 신도로 등록했습니다. 라테라노 사람이 아니어도 활은 쥘 수 있었습니다.', k: 'ev' })),
   E('lat_gua_bel_bow', [16, 40], [T('LAT_GUARD', 'believer')], 30, 2, () => ({ t: '수도원 뜰에서 활을 쏘았습니다. 열 발 중 세 발이 표적에 갔습니다.', k: 'ev', fx: { cap: { skill: 0.05 } } })),
   E('lat_gua_arc_wall', [17, 55], [T('LAT_GUARD', 'archer')], 30, 2, () => ({ t: '경비대 궁수로 수도원 담장을 지켰습니다. 넘어오는 사람보다 넘어가는 빵이 많았습니다.', k: 'note' })),
   E('lat_gua_arc_escort', [17, 55], [T('LAT_GUARD', 'archer')], 30, 3, () => ({ t: '용병 계약으로 외부 호위를 나갔습니다. 수호총을 든 호위대원들이 궁수를 신기하게 보았습니다.', k: 'ev', fx: { standing: 2 } })),
@@ -263,6 +263,8 @@ export const events = [
     heresy: '교리 문제로 수도원과 나라를 함께 떠났습니다.',
     _: '경비대를 나왔습니다. 활 쏘는 손가락의 굳은살은 오래 남았습니다.',
   }),
+  E('lat_gua_aff_alster', [16, 60], ['aff:LAT_GUA_ALSTER'], 25, 3, () => ({ t: '알스터 수도원 경비. 포도밭 담이 길었고, 순찰은 포도가 익을수록 잦았습니다.', k: 'note' })),
+  E('lat_gua_aff_ambrose', [16, 60], ['aff:LAT_GUA_AMBROSE'], 25, 3, () => ({ t: '암브로시우스 수도원 경비. 필사실 창 아래 초소였고, 밤에는 종이 넘기는 소리만 들렸습니다.', k: 'warm' })),
   E('lat_gua_aff_landen', [16, 60], ['aff:LAT_GUA_LANDEN'], 25, 3, () => ({ t: '랜든 수도원 직속 경비. 빵 냄새가 초소까지 왔습니다.', k: 'warm' })),
   E('lat_gua_aff_notary', [16, 60], ['aff:LAT_GUA_NOTARY'], 25, 3, () => ({ t: '공증소 이관 뒤 집행자가 초소를 점검했습니다. 활을 보고 서류에 "총기 외 무기"라고 적었습니다.', k: 'note' })),
 
@@ -396,7 +398,7 @@ export const events = [
 
   // ══════════ LAT_FALLEN 타락·추방 산크타 (강제) ══════════
   // 발병 → 엔진이 즉시 추방(정책 expel). 그다음 해 국외에서 공증소 관리 진로로 들어간다. 진로의 nation 이 라테라노라 enterTrack 이 되돌려 보내지 않도록 cur 를 잠시 맞춘다.
-  E('lat_fallen_judged', [1, 95], ['laterano', 'stigma:infected', 'migrant', '!' + T('LAT_FALLEN'), '!rhodes'], 200, 0, (s) => {
+  E('lat_fallen_judged', [1, 95], ['born:laterano', 'stigma:infected', 'migrant', '!' + T('LAT_FALLEN'), '!rhodes'], 200, 0, (s) => {
     const S = s.S; S.flags.latFallen = S.age;
     const cur = S.cur, root = S.root; S.cur = NAT; S.root = NAT;
     const ok = s.enterTrack('LAT_FALLEN', { how: 'forced', via: 'diagnosed', aff: 'LAT_FAL_EXPELLED', quiet: true });
@@ -439,9 +441,9 @@ export const events = [
   // ══════════ 종족 관계: 산크타(race:sankta) ══════════
   E('lat_san_license', [16, 17], [N, 'race:sankta'], 80, 0, () => ({ t: '총기 면허 시험. 사격 5발, 필기 10문항. 합격증은 공증소 도장이 찍혀 나왔습니다.', k: 'ev', fx: { cap: { skill: 0.05 } }, f: F('공증소 총기 면허 시험 요강') })),
   E('lat_san_school_end', [19, 20], [N, 'race:sankta'], 60, 0, () => ({ t: '열네 해 무상교육이 끝났습니다. 마지막 수업은 총기 안전이었습니다.', k: 'ev' })),
-  E('lat_san_empathy', [14, 90], [N, 'race:sankta'], 25, 4, () => ({ t: '이웃의 슬픔이 광륜을 타고 먼저 왔습니다. 무슨 일인지는 나중에 들었습니다.', k: 'note', fx: { h: -1 } })),
-  E('lat_san_quarrel', [14, 90], [N, 'race:sankta'], 20, 5, () => ({ t: '공감으로 전해진 감정과 입 밖의 말이 어긋났습니다. 작은 의견 차이가 하루 종일 갔습니다.', k: 'bad', fx: { h: -2 } })),
-  E('lat_san_abroad_silence', [16, 90], ['laterano', 'race:sankta', 'migrant', '!rhodes'], 20, 5, () => ({ t: '라테라노를 떠나 지낸 지 오래였습니다. 광륜의 공감이 닿는 사람이 주위에 없었고, 침묵이 길었습니다.', k: 'note', fx: { h: -2 } })),
+  E('lat_san_empathy', [14, 90], [N, 'race:sankta'], 25, 8, () => ({ t: '이웃의 슬픔이 광륜을 타고 먼저 왔습니다. 무슨 일인지는 나중에 들었습니다.', k: 'note', fx: { h: -1 } })),
+  E('lat_san_quarrel', [14, 90], [N, 'race:sankta'], 20, 8, () => ({ t: '공감으로 전해진 감정과 입 밖의 말이 어긋났습니다. 작은 의견 차이가 하루 종일 갔습니다.', k: 'bad', fx: { h: -2 } })),
+  E('lat_san_abroad_silence', [16, 90], ['born:laterano', 'race:sankta', 'migrant', '!rhodes'], 20, 5, () => ({ t: '라테라노를 떠나 지낸 지 오래였습니다. 광륜의 공감이 닿는 사람이 주위에 없었고, 침묵이 길었습니다.', k: 'note', fx: { h: -2 } })),
 
   // ══════════ 이주 신참: 라테라노의 이방인 공민(newcomer) ══════════
   E('lat_new_sankta', [10, 80], [N, 'newcomer', 'race:sankta'], 60, 0, () => ({ t: '외국에서 태어난 산크타도 공민이었습니다. 공증소 창구에서 공민증이 그날 나왔습니다.', k: 'warm', fx: { h: 2 } })),

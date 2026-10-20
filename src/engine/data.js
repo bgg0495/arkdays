@@ -21,7 +21,7 @@ const NATION_DEFAULTS = {
   mig: {}, refugeeIn: true, naturalize: 'hard', illegalRisk: 0.08, expelsInfected: false, slaveP: 0,
 };
 const INHERIT = ['model', 'custom', 'statMul', 'policy', 'policyVariants', 'oriExp', 'catFreq', 'conflict', 'nomadic', 'seaborn', 'collapsal',
-  'conscript', 'conscriptSex', 'homemakerP', 'races', 'jobs', 'threats', 'nameLang', 'canon', 'stats', 'statOrg', 'culture',
+  'conscript', 'conscriptUntil', 'conscriptSex', 'homemakerP', 'races', 'jobs', 'threats', 'nameLang', 'canon', 'stats', 'statOrg', 'culture',
   'mig', 'refugeeIn', 'naturalize', 'illegalRisk', 'expelsInfected', 'slaveP'];
 const STAT_FALLBACK = { le: 50, u5: 0.15, im: 0.1, ppp: 2000, gini: 0.4, urb: 0.4, tfr: 4.5, pop: 1 };
 
@@ -193,7 +193,7 @@ export function normTrack(t, warnings, affById, fallDefaults = {}) {
     oriPolicyOverride: null, canonFigures: [], standing: { name: '평판', start: 20 }, affiliations: [], ...t };
   if (!o.job && t.income && t.income.job) o.job = t.income.job;          // W8: income.job
   o.archetype = ARCHETYPES[t.archetype] ? t.archetype : 'A11';
-  o.A = A;
+  o.A = t.archFlags ? { ...A, flags: { ...A.flags, ...t.archFlags } } : A;   // W14: 진로가 원형 flags 를 덮어쓸 수 있다(URS_NOBLE: A3 인데 시험 없음)
   o.entry = { ages: [15, 40], classes: {}, gates: [], via: [], ...(t.entry || {}) };
   if (!Array.isArray(o.entry.ages) || o.entry.ages.length !== 2) o.entry.ages = [15, 40];
   o.entry.gates = Array.isArray(o.entry.gates) ? o.entry.gates : [];
@@ -255,7 +255,7 @@ function prepareV1(raw, data) {
     nations.push(rn); nationById.rhodes = rn; data.topNations.push(rn);
   }
   // ── 소속 ──
-  const affs = listOf(raw.affiliations, 'affiliations').map((a) => ({ canon: false, weight: 1, tags: [], events: null, ...a,
+  const affs = listOf(raw.affiliations, 'affiliations').map((a) => ({ canon: false, weight: 1, tags: [], events: null, gates: [], ...a,   // W15: gates[]
     track: Array.isArray(a.track) ? a.track : (a.track ? [a.track] : []), mods: { promo: 1, fall: 1, income: 1, standingStart: 0, ...(a.mods || {}) } }));
   const affById = Object.fromEntries(affs.map((a) => [a.id, a]));
   // ── 진로 ──

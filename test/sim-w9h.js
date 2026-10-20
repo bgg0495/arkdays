@@ -109,7 +109,7 @@ function main() {
   }
 
   // 2b) 강제 진로 진입 시나리오(출생 연도 범위 밖·classes 없는 진로의 단계 이벤트를 밟아 본다)
-  const forced = [['KZD_COMMISSION', 'kazdel', 1062], ['KZD_BABEL', 'kazdel', 1050], ['KZD_SLAVE', 'kazdel', 1065], ['KZD_DIASPORA', 'kazdel', 1085], ['KZD_ASSASSIN', 'kazdel', 1085], ['KZD_FACTORY', 'kazdel', 1085], ['KZD_CONFESSOR', 'kazdel', 1085], ['KZD_CHILD', 'kazdel', 1088], ['DUR_LIFT', 'durin', 1085], ['DUR_SURFACE', 'durin', 1085], ['COM_BLACKSTEEL_EXCHANGE', 'columbia', 1080], ['COM_MERC_STATE', 'victoria', 1085], ['COM_MERC_PMC', 'columbia', 1085], ['COM_BOUNTY', 'bolivar', 1085], ['COM_PENGUIN', 'lungmen', 1085], ['COM_CC', 'columbia', 1085], ['COM_PENGUIN_IDOL', 'lungmen', 1088], ['RHO_CONTRACTOR', 'kazdel', 1085]];
+  const forced = [['KZD_COMMISSION', 'kazdel', 1062], ['KZD_BABEL', 'kazdel', 1050], ['KZD_SLAVE', 'kazdel', 1065], ['KZD_DIASPORA', 'kazdel', 1085], ['KZD_ASSASSIN', 'kazdel', 1085], ['KZD_FACTORY', 'kazdel', 1085], ['KZD_CONFESSOR', 'kazdel', 1085], ['KZD_CHILD', 'kazdel', 1088], ['DUR_LIFT', 'durin', 1085], ['DUR_SURFACE', 'durin', 1085], ['COM_MERC_STATE', 'victoria', 1085], ['COM_MERC_PMC', 'columbia', 1085], ['COM_BOUNTY', 'bolivar', 1085], ['COM_CC', 'columbia', 1085], ['RHO_CONTRACTOR', 'kazdel', 1085]];
   const forcedRes = {};
   for (const [id, nation, by] of forced) {
     let ent = 0, err = 0; const t = data.trackById[id]; const age0 = Math.max(t.entry.ages[0], id === 'KZD_CHILD' ? 7 : 16);

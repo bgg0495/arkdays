@@ -109,3 +109,64 @@ node test/lint-content.js          # 정적 린트 L1~L7 + 데이터 교차 검�
 - `audit.js` 출력은 항목마다 "건수 / 원인 수 → 상위 12 원인 `[파일:줄]` → 예시 3개 → 보조 집계(국가·쌍·k)" 순이고, 끝에 항목별 요약표와 통과/실패가 찍힌다. 수정 뒤에는 **해당 항목의 건수가 0 또는 오탐 잔여만 남는지**를 본다(이 보고서 §4 의 오탐 목록은 그대로 남는다).
 - 새 종류의 결함을 추가하려면 `audit.js` 의 `NATION_RULES`(국가 데이터 모순)·`TEXT_RULES`(문장 패턴)·`analyzeLife()`(상태 교차) 중 한 곳에 규칙을 더하고, 심각 판정은 `SEVERE` 배열에 키를 넣는다. `lint-content.js` 는 `ENV_WORDS`(고유어 사전 80여 개)와 `checkTag()` 가 확장점.
 - 시드가 같으면 결과가 같다(`--seed qa` 기본). W12 가 콘텐츠를 바꾸면 피드 추첨이 달라져 건수가 흔들리므로 **항목이 0 이 되는지**로 보고, 수치 비교는 같은 커밋 안에서만.
+
+---
+
+## 7. W14 처리 결과 (2026-10-20)
+
+- **기준**: 전 = 이 보고서를 쓴 워킹트리에 `node test/audit.js 100 1000`(3,100생, 심각 197건 · 실패). 후 = 수정 뒤 `node test/audit.js 200 3000`(7,200생, 454초, 예외 0, **심각 0건 · 통과**). 생 수가 2.3배이므로 건수는 생당 비율로 읽을 것(표 아래 메모). 정적 린트 `node test/lint-content.js`: L1 13→2(격리 플래그 분기·후일담, 새는 것 아님)·L4 180→0·L2 0.
+- 수정 내용은 `docs/설계_명세_v1.md` "W14 메모" §1(§5 번호 순). 감사 도구 자체의 오탐 보정 목록은 같은 메모 §2.
+
+| 항목 | 감사 키 | 전(3,100생, 원인 수) | 후(7,200생, 원인 수) |
+|---|---|---|---|
+| A1·A6 출생국 태그 누수 | bornTagLeak, undefined | 3053 (183) | 0 (0) |
+| A2·A3 이동도시 문장(정주·nomadic 0) | settledHome, nomadic0 | 1199 (58) | 215 (26) |
+| A4 묵인 국가의 격리·수용소 | policyNoCamp | 427 (8) | 26 (5) |
+| A5 [object Object] | object | 31 (2) | 0 (0) |
+| A7 조사 오류 | josa, josa(결정), josa(선택지) | 433 (7) | 104 (6) |
+| A8 단일 선택지 | singleChoice | 77 (2) | 0 (0) |
+| A9 sub 없는 선택지 | noSub, badSub | 18797 (165) | 0 (0) |
+| A10 신원 카드 겹말·이중 소속 | cardRedundant, twoAffsCard | 3112 (70) | 0 (0) |
+| A11 같은 문장 4회+ | repeat4 | 17571 (1286) | 29794 (1782) |
+| A12 연속 2년 같은 문장 | consecutiveYears | 972 (94) | 996 (121) |
+| A13 지역·환경 전용 진로 후보 | candRegionOff, candRuralNameUrban, candForeign | 655 (25) | 5 (1) |
+| A14 빚 폭주(−20×중위) | moneyNegative | 117 (22) | 17 (2) |
+| B1 죽은 부모 재등장 | deadMom, deadDad | 571 (59) | 17 (6) |
+| B2 자녀 없는데 자녀 문장 | kidsNone | 823 (16) | 32 (3) |
+| B3·B4·B5 사인 불일치 | deathMismatch | 74 (10) | 48 (7) |
+| B6 minYears 무시 승급 | minYearsPromo | 68 (14) | 96 (9) |
+| B7 원형에 안 맞는 몰락 사유 | fallCauseOddForArchetype | 40 (14) | 13 (6) |
+| B8 감염 판정 없이 감염자 취급 / 선언 없는 사유 | infectedUnknown, fallCauseUndeclared | 84 (5) | 15 (2) |
+| B9 진로 없는데 직장 문장 | workNoTrack | 221 (17) | 223 (17) |
+| B10 로도스 거주 중 거주국 생활 | rhodesResidentEvent | 219 (26) | 12 (2) |
+| B11 미혼에 아내 | spouseUnmarried | 27 (5) | 1 (1) |
+| B12 60세+ 첫 월급·면접 | old60 | 6 (4) | 8 (2) |
+| B13 살카즈 놀림(중립 국가) | discrimNeutral | 44 (4) | 74 (7) |
+| B14 바다 없는 나라의 어부 | landlocked | 20 (1) | 6 (3) |
+| B15 징집 없는 나라의 징집 | conscriptNone | 23 (5) | 0 (0) |
+| B16 같은 결정 3회+ | decision3x | 2994 (80) | 7047 (91) |
+| B17 역량 등급 로그 지연 | capGradeNoLog | 249 (1) | 0 (0) |
+| B18 전직 비인접 | switchNonAdjacent | 0 (0) | 0 (0) |
+| B19 각주 없는 숫자(정보) | digitNoFootnote | 3519 (76) | 7978 (87) |
+| B20 catFreq 1 재앙(정보·데이터) | catFreq1 | 122 (3) | 187 (2) |
+| C1 캐논 인물 중복 | canonTwice, canonOver3 | 8 (7) | 1 (1) |
+| C3 단계 역행(재진입) | stageRegress | 3 (1) | 0 (0) |
+| C6 각주 있는 비숫자 문장(엔진이 버림) | footnoteNoDigit | 298817 (430) | 619877 (422) |
+| (기타) 붕괴체·시테러 false | collapsalFalse, seabornFalse | 1 (1) | 0 (0) |
+| (기타) 감옥 중 여행·칭호 앞서감(오탐) | prisonTravel, titleAhead | 696 (5) | 1783 (5) |
+
+심각 합계: 전 197 → 후 0 (생 3100 → 7200)
+
+**남은 건수 읽기**
+- A2·A3 215건: `yan_visit_chidao`·`rim_visit_in_catastrophe`(순회형·기항 방문국 문장, 거주지와 무관) 91, `career_talk`('이동도시 승무원' 부모 직업 — 정주 출생에 nomad_crew 부모가 걸린 것, jobs.json `only` 로 국가는 걸렀고 가정 유형은 안 거름) 12, 림 플레이트 건설 노동(`rim_bui_*`, 직업 자체가 플레이트) 22, 카시미어 감염자 구역(`kz_ghe_*`) 17 — 전부 거주 환경이 아니라 직업·방문 문장. nomadic 0 국가(`nomadic0`)는 0.
+- A7 104건: 전부 '니콜라이'(=니콜라+이, 보고서 C9)와 `track_promo` 본문의 '대장로' 서임(=대장+로) 오탐. 실제 조사 오류(`night_cry` 소운는) 0.
+- A11: 생당 5.7회(17,571/3,100) → 4.1회(29,794/7,200), 상위 원인 `money_tax` 1,122 → 7,200생에서 0(생애 2회 상한 ×0.1 + gap 8). A12: 생당 0.31 → 0.14, 남은 것은 치매·지병·전시·교대 근무 연간 이벤트(설계).
+- B6 96건: 전부 콘텐츠의 `promote({force:true})`(LEI_QUAR 병 진행 64, URS_UNIV·COL_SLUM·SAR_MINE 입단 서사). 엔진 승급·`track_promo` 경로는 0.
+- B9 223건: 엔진 '해고. ○○는 끝났습니다'(이탈 뒤 기록이라 진로가 null) 112 + 몰락 후일담 `*_after` — 보고서 §4 오탐 목록 그대로.
+- B13 74건: `kje_rel_sarkaz`·`sam_rel_sarkaz`("뿔 때문에 묻는 사람이 없었습니다", 차별 없음을 말하는 문장) 62 + 혼인 반대(상대 종족 기준) — 오탐. `teased_sarkaz` 는 0.
+- B16 7,047건: `track_promo` ×3(gap 2·단계당 3회 상한 안) 3,558, `track_choose` ×3+(전직·해고 뒤 재진입, gap 없음) 1,592, 계약 만료·귀향·주거(주기형) 1,072 — 설계. 콘텐츠 반복 결정은 gap 5+ 로 모두 3회 미만.
+- B3·B5 48건: 전부 진로 데이터 `fall.causes` 가 선언한 사인(LEI_MUSIC 후원자 암살, KAZ_SLAVE 처형, 로도스 본함 재앙 15). 비감염 결정화 사망(B3) 0, 붕괴체 없는 나라의 붕괴체 사망(B4) 0.
+- A14 17건: 카즈델 출생자가 컬럼비아 빈민가에서 진 빚이 **그 해 거주국 중위**(컬럼비아 10만 LMD) 기준 −3배 상한 안에 있다가 귀향한 경우 15 — 상한 자체는 작동(2년 연속 초과 시 채무 정리 기록 확인).
+- B19·B20·C6·`titleAhead`·`digitNoFootnote` 는 정보 항목(보고서 §3·§4).
+
+**검증 수치**: `node test/sim.js 2000` 예외 0 · 수명 Δ −3.7(±5 이탈 없음) · 로도스 3.1% / 감염자 중 7.7% · 이주 17.2% · 진로 경험 79.8% · 기록 175.6줄/생. `node test/sim-nations.js 150` 3,150생 예외 0 · 로도스 3.0% / 10.8% · 이주 15.8% · 캐논 인물 ≤3. `check-text` 조사 0·하드코딩 0·금지 0·각주 10.6%. `validate-data` 통과, `validate-tracks` 오류 0(경고 71: 복합 칭호 `·` 38·원형 밖 사유·환경 진로). `npm run build` 2,606.5 KB → `verify.js`·`verify-death.js 3`·`shot-theme.js` 통과, 브라우저 1생(컬럼비아 농촌 리베리 → 개척민 팀원·팀 리더·보안관, 42세 베헤모스 습격).

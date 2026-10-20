@@ -20,7 +20,7 @@
     "ages": [12,40],
     "classes": { "q2": 0.3909 },
     "gates": [
-     { "urban": false, "weight": 2 }
+     { "urban": false }
     ],
     "via": ["family","tenant","village"]
    },
@@ -143,7 +143,8 @@
     "ages": [14,40],
     "classes": { "q2": 0.1303 },
     "gates": [
-     { "urban": false, "weight": 1.5 }
+     { "urban": false, "weight": 1.5 },
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["village","debt"]
    },
@@ -317,7 +318,7 @@
     "ages": [16,30],
     "classes": { "q1": 0.2172, "q2": 0.0869, "q3": 0.0434, "q4": 0.2172, "q5": 0.1737 },
     "gates": [
-     { "cap": "skill", "min": -0.8 },
+     { "cap": "skill", "min": -0.3 },
      { "sex": "M", "weight": 3 }
     ],
     "via": ["enlist","noble_levy","border"]
@@ -560,7 +561,8 @@
     "ages": [8,18],
     "classes": { "q2": 0.0434, "q3": 0.1737, "q4": 0.0869 },
     "gates": [
-     { "cap": "learn", "min": 0.5 }
+     { "cap": "learn", "min": 0.5 },
+     { "money": 0.5 }
     ],
     "via": ["local_school","sponsor"]
    },
@@ -575,7 +577,7 @@
     },
     {
      "id": "academy",
-     "name": "백조학궁·지푸 학원",
+     "name": "학원 재학",
      "title": null,
      "minYears": 4,
      "promo": { "cap": "learn", "k": 0.1 },
@@ -696,7 +698,7 @@
      "title": null,
      "minYears": 10,
      "promo": { "cap": "learn", "k": 0.12 },
-     "fall": { "base": 0.025, "causes": ["injury","impeach","backlash"] }
+     "fall": { "base": 0.025, "causes": ["accident","impeach","backlash"] }
     },
     {
      "id": "tianshi",
@@ -704,7 +706,7 @@
      "title": "천사",
      "minYears": 10,
      "promo": { "cap": "learn", "k": 0.06 },
-     "fall": { "base": 0.025, "causes": ["injury","impeach","backlash"] }
+     "fall": { "base": 0.025, "causes": ["accident","impeach","backlash"] }
     },
     {
      "id": "shouye",
@@ -712,7 +714,7 @@
      "title": "수업천사",
      "minYears": 10,
      "promo": { "cap": "learn", "k": 0.03 },
-     "fall": { "base": 0.025, "causes": ["injury","impeach","backlash"] }
+     "fall": { "base": 0.025, "causes": ["accident","impeach","backlash"] }
     },
     {
      "id": "shilang",
@@ -720,7 +722,7 @@
      "title": "시랑",
      "minYears": 12,
      "promo": { "cap": "learn", "k": 0.015 },
-     "fall": { "base": 0.025, "causes": ["injury","impeach","backlash"] }
+     "fall": { "base": 0.025, "causes": ["accident","impeach","backlash"] }
     },
     {
      "id": "head",
@@ -728,7 +730,7 @@
      "title": "수장",
      "minYears": 0,
      "promo": null,
-     "fall": { "base": 0.025, "causes": ["injury","impeach","backlash"] }
+     "fall": { "base": 0.025, "causes": ["accident","impeach","backlash"] }
     }
    ],
    "income": { "stage": [1,2.5,5,10,18], "job": "tianshi_official" },
@@ -736,7 +738,7 @@
    "affiliations": ["YAN_TIANSHI_CIVIL","YAN_TIANSHI_AGRI","YAN_TIANSHI_MIL","YAN_TIANSHI_THUNDER"],
    "exits": {
     "retire": { "age": 80, "to": "YAN_OFFICE" },
-    "fall": { "injury": "injured", "impeach": "disgrace", "backlash": "death" },
+    "fall": { "accident": "injured", "impeach": "disgrace", "backlash": "death" },
     "switch": []
    },
    "oriPolicyOverride": null,

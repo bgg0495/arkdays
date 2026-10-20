@@ -20,7 +20,7 @@
     "ages": [16,19],
     "classes": { "q2": 0.2331, "q3": 0.0999, "q4": 0.2664, "q5": 0.3995 },
     "gates": [
-     { "region": "singas", "weight": 10 }
+     { "region": "singas" }
     ],
     "via": ["mandatory"]
    },
@@ -90,7 +90,7 @@
     "ages": [17,25],
     "classes": { "q2": 0.1665, "q3": 0.0666 },
     "gates": [
-     { "region": "coalition", "weight": 10 }
+     { "region": "coalition" }
     ],
     "via": ["draft","volunteer"]
    },
@@ -151,7 +151,7 @@
     "ages": [12,25],
     "classes": { "q1": 0.1665, "q4": 0.1998 },
     "gates": [
-     { "region": "liberated", "weight": 10 }
+     { "region": "liberated" }
     ],
     "via": ["youth_reserve"]
    },
@@ -223,7 +223,7 @@
      "title": null,
      "minYears": 4,
      "promo": { "cap": "skill", "k": 0.2 },
-     "fall": { "base": 0.04, "causes": ["starvation","accident","ruin","kia"] },
+     "fall": { "base": 0.04, "causes": ["starvation","accident","ruin","raid"] },
      "canon": false
     },
     {
@@ -232,7 +232,7 @@
      "title": null,
      "minYears": 10,
      "promo": { "cap": "skill", "k": 0.1 },
-     "fall": { "base": 0.04, "causes": ["starvation","accident","ruin","kia"] }
+     "fall": { "base": 0.04, "causes": ["starvation","accident","ruin","raid"] }
     },
     {
      "id": "foreman",
@@ -240,7 +240,7 @@
      "title": "반장",
      "minYears": 8,
      "promo": { "cap": "skill", "k": 0.04 },
-     "fall": { "base": 0.04, "causes": ["starvation","accident","ruin","kia"] },
+     "fall": { "base": 0.04, "causes": ["starvation","accident","ruin","raid"] },
      "canon": false
     },
     {
@@ -249,7 +249,7 @@
      "title": null,
      "minYears": 0,
      "promo": null,
-     "fall": { "base": 0.04, "causes": ["starvation","accident","ruin","kia"] }
+     "fall": { "base": 0.04, "causes": ["starvation","accident","ruin","raid"] }
     }
    ],
    "income": { "stage": [0.1,0.3,0.6,0.7], "job": "plantation" },
@@ -257,7 +257,7 @@
    "affiliations": ["BOL_PLA_MELON","BOL_PLA_BEET","BOL_PLA_CACTUS","BOL_PLA_COFFEE","BOL_PLA_CANE"],
    "exits": {
     "retire": { "age": 60, "to": "BOL_PLANT" },
-    "fall": { "starvation": "death", "accident": "death", "ruin": "expel", "kia": "death:war" },
+    "fall": { "starvation": "death", "accident": "death", "ruin": "expel", "raid": "death:violence" },
     "switch": ["BOL_FACTORY","BOL_REFUGEE"]
    },
    "oriPolicyOverride": null,
@@ -275,7 +275,7 @@
     "ages": [14,40],
     "classes": { "q1": 0.1332, "q2": 0.0999 },
     "gates": [
-     { "region": "dossoles", "weight": 5 },
+     { "region": "dossoles" },
      { "urban": true }
     ],
     "via": ["hire"]
@@ -399,7 +399,8 @@
     "classes": { "q3": 0.1998, "q4": 0.1998, "q5": 0.2664 },
     "gates": [
      { "cap": "learn", "min": -0.8 },
-     { "cap": "ties", "min": -0.8 }
+     { "cap": "ties", "min": -0.8 },
+     { "region": "dossoles" }
     ],
     "via": ["hire","connection"]
    },
@@ -460,7 +461,7 @@
     "ages": [16,35],
     "classes": { "q2": 0.0666 },
     "gates": [
-     { "region": "dossoles", "weight": 3 }
+     { "region": "dossoles" }
     ],
     "via": ["hire"]
    },
@@ -514,7 +515,7 @@
     "ages": [18,35],
     "classes": { "q3": 0.1332 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["veteran","hire"]
    },

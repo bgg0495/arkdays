@@ -336,7 +336,8 @@
     "classes": { "q3": 0.0714, "q4": 0.0714 },
     "gates": [
      { "cap": "learn", "min": 0.5 },
-     { "cap": "ties", "min": -0.8 }
+     { "cap": "ties", "min": -0.8 },
+     { "money": 0.5 }
     ],
     "via": ["law_school","patron"]
    },
@@ -452,7 +453,7 @@
     "classes": { "q2": 0.0476 },
     "gates": [
      { "year": [1100,9999] },
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["hire"]
    },
@@ -586,7 +587,7 @@
      "title": null,
      "minYears": 3,
      "promo": { "cap": "skill", "k": 0.2 },
-     "fall": { "base": 0.025, "causes": ["ruin","vendetta","arrest"] }
+     "fall": { "base": 0.025, "causes": ["ruin","protection","arrest"] }
     },
     {
      "id": "clerk",
@@ -594,7 +595,7 @@
      "title": null,
      "minYears": 4,
      "promo": { "cap": "skill", "k": 0.1 },
-     "fall": { "base": 0.025, "causes": ["ruin","vendetta","arrest"] }
+     "fall": { "base": 0.025, "causes": ["ruin","protection","arrest"] }
     },
     {
      "id": "owner",
@@ -602,7 +603,7 @@
      "title": "주인",
      "minYears": 10,
      "promo": { "cap": "skill", "k": 0.04 },
-     "fall": { "base": 0.025, "causes": ["ruin","vendetta","arrest"] }
+     "fall": { "base": 0.025, "causes": ["ruin","protection","arrest"] }
     },
     {
      "id": "house",
@@ -610,7 +611,7 @@
      "title": "명가",
      "minYears": 0,
      "promo": null,
-     "fall": { "base": 0.025, "causes": ["ruin","vendetta","arrest"] }
+     "fall": { "base": 0.025, "causes": ["ruin","protection","arrest"] }
     }
    ],
    "income": { "stage": [0.3,0.7,1.3,2.5], "job": "artisan" },
@@ -618,7 +619,7 @@
    "affiliations": ["SIR_LIV_TAILOR","SIR_LIV_PIZZA","SIR_LIV_CARWASH","SIR_LIV_WINERY"],
    "exits": {
     "retire": { "age": 60, "to": "SIR_LIVING" },
-    "fall": { "ruin": "expel", "vendetta": "death", "arrest": "prison:jail" },
+    "fall": { "ruin": "expel", "protection": "expel", "arrest": "prison:jail" },
     "switch": ["SIR_FAMBIZ","SIR_TRUCK"]
    },
    "oriPolicyOverride": null,

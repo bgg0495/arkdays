@@ -34,7 +34,7 @@
      "title": "집행자",
      "minYears": 4,
      "promo": { "cap": "learn", "k": 0.2 },
-     "fall": { "base": 0.03, "causes": ["kia","impeach","heresy"] }
+     "fall": { "base": 0.03, "causes": ["exile","impeach","heresy"] }
     },
     {
      "id": "senior",
@@ -42,7 +42,7 @@
      "title": "선임 집행자",
      "minYears": 8,
      "promo": { "cap": "learn", "k": 0.08 },
-     "fall": { "base": 0.03, "causes": ["kia","impeach","heresy"] }
+     "fall": { "base": 0.03, "causes": ["exile","impeach","heresy"] }
     },
     {
      "id": "head",
@@ -50,7 +50,7 @@
      "title": "공증소장",
      "minYears": 10,
      "promo": { "cap": "learn", "k": 0.01 },
-     "fall": { "base": 0.03, "causes": ["kia","impeach","heresy"] },
+     "fall": { "base": 0.03, "causes": ["exile","impeach","heresy"] },
      "canon": false
     },
     {
@@ -59,7 +59,7 @@
      "title": "성인",
      "minYears": 0,
      "promo": null,
-     "fall": { "base": 0.03, "causes": ["kia","impeach","heresy"] }
+     "fall": { "base": 0.03, "causes": ["exile","impeach","heresy"] }
     }
    ],
    "income": { "stage": [1.2,2.2,4,4], "job": "notary" },
@@ -67,7 +67,7 @@
    "affiliations": ["LAT_NOT_PAGUS","LAT_NOT_FALLEN","LAT_NOT_ABROAD"],
    "exits": {
     "retire": { "age": 65, "to": "LAT_DESSERT" },
-    "fall": { "kia": "death", "impeach": "disgrace", "heresy": "exile" },
+    "fall": { "exile": "exile", "impeach": "disgrace", "heresy": "exile" },
     "switch": ["LAT_CURIA"]
    },
    "oriPolicyOverride": null,
@@ -162,7 +162,7 @@
      "title": null,
      "minYears": 4,
      "promo": { "cap": "ties", "k": 0.2 },
-     "fall": { "base": 0.03, "causes": ["kia","scandal","impeach"] }
+     "fall": { "base": 0.03, "causes": ["exile","scandal","impeach"] }
     },
     {
      "id": "legatus",
@@ -170,7 +170,7 @@
      "title": "전달자",
      "minYears": 8,
      "promo": { "cap": "ties", "k": 0.1 },
-     "fall": { "base": 0.03, "causes": ["kia","scandal","impeach"] }
+     "fall": { "base": 0.03, "causes": ["exile","scandal","impeach"] }
     },
     {
      "id": "chief",
@@ -178,7 +178,7 @@
      "title": "수석 전달자",
      "minYears": 0,
      "promo": null,
-     "fall": { "base": 0.03, "causes": ["kia","scandal","impeach"] },
+     "fall": { "base": 0.03, "causes": ["exile","scandal","impeach"] },
      "canon": false
     }
    ],
@@ -187,7 +187,7 @@
    "affiliations": ["LAT_LEG_7","LAT_LEG_APPLEPIE"],
    "exits": {
     "retire": { "age": 65, "to": "LAT_CURIA" },
-    "fall": { "kia": "death", "scandal": "expel", "impeach": "disgrace" },
+    "fall": { "exile": "exile", "scandal": "expel", "impeach": "disgrace" },
     "switch": []
    },
    "oriPolicyOverride": null,
@@ -205,7 +205,7 @@
     "ages": [16,26],
     "classes": { "q2": 0.1665, "q3": 0.0416, "q4": 0.2081 },
     "gates": [
-     { "cap": "skill", "min": -0.8 },
+     { "cap": "skill", "min": -0.3 },
      { "race": ["sankta"], "weight": 3 },
      { "race": ["sarkaz"], "weight": 0 }
     ],
@@ -329,7 +329,7 @@
    "id": "LAT_GUARD",
    "nation": "laterano",
    "region": null,
-   "name": "랜든 경비대 궁수",
+   "name": "수도원 경비대",
    "archetype": "A6",
    "canon": true,
    "itinerant": false,
@@ -338,7 +338,7 @@
     "classes": { "q1": 0.2747, "q2": 0.0833 },
     "gates": [
      { "race": ["sankta"], "weight": 0.2 },
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["believer"]
    },
@@ -400,7 +400,7 @@
     "ages": [14,28],
     "classes": { "q3": 0.1249, "q4": 0.1665 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["apprentice"]
    },
@@ -782,7 +782,7 @@
    "exits": {
     "retire": null,
     "fall": { "crystallize": "death", "starvation": "death", "kia": "death" },
-    "switch": ["COM_PENGUIN","COM_BLACKSTEEL","SIR_CLERGY"]
+    "switch": ["SIR_CLERGY","COM_MERC_PMC"]
    },
    "oriPolicyOverride": null,
    "canonFigures": ["mostima"]

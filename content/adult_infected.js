@@ -15,8 +15,8 @@ export const events = [
   { id: 'inf_unknown_fatigue', a: [19, 64], tags: ['infected', '!known'], w: 25, gap: 4,
     run: (s) => ({ t: s.rng.pick(['몸이 자주 무거웠습니다. 나이 탓이라고 했습니다. 스물몇에.', '손끝이 가끔 저렸습니다. 일이 많아서라고 생각했습니다.', '밤에 열이 났다가 아침에 내렸습니다. 의사에게는 가지 않았습니다.']), k: 'note', fx: { hl: -1 },
       f: rhodesF('소책자 「조기 증상은 대개 무시된다」') }) },
-  { id: 'ori_rumor_adult', a: [19, 64], w: 12, gap: 6, c: (s) => s.nation.oriExp >= 2 && !known(s),
-    run: (s) => ({ t: s.rng.pick(['이웃이 어느 날 사라졌습니다. 격리구역으로 갔다는 소문이었습니다.', '시장 입구에 검진 천막이 섰습니다. 사람들이 돌아서 갔습니다.', '길에서 소매를 걷어 보라는 순찰이 있었습니다. 저는 걷었고, 앞사람은 걷지 못했습니다.']), k: 'note', fx: { h: -2 },
+  { id: 'ori_rumor_adult', a: [19, 64], tags: ['!rhodes'], w: 12, gap: 8, c: (s) => s.nation.oriExp >= 2 && !known(s) && !['ignore', 'treat', 'favored'].includes(s.policy),   // W14(QA A4): 묵인·치료 국가에는 검진·격리 소문이 없다
+    run: (s) => ({ t: s.rng.pick([['quarantine', 'euthanasia', 'persecute'].includes(s.policy) ? '이웃이 어느 날 사라졌습니다. ' + (s.policy === 'persecute' ? '수용소로' : '격리구역으로') + ' 갔다는 소문이었습니다.' : '이웃이 어느 날 이사를 갔습니다. 보험료 때문이라는 소문이었습니다.', '시장 입구에 검진 천막이 섰습니다. 사람들이 돌아서 갔습니다.', '길에서 소매를 걷어 보라는 순찰이 있었습니다. 저는 걷었고, 앞사람은 걷지 못했습니다.']), k: 'note', fx: { h: -2 },
       f: orgF(s, '감염자 등록 월보') }) },
 
   // ── 숨기는 삶 ──
@@ -29,21 +29,21 @@ export const events = [
   { id: 'inf_hidden_partner', a: [19, 64], w: 40, c: (s) => hidden(s) && !!partner(s) && !s.S.flags.hiddenPartnerTold,
     run: (s) => { s.S.flags.hiddenPartnerTold = true;
       const tell = s.rng.chance(0.6);
-      return { t: tell ? partner(s).name + '에게 말했습니다. 오래 말이 없었고, 그 뒤로 둘이 숨겼습니다.' : partner(s).name + '에게는 말하지 않았습니다. 같은 집에서 다른 소매를 입었습니다.', k: tell ? 'note' : 'bad', fx: tell ? { so: 2, h: -1 } : { so: -3, h: -3 },
+      return { t: tell ? partner(s).name + '에게 말했습니다. 오래 말이 없었고, 그 뒤로 둘이 숨겼습니다.' : partner(s).name + '에게는 말하지 않았습니다. 같은 집에서 다른 소매를 입었습니다.', k: tell ? 'note' : 'bad', fx: tell ? { h: -1, cap: { ties: 0.02 } } : { h: -3, cap: { ties: -0.03 } },
         f: F('기록된 바 없음') }; } },
 
   // ── 알려진 감염자의 일상 ──
   { id: 'inf_known_work', a: [19, 64], tags: ['known'], w: 30, gap: 4, c: (s) => working(s) && !s.S.rhodes && !hidden(s),
-    run: (s) => ({ t: s.rng.pick(['일터에서 제 컵이 따로 놓였습니다.', '같은 조 사람이 바뀌었습니다. 새 사람도 곧 바뀌었습니다.', '급료 봉투에 "감염자 감액" 줄이 생겼습니다.', '점심을 혼자 먹는 것이 자연스러워졌습니다.']), k: 'bad', fx: { so: -2, h: -2 },
+    run: (s) => ({ t: s.rng.pick(['일터에서 제 컵이 따로 놓였습니다.', '같은 조 사람이 바뀌었습니다. 새 사람도 곧 바뀌었습니다.', '급료 봉투에 "감염자 감액" 줄이 생겼습니다.', '점심을 혼자 먹는 것이 자연스러워졌습니다.']), k: 'bad', fx: { h: -2, cap: { ties: -0.02 } },
       f: orgF(s, '감염자 고용 지침') }) },
   { id: 'inf_fired', a: [19, 62], tags: ['known'], w: 45, c: (s) => working(s) && !s.S.rhodes && !hidden(s) && ['persecute', 'quarantine', 'euthanasia', 'insurance', 'expel'].includes(pol(s)) && yr(s, 'inffire', 0.12),
-    run: (s) => { s.S.job = null; s.S.income = 0; s.S.flags.laidOff = s.S.age; s.S.flags.infFired = s.S.age;
-      return { t: '감염을 이유로 해고되었습니다. ' + s.rng.pick(['통지서에는 "안전 규정"이라고 적혀 있었습니다.', '퇴직금은 반이었습니다. 규정이라고 했습니다.', '사물함은 이미 비워져 있었습니다.']), k: 'bad', fx: { h: -5, so: -2 },
+    run: (s) => { if (s.S.track) s.leaveTrack('expel', { quiet: true }); else { s.S.job = null; s.S.income = 0; } s.S.flags.laidOff = s.S.age; s.S.flags.infFired = s.S.age;   // W14(QA C8)
+      return { t: '감염을 이유로 해고되었습니다. ' + s.rng.pick(['통지서에는 "안전 규정"이라고 적혀 있었습니다.', '퇴직금은 반이었습니다. 규정이라고 했습니다.', '사물함은 이미 비워져 있었습니다.']), k: 'bad', fx: { h: -5, cap: { ties: -0.02 } },
         f: orgF(s, '감염자 고용 지침 제' + s.rng.ri(2, 15) + '조') }; } },
   { id: 'inf_family_reaction', a: [19, 64], tags: ['known'], w: 60, c: (s) => !!partner(s) && !s.S.flags.infFamTold && !hidden(s),
     run: (s) => { s.S.flags.infFamTold = true;
       const stay = s.rng.chance(0.7);
-      return { t: stay ? eun(partner(s).name) + ' 남았습니다. 식기를 나누자는 말은 하지 않았습니다.' : partner(s).name + '의 친정에서 사람이 왔습니다. 그날 저녁부터 집이 조용했습니다.', k: stay ? 'warm' : 'bad', fx: stay ? { so: 3, h: 2 } : { so: -4, h: -4 },
+      return { t: stay ? eun(partner(s).name) + ' 남았습니다. 식기를 나누자는 말은 하지 않았습니다.' : partner(s).name + '의 친정에서 사람이 왔습니다. 그날 저녁부터 집이 조용했습니다.', k: stay ? 'warm' : 'bad', fx: stay ? { h: 2, cap: { ties: 0.03 } } : { h: -4, cap: { ties: -0.04 } },
         f: orgF(s, '감염자 가족 등록란') }; } },
   { id: 'inf_crystal', a: [19, 64], tags: ['known', 'ori_stage2'], w: 30, gap: 4, c: (s) => !s.S.rhodes,
     run: (s) => ({ t: '손등 결정이 자랐습니다. ' + uL(s) + ' u/L. ' + s.rng.pick(['거울을 보는 시간이 줄었습니다.', '아이가 만져 보려 했고, 손을 뺐습니다.', '결정은 차가웠습니다. 사람들이 말하는 것과 달리.']), k: 'bad', fx: { h: -2 },
@@ -61,7 +61,7 @@ export const events = [
       f: orgF(s, '격리구역 운영 일지') }) },
   { id: 'inf_quarantine_pass', a: [19, 64], w: 30, gap: 5, c: (s) => !!s.S.flags.quarantined,
     run: (s) => { const ok = s.rng.chance(0.5);
-      return { t: '바깥 통행증을 신청했습니다. ' + (ok ? '사흘짜리가 나왔습니다. 부모를 보러 갔고, 사흘은 짧았습니다.' : '거절되었습니다. 사유란은 비어 있었습니다.'), k: ok ? 'warm' : 'bad', fx: ok ? { so: 3, h: 2, money: -medX(s, 0.1) } : { h: -3 },
+      return { t: '바깥 통행증을 신청했습니다. ' + (ok ? '사흘짜리가 나왔습니다. 부모를 보러 갔고, 사흘은 짧았습니다.' : '거절되었습니다. 사유란은 비어 있었습니다.'), k: ok ? 'warm' : 'bad', fx: ok ? { h: 2, money: -medX(s, 0.1), cap: { ties: 0.03 } } : { h: -3 },
         f: orgF(s, '격리구역 통행 허가 대장') }; } },
 
   // ── 억제제·보험·보호비·안락사 서류 ──
@@ -84,11 +84,11 @@ export const events = [
       f: orgF(s, '수용소 일일 점호 기록') }) },
   { id: 'inf_camp_after', a: [19, 64], w: 70, c: (s) => s.S.flags.oriOutcome === 'camp' && !s.S.prison && !s.S.flags.campAfterTold,
     run: (s) => { s.S.flags.campAfterTold = true;
-      return { t: '수용소에서 나온 뒤의 첫해였습니다. ' + s.rng.pick(['집은 다른 사람이 살고 있었습니다.', '옛 이웃이 길에서 저를 모르는 척했습니다. 고마웠습니다.', '서류의 "재분류"가 무슨 뜻인지 끝내 아무도 설명하지 않았습니다.']), k: 'note', fx: { h: -2, so: -2 },
+      return { t: '수용소에서 나온 뒤의 첫해였습니다. ' + s.rng.pick(['집은 다른 사람이 살고 있었습니다.', '옛 이웃이 길에서 저를 모르는 척했습니다. 고마웠습니다.', '서류의 "재분류"가 무슨 뜻인지 끝내 아무도 설명하지 않았습니다.']), k: 'note', fx: { h: -2, cap: { ties: -0.02 } },
         f: orgF(s, '재분류 대상자 명단') }; } },
   { id: 'inf_expelled_life', a: [19, 64], w: 70, c: (s) => !!s.S.mig && ['expel', 'insurance_default'].includes(s.S.flags.migReason) && !s.S.flags.expelTold,
     run: (s) => { s.S.flags.expelTold = true;
-      return { t: '쫓겨난 땅에서의 첫해였습니다. ' + s.rng.pick(['말이 달랐고, 감염자를 보는 눈은 같았습니다.', '첫 달은 역 근처에서 잤습니다.', '고향 ' + wa(cul(s).food) + ' 비슷한 것을 찾는 데 반년이 걸렸습니다.']), k: 'bad', fx: { h: -3, so: -3 },
+      return { t: '쫓겨난 땅에서의 첫해였습니다. ' + s.rng.pick(['말이 달랐고, 감염자를 보는 눈은 같았습니다.', '첫 달은 역 근처에서 잤습니다.', '고향 ' + wa(cul(s).food) + ' 비슷한 것을 찾는 데 반년이 걸렸습니다.']), k: 'bad', fx: { h: -3, cap: { ties: -0.03 } },
         f: orgF(s, '외국인 감염자 거주 등록') }; } },
 
   // (W11) 로도스 접점·합류는 엔진 rhodes_offer + content/tracks/rhodes.js 가 맡는다. 구 직접 합류 이벤트·결정은 제거
@@ -111,8 +111,8 @@ export const decisions = {
     },
     apply: (s, k) => {
       const S = s.S;
-      if (k === 'report') { S.flags.oriHidden = false; applyPolicy(s, s.policy); return { t: '신고했습니다. 서류의 "최초 진단일" 칸을 비워 두었고, 서기는 묻지 않았습니다.', k: 'note', f: orgF(s, '감염자 등록 대장', s.year) }; }
-      return { t: '계속 숨기기로 했습니다. 장갑을 한 켤레 더 샀습니다.', k: 'note', fx: { money: -medX(s, 0.05) }, f: F('기록된 바 없음') };
+      if (k === 'report') { S.flags.oriHidden = false; applyPolicy(s, s.policy); return { t: '신고했습니다. 서류의 "최초 진단일" 칸을 비워 두었고, 서기는 묻지 않았습니다.', k: 'note' }; }
+      return { t: '계속 숨기기로 했습니다. 장갑을 한 켤레 더 샀습니다.', k: 'note', fx: { money: -medX(s, 0.05) } };
     },
   },
   /** 억제제(엔진은 잔고가 중위소득 2배를 넘으면 자동 구매. 그 아래 구간에서 한 번 살지 묻는다) */
@@ -132,8 +132,8 @@ export const decisions = {
       if (k === 'buy') { o.uL = +Math.max(0.01, o.uL - 0.03).toFixed(3); s.S.flags.boughtSupp = (s.S.flags.boughtSupp || 0) + 1; return { t: '억제제를 샀습니다. 수치가 조금 내렸습니다. ' + uL(s) + ' u/L.', k: 'note', fx: { money: -medX(s, 0.4), h: 1 }, f: rhodesF('억제제 처방 안내') }; }
       if (k === 'cheap') { const real = s.rng.chance(0.5);
         if (real) { o.uL = +Math.max(0.01, o.uL - 0.02).toFixed(3); return { t: '싼 억제제를 샀습니다. 진짜였습니다. 수치 ' + uL(s) + ' u/L.', k: 'note', fx: { money: -medX(s, 0.1) }, f: F('기록된 바 없음') }; }
-        return { t: '싼 억제제를 샀습니다. 진통제였습니다. 아프지는 않았고 수치는 그대로였습니다.', k: 'bad', fx: { money: -medX(s, 0.1), h: -3 }, f: rhodesF('위조 억제제 경고문') }; }
-      return { t: '사지 않았습니다. 돈은 겨울을 위해 두었습니다.', k: 'note', f: F('기록된 바 없음') };
+        return { t: '싼 억제제를 샀습니다. 진통제였습니다. 아프지는 않았고 수치는 그대로였습니다.', k: 'bad', fx: { money: -medX(s, 0.1), h: -3 } }; }
+      return { t: '사지 않았습니다. 돈은 겨울을 위해 두었습니다.', k: 'note' };
     },
   },
 };

@@ -66,13 +66,15 @@ function main() {
   const oriHow = {};
   const scen = { bornInf: 0, bornInfU5: 0, minerFam: 0, minerFamBornInf: 0, childLabor: 0, childLaborAgeSum: 0, campChild: 0 };
   const rowOf = (id) => rows[id] || (rows[id] = { n: 0, nHuman: 0, ageSum: 0, ageSumHuman: 0, inf: 0, known: 0, bornInf: 0, money: 0, causes: {}, outcomes: {}, u5: 0, decisions: 0, logs: 0, rhodes: 0, moved: 0, marF: 0, hmF: 0, marM: 0, hmM: 0, servF: 0, specialY: 0, adultY: 0 });
-  const v1 = { spells: {}, decDone: {}, logLines: 0, lives: 0, infected: 0, rhodes: 0, rhodesInf: 0, via: {}, rstatus: {}, migrated: 0, migReason: {}, marriage: {}, married: 0, trackByNation: {}, entryByClass: {}, everTrack: 0, how: {}, falls: {}, relIncome: {}, housing: {}, promos: 0, disgrace: 0, stigma: {} };
+  const v1 = { giveAges: [], giveByArch: {}, dreamAsked: 0, dreamSet: 0, dreamDone: 0, dreamGiven: 0, dreamByNation: {}, lives12: 0, chooseModals: 0, closedDoors: 0, gradeLogs: 0, spells: {}, decDone: {}, logLines: 0, lives: 0, infected: 0, rhodes: 0, rhodesInf: 0, via: {}, rstatus: {}, migrated: 0, migReason: {}, marriage: {}, married: 0, trackByNation: {}, entryByClass: {}, everTrack: 0, how: {}, falls: {}, relIncome: {}, housing: {}, promos: 0, disgrace: 0, stigma: {} };
   let errors = 0;
   const t0 = Date.now();
   const lifeMulByRace = Object.fromEntries(data.races.map((r) => [r.id, r.lifeMul]));
 
   for (let i = 0; i < N; i++) {
-    const sim = createSim({ data, seed: SEED + ':' + i, content: registry, auto: true, terra: TERRA });
+    // W16: 닫힌 문(비활성 선택지) 집계 — track_choose 모달당 평균
+    const hooks = { decision(pd) { if (pd.id === 'track_choose') { v1.chooseModals++; v1.closedDoors += pd.view.choices.filter((c) => c.disabled).length; } } };
+    const sim = createSim({ data, seed: SEED + ':' + i, content: registry, auto: true, terra: TERRA, hooks });
     try {
       const S = sim.newLife();
       sim.start();
@@ -128,6 +130,9 @@ function main() {
       for (const id of Object.keys(S.done)) v1.decDone[id] = (v1.decDone[id] || 0) + 1;
       v1.logLines += S.log.length;
       if (S.trackHist.length || S.track) v1.everTrack++;
+      // W16(D56): 장래 희망 — 12세 이상 생존자 중 설정률, 설정자 중 달성률(국가별), 접음. 등급 변화 기록 수
+      if (S.deathAt.age >= 12) { v1.lives12++; if ((S.dream && S.dream.id) || S.flags.dreamNone) v1.dreamAsked++; if (S.dream && S.dream.id) { v1.dreamSet++; const dn = v1.dreamByNation[S.born] || (v1.dreamByNation[S.born] = { set: 0, done: 0 }); dn.set++; if (S.flags.dreamDone != null) { v1.dreamDone++; dn.done++; } if (S.flags.dreamGiven) { v1.dreamGiven++; v1.giveAges.push(S.flags.dreamGiven); const at = data.trackById[S.dream.id]; const ak = at ? at.archetype : '?'; (v1.giveByArch[ak] || (v1.giveByArch[ak] = [])).push(S.flags.dreamGiven); } } }
+      v1.gradeLogs += S.log.filter((l) => /^(기량|학식|아츠|관계)(이|가) .+에서 .+(올랐|내려갔)습니다\.$/.test(l.t)).length;
       for (const h of S.trackHist) v1.how[h.how] = (v1.how[h.how] || 0) + 1;
       if (S.flags.lastFall) v1.falls[S.flags.lastFall] = (v1.falls[S.flags.lastFall] || 0) + 1;
       const rg = v1.relIncome[S.rel] || (v1.relIncome[S.rel] = { n: 0, inc: 0 });
@@ -209,6 +214,10 @@ function main() {
   console.log('[v1] 결혼 유형(거주국:유형): ' + fmtObj(v1.marriage) + ' | 기혼 ' + pct(v1.married / v1.lives));
   console.log('[v1] 관계 등급별 최고소득(중위 배율 평균): ' + Object.entries(v1.relIncome).map(([g, r]) => g + ' ' + (r.n ? f1(r.inc / r.n) : '-') + '×(n=' + r.n + ')').join(', '));
   console.log('[v1] 주거: ' + fmtObj(v1.housing));
+  console.log('[v1] 장래 희망(W16): 결정 발화 ' + pct(v1.lives12 ? v1.dreamAsked / v1.lives12 : 0) + ' · 꿈 설정 ' + pct(v1.lives12 ? v1.dreamSet / v1.lives12 : 0) + ' (12세+ ' + v1.lives12 + '명 중, 목표 85%+ · 모르겠다 20%) | 달성 ' + pct(v1.dreamSet ? v1.dreamDone / v1.dreamSet : 0) + ' (설정자 중, 목표 15~30%) | 접음 ' + v1.dreamGiven + ' | 국가별 달성: ' + Object.entries(v1.dreamByNation).map(([n, r]) => n + ' ' + pct(r.set ? r.done / r.set : 0) + '(' + r.set + ')').join(', '));
+  { const qs = (arr) => { const a = arr.slice().sort((x, y) => x - y); const q = (f) => a[Math.min(a.length - 1, Math.floor(f * a.length))]; return a.length ? q(0.25) + '/' + q(0.5) + '/' + q(0.75) + '(n=' + a.length + ')' : '-'; };
+    console.log('[v1] 꿈 접는 나이(W16-2, 인간 척도 사분위 Q1/중앙/Q3): 전체 ' + qs(v1.giveAges) + ' | 원형별: ' + Object.entries(v1.giveByArch).sort((a, b) => b[1].length - a[1].length).map(([k, a]) => k + ' ' + qs(a)).join(', ')); }
+  console.log('[v1] 닫힌 문(W16): track_choose 모달 ' + v1.chooseModals + '개, 모달당 ' + f1(v1.chooseModals ? v1.closedDoors / v1.chooseModals : 0) + '개 (목표 ≥1) | 역량 등급 변화 기록/생 ' + f1(v1.lives ? v1.gradeLogs / v1.lives : 0));
   console.log('[v1] 생애 중 진로 경험 ' + pct(v1.everTrack / v1.lives) + ' | 기록 줄/생 평균 ' + f1(v1.logLines / v1.lives));
   // W11: 자연 시뮬에서 유입 0 인 자발 진로(forced·synthetic·classes 없음 제외)와 한 번도 열리지 않은 결정
   const zeroTracks = Object.values(data.trackById).filter((t) => !t.forcedEntry && !t.synthetic && !t.noClasses && !t.dept && !v1.spells[t.id]).map((t) => t.id);

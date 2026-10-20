@@ -374,7 +374,7 @@
      "title": null,
      "minYears": 4,
      "promo": { "cap": "skill", "k": 0.2 },
-     "fall": { "base": 0.015, "causes": ["scandal","dome"] },
+     "fall": { "base": 0.015, "causes": ["ruin","dome"] },
      "canon": false
     },
     {
@@ -383,7 +383,7 @@
      "title": "양조가",
      "minYears": 10,
      "promo": { "cap": "skill", "k": 0.1 },
-     "fall": { "base": 0.015, "causes": ["scandal","dome"] },
+     "fall": { "base": 0.015, "causes": ["ruin","dome"] },
      "canon": false
     },
     {
@@ -392,7 +392,7 @@
      "title": "명인",
      "minYears": 0,
      "promo": null,
-     "fall": { "base": 0.015, "causes": ["scandal","dome"] },
+     "fall": { "base": 0.015, "causes": ["ruin","dome"] },
      "canon": false
     }
    ],
@@ -401,7 +401,7 @@
    "affiliations": ["DUR_BRE_MEAD","DUR_BRE_SPIRIT","DUR_BRE_CANNON"],
    "exits": {
     "retire": { "age": 60, "to": "DUR_TRADE" },
-    "fall": { "scandal": "demote", "dome": "death" },
+    "fall": { "ruin": "demote", "dome": "death" },
     "switch": ["DUR_TRADE"]
    },
    "oriPolicyOverride": null,

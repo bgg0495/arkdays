@@ -101,11 +101,12 @@ function scanSource() {
   const walk = (d) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (e.name.endsWith('.js') && e.name !== 'dummy.js') files.push(p); } };
   walk(path.join(ROOT, 'content')); walk(path.join(ROOT, 'src'));
   const re = /\+ '(은|는|이|가|을|를|와|과|로|으로|라고|이라고)[ .,)'!?]/;
+  const re3 = /\+ \([^()]*\? '(은|는|을|를|와|과|로|으로|라고|이라고) /;   // W14(QA A7): 이름 뒤 삼항식 안 고정 조사(`name + (cond ? '는 …`). '이·가' 는 지시사(이 땅)와 겹쳐 뺀다
   const re2 = /\}(은|는|이|가|을|를|와|과|로|으로)[ .,)'!?<]/;
   const hits = [];
   for (const f of files) {
     const lines = fs.readFileSync(f, 'utf8').split('\n');
-    lines.forEach((l, i) => { if (re.test(l) || re2.test(l)) hits.push(path.relative(ROOT, f) + ':' + (i + 1)); });
+    lines.forEach((l, i) => { if (re.test(l) || re2.test(l) || re3.test(l)) hits.push(path.relative(ROOT, f) + ':' + (i + 1)); });
   }
   return hits;
 }

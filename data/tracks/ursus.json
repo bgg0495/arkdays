@@ -133,7 +133,7 @@
     "ages": [16,40],
     "classes": { "q1": 0.2081, "q2": 0.0416 },
     "gates": [
-     { "cap": "skill", "min": -0.8 },
+     { "cap": "skill", "min": -0.3 },
      { "infected": false }
     ],
     "via": ["paid","conscript"]
@@ -296,7 +296,7 @@
     "ages": [12,40],
     "classes": { "q2": 0.1665 },
     "gates": [
-     { "urban": false, "weight": 3 }
+     { "urban": false }
     ],
     "via": ["family"]
    },
@@ -350,7 +350,8 @@
     "ages": [14,35],
     "classes": { "q2": 0.0833, "q3": 0.0416 },
     "gates": [
-     { "urban": true }
+     { "urban": true },
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["apprentice","family"]
    },
@@ -456,7 +457,7 @@
     "classes": { "q3": 0.1249 },
     "gates": [
      { "status": "noble", "weight": 3 },
-     { "cap": "skill", "min": -0.8 },
+     { "cap": "skill", "min": -0.3 },
      { "rel": "<=subtle" }
     ],
     "via": ["appointed","exam"]
@@ -601,7 +602,7 @@
      "title": null,
      "minYears": 3,
      "promo": { "cap": "learn", "k": 0.22 },
-     "fall": { "base": 0.05, "causes": ["arrest","kia","ruin"] }
+     "fall": { "base": 0.05, "causes": ["arrest","disappear","ruin"] }
     },
     {
      "id": "university",
@@ -609,7 +610,7 @@
      "title": null,
      "minYears": 2,
      "promo": { "cap": "learn", "k": 0.1 },
-     "fall": { "base": 0.05, "causes": ["arrest","kia","ruin"] }
+     "fall": { "base": 0.05, "causes": ["arrest","disappear","ruin"] }
     },
     {
      "id": "faction",
@@ -617,7 +618,7 @@
      "title": null,
      "minYears": 2,
      "promo": { "cap": "learn", "k": 0.05 },
-     "fall": { "base": 0.05, "causes": ["arrest","kia","ruin"] }
+     "fall": { "base": 0.05, "causes": ["arrest","disappear","ruin"] }
     },
     {
      "id": "chair",
@@ -625,7 +626,7 @@
      "title": "의장",
      "minYears": 0,
      "promo": null,
-     "fall": { "base": 0.05, "causes": ["arrest","kia","ruin"] }
+     "fall": { "base": 0.05, "causes": ["arrest","disappear","ruin"] }
     }
    ],
    "income": { "stage": [0.1,0.2,0.3,0.5] },
@@ -633,7 +634,7 @@
    "affiliations": ["URS_UNIV_SYMPOSIUM","URS_UNIV_VANGUARD","URS_UNIV_AUTONOMY"],
    "exits": {
     "retire": { "age": 26, "to": "URS_RESEARCH" },
-    "fall": { "arrest": "prison:camp", "kia": "death", "ruin": "expel" },
+    "fall": { "arrest": "prison:camp", "disappear": "death", "ruin": "expel" },
     "switch": ["URS_RESEARCH","URS_TEACHER","URS_OFFICER","URS_UNDER"]
    },
    "oriPolicyOverride": null,
@@ -812,7 +813,10 @@
    "nation": "ursus",
    "region": null,
    "name": "신 귀족",
-   "archetype": "A10",
+   "archetype": "A3",
+   "archFlags": { "exam": false },
+   "promoStyle": "A1",
+   "archNote": "W14(QA B5·B7): 신 귀족은 숙청·암살이 사유라 관료·과거(A3) 원형. 등용 시험은 없음(archFlags.exam false)",
    "canon": true,
    "itinerant": false,
    "entry": {

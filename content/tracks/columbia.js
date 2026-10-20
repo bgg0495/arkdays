@@ -24,6 +24,10 @@ const promoted = (s) => !!tr(s) && tr(s).stage > 0 && s.S.age - tr(s).stageSince
 /** 그 진로에서 몰락한 직후(후일담용). 사망·강제 전환이면 진로가 바뀌어 있으므로 진로 없음만 본다 */
 const fellFrom = (s, id) => !tr(s) && s.S.flags.lastTrack === id && s.S.flags.lastFallAt != null && s.S.age - s.S.flags.lastFallAt <= 1 && s.S.flags.lastTrackLeftAt === s.S.flags.lastFallAt;
 const affName = (s, d) => (s.aff ? s.aff.name : d);
+const affIs = (s, ...ids) => !!tr(s) && ids.includes(tr(s).aff);
+// W15(D55): 블랙스틸·라인 랩은 소속. 그 집단이 전제인 문장은 소속 조건으로
+const bsw = (s) => affIs(s, 'COL_PMC_BLACKSTEEL');
+const rhine = (s) => affIs(s, 'COL_RES_RHINE');
 const someone = (s, sex) => makeName(s.data, s.rng, { lang: s.nation.nameLang, sex: sex || (s.rng.chance(0.5) ? 'M' : 'F'), race: s.S.race, avoid: familyNames(s.S) }).given;
 const pick = (s, arr) => s.rng.pick(arr);
 const fmt = (n) => Math.round(n).toLocaleString() + ' LMD';
@@ -98,116 +102,123 @@ export const events = [
     run: (s) => ({ t: '신제품 발표일이었습니다. 무대 위에서 "미래"라는 말이 아홉 번 나왔고, 무대 뒤에서는 버그 목록이 한 장 더 늘었습니다.', k: 'ev', fx: { hl: -1 } }) },
 
   // ══════════════════════════════════════════════════════════════════════════
-  // COL_RHINE 라인 랩 연구원(A9, 핵심) — intern / researcher / director / board
+  // COL_RESEARCH 연구원(A9) — intern / researcher / director / board. W15: 라인 랩은 희귀 소속(rhine)
   // ══════════════════════════════════════════════════════════════════════════
-  entry('col_rhine_entry', 'COL_RHINE', (s) => ({ t: ro(affName(s, '라인 랩')) + ' 들어간 첫 해였습니다. 흰색 출입증을 받았고, 복도의 문 절반은 그 색으로 열리지 않았습니다.', k: 'ev', fx: { h: 2 } })),
-  ev('col_rhine_intern_badge', 'COL_RHINE', 'intern', [20, 35], 30, 3, (s) => ({ t: '출입증 색으로 사람을 보게 되었습니다. 주황색이 지나가면 길을 비켰습니다.', k: 'note' })),
-  ev('col_rhine_intern_dawn', 'COL_RHINE', 'intern', [20, 35], 30, 2, (s) => ({ t: '연구 보조의 하루는 아침 8시에 시작해 다음 날 새벽 3시에 끝났습니다. 그 사이에 식사는 한 번이었습니다.', k: 'bad', fx: { hl: -3, cap: { learn: 0.04 } }, f: F('라인 랩 연구 보조 근무 지침서 제4항') })),
-  ev('col_rhine_intern_courier', 'COL_RHINE', 'intern', [20, 35], 20, 4, (s) => ({ t: '보급품은 택배로 왔습니다. 옆 섹션 사람의 얼굴은 한 번도 보지 못했고, 이름은 송장에서만 보았습니다.', k: 'note' })),
-  ev('col_rhine_intern_gear', 'COL_RHINE', 'intern', [20, 35], 25, 3, (s) => ({ t: '보호장비 없이 오염 구역에 들어가라는 말을 들었습니다. 들어갔고, 그날은 아무 일도 없었습니다.', k: 'bad', fx: { h: -2, standing: 3 } })),
-  ev('col_rhine_res_orange', 'COL_RHINE', 'researcher', [22, 50], 30, 3, (s) => ({ t: '주황색 출입증을 받았습니다. 열리는 문이 늘었고, 묻지 말아야 하는 것도 늘었습니다.', k: 'ev', fx: { standing: 2 } })),
-  ev('col_rhine_res_paper', 'COL_RHINE', 'researcher', [22, 50], 30, 2, (s) => ({ t: '논문이 나갔습니다. 저자 줄에서 제 이름은 넷째였고, 셋째는 한 번도 실험실에 오지 않은 사람이었습니다.', k: 'ev', fx: { cap: { learn: 0.05 }, standing: 3 } })),
-  ev('col_rhine_res_rivalry', 'COL_RHINE', 'researcher', [22, 50], 25, 3, (s) => ({ t: '섹션 사이 예산 경쟁이 있었습니다. 복도에서 인사는 했고, 자료는 주지 않았습니다.', k: 'note', fx: { h: -1 } })),
-  ev('col_rhine_res_missing', 'COL_RHINE', 'researcher', [22, 50], 20, 4, (s) => ({ t: '옆 자리 연구원이 출근하지 않았습니다. 사직이라고 했고, 짐은 그대로였습니다.', k: 'bad', fx: { h: -2 } })),
-  ev('col_rhine_dir_budget', 'COL_RHINE', 'director', [28, 65], 30, 2, (s) => ({ t: '섹션 예산을 따냈습니다. 금액은 적지 않았고, 조건은 두 장이었습니다.', k: 'ev', fx: { standing: 3 } })),
-  ev('col_rhine_dir_defense', 'COL_RHINE', 'director', [28, 65], 25, 3, (s) => ({ t: '국방부 쪽 손님이 왔습니다. 발표는 삼십 분, 질문은 하나였습니다. "언제 쓸 수 있습니까."', k: 'note', fx: { h: -1 } })),
-  ev('col_rhine_dir_ethics', 'COL_RHINE', 'director', [28, 65], 30, 9, (s) => ({ t: '윤리 공동선언에 섹션장 자격으로 서명했습니다. 선언문은 2장이었고, 실험 일정표는 바뀌지 않았습니다.', k: 'note', f: F('라인 랩 윤리 공동선언, 1099년 12월') }), { c: (s) => s.year >= 1099 && s.year <= 1101 }),
-  ev('col_rhine_dir_board_call', 'COL_RHINE', 'director', [28, 65], 20, 4, (s) => ({ t: '이사회에 불려 갔습니다. 열두 시간 전에 연락이 왔고, 발표 자료는 세 번 바뀌었습니다.', k: 'ev', fx: { hl: -1, standing: 2 } })),
-  ev('col_rhine_board_dinner', 'COL_RHINE', 'board', [35, 75], 30, 3, (s) => ({ t: '열 사람이 앉는 저녁 자리에 갔습니다. 메뉴에 값이 없었고, 이야기에는 전부 값이 있었습니다.', k: 'ev', fx: { standing: 2 } })),
-  ev('col_rhine_board_sanction', 'COL_RHINE', 'board', [35, 75], 25, 4, (s) => ({ t: '연방 쪽에서 조용한 제재가 왔습니다. 공고는 없었고, 계좌 하나가 묶였습니다.', k: 'bad', fx: { money: -medX(s, 1.5), h: -2 } })),
-  ev('col_rhine_board_share', 'COL_RHINE', 'board', [35, 75], 25, 3, (s) => ({ t: '지분 조정이 있었습니다. 숫자 하나가 바뀌었고, 그 숫자로 집 2채 값이 움직였습니다.', k: 'ev', fx: { money: medX(s, 2) }, f: F('연방 증권위원회 지분 변동 공시, ' + s.year + '년') })),
-  ev('col_rhine_board_heir', 'COL_RHINE', 'board', [40, 75], 20, 5, (s) => ({ t: '후임 섹션장을 정하는 자리였습니다. 가장 뛰어난 사람과 가장 말이 없는 사람 중에서 골라야 했습니다.', k: 'note' })),
-  transition('col_rhine_transition', 'COL_RHINE', {
-    researcher: (s) => '연구원이 되었습니다. 출입증이 주황색으로 바뀌었고, 책상에 이름표가 붙었습니다.',
-    director: (s) => '섹션장이 되었습니다. 방이 생겼고, 그 방에 오는 사람은 전부 돈 이야기를 했습니다.',
-    board: (s) => '이사가 되었습니다. 실험복은 벽에 걸렸고, 다시 입을 일은 없었습니다.',
+  entry('col_rhine_entry', 'COL_RESEARCH', (s) => rhine(s) ? ({ t: ro(affName(s, '라인 랩')) + ' 들어간 첫 해였습니다. 흰색 출입증을 받았고, 복도의 문 절반은 그 색으로 열리지 않았습니다.', k: 'ev', fx: { h: 2 } }) : ({ t: ro(affName(s, '연구소')) + ' 들어간 첫 해였습니다. 출입증 하나, 책상 반 개, 실험실 열쇠는 돌려 썼습니다.', k: 'ev' })),
+  ev('col_rhine_intern_badge', 'COL_RESEARCH', 'intern', [20, 35], 30, 3, (s) => ({ t: '출입증 색으로 사람을 보게 되었습니다. 주황색이 지나가면 길을 비켰습니다.', k: 'note' }), { c: rhine }),
+  ev('col_rhine_intern_dawn', 'COL_RESEARCH', 'intern', [20, 35], 30, 2, (s) => ({ t: '연구 보조의 하루는 아침 8시에 시작해 다음 날 새벽 3시에 끝났습니다. 그 사이에 식사는 한 번이었습니다.', k: 'bad', fx: { hl: -3, cap: { learn: 0.04 } }, f: F('라인 랩 연구 보조 근무 지침서 제4항') })),
+  ev('col_rhine_intern_courier', 'COL_RESEARCH', 'intern', [20, 35], 20, 4, (s) => ({ t: '보급품은 택배로 왔습니다. 옆 섹션 사람의 얼굴은 한 번도 보지 못했고, 이름은 송장에서만 보았습니다.', k: 'note' }), { c: rhine }),
+  ev('col_rhine_intern_gear', 'COL_RESEARCH', 'intern', [20, 35], 25, 3, (s) => ({ t: '보호장비 없이 오염 구역에 들어가라는 말을 들었습니다. 들어갔고, 그날은 아무 일도 없었습니다.', k: 'bad', fx: { h: -2, standing: 3 } })),
+  ev('col_rhine_res_orange', 'COL_RESEARCH', 'researcher', [22, 50], 30, 3, (s) => ({ t: '주황색 출입증을 받았습니다. 열리는 문이 늘었고, 묻지 말아야 하는 것도 늘었습니다.', k: 'ev', fx: { standing: 2 } }), { c: rhine }),
+  ev('col_rhine_res_paper', 'COL_RESEARCH', 'researcher', [22, 50], 30, 2, (s) => ({ t: '논문이 나갔습니다. 저자 줄에서 제 이름은 넷째였고, 셋째는 한 번도 실험실에 오지 않은 사람이었습니다.', k: 'ev', fx: { cap: { learn: 0.05 }, standing: 3 } })),
+  ev('col_rhine_res_rivalry', 'COL_RESEARCH', 'researcher', [22, 50], 25, 3, (s) => ({ t: '섹션 사이 예산 경쟁이 있었습니다. 복도에서 인사는 했고, 자료는 주지 않았습니다.', k: 'note', fx: { h: -1 } }), { c: rhine }),
+  ev('col_rhine_res_missing', 'COL_RESEARCH', 'researcher', [22, 50], 20, 4, (s) => ({ t: '옆 자리 연구원이 출근하지 않았습니다. 사직이라고 했고, 짐은 그대로였습니다.', k: 'bad', fx: { h: -2 } })),
+  ev('col_rhine_dir_budget', 'COL_RESEARCH', 'director', [28, 65], 30, 2, (s) => ({ t: '섹션 예산을 따냈습니다. 금액은 적지 않았고, 조건은 두 장이었습니다.', k: 'ev', fx: { standing: 3 } }), { c: rhine }),
+  ev('col_rhine_dir_defense', 'COL_RESEARCH', 'director', [28, 65], 25, 3, (s) => ({ t: '국방부 쪽 손님이 왔습니다. 발표는 삼십 분, 질문은 하나였습니다. "언제 쓸 수 있습니까."', k: 'note', fx: { h: -1 } }), { c: rhine }),
+  ev('col_rhine_dir_ethics', 'COL_RESEARCH', 'director', [28, 65], 30, 9, (s) => ({ t: '윤리 공동선언에 섹션장 자격으로 서명했습니다. 선언문은 2장이었고, 실험 일정표는 바뀌지 않았습니다.', k: 'note', f: F('라인 랩 윤리 공동선언, 1099년 12월') }), { c: (s) => (rhine)(s) && s.year >= 1099 && s.year <= 1101 }),
+  ev('col_rhine_dir_board_call', 'COL_RESEARCH', 'director', [28, 65], 20, 4, (s) => ({ t: '이사회에 불려 갔습니다. 열두 시간 전에 연락이 왔고, 발표 자료는 세 번 바뀌었습니다.', k: 'ev', fx: { hl: -1, standing: 2 } }), { c: rhine }),
+  ev('col_rhine_board_dinner', 'COL_RESEARCH', 'board', [35, 75], 30, 3, (s) => ({ t: '열 사람이 앉는 저녁 자리에 갔습니다. 메뉴에 값이 없었고, 이야기에는 전부 값이 있었습니다.', k: 'ev', fx: { standing: 2 } }), { c: rhine }),
+  ev('col_rhine_board_sanction', 'COL_RESEARCH', 'board', [35, 75], 25, 4, (s) => ({ t: '연방 쪽에서 조용한 제재가 왔습니다. 공고는 없었고, 계좌 하나가 묶였습니다.', k: 'bad', fx: { money: -medX(s, 1.5), h: -2 } }), { c: rhine }),
+  ev('col_rhine_board_share', 'COL_RESEARCH', 'board', [35, 75], 25, 3, (s) => ({ t: '지분 조정이 있었습니다. 숫자 하나가 바뀌었고, 그 숫자로 집 2채 값이 움직였습니다.', k: 'ev', fx: { money: medX(s, 2) }, f: F('연방 증권위원회 지분 변동 공시, ' + s.year + '년') }), { c: rhine }),
+  ev('col_rhine_board_heir', 'COL_RESEARCH', 'board', [40, 75], 20, 5, (s) => ({ t: '후임 섹션장을 정하는 자리였습니다. 가장 뛰어난 사람과 가장 말이 없는 사람 중에서 골라야 했습니다.', k: 'note' }), { c: rhine }),
+  transition('col_rhine_transition', 'COL_RESEARCH', {
+    researcher: (s) => rhine(s) ? '연구원이 되었습니다. 출입증이 주황색으로 바뀌었고, 책상에 이름표가 붙었습니다.' : '연구원이 되었습니다. 책상 반 개가 한 개가 되었고, 논문 저자 줄에 이름이 들어갔습니다.',
+    director: (s) => rhine(s) ? '섹션장이 되었습니다. 방이 생겼고, 그 방에 오는 사람은 전부 돈 이야기를 했습니다.' : '수석 연구원이 되었습니다. 예산 신청서를 제 이름으로 썼고, 반려도 제 이름으로 왔습니다.',
+    board: (s) => rhine(s) ? '이사가 되었습니다. 실험복은 벽에 걸렸고, 다시 입을 일은 없었습니다.' : '연구소장이 되었습니다. 실험실보다 회의실에 오래 있었고, 열쇠는 늘어났습니다.',
   }),
-  aftermath('col_rhine_after', 'COL_RHINE', {
+  aftermath('col_rhine_after', 'COL_RESEARCH', {
     accident: (s) => '실험 사고였습니다. 살아남았고, 보고서에는 "절차상 과실"이라고 적혔습니다. 연구소로는 돌아가지 못했습니다.',
     disappear: (s) => '어느 날부터 연구소 기록에서 제 이름이 지워져 있었습니다. 급여는 두 달 더 들어왔고, 그 뒤로는 아무 연락이 없었습니다.',
-    infected: (s) => '판정이 나자 섹션장이 조용히 전출을 권했습니다. 권고였고, 거절할 자리는 없었습니다.',
+    infected: (s) => '판정이 나자 윗사람이 조용히 전출을 권했습니다. 권고였고, 거절할 자리는 없었습니다.',
   }),
-  // 소속 변주: 섹션별
-  { id: 'col_rhi_control', a: [20, 70], tags: ['aff:COL_RHI_CONTROL'], w: 20, gap: 4,
+  // 소속 변주: 라인 랩(섹션 변주)·대학 연구소·중소 기술 기업
+  { id: 'col_rhi_control', a: [20, 70], tags: ['aff:COL_RES_RHINE'], w: 20, gap: 4,
     run: (s) => ({ t: '통제 섹션 회의에서는 다른 섹션 이름이 먼저 나왔습니다. 모두의 예산이 이 방을 지나갔습니다.', k: 'note', fx: { standing: 2 } }) },
-  { id: 'col_rhi_ecology', a: [20, 70], tags: ['aff:COL_RHI_ECOLOGY'], w: 20, gap: 4,
+  { id: 'col_rhi_ecology', a: [20, 70], tags: ['aff:COL_RES_RHINE'], w: 20, gap: 4,
     run: (s) => ({ t: '생태 섹션 온실에서 하루를 보냈습니다. 식물 이름은 외웠고, 어디서 왔는지는 묻지 않았습니다.', k: 'ev', fx: { h: 1 } }) },
-  { id: 'col_rhi_energy', a: [20, 70], tags: ['aff:COL_RHI_ENERGY'], w: 20, gap: 4,
+  { id: 'col_rhi_energy', a: [20, 70], tags: ['aff:COL_RES_RHINE'], w: 20, gap: 4,
     run: (s) => ({ t: '에너지 섹션 실험실에서 경보가 울렸습니다. 두 번 울렸고, 세 번째는 울리지 않게 꺼 두었습니다.', k: 'bad', fx: { hl: -1 } }) },
-  { id: 'col_rhi_arts', a: [20, 70], tags: ['aff:COL_RHI_ARTS'], w: 20, gap: 4,
+  { id: 'col_rhi_arts', a: [20, 70], tags: ['aff:COL_RES_RHINE'], w: 20, gap: 4,
     run: (s) => ({ t: '아츠 섹션 실험대에 피험자가 앉았습니다. 서류상 자원자였습니다. 눈은 그렇게 말하지 않았습니다.', k: 'bad', fx: { h: -2 } }) },
-  { id: 'col_rhi_defense', a: [20, 70], tags: ['aff:COL_RHI_DEFENSE'], w: 20, gap: 4,
+  { id: 'col_rhi_defense', a: [20, 70], tags: ['aff:COL_RES_RHINE'], w: 20, gap: 4,
     run: (s) => ({ t: '방위 섹션 시험장에 갔습니다. 표적은 사람 모양이었고, 결과표는 숫자 모양이었습니다.', k: 'note', fx: { standing: 2 } }) },
+  { id: 'col_res_univ_grant', a: [20, 70], tags: ['aff:COL_RES_UNIV'], w: 25, gap: 3,
+    run: (s) => ({ t: pick(s, ['연구비 공모에 떨어졌습니다. 심사평은 두 줄이었고, 둘 다 "흥미롭다"로 시작했습니다.', '학부생 조교가 실험 기록을 잘못 적었습니다. 다시 했고, 한 달이 갔습니다.', '학회에 갔습니다. 발표는 열 분, 질문은 없었고, 점심은 좋았습니다.']), k: 'note', fx: { cap: { learn: 0.02 } } }) },
+  { id: 'col_res_tech_deadline', a: [20, 70], tags: ['aff:COL_RES_TECH'], w: 25, gap: 3,
+    run: (s) => ({ t: pick(s, ['납품 기한이 연구 일정보다 먼저였습니다. 시제품은 동작했고, 보고서는 동작한다고 적었습니다.', '회사가 특허를 냈습니다. 발명자 칸에 제 이름이, 권리자 칸에 회사 이름이 있었습니다.', '투자자가 실험실을 둘러보았습니다. 장비 값을 물었고, 결과는 묻지 않았습니다.']), k: 'note', fx: { money: medX(s, 0.05), h: -1 } }) },
+  { id: 'col_res_rhine_offer', a: [22, 45], tags: ['track:COL_RESEARCH', '!aff:COL_RES_RHINE'], w: 1, c: (s) => s.S.cap.learn >= 1.6 && s.S.innate.luck >= 0.5 && !!tr(s) && tr(s).stage >= 1 && lifeRoll(s, 'rhine_offer', 0.15),
+    run: (s) => { tr(s).aff = 'COL_RES_RHINE'; return { t: '라인 랩에서 연락이 왔습니다. 논문 한 편을 보고 왔다고 했습니다. 흰색 출입증이 우편으로 먼저 도착했습니다.', k: 'big', fx: { standing: 5, h: 3 } }; } },
   // 로도스 접점(referral): 의료 협정
-  { id: 'col_rhine_rhodes_pact', a: [22, 60], tags: ['track:COL_RHINE', '!rhodes'], w: 8, gap: 8, c: (s) => !!tr(s) && tr(s).stage >= 1,
+  { id: 'col_rhine_rhodes_pact', a: [22, 60], tags: ['track:COL_RESEARCH', '!rhodes'], w: 8, gap: 8, c: (s) => rhine(s) && tr(s).stage >= 1,
     run: (s) => { s.S.flags.rhodes_medical_pact = s.S.age; return { t: '로도스 아일랜드 의료부와 공동 연구 협정 서류를 주고받았습니다. 상대 쪽 연구원이 제 이름을 적어 갔습니다.', k: 'note' }; } },
   // 캐논 인물(D43): 1회성, 연도 게이트, 거리감
-  { id: 'col_canon_saria', a: [20, 60], tags: ['track:COL_RHINE'], w: 30, c: (s) => canonOk(s, 'saria'),
+  { id: 'col_canon_saria', a: [20, 60], tags: ['track:COL_RESEARCH'], w: 30, c: (s) => rhine(s) && canonOk(s, 'saria'),
     run: (s) => { canonSeen(s); return { t: '방위 섹션장이 사직서를 내고 나가던 날이었습니다. 연구동 복도의 불이 평소보다 일찍 꺼졌고, 아무도 이유를 묻지 않았습니다.', k: 'note' }; } },
-  { id: 'col_canon_muelsyse', a: [20, 60], tags: ['track:COL_RHINE'], w: 30, c: (s) => canonOk(s, 'muelsyse'),
+  { id: 'col_canon_muelsyse', a: [20, 60], tags: ['track:COL_RESEARCH'], w: 30, c: (s) => rhine(s) && canonOk(s, 'muelsyse'),
     run: (s) => { canonSeen(s); return { t: '생태 섹션장이 신입들 앞에서 유리잔의 물을 손으로 들어 올렸습니다. "이건 장난"이라고 했고, 신입들은 웃어야 할지 몰랐습니다.', k: 'note' }; } },
-  { id: 'col_canon_dorothy', a: [18, 60], tags: ['columbia'], w: 30, c: (s) => canonOk(s, 'dorothy') && !!tr(s) && ['COL_RHINE', 'COL_UNIV'].includes(tr(s).id),
+  { id: 'col_canon_dorothy', a: [18, 60], tags: ['columbia'], w: 30, c: (s) => canonOk(s, 'dorothy') && !!tr(s) && (rhine(s) || tr(s).id === 'COL_UNIV'),
     run: (s) => { canonSeen(s); return { t: '세미나에서 최연소 입사라는 연구원이 질문을 받았습니다. 대답 대신 칠판을 두 번 채웠고, 질문한 사람은 앉았습니다.', k: 'note', fx: { cap: { learn: 0.02 } } }; } },
-  { id: 'col_canon_kristen', a: [20, 65], tags: ['columbia'], w: 30, c: (s) => canonOk(s, 'kristen') && !!tr(s) && ['COL_RHINE', 'COL_EXEC'].includes(tr(s).id),
+  { id: 'col_canon_kristen', a: [20, 65], tags: ['columbia'], w: 30, c: (s) => canonOk(s, 'kristen') && !!tr(s) && (rhine(s) || tr(s).id === 'COL_EXEC'),
     run: (s) => { canonSeen(s); return { t: '이사회장에서 나온 여자와 엘리베이터를 같이 탔습니다. 그 사람은 위층 버튼만 보고 있었고, 저는 내릴 층을 지나쳤습니다.', k: 'note' }; } },
-  { id: 'col_canon_ifrit', a: [20, 50], tags: ['track:COL_RHINE'], w: 30, c: (s) => canonOk(s, 'ifrit'),
+  { id: 'col_canon_ifrit', a: [20, 50], tags: ['track:COL_RESEARCH'], w: 30, c: (s) => rhine(s) && canonOk(s, 'ifrit'),
     run: (s) => { canonSeen(s); return { t: '연구동 지하에서 뿔 달린 아이가 끌려 나오는 것을 보았습니다. 같이 본 인턴은 그날로 사직서를 썼고, 저는 쓰지 않았습니다.', k: 'bad', fx: { h: -3 } }; } },
 
   // ══════════════════════════════════════════════════════════════════════════
-  // COL_BSW 블랙스틸(A6 순회형, 핵심) — trainee / operator / elite / exec / ceo
+  // COL_PMC 민간 군사·경비(A6 순회형) — trainee / operator / elite / exec / ceo. W15: 블랙스틸은 소속(bsw), 창작 PMC 3
   // ══════════════════════════════════════════════════════════════════════════
-  entry('col_bsw_entry', 'COL_BSW', (s) => ({ t: '포트 배런 모집센터에서 연습생 계약서에 서명했습니다. 계약 기간은 두 해, 뒷면에는 탈락 조항이 있었습니다.', k: 'ev', fx: { h: 1 } })),
-  ev('col_bsw_trainee_mock', 'COL_BSW', 'trainee', [16, 30], 30, 2, (s) => ({ t: '모조 화기로 하루 열 시간을 훈련했습니다. 진짜 화기는 아직 멀었고, 어깨 멍은 진짜였습니다.', k: 'ev', fx: { hl: -2, cap: { skill: 0.05 } } })),
-  ev('col_bsw_trainee_wasteland', 'COL_BSW', 'trainee', [16, 30], 30, 2, (s) => ({ t: '황무지인 축출 훈련이었습니다. 표적은 사람이 아니라고 교관이 세 번 말했습니다.', k: 'bad', fx: { h: -2, standing: 2 } })),
-  ev('col_bsw_trainee_half', 'COL_BSW', 'trainee', [16, 30], 25, 3, (s) => ({ t: '동기 40명 중 절반이 짐을 쌌습니다. 침상이 비었고, 식당 줄이 짧아졌습니다.', k: 'note', fx: { h: -1 }, f: F('블랙스틸 포트 배런 모집센터 연습생 명부, 탈락률 76%') })),
-  ev('col_bsw_trainee_field', 'COL_BSW', 'trainee', [16, 30], 25, 2, (s) => ({ t: '기초 야전 교육을 마쳤습니다. 비 오는 사흘을 밖에서 났고, 신발은 버려야 했습니다.', k: 'ev', fx: { hl: -2, cap: { skill: 0.04 } } })),
-  ev('col_bsw_op_deploy', 'COL_BSW', 'operator', [18, 50], 35, 2, (s) => ({ t: visitName(s) + ' 파견이 4개월이었습니다. 돌아오니 계절이 바뀌어 있었고, 우편함이 넘쳐 있었습니다.', k: 'ev', fx: { standing: 3, money: medX(s, 0.2) }, f: F('블랙스틸 파견 근무 기록, ' + s.year + '년') })),
-  ev('col_bsw_op_misfire', 'COL_BSW', 'operator', [18, 50], 20, 4, (s) => ({ t: '공압 화기가 오발했습니다. 옆 사수가 다쳤고, 그 사람의 판정은 두 달 뒤에 나왔습니다.', k: 'bad', fx: { h: -3 } })),
-  ev('col_bsw_op_escort', 'COL_BSW', 'operator', [18, 50], 30, 2, (s) => ({ t: '호위 임무였습니다. 의뢰인은 차 안에서 전화만 했고, 저희는 차 밖에서 비만 맞았습니다.', k: 'ev', fx: { standing: 2 } })),
-  ev('col_bsw_op_gear_test', 'COL_BSW', 'operator', [18, 50], 20, 4, (s) => ({ t: '신장비 시험대에 올랐습니다. 장비는 무거웠고, 보고서에는 "무결점"이라고 적혔습니다.', k: 'note', fx: { cap: { skill: 0.03 } } })),
-  ev('col_bsw_elite_instructor', 'COL_BSW', 'elite', [24, 55], 30, 2, (s) => ({ t: '연습생 교육을 맡았습니다. 제가 들었던 "표적은 사람이 아니다"를 이번에는 제가 말했습니다.', k: 'ev', fx: { standing: 3 } })),
-  ev('col_bsw_elite_grading', 'COL_BSW', 'elite', [24, 55], 25, 3, (s) => ({ t: '연습생 평가 채점을 했습니다. 4명 중 3명에게 탈락을 적었습니다. 그중 하나는 제 첫해와 똑같이 뛰었습니다.', k: 'bad', fx: { h: -2 }, f: F('블랙스틸 포트 배런 모집센터 연습생 평가 기준, 탈락률 76%') })),
-  ev('col_bsw_elite_range', 'COL_BSW', 'elite', [24, 55], 25, 3, (s) => ({ t: '사격장에서 기록을 냈습니다. 게시판에 이름이 붙었고, 다음 주에 다른 이름이 그 위에 붙었습니다.', k: 'ev', fx: { cap: { skill: 0.04 } } })),
-  ev('col_bsw_elite_contract', 'COL_BSW', 'elite', [24, 55], 20, 4, (s) => ({ t: '계약 조건을 직접 협상했습니다. 위험 수당 줄이 하나 늘었고, 사망 보상 줄은 그대로였습니다.', k: 'ev', fx: { money: medX(s, 0.3) } })),
-  ev('col_bsw_exec_absorb', 'COL_BSW', 'exec', [30, 65], 25, 3, (s) => ({ t: '하청 용병단이 임무에 실패했습니다. 생존자들을 헐값에 흡수하는 서류에 서명했습니다.', k: 'bad', fx: { h: -2, standing: 3 } })),
-  ev('col_bsw_exec_refuse', 'COL_BSW', 'exec', [30, 65], 25, 6, (s) => ({ t: '은행이 개척지 주민에게 발포하라는 명령을 넣었습니다. 거부했습니다. 계약 하나가 깨졌고, 다른 계약 셋이 들어왔습니다.', k: 'ev', fx: { standing: 5, money: -medX(s, 0.5) } }), { c: (s) => s.year >= 1099 }),
-  ev('col_bsw_exec_board', 'COL_BSW', 'exec', [30, 65], 30, 2, (s) => ({ t: '임원 회의였습니다. 지도에 꽂힌 핀이 열두 개였고, 핀마다 사람이 수십 명이었습니다.', k: 'ev', fx: { standing: 2 } })),
-  ev('col_bsw_exec_funeral', 'COL_BSW', 'exec', [30, 65], 20, 4, (s) => ({ t: '임무 중 사망한 오퍼레이터의 장례에 회사 대표로 갔습니다. 가족은 보상금 서류를 받았고, 저를 보지 않았습니다.', k: 'loss', fx: { h: -3 } })),
-  ev('col_bsw_ceo_shareholders', 'COL_BSW', 'ceo', [35, 75], 30, 2, (s) => ({ t: '주주 총회였습니다. 사망자 수는 각주에, 매출은 본문에 있었습니다.', k: 'ev', fx: { standing: 2 } })),
-  ev('col_bsw_ceo_gov', 'COL_BSW', 'ceo', [35, 75], 25, 3, (s) => ({ t: '연방 정부 계약에 서명했습니다. 계약서는 두껍고, 서명 칸은 하나였습니다.', k: 'ev', fx: { money: medX(s, 3) } })),
-  ev('col_bsw_ceo_resign_denied', 'COL_BSW', 'ceo', [35, 75], 20, 5, (s) => ({ t: '옛 오퍼레이터의 사직서가 올라왔습니다. 승인하지 않았습니다. 그 사람은 서류상 여전히 회사 사람입니다.', k: 'note' })),
-  ev('col_bsw_ceo_founder', 'COL_BSW', 'ceo', [35, 75], 20, 5, (s) => ({ t: '정예 오퍼레이터 하나가 독립해 회사를 차린다고 했습니다. 막지 않았습니다. 첫 고객이 되어 주었습니다.', k: 'warm', fx: { h: 2 } })),
-  transition('col_bsw_transition', 'COL_BSW', {
-    operator: (s) => '평가를 통과해 오퍼레이터가 되었습니다. 진짜 화기를 받았고, 계약서가 세 해짜리로 바뀌었습니다.',
-    elite: (s) => '정예로 분류되었습니다. 교관 완장이 왔고, 파견 횟수는 줄지 않았습니다.',
-    exec: (s) => '임원이 되었습니다. 총 대신 서류를 들었고, 서류가 더 무거웠습니다.',
-    ceo: (s) => '회사의 대표가 되었습니다. 첫 결재는 다음 분기 사망 보상 예산이었습니다.',
+  entry('col_bsw_entry', 'COL_PMC', (s) => bsw(s) ? ({ t: '포트 배런 모집센터에서 연습생 계약서에 서명했습니다. 계약 기간은 두 해, 뒷면에는 탈락 조항이 있었습니다.', k: 'ev', fx: { h: 1 } }) : ({ t: ro(affName(s, '용병단')) + ' 들어간 첫 해였습니다. 계약서는 두 장, 장비는 중고, 훈련장은 창고 뒤 공터였습니다.', k: 'ev' })),
+  ev('col_bsw_trainee_mock', 'COL_PMC', 'trainee', [16, 30], 30, 2, (s) => ({ t: '모조 화기로 하루 열 시간을 훈련했습니다. 진짜 화기는 아직 멀었고, 어깨 멍은 진짜였습니다.', k: 'ev', fx: { hl: -2, cap: { skill: 0.05 } } }), { c: bsw }),
+  ev('col_bsw_trainee_wasteland', 'COL_PMC', 'trainee', [16, 30], 30, 2, (s) => ({ t: '황무지인 축출 훈련이었습니다. 표적은 사람이 아니라고 교관이 세 번 말했습니다.', k: 'bad', fx: { h: -2, standing: 2 } }), { c: bsw }),
+  ev('col_bsw_trainee_half', 'COL_PMC', 'trainee', [16, 30], 25, 3, (s) => ({ t: '동기 40명 중 절반이 짐을 쌌습니다. 침상이 비었고, 식당 줄이 짧아졌습니다.', k: 'note', fx: { h: -1 }, f: F('블랙스틸 포트 배런 모집센터 연습생 명부, 탈락률 76%') }), { c: bsw }),
+  ev('col_bsw_trainee_field', 'COL_PMC', 'trainee', [16, 30], 25, 2, (s) => ({ t: '기초 야전 교육을 마쳤습니다. 비 오는 사흘을 밖에서 났고, 신발은 버려야 했습니다.', k: 'ev', fx: { hl: -2, cap: { skill: 0.04 } } })),
+  ev('col_bsw_op_deploy', 'COL_PMC', 'operator', [18, 50], 35, 2, (s) => ({ t: visitName(s) + ' 파견이 4개월이었습니다. 돌아오니 계절이 바뀌어 있었고, 우편함이 넘쳐 있었습니다.', k: 'ev', fx: { standing: 3, money: medX(s, 0.2) }, f: F('블랙스틸 파견 근무 기록, ' + s.year + '년') })),
+  ev('col_bsw_op_misfire', 'COL_PMC', 'operator', [18, 50], 20, 4, (s) => ({ t: '공압 화기가 오발했습니다. 옆 사수가 다쳤고, 그 사람의 판정은 두 달 뒤에 나왔습니다.', k: 'bad', fx: { h: -3 } })),
+  ev('col_bsw_op_escort', 'COL_PMC', 'operator', [18, 50], 30, 2, (s) => ({ t: '호위 임무였습니다. 의뢰인은 차 안에서 전화만 했고, 저희는 차 밖에서 비만 맞았습니다.', k: 'ev', fx: { standing: 2 } })),
+  ev('col_bsw_op_gear_test', 'COL_PMC', 'operator', [18, 50], 20, 4, (s) => ({ t: '신장비 시험대에 올랐습니다. 장비는 무거웠고, 보고서에는 "무결점"이라고 적혔습니다.', k: 'note', fx: { cap: { skill: 0.03 } } }), { c: bsw }),
+  ev('col_bsw_elite_instructor', 'COL_PMC', 'elite', [24, 55], 30, 2, (s) => ({ t: '연습생 교육을 맡았습니다. 제가 들었던 "표적은 사람이 아니다"를 이번에는 제가 말했습니다.', k: 'ev', fx: { standing: 3 } })),
+  ev('col_bsw_elite_grading', 'COL_PMC', 'elite', [24, 55], 25, 3, (s) => ({ t: '연습생 평가 채점을 했습니다. 4명 중 3명에게 탈락을 적었습니다. 그중 하나는 제 첫해와 똑같이 뛰었습니다.', k: 'bad', fx: { h: -2 }, f: F('블랙스틸 포트 배런 모집센터 연습생 평가 기준, 탈락률 76%') }), { c: bsw }),
+  ev('col_bsw_elite_range', 'COL_PMC', 'elite', [24, 55], 25, 3, (s) => ({ t: '사격장에서 기록을 냈습니다. 게시판에 이름이 붙었고, 다음 주에 다른 이름이 그 위에 붙었습니다.', k: 'ev', fx: { cap: { skill: 0.04 } } })),
+  ev('col_bsw_elite_contract', 'COL_PMC', 'elite', [24, 55], 20, 4, (s) => ({ t: '계약 조건을 직접 협상했습니다. 위험 수당 줄이 하나 늘었고, 사망 보상 줄은 그대로였습니다.', k: 'ev', fx: { money: medX(s, 0.3) } })),
+  ev('col_bsw_exec_absorb', 'COL_PMC', 'exec', [30, 65], 25, 3, (s) => ({ t: '하청 용병단이 임무에 실패했습니다. 생존자들을 헐값에 흡수하는 서류에 서명했습니다.', k: 'bad', fx: { h: -2, standing: 3 } }), { c: bsw }),
+  ev('col_bsw_exec_refuse', 'COL_PMC', 'exec', [30, 65], 25, 6, (s) => ({ t: '은행이 개척지 주민에게 발포하라는 명령을 넣었습니다. 거부했습니다. 계약 하나가 깨졌고, 다른 계약 셋이 들어왔습니다.', k: 'ev', fx: { standing: 5, money: -medX(s, 0.5) } }), { c: (s) => (bsw)(s) && s.year >= 1099 }),
+  ev('col_bsw_exec_board', 'COL_PMC', 'exec', [30, 65], 30, 2, (s) => ({ t: '임원 회의였습니다. 지도에 꽂힌 핀이 열두 개였고, 핀마다 사람이 수십 명이었습니다.', k: 'ev', fx: { standing: 2 } })),
+  ev('col_bsw_exec_funeral', 'COL_PMC', 'exec', [30, 65], 20, 4, (s) => ({ t: '임무 중 사망한 오퍼레이터의 장례에 회사 대표로 갔습니다. 가족은 보상금 서류를 받았고, 저를 보지 않았습니다.', k: 'loss', fx: { h: -3 } })),
+  ev('col_bsw_ceo_shareholders', 'COL_PMC', 'ceo', [35, 75], 30, 2, (s) => ({ t: '주주 총회였습니다. 사망자 수는 각주에, 매출은 본문에 있었습니다.', k: 'ev', fx: { standing: 2 } }), { c: bsw }),
+  ev('col_bsw_ceo_gov', 'COL_PMC', 'ceo', [35, 75], 25, 3, (s) => ({ t: '연방 정부 계약에 서명했습니다. 계약서는 두껍고, 서명 칸은 하나였습니다.', k: 'ev', fx: { money: medX(s, 3) } }), { c: bsw }),
+  ev('col_bsw_ceo_resign_denied', 'COL_PMC', 'ceo', [35, 75], 20, 5, (s) => ({ t: '옛 오퍼레이터의 사직서가 올라왔습니다. 승인하지 않았습니다. 그 사람은 서류상 여전히 회사 사람입니다.', k: 'note' }), { c: bsw }),
+  ev('col_bsw_ceo_founder', 'COL_PMC', 'ceo', [35, 75], 20, 5, (s) => ({ t: '정예 오퍼레이터 하나가 독립해 회사를 차린다고 했습니다. 막지 않았습니다. 첫 고객이 되어 주었습니다.', k: 'warm', fx: { h: 2 } }), { c: bsw }),
+  transition('col_pmc_transition', 'COL_PMC', {
+    operator: (s) => bsw(s) ? '평가를 통과해 오퍼레이터가 되었습니다. 진짜 화기를 받았고, 계약서가 세 해짜리로 바뀌었습니다.' : '정식 대원이 되었습니다. 중고 장비 대신 조금 덜 중고인 장비가 왔습니다.',
+    elite: (s) => bsw(s) ? '정예로 분류되었습니다. 교관 완장이 왔고, 파견 횟수는 줄지 않았습니다.' : '팀장이 되었습니다. 계약서에 제 이름이 두 번 들어가게 되었습니다.',
+    exec: (s) => bsw(s) ? '임원이 되었습니다. 총 대신 서류를 들었고, 서류가 더 무거웠습니다.' : '용병단의 두목이 되었습니다. 회사 이름을 지었고, 이름보다 빚이 먼저 등록되었습니다.',
+    ceo: (s) => bsw(s) ? '회사의 대표가 되었습니다. 첫 결재는 다음 분기 사망 보상 예산이었습니다.' : '용병단 대표로 등기했습니다. 사무실 하나, 전화 둘, 대표는 저 하나였습니다.',
   }),
-  aftermath('col_bsw_after', 'COL_BSW', {
+  aftermath('col_pmc_after', 'COL_PMC', {
     elimination: (s) => '탈락했습니다. 모집센터 뒷문으로 나왔고, 가방 하나와 두 해가 남았습니다.',
     kia: (s) => '임무에서 크게 다쳤습니다. 회사는 계약서대로 치료비를 냈고, 계약서대로 다음 계약은 없었습니다.',
+    contract_end: (s) => '계약이 해지되었습니다. 의뢰인이 바뀌었고, 새 의뢰인은 다른 용병단을 썼습니다.',
     infected: (s) => '판정이 중증으로 나왔습니다. 퇴직금과 계약 해지 통지가 같은 봉투에 들어 있었습니다.',
   }),
   // 소속 변주
-  { id: 'col_bsw_apd', a: [16, 60], tags: ['aff:COL_BSW_APD'], w: 20, gap: 4,
+  { id: 'col_bsw_apd', a: [16, 60], tags: ['aff:COL_PMC_BLACKSTEEL'], w: 10, gap: 4,
     run: (s) => ({ t: 'APD 소속으로 도시 경비에 섰습니다. 경찰과 같은 모퉁이에 서 있었고, 월급은 달랐습니다.', k: 'note' }) },
-  { id: 'col_bsw_deat', a: [16, 60], tags: ['aff:COL_BSW_DEAT'], w: 20, gap: 4,
+  { id: 'col_bsw_deat', a: [16, 60], tags: ['aff:COL_PMC_BLACKSTEEL'], w: 10, gap: 4,
     run: (s) => ({ t: 'DEAT 작전 전날 밤이었습니다. 편지를 썼고, 돌아와서 찢었습니다.', k: 'ev', fx: { h: -1, standing: 3 } }) },
-  { id: 'col_bsw_obhr', a: [16, 60], tags: ['aff:COL_BSW_OBHR'], w: 20, gap: 4,
+  { id: 'col_bsw_obhr', a: [16, 60], tags: ['aff:COL_PMC_BLACKSTEEL'], w: 10, gap: 4,
     run: (s) => ({ t: 'OBHR 호위 임무였습니다. 의뢰인의 이름은 끝까지 몰랐고, 의뢰인은 저희 이름을 알 필요가 없었습니다.', k: 'note', fx: { money: medX(s, 0.15) } }) },
-  { id: 'col_bsw_account', a: [16, 60], tags: ['aff:COL_BSW_ACCOUNT'], w: 20, gap: 4,
+  { id: 'col_bsw_account', a: [16, 60], tags: ['aff:COL_PMC_BLACKSTEEL'], w: 10, gap: 4,
     run: (s) => ({ t: '회계 부서라 기초 야전 훈련만 받았습니다. 장부에서 "손실"이라는 칸이 무엇을 세는지는 첫 달에 알았습니다.', k: 'note' }) },
   // 로도스 접점(referral): 합동 작전
-  { id: 'col_bsw_rhodes_joint', a: [18, 55], tags: ['track:COL_BSW', '!rhodes'], w: 8, gap: 8, c: (s) => !!tr(s) && tr(s).stage >= 1,
+  { id: 'col_bsw_rhodes_joint', a: [18, 55], tags: ['track:COL_PMC', '!rhodes'], w: 8, gap: 8, c: (s) => !!tr(s) && tr(s).stage >= 1,
     run: (s) => { s.S.flags.rhodes_operation = s.S.age; return { t: '로도스 아일랜드 오퍼레이터들과 합동 작전을 했습니다. 끝나고 그쪽 지휘관이 제 소속과 이름을 물었습니다.', k: 'note' }; } },
   // 방문국(순회형 피드)
-  { id: 'col_bsw_visit_kazimierz', a: [16, 60], tags: ['track:COL_BSW', 'visit:kazimierz'], w: 30, gap: 3,
+  { id: 'col_bsw_visit_kazimierz', a: [16, 60], tags: ['track:COL_PMC', 'visit:kazimierz'], w: 30, gap: 3,
     run: (s) => ({ t: '카시미어 파견이었습니다. 경기장 경비였고, 관중은 저희를 배경으로 알았습니다.', k: 'ev', fx: { standing: 2 } }) },
-  { id: 'col_bsw_visit_bolivar', a: [16, 60], tags: ['track:COL_BSW', 'visit:bolivar'], w: 30, gap: 3,
+  { id: 'col_bsw_visit_bolivar', a: [16, 60], tags: ['track:COL_PMC', 'visit:bolivar'], w: 30, gap: 3,
     run: (s) => ({ t: '볼리바르 파견이었습니다. 세 정부 중 누가 의뢰인인지 묻지 않는 것이 첫 규칙이었습니다.', k: 'ev', fx: { hl: -1, standing: 2 } }) },
-  { id: 'col_bsw_visit_sargon', a: [16, 60], tags: ['track:COL_BSW', 'visit:sargon'], w: 30, gap: 3,
+  { id: 'col_bsw_visit_sargon', a: [16, 60], tags: ['track:COL_PMC', 'visit:sargon'], w: 30, gap: 3,
     run: (s) => ({ t: '사르곤 파견이었습니다. 모래가 화기 속으로 들어왔고, 저녁마다 분해해서 닦았습니다.', k: 'ev', fx: { cap: { skill: 0.02 } } }) },
-  { id: 'col_canon_liskarm', a: [18, 55], tags: ['columbia'], w: 30, c: (s) => canonOk(s, 'liskarm') && !!tr(s) && ['COL_BSW', 'COL_LABOR'].includes(tr(s).id),
+  { id: 'col_canon_liskarm', a: [18, 55], tags: ['columbia'], w: 30, c: (s) => canonOk(s, 'liskarm') && !!tr(s) && (bsw(s) || tr(s).id === 'COL_LABOR'),
     run: (s) => { canonSeen(s); return { t: '파견지에서 블랙스틸 오퍼레이터 하나가 동료 둘의 짐까지 들고 먼저 차에 올랐습니다. 이름은 들었고, 다시 볼 일은 없었습니다.', k: 'note' }; } },
 
   // ══════════════════════════════════════════════════════════════════════════
@@ -253,7 +264,7 @@ export const events = [
     run: (s) => ({ t: '일요일이었습니다. 개척지 전체가 늦게 일어났고, 저녁에는 누군가 기타를 꺼냈습니다.', k: 'warm', fx: { h: 2 } }) },
   // 소속 변주: 개척지별
   { id: 'col_fro_basewood', a: [14, 80], tags: ['aff:COL_FRO_BASEWOOD'], w: 20, gap: 4,
-    run: (s) => ({ t: '베이스우드 플레이트가 이동했습니다. 땅이 흔들리는 사이 울타리 기둥 셋이 넘어졌고, 다시 세웠습니다.', k: 'ev' }) },
+    run: (s) => ({ t: s.S.home.type === 'nomadic' ? '베이스우드 플레이트가 이동했습니다. 땅이 흔들리는 사이 울타리 기둥 셋이 넘어졌고, 다시 세웠습니다.' : '베이스우드에 폭풍이 지나갔습니다. 바람에 울타리 기둥 셋이 넘어졌고, 다시 세웠습니다.', k: 'ev' }) },
   { id: 'col_fro_deadhorse', a: [14, 80], tags: ['aff:COL_FRO_DEADHORSE'], w: 20, gap: 4,
     run: (s) => ({ t: '데드호스에는 보안관이 하나, 술집이 셋이었습니다. 밤에 소리가 나면 술집 쪽이었습니다.', k: 'note', fx: { h: -1 } }) },
   { id: 'col_fro_richmond', a: [14, 80], tags: ['aff:COL_FRO_RICHMOND'], w: 20, gap: 4,
@@ -294,7 +305,7 @@ export const events = [
   { id: 'col_newcomer_insurance', a: [10, 80], tags: ['columbia', 'newcomer'], w: 40, gap: 3,
     run: (s) => ({ t: '거주 등록을 하자 보험협회에서 가입 안내서가 왔습니다. 첫 장은 환영 인사, 둘째 장부터 7쪽은 광석병 특약 안내였습니다.', k: 'note', fx: { money: -medX(s, 0.03) }, f: F('보험협회 신규 거주자 가입 안내서 ' + s.year + '년판') }) },
   { id: 'col_newcomer_first_year', a: [10, 80], tags: ['columbia', 'newcomer'], w: 35, gap: 2,
-    run: (s) => ({ t: pick(s, ['이민자 첫 해였습니다. 모든 것이 빨랐고, 값이 붙어 있었고, 값은 매달 조금씩 올랐습니다.', '말이 서툴러 가게에서 두 번 물었습니다. 두 번째 대답에는 미소가 있었고, 값은 같았습니다.', '첫 월급의 셋 중 하나가 집세로, 하나가 보험료로 갔습니다. 남은 하나로 살았습니다.']), k: 'ev', fx: { h: -1 } }) },
+    run: (s) => ({ t: pick(s, ['이민자 첫 해였습니다. 모든 것이 빨랐고, 값이 붙어 있었고, 값은 매달 조금씩 올랐습니다.', '말이 서툴러 가게에서 두 번 물었습니다. 두 번째 대답에는 미소가 있었고, 값은 같았습니다.', (s.S.track ? '첫 월급의' : '첫 달 품삯의') + ' 셋 중 하나가 집세로, 하나가 보험료로 갔습니다. 남은 하나로 살았습니다.']), k: 'ev', fx: { h: -1 } }) },
   { id: 'col_newcomer_papers', a: [14, 80], tags: ['columbia', 'newcomer', 'papers:legal'], w: 25, gap: 3,
     run: (s) => ({ t: '거주 허가 갱신 창구에 섰습니다. 번호표가 넘어가는 사이 옆 사람이 고향 말로 중얼거렸고, 같은 말이었습니다.', k: 'note', fx: { cap: { ties: 0.02 } } }) },
 
@@ -388,25 +399,18 @@ export const events = [
     run: (s) => ({ t: '바의 밤은 길었습니다. 마지막 손님은 늘 같은 사람이었고, 늘 같은 이야기를 했습니다.', k: 'note', fx: { hl: -1, cap: { ties: 0.02 } } }) },
 
   // COL_PMC 기타 용병단(A6 순회형) — merc / lead / boss
-  ev('col_pmc_merc_sign', 'COL_PMC', 'merc', [16, 50], 30, 2, (s) => ({ t: '계약서에 서명했습니다. 보상 칸은 명확했고, 임무 칸은 비어 있었습니다.', k: 'ev', fx: { standing: 2 } })),
-  ev('col_pmc_merc_cheap', 'COL_PMC', 'merc', [16, 50], 25, 3, (s) => ({ t: '장비가 중고였습니다. 앞사람 이름이 지워진 자리에 제 이름을 썼습니다.', k: 'note', fx: { h: -1 } })),
-  ev('col_pmc_lead_team', 'COL_PMC', 'lead', [20, 55], 30, 2, (s) => ({ t: '팀을 맡았습니다. 여섯 명, 그중 둘은 처음 보는 얼굴이었고, 임무 전에 이름을 외웠습니다.', k: 'ev', fx: { standing: 3 } })),
-  ev('col_pmc_lead_bigfirm', 'COL_PMC', 'lead', [20, 55], 25, 3, (s) => ({ t: '큰 회사 밑에서 하청을 받았습니다. 그쪽 장비는 새것이었고, 저희 자리는 맨 앞이었습니다.', k: 'bad', fx: { money: medX(s, 0.2), hl: -1 } })),
-  ev('col_pmc_boss_bid', 'COL_PMC', 'boss', [25, 65], 30, 2, (s) => ({ t: '입찰에 들어갔습니다. 큰 회사보다 싸게 썼고, 그 차이가 저희 사람들 보험료였습니다.', k: 'bad', fx: { money: medX(s, 0.5), h: -1 } })),
-  ev('col_pmc_boss_survivors', 'COL_PMC', 'boss', [25, 65], 20, 4, (s) => ({ t: '임무가 실패했습니다. 큰 회사가 생존자를 흡수하겠다고 했습니다. 값은 헐값이었고, 거절할 돈이 없었습니다.', k: 'bad', fx: { h: -3, standing: -5 } })),
-  transition('col_pmc_transition', 'COL_PMC', {
-    lead: (s) => '팀장이 되었습니다. 계약서에 제 이름이 두 번 들어가게 되었습니다.',
-    boss: (s) => '하청 용병단의 두목이 되었습니다. 회사 이름을 지었고, 이름보다 빚이 먼저 등록되었습니다.',
-  }),
-  aftermath('col_pmc_after', 'COL_PMC', {
-    kia: (s) => '임무에서 다쳤습니다. 용병단은 치료비 절반을 냈고, 나머지 절반은 제 몫이었습니다.',
-    contract_end: (s) => '계약이 해지되었습니다. 의뢰인이 바뀌었고, 새 의뢰인은 다른 용병단을 썼습니다.',
-    infected: (s) => '판정이 났습니다. 용병단은 계약서 맨 뒷장을 보여 주었고, 그 장에 제 이름이 지워졌습니다.',
-  }),
+  ev('col_pmc_merc_sign', 'COL_PMC', 'operator', [16, 50], 30, 2, (s) => ({ t: '계약서에 서명했습니다. 보상 칸은 명확했고, 임무 칸은 비어 있었습니다.', k: 'ev', fx: { standing: 2 } })),
+  ev('col_pmc_merc_cheap', 'COL_PMC', 'operator', [16, 50], 25, 3, (s) => ({ t: '장비가 중고였습니다. 앞사람 이름이 지워진 자리에 제 이름을 썼습니다.', k: 'note', fx: { h: -1 } }), { c: (s) => !bsw(s) }),
+  ev('col_pmc_lead_team', 'COL_PMC', 'elite', [20, 55], 30, 2, (s) => ({ t: '팀을 맡았습니다. 여섯 명, 그중 둘은 처음 보는 얼굴이었고, 임무 전에 이름을 외웠습니다.', k: 'ev', fx: { standing: 3 } })),
+  ev('col_pmc_lead_bigfirm', 'COL_PMC', 'elite', [20, 55], 25, 3, (s) => ({ t: '큰 회사 밑에서 하청을 받았습니다. 그쪽 장비는 새것이었고, 저희 자리는 맨 앞이었습니다.', k: 'bad', fx: { money: medX(s, 0.2), hl: -1 } }), { c: (s) => !bsw(s) }),
+  ev('col_pmc_boss_bid', 'COL_PMC', 'exec', [25, 65], 30, 2, (s) => ({ t: '입찰에 들어갔습니다. 큰 회사보다 싸게 썼고, 그 차이가 저희 사람들 보험료였습니다.', k: 'bad', fx: { money: medX(s, 0.5), h: -1 } }), { c: (s) => !bsw(s) }),
+  ev('col_pmc_boss_survivors', 'COL_PMC', 'exec', [25, 65], 20, 4, (s) => ({ t: '임무가 실패했습니다. 큰 회사가 생존자를 흡수하겠다고 했습니다. 값은 헐값이었고, 거절할 돈이 없었습니다.', k: 'bad', fx: { h: -3, standing: -5 } }), { c: (s) => !bsw(s) }),
   { id: 'col_pmc_visit_bolivar', a: [16, 60], tags: ['track:COL_PMC', 'visit:bolivar'], w: 30, gap: 3,
     run: (s) => ({ t: '볼리바르에서 플랜테이션 경비를 섰습니다. 밤에 들리는 소리가 짐승인지 사람인지 구분하는 데 한 달이 걸렸습니다.', k: 'ev', fx: { standing: 2 } }) },
   { id: 'col_pmc_visit_siracusa', a: [16, 60], tags: ['track:COL_PMC', 'visit:siracusa'], w: 30, gap: 3,
     run: (s) => ({ t: '시라쿠사 의뢰였습니다. 의뢰인은 가족 이름으로 서명했고, 저희는 누구 편인지 끝까지 몰랐습니다.', k: 'note' }) },
+  { id: 'col_pmc_bsw_offer', a: [18, 40], tags: ['track:COL_PMC', '!aff:COL_PMC_BLACKSTEEL'], w: 1, c: (s) => s.S.cap.skill >= 0.8 && s.S.innate.luck >= 0.5 && !!tr(s) && tr(s).stage >= 1 && tr(s).stage <= 2 && lifeRoll(s, 'bsw_offer', 0.25),
+    run: (s) => { tr(s).aff = 'COL_PMC_BLACKSTEEL'; return { t: '블랙스틸 모집 담당이 파견지에서 명함을 주었습니다. 다음 계약은 그쪽 서류로 썼고, 장비가 새것이 되었습니다.', k: 'big', fx: { standing: 4, money: medX(s, 0.3) } }; } },
   { id: 'col_pmc_redmark', a: [16, 60], tags: ['aff:COL_PMC_REDMARK'], w: 20, gap: 4,
     run: (s) => ({ t: '레드마크의 임무는 늘 급했습니다. 출발 두 시간 전에 통보가 왔고, 돌아오는 날은 적혀 있지 않았습니다.', k: 'ev', fx: { hl: -1, money: medX(s, 0.1) } }) },
 
@@ -635,8 +639,8 @@ export const decisions = {
 
   // ── 라인 랩(A9): 자가 실험·은폐 ──
   col_rhine_self_experiment: {
-    tags: ['track:COL_RHINE'], once: false, gap: 5,
-    ok: (s) => onT(s, 'COL_RHINE') && tr(s).stage >= 1 && tr(s).stage <= 2 && s.S.age >= 24 && yr(s, 'colself', 0.18),
+    tags: ['track:COL_RESEARCH'], once: false, gap: 5,
+    ok: (s) => onT(s, 'COL_RESEARCH') && tr(s).stage >= 1 && tr(s).stage <= 2 && s.S.age >= 24 && yr(s, 'colself', rhine(s) ? 0.18 : 0.08),
     build: (s) => ({ title: '자가 실험', body: '피험자 승인이 나지 않았습니다. 실험 일정은 나 있었습니다. 제 몸에 하면 서류가 필요 없습니다.',
       choices: [{ k: 'no', label: '승인을 기다린다', sub: '실적 지연', auto: 2 }, { k: 'yes', label: '제 몸에 한다', sub: '큰 보상, 큰 위험', auto: 1 }] }),
     apply: (s, k) => {
@@ -648,8 +652,8 @@ export const decisions = {
     },
   },
   col_rhine_coverup: {
-    tags: ['track:COL_RHINE'], once: false, gap: 6,
-    ok: (s) => onT(s, 'COL_RHINE') && tr(s).stage >= 1 && yr(s, 'colcover', 0.15),
+    tags: ['track:COL_RESEARCH'], once: false, gap: 6,
+    ok: (s) => onT(s, 'COL_RESEARCH') && tr(s).stage >= 1 && yr(s, 'colcover', 0.15),
     build: (s) => ({ title: '사고 보고서', body: '실험실 사고가 있었습니다. 보고서 초안에는 "장비 결함"이라고 적혀 있었고, 장비는 멀쩡했습니다. 서명란이 비어 있습니다.',
       choices: [{ k: 'sign', label: '서명한다', sub: '섹션 보호', auto: 2 }, { k: 'refuse', label: '서명하지 않는다', sub: '평가 하락', auto: 1 }] }),
     apply: (s, k) => { if (k === 'sign') return { t: '서명했습니다. 보고서는 접수되었고, 다친 사람의 이름은 보고서에 없었습니다.', k: 'bad', fx: { h: -3, standing: 5 } }; return { t: '서명하지 않았습니다. 다른 사람이 했고, 제 연말 평가가 한 칸 내려갔습니다.', k: 'note', fx: { standing: -8, h: 1 } }; },
@@ -657,8 +661,8 @@ export const decisions = {
 
   // ── 블랙스틸(A6): 연습생 평가(76% 탈락)·감염 5규칙 ──
   col_bsw_eval: {
-    tags: ['track:COL_BSW:trainee'], once: false,
-    ok: (s) => onT(s, 'COL_BSW') && tr(s).years >= 2 && !s.S.flags.bswEvalAt,
+    tags: ['track:COL_PMC:trainee', 'aff:COL_PMC_BLACKSTEEL'], once: false,
+    ok: (s) => onT(s, 'COL_PMC') && bsw(s) && tr(s).years >= 2 && !s.S.flags.bswEvalAt,
     build: (s) => ({ title: '최종 평가', body: '두 해 훈련이 끝났습니다. 내일이 평가입니다. 넷 중 하나만 오퍼레이터 계약서를 받습니다.', fact: F('블랙스틸 포트 배런 모집센터 연습생 평가 기준, 탈락률 76%'),
       choices: [{ k: 'go', label: '평가를 받는다', auto: 4 }, { k: 'quit', label: '평가 전에 나간다', sub: '탈락 기록 없음', auto: 0.5 }] }),
     apply: (s, k) => {
@@ -670,8 +674,8 @@ export const decisions = {
     },
   },
   col_bsw_infected_rule: {
-    tags: ['track:COL_BSW', 'known'], once: true,
-    ok: (s) => onT(s, 'COL_BSW') && tr(s).stage >= 1 && tr(s).stage <= 2,
+    tags: ['track:COL_PMC', 'known', 'aff:COL_PMC_BLACKSTEEL'], once: true,
+    ok: (s) => onT(s, 'COL_PMC') && bsw(s) && tr(s).stage >= 1 && tr(s).stage <= 2,
     build: (s) => ({ title: '감염자 운용 규정', body: '판정 결과가 회사에 들어갔습니다. 규정은 다섯 줄입니다. 경증은 허가 뒤 합동 임무, 중등증은 단독 임무, 중증은 퇴직금과 계약 해지.',
       choices: [{ k: 'solo', label: '단독 임무를 받는다', sub: '위험 높음, 계약 유지', auto: 2 }, { k: 'quit', label: '퇴직금을 받고 나간다', auto: 1 }] }),
     apply: (s, k) => { if (k === 'quit') { s.S.money += Math.round(s.med * 1.5); s.leaveTrack('expel', { quiet: true }); return { t: '퇴직금을 받았습니다. 계약 해지 통지와 같은 봉투였습니다.', k: 'loss' }; } s.S.track.standing = Math.min(100, s.S.track.standing + 5); return { t: '단독 임무로 분류되었습니다. 같은 차를 타는 사람이 없어졌습니다.', k: 'bad', fx: { h: -3 } }; },

@@ -6,10 +6,10 @@ import { focusOptions, capProfile, rhodesCard } from '../../engine/sim.js';
 import { humanAge } from '../../engine/lifetable.js';
 import { SPEEDS } from '../../main.js';
 import { STAT_LABEL, STAGE_LABEL, ORI_OUTCOME, POLICY_LABEL, TRAIT_LABEL, SCHOOL_LABEL, EDU_LABEL, SEX, Q_DOTS, RHODES_STATUS, homeWord, jobName, nationName, fxText, focusLabel, focusHint, nationStatRows, MRZ, certNo,
-  statusWord, standingOf, residenceLine, housingName, traitWords } from '../text.js';
+  statusWord, standingOf, residenceLine, housingName, traitWords, dreamLine } from '../text.js';
 
 const LOG_MAX = 1500;
-const GRADE_KEY = { '낮음': 'low', '보통': 'mid', '높음': 'high', '뛰어남': 'top' };
+const GRADE_KEY = { '아주 낮음': 'low', '낮음': 'low', '보통': 'mid', '높음': 'high', '뛰어남': 'top', '탁월': 'top' };   // W16: 6등급 → 색 4종
 const OP_KEY = { '결함': 'low', '보통': 'mid', '표준': 'mid', '우수': 'high', '뛰어남': 'high', '탁월': 'top' };
 let R = null;     // 엘리먼트 참조
 let lastBar = '';
@@ -125,6 +125,7 @@ function renderId(app) {
   const traits = traitWords(S, arch);
   const res = residenceLine(sim);
   const housing = housingName(sim);
+  const dream = dreamLine(sim);   // W16(D56)
   const f = (k, v, w) => `<div class="f${w ? ' w' : ''}"><dt>${k}</dt><dd>${v}</dd></div>`;
   setHtml(R.id, `
     <div class="id-head"><span class="lbl"><span class="en">Operator file</span>테라 신원 기록</span><span class="mono id-no">${esc(certNo(S))}</span></div>
@@ -138,13 +139,14 @@ function renderId(app) {
       </div>
     </div>
     <div class="caps" aria-label="역량">
-      ${prof.caps.map((c) => `<span class="cap g-${GRADE_KEY[c.grade] || 'mid'}" title="${c.delta > 0.005 ? '올해 오름' : c.delta < -0.005 ? '올해 내림' : '변화 없음'}"><i>${esc(c.label)}</i><b>${esc(c.grade)}${c.delta > 0.005 ? '<em class="cap-d up">▲</em>' : c.delta < -0.005 ? '<em class="cap-d dn">▼</em>' : ''}</b></span>`).join('')}
+      ${prof.caps.map((c) => `<span class="cap g-${GRADE_KEY[c.grade] || 'mid'}" title="${c.delta > 0.005 ? '올해 오름' : c.delta < -0.005 ? '올해 내림' : '변화 없음'}"><i>${esc(c.label)}</i><b>${esc(c.grade)}${c.delta > 0.005 ? '<em class="cap-d up">▲</em>' : c.delta < -0.005 ? '<em class="cap-d dn">▼</em>' : ''}</b><em class="cap-dots" title="다음 등급까지">${'●'.repeat(c.dots ?? 0)}${'○'.repeat(3 - (c.dots ?? 0))}</em></span>`).join('')}
     </div>
     ${traits.length ? `<div class="traits">${traits.map((t) => `<span class="trait">${esc(t)}</span>`).join('')}</div>` : ''}
     <dl class="id-kv">
       ${f('출생', `${esc(nationName(sim, S.born))} · 테라력 ${S.by}년`, true)}
       ${f('거주', `${esc(nationName(sim, S.cur))} · ${esc(housing || homeWord(S))}${S.flags.quarantined ? ' · <b class="stamp-text">격리</b>' : ''}`, true)}
       ${res ? f('거주 상태', esc(res), true) : ''}
+      ${dream ? f('꿈', `<span title="${esc(dream.title)}" class="${dream.done ? 'dream-done' : dream.given ? 'dream-given' : ''}">${esc(dream.text)}</span>`, true) : ''}
       ${f('출신 가정', `<span class="dots">${Q_DOTS(S.q)}</span>`)}
       ${f('학력', `${esc(EDU_LABEL[Math.min(4, S.edu || 0)])}${S.flags.casterRoute ? ' · 캐스터' : ''}`)}
       ${S.trait ? f('기질', esc(TRAIT_LABEL[S.trait] || S.trait)) : ''}

@@ -259,7 +259,9 @@
    "entry": {
     "ages": [14,35],
     "classes": { "q2": 0.1, "q3": 0.25 },
-    "gates": [],
+    "gates": [
+     { "cap": "skill", "min": -0.3 }
+    ],
     "via": ["apprentice","family"]
    },
    "stages": [
@@ -311,7 +313,7 @@
     "ages": [12,40],
     "classes": { "q2": 0.2 },
     "gates": [
-     { "urban": false, "weight": 3 }
+     { "urban": false }
     ],
     "via": ["family"]
    },
@@ -364,7 +366,7 @@
     "ages": [18,35],
     "classes": { "q2": 0.05, "q3": 0.05 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["veteran","hire"]
    },
@@ -418,7 +420,7 @@
     "ages": [18,30],
     "classes": { "q3": 0.15 },
     "gates": [
-     { "cap": "skill", "min": -0.8 },
+     { "cap": "skill", "min": -0.3 },
      { "rel": "<=subtle" }
     ],
     "via": ["exam"]
@@ -636,7 +638,7 @@
     "classes": { "q3": 0.2, "q4": 0.45, "q5": 0.2 },
     "gates": [
      { "cap": "learn", "min": -0.8 },
-     { "cap": "skill", "min": -0.8 },
+     { "cap": "skill", "min": -0.3 },
      { "rel": "<=subtle" }
     ],
     "via": ["entrance","scholarship"]

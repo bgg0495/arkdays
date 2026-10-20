@@ -3,7 +3,8 @@
   "schema": "docs/설계_명세_v1.md §3.2",
   "builtAt": "2026-10-20",
   "note": "진로 안의 소속 변주(카탈로그 \"소속 변주\" 열). weight 는 진로 안에서 합 1(규모 감으로 창작). mods 는 승급·몰락·소득 배율(±30% 안, 전부 창작)과 standingStart 가산. tags: major(주류)/minor(군소)/elite(상층·정예, 단계 requires.aff 가 봄). canon:false 는 조직 자체가 창작. events 는 콘텐츠 태그 aff:<id> 와 짝.",
-  "tagEnum": ["major","minor","elite"]
+  "tagEnum": ["major","minor","elite"],
+  "gates": "W15(D55): 소속 gates[] — 진로 entry.gates 와 같은 키(cap+min·born+min…). 조건이 맞지 않으면 그 소속은 배정 후보에서 빠진다(weight 가 있으면 가중). 희귀 소속(블랙스틸·라인 랩·펭귄·몬스터 사이렌)의 역량·운 게이트"
  },
  "affiliations": [
   {
@@ -501,17 +502,19 @@
    "track": "LGM_MESSENGER",
    "name": "펭귄 로지스틱스",
    "canon": true,
-   "weight": 0.25,
+   "weight": 0.12,
    "mods": { "promo": 1, "fall": 1.2, "income": 1.3, "standingStart": 10 },
    "tags": ["elite"],
-   "events": "LGM_MESSENGER:msg_penguin"
+   "events": "LGM_MESSENGER:msg_penguin",
+   "gates": [{"cap": "skill", "min": 0.3}, {"born": "luck", "min": 0.3}],
+   "note": "W15(D55): 희귀 소속 — 기량·운 높을 때 사장 눈에 든다"
   },
   {
    "id": "LGM_MSG_MOUNTAINDASH",
    "track": "LGM_MESSENGER",
    "name": "마운틴대쉬",
    "canon": true,
-   "weight": 0.35,
+   "weight": 0.45,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
    "tags": ["major"],
    "events": "LGM_MESSENGER:msg_mountaindash"
@@ -521,10 +524,81 @@
    "track": "LGM_MESSENGER",
    "name": "창업 붐 소업체",
    "canon": true,
-   "weight": 0.4,
+   "weight": 0.55,
    "mods": { "promo": 1, "fall": 1.3, "income": 0.9, "standingStart": 0 },
    "tags": ["minor"],
    "events": "LGM_MESSENGER:msg_startup"
+  },
+  {
+   "id": "LGM_ART_NIGHT",
+   "track": "LGM_ART",
+   "name": "야시장 무대",
+   "canon": false,
+   "weight": 0.55,
+   "mods": {
+    "promo": 1,
+    "fall": 1,
+    "income": 0.9,
+    "standingStart": 0
+   },
+   "tags": [
+    "major"
+   ],
+   "events": "LGM_ART:night"
+  },
+  {
+   "id": "LGM_ART_CLUB",
+   "track": "LGM_ART",
+   "name": "상업단지 클럽",
+   "canon": false,
+   "weight": 0.45,
+   "mods": {
+    "promo": 1.1,
+    "fall": 1.1,
+    "income": 1.2,
+    "standingStart": 0
+   },
+   "tags": [
+    "minor"
+   ],
+   "events": "LGM_ART:club"
+  },
+  {
+   "id": "COM_SIREN",
+   "track": [
+    "HIG_ENT",
+    "LEI_MUSIC",
+    "LEI_STREET",
+    "SIR_ART",
+    "COL_MEDIA",
+    "LGM_ART",
+    "AEG_ARTIST",
+    "BOL_STREET"
+   ],
+   "name": "몬스터 사이렌 레코드",
+   "canon": true,
+   "weight": 0.1,
+   "gates": [
+    {
+     "born": "looks",
+     "min": 0.5
+    },
+    {
+     "born": "luck",
+     "min": 0.5
+    }
+   ],
+   "mods": {
+    "promo": 1.2,
+    "fall": 1,
+    "income": 1.6,
+    "standingStart": 10
+   },
+   "tags": [
+    "elite"
+   ],
+   "events": "COM:siren",
+   "note": "W15(D55): 테라 전역 유명 음반사. 어느 나라 음악가·공연 진로에서든 외모·운이 높을 때 극히 드물게"
   },
   {
    "id": "LGM_SHOP_SIAUSAN",
@@ -921,7 +995,7 @@
    "track": "HIG_YAKUZA",
    "name": "협객 이탈파",
    "canon": true,
-   "weight": 0.2,
+   "weight": 0.1,
    "mods": { "promo": 1, "fall": 1.3, "income": 0.8, "standingStart": 0 },
    "tags": ["minor"],
    "events": "HIG_YAKUZA:yak_kyokaku"
@@ -931,10 +1005,44 @@
    "track": "HIG_YAKUZA",
    "name": "킨세키 그룹 합법화",
    "canon": true,
-   "weight": 0.2,
+   "weight": 0.1,
    "mods": { "promo": 1, "fall": 0.7, "income": 1.3, "standingStart": 0 },
    "tags": ["elite"],
    "events": "HIG_YAKUZA:yak_group"
+  },
+  {
+   "id": "HIG_YAK_SHIRANUI",
+   "track": "HIG_YAKUZA",
+   "name": "시라누이구미",
+   "canon": false,
+   "weight": 0.1,
+   "mods": {
+    "promo": 1,
+    "fall": 1.2,
+    "income": 0.9,
+    "standingStart": 0
+   },
+   "tags": [
+    "minor"
+   ],
+   "events": "HIG_YAKUZA:shiranui"
+  },
+  {
+   "id": "HIG_YAK_HARBOR",
+   "track": "HIG_YAKUZA",
+   "name": "항만 연합회",
+   "canon": false,
+   "weight": 0.1,
+   "mods": {
+    "promo": 0.9,
+    "fall": 1,
+    "income": 1,
+    "standingStart": 0
+   },
+   "tags": [
+    "minor"
+   ],
+   "events": "HIG_YAKUZA:harbor"
   },
   {
    "id": "HIG_NINJA_CLAN",
@@ -1509,7 +1617,7 @@
   {
    "id": "SAM_GUI_EXPEDITION",
    "track": "SAM_GUIDE",
-   "name": "탐사대 고용",
+   "name": "탐사대 길잡이단",
    "canon": true,
    "weight": 0.35,
    "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
@@ -1549,7 +1657,7 @@
   {
    "id": "KJE_EX_CHERNOBOG",
    "track": "KJE_EXILE",
-   "name": "체르노보그 이주",
+   "name": "체르노보그 이주민회",
    "canon": true,
    "weight": 0.5,
    "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
@@ -1559,7 +1667,7 @@
   {
    "id": "KJE_EX_HOUSE",
    "track": "KJE_EXILE",
-   "name": "몰락 가문",
+   "name": "몰락한 옛 가문",
    "canon": true,
    "weight": 0.5,
    "mods": { "promo": 1, "fall": 1, "income": 1.1, "standingStart": 0 },
@@ -1669,9 +1777,9 @@
   {
    "id": "KJE_KT_DEPT",
    "track": "KJE_KT",
-   "name": "카란 무역 부서",
+   "name": "카란 무역",
    "canon": true,
-   "weight": 0.85,
+   "weight": 0.8,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
    "tags": ["major"],
    "events": "KJE_KT:kt_dept"
@@ -1681,10 +1789,27 @@
    "track": "KJE_KT",
    "name": "설산귀",
    "canon": true,
-   "weight": 0.15,
+   "weight": 0.1,
    "mods": { "promo": 1.3, "fall": 1.3, "income": 1.2, "standingStart": 0 },
    "tags": ["elite"],
    "events": "KJE_KT:kt_snowdevil"
+  },
+  {
+   "id": "KJE_KT_SMALL",
+   "track": "KJE_KT",
+   "name": "투리쿰 소상단",
+   "canon": false,
+   "weight": 0.1,
+   "mods": {
+    "promo": 0.9,
+    "fall": 1.2,
+    "income": 0.8,
+    "standingStart": 0
+   },
+   "tags": [
+    "minor"
+   ],
+   "events": "KJE_KT:small"
   },
   {
    "id": "KJE_SCH_COLUMBIA",
@@ -1809,7 +1934,7 @@
   {
    "id": "LEI_STR_PLAYER",
    "track": "LEI_STREET",
-   "name": "거리 연주자",
+   "name": "거리 악사 무리",
    "canon": true,
    "weight": 0.7,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
@@ -1819,7 +1944,7 @@
   {
    "id": "LEI_STR_AUDITION",
    "track": "LEI_STREET",
-   "name": "오디션 줄",
+   "name": "극장 오디션파",
    "canon": true,
    "weight": 0.3,
    "mods": { "promo": 1.3, "fall": 1, "income": 1, "standingStart": 0 },
@@ -2319,7 +2444,7 @@
   {
    "id": "VIC_OFF_WHOLESALE",
    "track": "VIC_OFFICE",
-   "name": "도매상",
+   "name": "도매 상회",
    "canon": true,
    "weight": 0.25,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
@@ -3137,6 +3262,30 @@
    "events": "COL_PMC:pmc_western"
   },
   {
+   "id": "COL_PMC_BLACKSTEEL",
+   "track": "COL_PMC",
+   "name": "블랙스틸 월드와이드",
+   "canon": true,
+   "weight": 0.08,
+   "gates": [
+    {
+     "cap": "skill",
+     "min": 0.5
+    }
+   ],
+   "mods": {
+    "promo": 1.1,
+    "fall": 1.1,
+    "income": 1.4,
+    "standingStart": 5
+   },
+   "tags": [
+    "elite"
+   ],
+   "events": "COL_PMC:pmc_blacksteel",
+   "note": "W15(D55): 기량 높음 게이트. 교환 프로그램(로도스 협력)은 이 소속의 결정 com_bsx_sign"
+  },
+  {
    "id": "COL_PMC_REDMARK",
    "track": "COL_PMC",
    "name": "레드마크",
@@ -3157,44 +3306,62 @@
    "events": "COL_PMC:pmc_sub"
   },
   {
-   "id": "COL_BSW_APD",
-   "track": "COL_BSW",
-   "name": "APD",
+   "id": "COL_RES_RHINE",
+   "track": "COL_RESEARCH",
+   "name": "라인 랩",
    "canon": true,
-   "weight": 0.4,
-   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
-   "tags": ["major"],
-   "events": "COL_BSW:bsw_apd"
+   "weight": 0.05,
+   "gates": [
+    {
+     "cap": "learn",
+     "min": 1.4
+    }
+   ],
+   "mods": {
+    "promo": 1.2,
+    "fall": 1.2,
+    "income": 1.6,
+    "standingStart": 5
+   },
+   "tags": [
+    "elite"
+   ],
+   "events": "COL_RESEARCH:rhine",
+   "note": "W15(D55): 학식 뛰어남 게이트"
   },
   {
-   "id": "COL_BSW_DEAT",
-   "track": "COL_BSW",
-   "name": "DEAT",
-   "canon": true,
-   "weight": 0.2,
-   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
-   "tags": ["elite"],
-   "events": "COL_BSW:bsw_deat"
+   "id": "COL_RES_UNIV",
+   "track": "COL_RESEARCH",
+   "name": "대학 연구소",
+   "canon": false,
+   "weight": 0.5,
+   "mods": {
+    "promo": 1,
+    "fall": 0.8,
+    "income": 0.9,
+    "standingStart": 0
+   },
+   "tags": [
+    "major"
+   ],
+   "events": "COL_RESEARCH:univ"
   },
   {
-   "id": "COL_BSW_OBHR",
-   "track": "COL_BSW",
-   "name": "OBHR",
-   "canon": true,
-   "weight": 0.2,
-   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
-   "tags": ["elite"],
-   "events": "COL_BSW:bsw_obhr"
-  },
-  {
-   "id": "COL_BSW_ACCOUNT",
-   "track": "COL_BSW",
-   "name": "비전투 회계",
-   "canon": true,
-   "weight": 0.2,
-   "mods": { "promo": 1, "fall": 0.7, "income": 0.9, "standingStart": 0 },
-   "tags": ["minor"],
-   "events": "COL_BSW:bsw_account"
+   "id": "COL_RES_TECH",
+   "track": "COL_RESEARCH",
+   "name": "중소 기술 기업 연구실",
+   "canon": false,
+   "weight": 0.5,
+   "mods": {
+    "promo": 1,
+    "fall": 1.1,
+    "income": 1,
+    "standingStart": 0
+   },
+   "tags": [
+    "minor"
+   ],
+   "events": "COL_RESEARCH:tech"
   },
   {
    "id": "COL_OFF_TECH",
@@ -3325,66 +3492,6 @@
    "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
    "tags": ["minor"],
    "events": "COL_INSURANCE:ins_public"
-  },
-  {
-   "id": "COL_RHI_CONTROL",
-   "track": "COL_RHINE",
-   "name": "통제 섹션",
-   "canon": true,
-   "weight": 0.15,
-   "mods": { "promo": 1.2, "fall": 1, "income": 1, "standingStart": 0 },
-   "tags": ["elite"],
-   "events": "COL_RHINE:rhi_control"
-  },
-  {
-   "id": "COL_RHI_ECOLOGY",
-   "track": "COL_RHINE",
-   "name": "생태 섹션",
-   "canon": true,
-   "weight": 0.2,
-   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
-   "tags": ["major"],
-   "events": "COL_RHINE:rhi_ecology"
-  },
-  {
-   "id": "COL_RHI_ENERGY",
-   "track": "COL_RHINE",
-   "name": "에너지 섹션",
-   "canon": true,
-   "weight": 0.2,
-   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
-   "tags": ["major"],
-   "events": "COL_RHINE:rhi_energy"
-  },
-  {
-   "id": "COL_RHI_ARTS",
-   "track": "COL_RHINE",
-   "name": "아츠 섹션",
-   "canon": true,
-   "weight": 0.15,
-   "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
-   "tags": ["elite"],
-   "events": "COL_RHINE:rhi_arts"
-  },
-  {
-   "id": "COL_RHI_DEFENSE",
-   "track": "COL_RHINE",
-   "name": "방위 섹션",
-   "canon": true,
-   "weight": 0.15,
-   "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
-   "tags": ["elite"],
-   "events": "COL_RHINE:rhi_defense"
-  },
-  {
-   "id": "COL_RHI_OTHER",
-   "track": "COL_RHINE",
-   "name": "기타 섹션",
-   "canon": true,
-   "weight": 0.15,
-   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
-   "tags": ["minor"],
-   "events": "COL_RHINE:rhi_other"
   },
   {
    "id": "COL_LAW_INHOUSE",
@@ -3809,7 +3916,7 @@
   {
    "id": "SIR_ART_FILM",
    "track": "SIR_ART",
-   "name": "극장·영화",
+   "name": "극장과 영화",
    "canon": true,
    "weight": 0.3,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
@@ -4011,17 +4118,51 @@
    "track": "LAT_GUARD",
    "name": "랜든 수도원 직속",
    "canon": true,
-   "weight": 0.7,
+   "weight": 0.5,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
    "tags": ["major"],
    "events": "LAT_GUARD:gua_landen"
+  },
+  {
+   "id": "LAT_GUA_ALSTER",
+   "track": "LAT_GUARD",
+   "name": "알스터 수도원 경비",
+   "canon": false,
+   "weight": 0.2,
+   "mods": {
+    "promo": 1,
+    "fall": 1,
+    "income": 1,
+    "standingStart": 0
+   },
+   "tags": [
+    "minor"
+   ],
+   "events": "LAT_GUARD:alster"
+  },
+  {
+   "id": "LAT_GUA_AMBROSE",
+   "track": "LAT_GUARD",
+   "name": "암브로시우스 수도원 경비",
+   "canon": false,
+   "weight": 0.15,
+   "mods": {
+    "promo": 1,
+    "fall": 0.9,
+    "income": 1.1,
+    "standingStart": 0
+   },
+   "tags": [
+    "minor"
+   ],
+   "events": "LAT_GUARD:ambrose"
   },
   {
    "id": "LAT_GUA_NOTARY",
    "track": "LAT_GUARD",
    "name": "공증소 이관",
    "canon": false,
-   "weight": 0.3,
+   "weight": 0.15,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
    "tags": ["minor"],
    "events": "LAT_GUARD:gua_notary"
@@ -4979,7 +5120,7 @@
   {
    "id": "MIN_TRA_PEDDLER",
    "track": "MIN_TRADE",
-   "name": "행상",
+   "name": "떠돌이 행상단",
    "canon": true,
    "weight": 0.3,
    "mods": { "promo": 1, "fall": 1, "income": 0.8, "standingStart": 0 },
@@ -5249,7 +5390,7 @@
   {
    "id": "SAR_TRA_COLUMBIA",
    "track": "SAR_TRADE",
-   "name": "컬럼비아 상단 현지 고용",
+   "name": "컬럼비아 상단 현지 지점",
    "canon": true,
    "weight": 0.2,
    "mods": { "promo": 0.7, "fall": 1, "income": 1.1, "standingStart": 0 },
@@ -6129,7 +6270,7 @@
   {
    "id": "RIM_EUR_VICMINE",
    "track": "RIM_EUREKA",
-   "name": "유레카 자치주 빅토리아 광산회사",
+   "name": "유레카 자치주 광산회사",
    "canon": true,
    "weight": 0.6,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
@@ -6179,7 +6320,7 @@
   {
    "id": "RIM_INF_ABROAD",
    "track": "RIM_INFECTED",
-   "name": "국외 이주",
+   "name": "국외 감염자 공동체",
    "canon": true,
    "weight": 0.15,
    "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
@@ -6531,17 +6672,34 @@
    "track": "KZD_BROKER",
    "name": "용병 알선",
    "canon": true,
-   "weight": 0.4,
+   "weight": 0.2,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
    "tags": ["major"],
    "events": "KZD_BROKER:bro_recruit"
+  },
+  {
+   "id": "KZD_BRO_SCAR",
+   "track": "KZD_BROKER",
+   "name": "흉터의 상점",
+   "canon": true,
+   "weight": 0.5,
+   "mods": {
+    "promo": 1.1,
+    "fall": 1.1,
+    "income": 1.2,
+    "standingStart": 5
+   },
+   "tags": [
+    "major"
+   ],
+   "events": "KZD_BROKER:scar"
   },
   {
    "id": "KZD_BRO_INFO",
    "track": "KZD_BROKER",
    "name": "정보 거래",
    "canon": true,
-   "weight": 0.35,
+   "weight": 0.18,
    "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
    "tags": ["minor"],
    "events": "KZD_BROKER:bro_info"
@@ -6551,7 +6709,7 @@
    "track": "KZD_BROKER",
    "name": "노예 암시장(1086 이전)",
    "canon": true,
-   "weight": 0.25,
+   "weight": 0.12,
    "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
    "tags": ["minor"],
    "events": "KZD_BROKER:bro_slave"
@@ -7217,56 +7375,6 @@
    "events": "RHO_PATIENT:pat_remote"
   },
   {
-   "id": "COM_PEN_LUNGMEN",
-   "track": "COM_PENGUIN",
-   "name": "용문 본부",
-   "canon": true,
-   "weight": 0.5,
-   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
-   "tags": ["major"],
-   "events": "COM_PENGUIN:pen_lungmen"
-  },
-  {
-   "id": "COM_PEN_SIRACUSA",
-   "track": "COM_PENGUIN",
-   "name": "시라쿠사 지사",
-   "canon": true,
-   "weight": 0.2,
-   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
-   "tags": ["minor"],
-   "events": "COM_PENGUIN:pen_siracusa"
-  },
-  {
-   "id": "COM_PEN_APPLEPIE",
-   "track": "COM_PENGUIN",
-   "name": "애플파이 로지스틱스",
-   "canon": true,
-   "weight": 0.15,
-   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
-   "tags": ["minor"],
-   "events": "COM_PENGUIN:pen_applepie"
-  },
-  {
-   "id": "COM_PEN_HONORARY",
-   "track": "COM_PENGUIN",
-   "name": "임시·명예 직원",
-   "canon": true,
-   "weight": 0.15,
-   "mods": { "promo": 1, "fall": 1, "income": 0.8, "standingStart": 0 },
-   "tags": ["minor"],
-   "events": "COM_PENGUIN:pen_honorary"
-  },
-  {
-   "id": "COM_PID_SIREN",
-   "track": "COM_PENGUIN_IDOL",
-   "name": "몬스터 사이렌 레코드",
-   "canon": true,
-   "weight": 1,
-   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
-   "tags": ["major"],
-   "events": "COM_PENGUIN_IDOL:pid_siren"
-  },
-  {
    "id": "COM_MSG_YAN",
    "track": "COM_MESSENGER",
    "name": "염국 흠천감·춘건",
@@ -7319,7 +7427,7 @@
   {
    "id": "COM_MSG_SIESTA",
    "track": "COM_MESSENGER",
-   "name": "시에스타 시 고용",
+   "name": "시에스타 시청 전달자단",
    "canon": true,
    "weight": 0.15,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
@@ -7357,86 +7465,6 @@
    "events": "COM_CC:cc_corrupt"
   },
   {
-   "id": "COM_BSW_APD",
-   "track": "COM_BLACKSTEEL",
-   "name": "APD(무장인원파견)",
-   "canon": true,
-   "weight": 0.4,
-   "mods": { "promo": 1, "fall": 1.2, "income": 1, "standingStart": 0 },
-   "tags": ["major"],
-   "events": "COM_BLACKSTEEL:bsw_apd"
-  },
-  {
-   "id": "COM_BSW_DEAT",
-   "track": "COM_BLACKSTEEL",
-   "name": "DEAT(장비응용기술)",
-   "canon": true,
-   "weight": 0.2,
-   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
-   "tags": ["elite"],
-   "events": "COM_BLACKSTEEL:bsw_deat"
-  },
-  {
-   "id": "COM_BSW_OBHR",
-   "track": "COM_BLACKSTEEL",
-   "name": "OBHR(오리지늄·생물재해)",
-   "canon": true,
-   "weight": 0.2,
-   "mods": { "promo": 1, "fall": 1.3, "income": 1.3, "standingStart": 0 },
-   "tags": ["elite"],
-   "events": "COM_BLACKSTEEL:bsw_obhr"
-  },
-  {
-   "id": "COM_BSW_ACCOUNT",
-   "track": "COM_BLACKSTEEL",
-   "name": "어카운턴트(사무직)",
-   "canon": true,
-   "weight": 0.2,
-   "mods": { "promo": 1, "fall": 0.7, "income": 0.9, "standingStart": 0 },
-   "tags": ["minor"],
-   "events": "COM_BLACKSTEEL:bsw_account"
-  },
-  {
-   "id": "COM_BSX_TREATMENT",
-   "track": "COM_BLACKSTEEL_EXCHANGE",
-   "name": "치료형",
-   "canon": true,
-   "weight": 0.3,
-   "mods": { "promo": 1, "fall": 0.8, "income": 1, "standingStart": 0 },
-   "tags": ["major"],
-   "events": "COM_BLACKSTEEL_EXCHANGE:bsx_treatment"
-  },
-  {
-   "id": "COM_BSX_DISPATCH",
-   "track": "COM_BLACKSTEEL_EXCHANGE",
-   "name": "파견형",
-   "canon": true,
-   "weight": 0.4,
-   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
-   "tags": ["major"],
-   "events": "COM_BLACKSTEEL_EXCHANGE:bsx_dispatch"
-  },
-  {
-   "id": "COM_BSX_INFO",
-   "track": "COM_BLACKSTEEL_EXCHANGE",
-   "name": "정보형",
-   "canon": true,
-   "weight": 0.15,
-   "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
-   "tags": ["minor"],
-   "events": "COM_BLACKSTEEL_EXCHANGE:bsx_info"
-  },
-  {
-   "id": "COM_BSX_TECH",
-   "track": "COM_BLACKSTEEL_EXCHANGE",
-   "name": "기술형",
-   "canon": true,
-   "weight": 0.15,
-   "mods": { "promo": 1, "fall": 1, "income": 1.2, "standingStart": 0 },
-   "tags": ["minor"],
-   "events": "COM_BLACKSTEEL_EXCHANGE:bsx_tech"
-  },
-  {
    "id": "COM_PMC_COLUMBIA",
    "track": "COM_MERC_PMC",
    "name": "컬럼비아계 PMC",
@@ -7459,7 +7487,7 @@
   {
    "id": "COM_PMC_BOLIVAR",
    "track": "COM_MERC_PMC",
-   "name": "볼리바르 삼파 고용",
+   "name": "볼리바르 삼파 계약 용병단",
    "canon": true,
    "weight": 0.25,
    "mods": { "promo": 1, "fall": 1.3, "income": 1.2, "standingStart": 0 },
@@ -7499,7 +7527,7 @@
   {
    "id": "COM_BTY_BOLIVAR",
    "track": "COM_BOUNTY",
-   "name": "볼리바르 삼파 고용",
+   "name": "볼리바르 현상금 사무소",
    "canon": true,
    "weight": 0.35,
    "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },
@@ -7509,7 +7537,7 @@
   {
    "id": "COM_BTY_KAZIMIERZ",
    "track": "COM_BOUNTY",
-   "name": "카시미어",
+   "name": "카시미어 현상금 조합",
    "canon": true,
    "weight": 0.3,
    "mods": { "promo": 1, "fall": 1, "income": 1, "standingStart": 0 },
@@ -7519,7 +7547,7 @@
   {
    "id": "COM_BTY_INDEP",
    "track": "COM_BOUNTY",
-   "name": "독립",
+   "name": "독립 현상금 사냥꾼",
    "canon": true,
    "weight": 0.35,
    "mods": { "promo": 1, "fall": 1, "income": 0.9, "standingStart": 0 },
@@ -7529,7 +7557,7 @@
   {
    "id": "COM_MS_CAVENDISH",
    "track": "COM_MERC_STATE",
-   "name": "캐번디시 공작 고용",
+   "name": "캐번디시 공작 사병단",
    "canon": true,
    "weight": 0.25,
    "mods": { "promo": 1, "fall": 1.3, "income": 1, "standingStart": 0 },

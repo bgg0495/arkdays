@@ -106,116 +106,6 @@
  },
  "tracks": [
   {
-   "id": "COM_PENGUIN",
-   "nation": "common",
-   "region": null,
-   "name": "펭귄 로지스틱스",
-   "archetype": "A6",
-   "canon": true,
-   "itinerant": true,
-   "route": ["lungmen","siracusa","columbia","laterano"],
-   "entry": {
-    "ages": [16,40],
-    "classes": {},
-    "gates": [
-     { "year": [1093,9999] },
-     { "cap": "ties", "min": -0.8 }
-    ],
-    "via": ["emperor_interview"]
-   },
-   "stages": [
-    {
-     "id": "screened",
-     "name": "심사",
-     "title": null,
-     "minYears": 1,
-     "promo": { "cap": "ties", "k": 0.25 },
-     "fall": { "base": 0.035, "causes": ["kia","contract_end"] }
-    },
-    {
-     "id": "staff",
-     "name": "직원",
-     "title": "직원",
-     "minYears": 5,
-     "promo": { "cap": "ties", "k": 0.1 },
-     "fall": { "base": 0.035, "causes": ["kia","contract_end"] }
-    },
-    {
-     "id": "role",
-     "name": "역할 분화",
-     "title": "직원",
-     "minYears": 0,
-     "promo": null,
-     "fall": { "base": 0.035, "causes": ["kia","contract_end"] }
-    }
-   ],
-   "income": { "stage": [0.8,2,2.5], "job": "penguin_courier" },
-   "standing": { "name": "사장 호감", "start": 30 },
-   "affiliations": ["COM_PEN_LUNGMEN","COM_PEN_SIRACUSA","COM_PEN_APPLEPIE","COM_PEN_HONORARY"],
-   "exits": {
-    "retire": { "age": 60, "to": "COM_PENGUIN" },
-    "fall": { "kia": "death", "contract_end": "expel" },
-    "switch": ["RHO_OPERATOR"]
-   },
-   "oriPolicyOverride": null,
-   "canonFigures": ["emperor","texas","sora"]
-  },
-  {
-   "id": "COM_PENGUIN_IDOL",
-   "nation": "common",
-   "region": null,
-   "name": "펭귄 보호 아이돌",
-   "archetype": "A12",
-   "canon": true,
-   "itinerant": true,
-   "route": ["lungmen","higashi"],
-   "entry": {
-    "ages": [14,28],
-    "classes": {},
-    "gates": [
-     { "cap": "arts", "min": -0.8 },
-     { "born": "looks", "min": -0.8 }
-    ],
-    "via": ["contract"]
-   },
-   "stages": [
-    {
-     "id": "contract",
-     "name": "계약",
-     "title": null,
-     "minYears": 1,
-     "promo": { "cap": "looks", "k": 0.22 },
-     "fall": { "base": 0.03, "causes": ["scandal","fade"] }
-    },
-    {
-     "id": "protected",
-     "name": "보호 대상 아이돌",
-     "title": "아이돌",
-     "minYears": 5,
-     "promo": { "cap": "looks", "k": 0.12 },
-     "fall": { "base": 0.03, "causes": ["scandal","fade"] }
-    },
-    {
-     "id": "record",
-     "name": "몬스터 사이렌 레코드",
-     "title": "간판",
-     "minYears": 0,
-     "promo": null,
-     "fall": { "base": 0.03, "causes": ["scandal","fade"] }
-    }
-   ],
-   "income": { "stage": [0.5,1.8,4], "job": "idol" },
-   "standing": { "name": "명성", "start": 20 },
-   "affiliations": ["COM_PID_SIREN"],
-   "exits": {
-    "retire": { "age": 35, "to": "COM_PENGUIN" },
-    "fall": { "scandal": "disgrace", "fade": "expel" },
-    "switch": ["COM_PENGUIN"]
-   },
-   "oriPolicyOverride": null,
-   "canonFigures": ["sora"]
-  },
-  {
    "id": "COM_MESSENGER",
    "nation": "common",
    "region": null,
@@ -341,124 +231,6 @@
    "canonFigures": []
   },
   {
-   "id": "COM_BLACKSTEEL",
-   "nation": "common",
-   "region": null,
-   "name": "블랙스틸 월드와이드",
-   "archetype": "A6",
-   "canon": true,
-   "itinerant": true,
-   "route": ["columbia","kazimierz","bolivar","sargon","leithanien"],
-   "entry": {
-    "ages": [16,30],
-    "classes": {},
-    "gates": [
-     { "cap": "skill", "min": -0.8 }
-    ],
-    "via": ["trainee"]
-   },
-   "stages": [
-    {
-     "id": "trainee",
-     "name": "훈련생",
-     "title": null,
-     "minYears": 2,
-     "promo": { "cap": "skill", "k": 0.24 },
-     "fall": { "base": 0.055, "causes": ["elimination","kia","infected"] },
-     "contract": 2
-    },
-    {
-     "id": "operator",
-     "name": "정식 오퍼레이터",
-     "title": "오퍼레이터",
-     "minYears": 5,
-     "promo": { "cap": "skill", "k": 0.1 },
-     "fall": { "base": 0.055, "causes": ["elimination","kia","infected"] },
-     "contract": 3
-    },
-    {
-     "id": "lead",
-     "name": "팀장",
-     "title": "팀장",
-     "minYears": 6,
-     "promo": { "cap": "skill", "k": 0.05 },
-     "fall": { "base": 0.055, "causes": ["elimination","kia","infected"] }
-    },
-    {
-     "id": "cadre",
-     "name": "부서 간부",
-     "title": "간부",
-     "minYears": 0,
-     "promo": null,
-     "fall": { "base": 0.055, "causes": ["elimination","kia","infected"] }
-    }
-   ],
-   "income": { "stage": [0.6,1.8,3,6], "job": "blacksteel" },
-   "standing": { "name": "사내 평가", "start": 20 },
-   "affiliations": ["COM_BSW_APD","COM_BSW_DEAT","COM_BSW_OBHR","COM_BSW_ACCOUNT"],
-   "exits": {
-    "retire": { "age": 50, "to": "COM_CC" },
-    "fall": { "elimination": "expel", "kia": "death", "infected": "expel" },
-    "switch": ["COM_BLACKSTEEL_EXCHANGE","COM_MERC_PMC"]
-   },
-   "oriPolicyOverride": null,
-   "canonFigures": ["liskarm"]
-  },
-  {
-   "id": "COM_BLACKSTEEL_EXCHANGE",
-   "nation": "common",
-   "region": null,
-   "name": "블랙스틸 교환 프로그램",
-   "archetype": "A6",
-   "canon": true,
-   "itinerant": false,
-   "entry": {
-    "ages": [18,45],
-    "classes": {},
-    "gates": [
-     { "year": [1095,9999] }
-    ],
-    "via": ["exchange"]
-   },
-   "stages": [
-    {
-     "id": "signed",
-     "name": "협력 합의서·치료 동의서",
-     "title": null,
-     "minYears": 1,
-     "promo": { "cap": "skill", "k": 0.25 },
-     "fall": { "base": 0.035, "causes": ["kia","contract_end","crystallize"] }
-    },
-    {
-     "id": "dispatched",
-     "name": "로도스 파견",
-     "title": "파견 오퍼레이터",
-     "minYears": 4,
-     "promo": { "cap": "skill", "k": 0.1 },
-     "fall": { "base": 0.035, "causes": ["kia","contract_end","crystallize"] }
-    },
-    {
-     "id": "ended",
-     "name": "치료 완료·계약 만료",
-     "title": null,
-     "minYears": 0,
-     "promo": null,
-     "fall": { "base": 0.035, "causes": ["kia","contract_end","crystallize"] }
-    }
-   ],
-   "income": { "stage": [1.5,1.8,1.5] },
-   "standing": { "name": "파견 평가", "start": 30 },
-   "affiliations": ["COM_BSX_TREATMENT","COM_BSX_DISPATCH","COM_BSX_INFO","COM_BSX_TECH"],
-   "exits": {
-    "retire": null,
-    "fall": { "kia": "death", "contract_end": "expel", "crystallize": "death" },
-    "switch": ["COM_BLACKSTEEL","RHO_OPERATOR"]
-   },
-   "oriPolicyOverride": null,
-   "canonFigures": ["liskarm"],
-   "note": "classes 없음: COM_BLACKSTEEL·COL_BSW 오퍼레이터 단계 이상에서 전환. 진입 시 res.nation=rhodes, papers=agreement"
-  },
-  {
    "id": "COM_MERC_PMC",
    "nation": "common",
    "region": null,
@@ -471,7 +243,7 @@
     "ages": [16,35],
     "classes": {},
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["trainee"]
    },
@@ -517,7 +289,7 @@
    "exits": {
     "retire": { "age": 50, "to": "COM_CC" },
     "fall": { "kia": "death", "infected": "expel", "contract_end": "expel" },
-    "switch": ["COM_BLACKSTEEL","COM_BOUNTY"]
+    "switch": ["COM_BOUNTY","COM_MERC_TEAM"]
    },
    "oriPolicyOverride": null,
    "canonFigures": []
@@ -535,7 +307,7 @@
     "ages": [12,35],
     "classes": {},
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["joined"]
    },
@@ -661,7 +433,7 @@
     "ages": [16,40],
     "classes": {},
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["faction_event"]
    },

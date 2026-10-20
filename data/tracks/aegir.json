@@ -146,7 +146,7 @@
     "ages": [16,28],
     "classes": { "q2": 0.2664, "q3": 0.1998 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["assigned"]
    },
@@ -325,7 +325,8 @@
     "ages": [14,40],
     "classes": { "q1": 0.6659, "q2": 0.333 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.8 },
+     { "urban": false }
     ],
     "via": ["assigned"]
    },

@@ -21,7 +21,7 @@
     "ages": [12,30],
     "classes": { "q1": 0.3444, "q2": 0.3789, "q4": 0.2756 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["team","child_errand","survivor"]
    },
@@ -510,7 +510,9 @@
    "entry": {
     "ages": [12,50],
     "classes": { "q2": 0.0689 },
-    "gates": [],
+    "gates": [
+     { "urban": false }
+    ],
     "via": ["babel_farm","rebuild"]
    },
    "stages": [
@@ -665,7 +667,7 @@
    "id": "KZD_BROKER",
    "nation": "kazdel",
    "region": null,
-   "name": "흉터의 상점 중개인",
+   "name": "용병 중개인",
    "archetype": "A1",
    "canon": true,
    "itinerant": false,

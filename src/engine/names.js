@@ -1,6 +1,13 @@
 // 이름 생성: names.json 의 언어 풀 { o, sep, m, f, s, raceRule?, pat?, femSurname?, noble?, doubleSurname? } 규칙을 따른다.
 // o = gf(이름 성) / fg(성 이름) / pat(이름 부칭 성) / mono(이름만). 풀이 없으면 _default → 아무 풀.
 
+/** canon_figures.json 의 인물 이름 집합(데이터당 1회 계산) */
+function canonSet(data) {
+  if (!data) return new Set();
+  if (!data._canonNames) data._canonNames = new Set((data.canonFigures || []).map((f) => f && f.name).filter(Boolean));
+  return data._canonNames;
+}
+
 export function poolFor(data, lang) {
   const n = data.names || {};
   return n[lang] || n._default || Object.values(n).find((p) => p && Array.isArray(p.m)) || { m: ['이름'], f: ['이름'], s: ['성'], o: 'gf', sep: ' ' };
@@ -28,9 +35,10 @@ export function makeName(data, rng, { lang, sex, race, q = 3, father, avoid } = 
   const o = (pool.raceRule && race && pool.raceRule[race]) || pool.o || 'gf';
   const sep = pool.sep ?? ' ';
   const givens = sex === 'F' ? (pool.f || pool.m) : (pool.m || pool.f);
+  const canon = canonSet(data);   // W14(QA C1): 캐논 인물의 이름은 가족·지인 이름으로 쓰지 않는다
   let given = rng.pick(givens);
-  if (avoid && avoid.size) {
-    for (let i = 0; i < 12 && avoid.has(given); i++) given = rng.pick(givens);
+  if ((avoid && avoid.size) || canon.size) {
+    for (let i = 0; i < 12 && ((avoid && avoid.has(given)) || canon.has(given)); i++) given = rng.pick(givens);
   }
   let family = rng.pick(pool.s || ['성']);
   const shortGiven = [...given].length <= 1;   // 염국·용문식 외자 이름은 성을 붙여 부른다("거" → "임거")

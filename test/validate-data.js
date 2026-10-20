@@ -186,7 +186,9 @@ for (const n of nations) {
   if (!n.statMul || !['le', 'u5', 'ppp', 'gini', 'urb'].every((k) => inRange(n.statMul[k], 0.1, 5))) err(`${w}: statMul {le,u5,ppp,gini,urb} 오류`);
   if (!POLICIES.includes(n.policy)) err(`${w}: policy '${n.policy}' enum 아님`);
   if (n.policyVariants) for (const v of n.policyVariants) { if (!POLICIES.includes(v.policy)) err(`${w}: policyVariants policy '${v.policy}' enum 아님`); if (!isStr(v.when)) err(`${w}: policyVariants.when 누락`); }
-  for (const k of ['oriExp', 'catFreq', 'conflict']) if (![1, 2, 3].includes(n[k])) err(`${w}: ${k} 는 1~3 정수`);
+  for (const k of ['oriExp', 'conflict']) if (![1, 2, 3].includes(n[k])) err(`${w}: ${k} 는 1~3 정수`);
+  if (![0, 1, 2, 3].includes(n.catFreq)) err(`${w}: catFreq 는 0~3 정수`);   // W14(D54): 0 = 재앙 없음
+  if (n.conscriptUntil != null && !(Number.isInteger(n.conscriptUntil) && n.conscriptUntil >= 1050 && n.conscriptUntil <= 1200)) err(`${w}: conscriptUntil 연도`);
   need(n, 'nomadic', (x) => inRange(x, 0, 1), w);
   if (typeof n.seaborn !== 'boolean') err(`${w}: seaborn boolean`);
   if (typeof n.collapsal !== 'boolean') err(`${w}: collapsal boolean`);
@@ -239,8 +241,8 @@ for (const c of causes) for (const t of c.tags) {
   if (t.startsWith('nation:')) { if (!nationIds.has(t.slice(7))) err(`causes[${c.id}]: tag '${t}' 국가 없음`); }
   else if (t.startsWith('threat:')) { if (!allThreats.has(t.slice(7))) err(`causes[${c.id}]: tag '${t}' 가 어느 국가 threats 에도 없음`); }
   else if (t.startsWith('trait:')) { if (!traitKeys.has(t.slice(6))) err(`causes[${c.id}]: tag '${t}' trait 없음`); }
-  else if (t.startsWith('pos:')) { if (!/^pos:(A([1-9]|1[0-2])|noble|high)$/.test(t)) err(`causes[${c.id}]: tag '${t}' pos: 값 미정의(A1~A12·noble·high)`); }   // W12(D51-6)
-  else if (!['infected', 'female', 'male'].includes(t)) err(`causes[${c.id}]: tag '${t}' 형식 미정의`);
+  else if (t.startsWith('pos:')) { if (!/^pos:(A([1-9]|1[0-2])|noble|high|mine|caster|war|prison|infected)$/.test(t)) err(`causes[${c.id}]: tag '${t}' pos: 값 미정의(A1~A12·noble·high·mine·caster·war·prison·infected)`); }   // W12(D51-6)·W14(B5)
+  else if (!['infected', 'female', 'male', 'nomadic', 'serving', 'war', 'camp', 'known'].includes(t)) err(`causes[${c.id}]: tag '${t}' 형식 미정의`);
 }
 // ethnicFlags
 for (const [k, f] of Object.entries(nationsDoc.ethnicFlags || {})) {
@@ -291,7 +293,7 @@ const W8 = { tracks: 0, affs: 0, figures: 0, relPairs: 0, marriageTypes: 0, hous
   const rhoDoc = load('rhodes.json');
 
   const EXIT_RE = /^(death(:[a-z_]+)?|prison:(jail|camp)|exile|demote|expel|injured|infected|disgrace|arena:[A-Z0-9_]+)$/;
-  const GATE_KEYS = new Set(['cap', 'born', 'min', 'max', 'weight', 'status', 'rel', 'race', 'only', 'sex', 'year', 'urban', 'infected', 'region', 'eth', 'newcomer', 'papers', 'note']);
+  const GATE_KEYS = new Set(['cap', 'born', 'min', 'max', 'weight', 'status', 'rel', 'race', 'only', 'sex', 'year', 'urban', 'infected', 'known', 'rhodes', 'q', 'flag', 'edu', 'region', 'eth', 'newcomer', 'papers', 'money', 'any', 'note']);   // W16: money(재산 중위 배율)·any(하위 중 하나)
   const CAPS = ['skill', 'learn', 'arts', 'ties', 'looks'];
   const REL_RE = /^(<=|>=|<|>|=)?(exclude|institutional|cultural|subtle|neutral|favored)$/;
   const classSum = {};  // nation → q → sum
@@ -324,6 +326,8 @@ const W8 = { tracks: 0, affs: 0, figures: 0, relPairs: 0, marriageTypes: 0, hous
     if (!Array.isArray(e.gates)) err(`${w}: entry.gates 배열`);
     else for (const g of e.gates) {
       for (const k of Object.keys(g)) if (!GATE_KEYS.has(k)) err(`${w}: gate 키 '${k}' 미정의`);
+      if (g.any) { if (!Array.isArray(g.any) || g.any.length < 2) err(`${w}: gate any 는 배열(2개 이상)`); else for (const sub of g.any) for (const k of Object.keys(sub)) if (!GATE_KEYS.has(k) || k === 'any') err(`${w}: any 하위 gate 키 '${k}'`); }
+      if (g.money != null && !(isNum(g.money) && g.money > 0)) err(`${w}: gate money 는 양수(재산 중위 배율)`);
       if (g.cap && (!CAPS.includes(g.cap) || !isNum(g.min))) err(`${w}: gate cap '${g.cap}' 또는 min 오류`);
       if (g.born && (!['looks', 'luck'].includes(g.born) || !isNum(g.min))) err(`${w}: gate born`);
       if (g.race) { for (const r of g.race) if (!raceIds.has(r)) err(`${w}: gate race '${r}' 없음`); if (!g.only && !isNum(g.weight)) err(`${w}: gate race 는 weight 또는 only:true`); }
@@ -368,7 +372,7 @@ const W8 = { tracks: 0, affs: 0, figures: 0, relPairs: 0, marriageTypes: 0, hous
     // affiliations
     if (!Array.isArray(t.affiliations)) err(`${w}: affiliations 배열`);
     else {
-      for (const a of t.affiliations) { if (!affIds.has(a)) err(`${w}: affiliation '${a}' 없음`); else if (affById[a].track !== t.id) err(`${w}: affiliation '${a}' 의 track 이 ${affById[a].track}`); }
+      for (const a of t.affiliations) { if (!affIds.has(a)) err(`${w}: affiliation '${a}' 없음`); else if (!(Array.isArray(affById[a].track) ? affById[a].track : [affById[a].track]).includes(t.id)) err(`${w}: affiliation '${a}' 의 track 이 ${affById[a].track}`); }   // W15: 다중 진로 소속
       if (!t.affiliations.length) warn(`${w}: 소속 변주 없음`);
     }
     // exits
@@ -406,10 +410,11 @@ const W8 = { tracks: 0, affs: 0, figures: 0, relPairs: 0, marriageTypes: 0, hous
   for (const a of affs) {
     const w = `affiliations[${a.id}]`;
     need(a, 'id', isStr, w); need(a, 'name', isStr, w);
-    if (!trackIds.has(a.track)) err(`${w}: track '${a.track}' 없음`);
+    const tlist = Array.isArray(a.track) ? a.track : [a.track];   // W15: 여러 진로에 걸친 소속(몬스터 사이렌 레코드)
+    for (const tid of tlist) if (!trackIds.has(tid)) err(`${w}: track '${tid}' 없음`);
     if (typeof a.canon !== 'boolean') err(`${w}: canon boolean`);
     if (!inRange(a.weight, 0, 1)) err(`${w}: weight 0~1`);
-    affSum[a.track] = (affSum[a.track] || 0) + (a.weight || 0);
+    if (!(a.gates && a.gates.length)) for (const tid of tlist) affSum[tid] = (affSum[tid] || 0) + (a.weight || 0);   // W15: 게이트가 있는 희귀 소속은 합 1 에 넣지 않는다(추가분)
     if (!a.mods || typeof a.mods !== 'object') err(`${w}: mods 객체`);
     else {
       for (const k of ['promo', 'fall', 'income']) { if (!isNum(a.mods[k])) err(`${w}: mods.${k} 숫자`); else if (a.mods[k] < 0.5 || a.mods[k] > 2.0) err(`${w}: mods.${k} ${a.mods[k]} (0.5~2.0)`); else if (a.mods[k] < 0.7 || a.mods[k] > 1.3) warn(`${w}: mods.${k} ${a.mods[k]} 가 ±30% 밖`); }

@@ -8,7 +8,7 @@ export const CAT_BASE = B.catBase;
 
 export function catP(sim) {
   const { S, nation } = sim;
-  let p = CAT_BASE[nation.catFreq] * (S.home.type === 'nomadic' ? B.catHome.nomadic : B.catHome.settled);
+  let p = (CAT_BASE[nation.catFreq] ?? 0) * (S.home.type === 'nomadic' ? B.catHome.nomadic : B.catHome.settled);
   if ((S.focusW.survive || 0) > 0.3) p *= 0.7;
   return p;
 }

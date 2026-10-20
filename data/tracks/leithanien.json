@@ -294,7 +294,7 @@
     "ages": [12,40],
     "classes": { "q2": 0.1598 },
     "gates": [
-     { "urban": false, "weight": 3 },
+     { "urban": false },
      { "race": ["caprinae","elafia"], "weight": 1.5 }
     ],
     "via": ["family"]
@@ -352,7 +352,8 @@
     "ages": [10,30],
     "classes": { "q1": 0.1119, "q2": 0.0799, "q3": 0.1199, "q4": 0.1598, "q5": 0.1598 },
     "gates": [
-     { "cap": "arts", "min": 0.5 }
+     { "cap": "arts", "min": 0.5 },
+     { "money": 1 }
     ],
     "via": ["audition","patron","street"]
    },
@@ -421,7 +422,7 @@
     "ages": [17,28],
     "classes": { "q2": 0.1199, "q3": 0.1199, "q4": 0.1998 },
     "gates": [
-     { "cap": "skill", "min": -0.8 },
+     { "cap": "skill", "min": -0.3 },
      { "rel": "<=cultural" }
     ],
     "via": ["enlist","test"]

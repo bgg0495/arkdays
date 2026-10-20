@@ -28,7 +28,7 @@ const GOV = (s) => fac(s) + ' 쪽';
 const singas = [
   E('bol_sin_sc_entry', [16, 22], [T('BOL_SINGAS', 'school')], 50, 2, (s) => ({ t: '군사학교에 들어갔습니다. 종족도 성별도 집안도 묻지 않았습니다. 묻는 것은 하나, 세 해를 채울 수 있느냐였습니다.', k: 'ev', fx: { cap: { skill: 0.04 } }, f: F('싱가스 왕조군 입교 명부, ' + s.year + '년') })),
   E('bol_sin_sc_drill', [16, 22], [T('BOL_SINGAS', 'school')], 45, 1, (s) => ({ t: '새벽 훈련이 한 해 내내였습니다. 교관은 라이타니엔에서 온 사람이었고, 명령은 두 나라 말로 떨어졌습니다.', k: 'ev', fx: { hl: 1, cap: { skill: 0.03 } } })),
-  E('bol_sin_sc_leave', [16, 22], [T('BOL_SINGAS', 'school')], 35, 2, (s) => ({ t: '휴가에 집에 갔습니다. 어머니가 군복을 빨아 주었고, 아버지는 어느 쪽 사람이냐고 농담했습니다. 농담이 아니었습니다.', k: 'warm', fx: { h: 2 } })),
+  E('bol_sin_sc_leave', [16, 22], [T('BOL_SINGAS', 'school')], 35, 2, (s) => ({ t: '휴가에 집에 갔습니다. ' + (s.S.fam.mom.alive ? '어머니가' : '이웃이') + ' 군복을 빨아 주었고, ' + (s.S.fam.dad.alive && !s.S.fam.dad.absent ? '아버지는' : '동네 노인은') + ' 어느 쪽 사람이냐고 농담했습니다. 농담이 아니었습니다.', k: 'warm', fx: { h: 2 } })),
   E('bol_sin_sc_dropout', [16, 22], [T('BOL_SINGAS', 'school')], 30, 2, (s) => ({ t: '같은 방 하나가 담을 넘었습니다. 사흘 뒤 잡혀 왔고, 다시 담을 넘지 않았습니다. 세 해는 누구에게나 세 해였습니다.', k: 'bad', fx: { h: -2, f: F('군사학교 징계 기록, ' + s.year + '년') } })),
   E('bol_sin_so_post', [18, 30], [T('BOL_SINGAS', 'soldier')], 45, 2, (s) => ({ t: '남쪽 초소에 배치되었습니다. 건너편은 연립정부 초소였고, 양쪽 다 ' + eul(cul(s).drink) + ' 마셨습니다. 서로 보이는 거리였습니다.', k: 'note', fx: { standing: 2 } })),
   E('bol_sin_so_pay', [18, 30], [T('BOL_SINGAS', 'soldier')], 40, 2, (s) => ({ t: '급여가 두카트로 나왔습니다. 플랜테이션에서 일하는 사촌의 넉 달치였습니다. 이 나라에서 가장 벌이가 좋은 직업이 군인이라는 말이 맞았습니다.', k: 'warm', fx: { money: medX(s, 0.15), h: 1, f: F('왕조군 급여표, ' + s.year + '년') } })),

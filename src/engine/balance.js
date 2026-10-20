@@ -24,7 +24,8 @@ export const BALANCE = {
 
   // §5.2 재앙이 '나'를 덮칠 연간 확률. 명세 초안: {1: 0.01, 2: 0.03, 3: 0.06} × (이동도시 0.3 / 정주 1.5)
   //  → 정주 catFreq 3 이면 연 9% 피격이라 피폭 감염만으로 평생 25% 가 감염된다. 0.4배로 낮춤(국가 단위 재앙 빈도와 개인 피격은 다르다는 해석)
-  catBase: { 1: 0.004, 2: 0.012, 3: 0.025 },
+  catBase: { 0: 0, 1: 0.004, 2: 0.012, 3: 0.025 },   // W14(D54): catFreq 0 = 재앙 없음(쉐라그·라테라노, 대사건이 담당)
+  debtCap: 3,                  // W14(QA A14): 이자 대상 빚 상한(중위소득 배율). 2년 연속 넘기면 채무 정리
   catHome: { nomadic: 0.3, settled: 1.5 },
   // 결과 누적 경계. 명세 초안: 대피 60% / 피해 30% / 감염 8% / 사망 2%
   //  → 감염 8% 는 재앙 피격 확률과 곱하면 평생 20% 이상 추가 감염이라 3% 로 낮춤(대피 63 / 피해 33 / 감염 3 / 사망 1)
@@ -106,7 +107,22 @@ export const BALANCE = {
     decayAge: 60, decaySkill: 0.02, dementiaLearn: 0.05,
     looksChange: { money: 3, ok: 0.7, fail: 0.2, hlFail: -15, hlAccident: -40, delta: 1.0, nations: ['leithanien', 'columbia', 'lungmen', 'higashi'], ageMax: 45, lowLooks: -1, p: 0.5 },   // W12(D51-5): 생애 1회·18~45세·외모 낮음 또는 A2/A12 진로
     looksTrait: 1.2,            // W12(D51-5): 신원 카드 외모 특성 줄 |looks| 문턱(A2/A12 진로는 항상)
-    grades: [[-0.8, '낮음'], [0.5, '보통'], [1.4, '높음'], [Infinity, '뛰어남']],
+    grades: [[-1.4, '아주 낮음'], [-0.5, '낮음'], [0.5, '보통'], [1.2, '높음'], [1.9, '뛰어남'], [Infinity, '탁월']],   // W16(D56): 4 → 6등급(성장 체감). 로도스 캐논 6등급(rhodes.json opGrades)과는 별개
+    childFocus: 1.5, childAge: 18,   // W16(D56): 18세 이하의 공부·운동·아츠 초점 역량 성장 ×
+  },
+  // W16(D56): 장래 희망 — 8~11세 생애 1회 결정(dream_choose). 꿈 진로는 track_choose 가중 ×mul, 진입 시 행복 +happyIn, 못 들어간 채 나이가 들면 해저드 롤로 접음(giveUp, 행복 happyGiveUp)
+  dream: {
+    ages: [8, 11],
+    unknownP: 0.2,              // 자동 결정에서 '아직 모르겠다' 비율
+    mul: 1.2,                   // 자동 시뮬 달성률 15~30% 에 맞춘 값(D56 초안 1.5 는 35%, 1.3 은 33%)
+    happyIn: 8, happyGiveUp: -3,
+    // 꿈 접기(W16-2): 매년 해저드 롤 p(h) = clamp((h − start) × slope × 보정, 0, max), h = 인간 척도 나이. 꿈 진로가 그 해 열려 있으면 롤하지 않는다
+    giveUp: { start: 24, slope: 0.025, max: 0.35,
+      arch: { A2: [20, 1.6], A12: [20, 1.6], A3: [27, 0.8], A9: [27, 0.8], A8: [27, 0.8] },   // [시작 나이, 기울기 ×] — 신체·외모 경력은 일찍, 시험·연구·교단은 늦게까지
+      lowQ: 1.3, highQ: 0.8,    // q1~2 생계가 먼저 / q4~5 여유
+      family: 1.2 },            // 결혼·첫 자녀가 있으면
+    closedMax: 2,               // track_choose 모달의 닫힌 문(비활성 선택지) 최대
+    rhodesYear: 1094,           // 이 해부터 감염 가정의 아이는 로도스 오퍼레이터를 꿈꿀 수 있다
   },
   mig: {
     settling: 3, settlingRefugee: 6,
@@ -119,7 +135,7 @@ export const BALANCE = {
     joblessWorkP: 0.06,         // 실업 3년+ 에서 migrate_work 결정 노출 연
     workAutoStay: 6,            // 자동 결정에서 '남는다' 가중(목적지는 각 1)
     joblessYears: 3,
-    studyP: 0.02, studyLearn: 0.8, studyNations: ['columbia', 'leithanien', 'yan', 'victoria', 'kjerag'],
+    studyP: 0.02, studyLearn: 0.8, studyMoney: 2 /* W16(D56): 유학은 재산 중위 ×2 이상 또는 q≥4 */, studyNations: ['columbia', 'leithanien', 'yan', 'victoria', 'kjerag'],
     asylumNations: ['columbia', 'victoria', 'lungmen'],
     fleeP: 0.1,                 // 재앙 피격(피해)·전시 피난 롤
     contractAbroadP: 0.3,       // A6 진입 시 해외 계약

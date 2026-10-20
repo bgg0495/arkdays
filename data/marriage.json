@@ -89,7 +89,7 @@
   "types": [
    { "id": "civil", "name": "혼인 신고", "w": 0.55, "age": [24,34], "dowry": 0, "canon": false },
    { "id": "church", "name": "교회 혼인", "w": 0.25, "age": [22,30], "dowry": 0.2, "canon": false },
-   { "id": "prenup", "name": "혼전 계약 혼인", "w": 0.15, "age": [26,40], "dowry": 2, "req": { "track": ["COL_LAW","COL_EXEC","COL_RHINE","COL_OFFICE"] }, "canon": false, "note": "D48 '돈 써서 결혼' 변주" },
+   { "id": "prenup", "name": "혼전 계약 혼인", "w": 0.15, "age": [26,40], "dowry": 2, "req": { "track": ["COL_LAW","COL_EXEC","COL_RESEARCH","COL_OFFICE"] }, "canon": false, "note": "D48 '돈 써서 결혼' 변주" },
    { "id": "frontier", "name": "개척지 혼인", "w": 0.05, "age": [18,30], "dowry": 0, "req": { "track": ["COL_FRONTIER"] }, "canon": false }
   ]
  },

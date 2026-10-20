@@ -183,7 +183,7 @@
     "ages": [12,40],
     "classes": { "q2": 0.4 },
     "gates": [
-     { "urban": false, "weight": 3 }
+     { "urban": false }
     ],
     "via": ["family"]
    },
@@ -238,7 +238,8 @@
     "gates": [
      { "cap": "skill", "min": 0.5 },
      { "race": ["kuranta"], "weight": 1.5 },
-     { "rel": "<=cultural" }
+     { "rel": "<=cultural" },
+     { "money": 0.5 }
     ],
     "via": ["family_training","underground_points","registered"]
    },
@@ -521,7 +522,7 @@
     "ages": [14,30],
     "classes": { "q2": 0.05, "q3": 0.1 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["apprentice"]
    },

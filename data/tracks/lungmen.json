@@ -19,7 +19,9 @@
    "entry": {
     "ages": [10,40],
     "classes": { "q1": 0.5646, "q2": 0.2172, "q5": 0.1737 },
-    "gates": [],
+    "gates": [
+     { "urban": true }
+    ],
     "via": ["stall","ratking","fallen"]
    },
    "stages": [
@@ -232,10 +234,121 @@
    "exits": {
     "retire": { "age": 60, "to": "LGM_SHOP" },
     "fall": { "bankrupt": "expel", "kia": "death", "layoff": "expel" },
-    "switch": ["COM_PENGUIN","LGM_CORP"]
+    "switch": ["LGM_CORP","LGM_SECURITY"]
    },
    "oriPolicyOverride": null,
    "canonFigures": ["emperor","texas"]
+  },
+  {
+   "id": "LGM_ART",
+   "nation": "lungmen",
+   "name": "가수·거리 공연자",
+   "archetype": "A12",
+   "canon": false,
+   "itinerant": false,
+   "note": "W15(D55): 도시 국가의 소규모 음악가·공연자 생업. 몬스터 사이렌 레코드(COM_SIREN)는 희귀 소속",
+   "canonFigures": [],
+   "entry": {
+    "ages": [
+     12,
+     30
+    ],
+    "classes": {
+     "q1": 0.03,
+     "q2": 0.04,
+     "q3": 0.03
+    },
+    "gates": [
+     {
+      "cap": "arts",
+      "min": -0.3
+     }
+    ],
+    "via": [
+     "street",
+     "club"
+    ]
+   },
+   "stages": [
+    {
+     "id": "busker",
+     "name": "거리 공연",
+     "title": "거리 가수",
+     "minYears": 2,
+     "promo": {
+      "cap": "arts",
+      "k": 0.2
+     },
+     "fall": {
+      "base": 0.035,
+      "causes": [
+       "fade",
+       "scandal"
+      ]
+     }
+    },
+    {
+     "id": "club",
+     "name": "클럽 무대",
+     "title": "무대 가수",
+     "minYears": 4,
+     "promo": {
+      "cap": "arts",
+      "k": 0.1
+     },
+     "fall": {
+      "base": 0.035,
+      "causes": [
+       "fade",
+       "scandal"
+      ]
+     }
+    },
+    {
+     "id": "star",
+     "name": "간판 가수",
+     "title": "간판 가수",
+     "minYears": 0,
+     "promo": null,
+     "fall": {
+      "base": 0.035,
+      "causes": [
+       "fade",
+       "scandal"
+      ]
+     }
+    }
+   ],
+   "income": {
+    "stage": [
+     0.3,
+     1.0,
+     3.5
+    ],
+    "job": "entertainer"
+   },
+   "standing": {
+    "name": "명성",
+    "start": 20
+   },
+   "affiliations": [
+    "LGM_ART_NIGHT",
+    "LGM_ART_CLUB",
+    "COM_SIREN"
+   ],
+   "exits": {
+    "retire": {
+     "age": 55,
+     "to": "LGM_SHOP"
+    },
+    "fall": {
+     "fade": "expel",
+     "scandal": "disgrace"
+    },
+    "switch": [
+     "LGM_SHOP"
+    ]
+   }
   },
   {
    "id": "LGM_SHOP",

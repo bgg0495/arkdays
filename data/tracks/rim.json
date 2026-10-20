@@ -19,7 +19,9 @@
    "entry": {
     "ages": [12,40],
     "classes": { "q1": 0.478, "q2": 0.3211 },
-    "gates": [],
+    "gates": [
+     { "cap": "skill", "min": -0.3 }
+    ],
     "via": ["pitsinker","adult"]
    },
    "stages": [
@@ -198,7 +200,7 @@
     "ages": [16,35],
     "classes": { "q2": 0.0714, "q3": 0.0714 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["miner","hire"]
    },
@@ -260,7 +262,7 @@
     "ages": [15,35],
     "classes": { "q2": 0.0714, "q3": 0.0714 },
     "gates": [
-     { "cap": "skill", "min": -0.8 }
+     { "cap": "skill", "min": -0.3 }
     ],
     "via": ["apprentice"]
    },
@@ -681,7 +683,7 @@
    "id": "RIM_EUREKA",
    "nation": "rim",
    "region": null,
-   "name": "유레카 죄수 채굴·우리 인질",
+   "name": "죄수 채굴장",
    "archetype": "A5",
    "canon": true,
    "itinerant": false,
@@ -773,7 +775,7 @@
     },
     {
      "id": "zone",
-     "name": "중앙 격리구역·국외 이주",
+     "name": "중앙 격리구역 배치",
      "title": null,
      "minYears": 0,
      "promo": null,
